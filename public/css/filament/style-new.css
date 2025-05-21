@@ -1,0 +1,46 @@
+/*===========================================*/
+/* General */
+/*===========================================*/
+body {
+    font-family: var(--body-font);
+    font-weight: normal;
+    font-style: normal;
+    font-size: 17px;
+    line-height: 28px;
+    color: var(--cd-tertiary-color);
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--title-font);
+    font-weight: normal;
+    color: var(--cd-secondary-color);
+    margin-top: 0px;
+    letter-spacing: 0px;
+    text-transform: capitalize;
+}
+
+h1 {font-size: 56px; line-height: 66px; font-weight: 500;}
+h2 {font-size: 48px; line-height: 56px; font-weight: 500;}
+h3 {font-size: 40px; line-height: 48px; font-weight: 500;}
+h4 {font-size: 36px; line-height: 46px; font-weight: 500;}
+h5 {font-size: 28px; line-height: 36px; font-weight: 500;}
+h6 {font-size: 20px; line-height: 28px; font-weight: 500;}
+
+blockquote {font-size: 16px; padding-left: 80px;}
+blockquote::before {left: 20px; color: var(--cd-primary-color);}
+
+/*===============================================*/
+/* Car Details Page */
+/*===============================================*/
+.product-listing ul li.list-group-item a:after {font-size: 16px;}
+.car-item .car-content .star {font-size: 14px;}
+
+.details-nav ul li a {padding: 7px 20px; font-size: 16px;}
+.car-details-sidebar .sidebar-title {font-size: 24px; font-weight: 600;}
+
+
+/*=========================================================================*/
+/* Responsive CSS */
+/*=========================================================================*/
+@media (min-width: 1200px) {
+    .container {max-width: 1240px !important;}
+}
