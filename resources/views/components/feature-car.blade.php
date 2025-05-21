@@ -1,9 +1,9 @@
 {{-- feature cards --}}
-   <section class="feature-car bg-2 bg-overlay-black-70 page-section-ptb">
+   <section class="feature-car bg-2 bg-overlay-black-70 page-section-ptb" >
   <div class="container">
    <div class="row">
     <div class="col-md-12">
-      <div class="section-title">
+      <div class="section-title" style="margin-top: 5rem">
          <span class="text-white">Check out our recent cars</span>
          <h2 class="text-white">Feature Car </h2>
          <div class="separator"></div>
