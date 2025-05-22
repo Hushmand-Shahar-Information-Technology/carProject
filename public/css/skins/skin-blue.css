@@ -1,0 +1,84 @@
+/*
+
+Template: Car Dealer - The Best Car Dealer Automotive Responsive HTML5 Template
+Author: potenzaglobalsolutions.com
+Design and Developed by: potenzaglobalsolutions.com
+
+NOTE: This is color stylesheet of Color Scheme.
+
+*/
+
+/*************************
+		General
+*************************/
+/** selection **/
+*::-moz-selection { background: #1551a1; color: #fff; text-shadow: none; }
+::-moz-selection { background: #1551a1; color: #fff; text-shadow: none; }
+::selection { background: #1551a1; color: #fff; text-shadow: none; }
+
+/*.button*/
+.button, .button.border:before { background: #1551a1; }
+.button.border:hover, .button.border:focus, .button.border:active { border-color: #1551a1; }
+.button.white { color: #1551a1; background: #ffffff; }
+.button.white:hover { color: #ffffff; }
+
+
+/*rev slider wrapper*/
+.rev_slider_wrapper .button, .rev_slider_wrapper .button.border:before { background: #1551a1 !important; }
+.rev_slider_wrapper .button.border:hover, .rev_slider_wrapper .button.border:focus, .rev_slider_wrapper .button.border:active { border-color: #1551a1 !important; }
+.rev_slider_wrapper .button.white { color: #1551a1 !important; background: #ffffff !important; }
+.rev_slider_wrapper .button.white:hover { color: #ffffff !important; }
+.tp-caption.red-bg { background: #1551a1 !important; }
+.tp-caption.text-red { color: #1551a1 !important; }
+
+/*************************
+	 background color
+*************************/
+.red-bg, .section-title .separator:before, .section-title .separator:after, .feature-box h6:before, .feature-box:hover i, .car-item:hover .separator:before, .car-item:hover .separator:after, .owl-carousel .owl-nav i:hover, .blog-1 .blog-content a.link:before, .counter.counter-style-1 h6:before, .owl-carousel.owl-theme .owl-dots .owl-dot.active span, .owl-carousel.owl-theme .owl-dots .owl-dot:hover span, .footer h6:before, .content-box .border, .testimonial-2 .testimonial-content, .footer-2 .social ul li a i:hover, .footer-2 .input-group-btn button, .footer-2 .input-group-btn button:hover, .footer-2 .footer-box .box-link a, .ui-widget-header, .feature-box-2.box-hover:hover, .feature-box-2.box-hover.active, .blog-2 .blog-image .date span, .share .blog-social li a, .blog-2 .blog-description .separator:before, .blog-2 .blog-description .separator:after, .testimonial-3 .testimonial-content, .footer-3 .social ul li a i:hover, .quick-links .link a:hover, .custom-block-3 .title h3:before, .feature-box-3:hover .icon i, .content-box-4 .link a, .car-item-3 .car-overlay, .team:hover, .team .team-social li a:hover, .timeline > li:hover > .timeline-badge, .timeline > li:hover > .timeline-panel, .opening-hours h6:before, .team-2 .team-social ul li a, .contact .contact-box:hover, .accordion .accordion-header .accordion-button, .accordion .accordion-title a.active, .typography-main  h4.title:before, mark, .blog-sidebar .sidebar-widget h6:before, .blog-sidebar .sidebar-widget .tags li a:hover, .blog .entry-share .share a, .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .pagination li a:focus, .pagination li a:hover, .pagination li span:focus, .pagination li span:hover, .product-listing .listing-sidebar .widget-search ul li span, .details-nav ul li a:hover, .car-details h4.modal-title:before, .car-details-sidebar h5:before, .slider-for .slick-prev:hover, .slider-for .slick-prev:focus, .slider-for .slick-next:hover, .slider-for .slick-next:focus, .car-item-3 .car-popup a:hover, #header.fancy .topbar, .topbar-dark .mega-menu .menu-mobile-collapse-trigger:before, .topbar-dark .mega-menu .menu-mobile-collapse-trigger:after, .topbar-dark .mega-menu .menu-mobile-collapse-trigger span, #header.fancy .mega-menu .menu-mobile-collapse-trigger:before, #header.fancy .mega-menu .menu-mobile-collapse-trigger:after, #header.fancy .mega-menu .menu-mobile-collapse-trigger span, #header.light .mega-menu .menu-mobile-collapse-trigger:before, #header.light .mega-menu .menu-mobile-collapse-trigger:after, #header.light .mega-menu .menu-mobile-collapse-trigger span, .product-listing .listing-sidebar .widget-search h5:before, .product-listing .car-grid .car-title a:before, .timeline .timeline-heading h5:before { background: #1551a1; }
+
+
+/*v2.0*/
+.search-block.red-bg, .car-item.car-item-4 .price, .footer.footer-white .footer-box .box-link a, .footer.footer-black .footer-box .box-link a, .search-block h3.title { background: #1551a1; }
+
+/*v2.2*/
+  .feature-box-3.white-icon:hover .icon i, .bg-12, #header.header-dark.topbar-dark ul.submit-button li a i:hover, .car-directory-banner .search-tab #tabs ul.tabs li.active, .car-directory-banner .search-tab #tabs ul.tabs li.active:focus, .car-directory-banner .search-tab #tabs ul.tabs li:hover, .search-logo #tabs ul.tabs li.active, .search-logo #tabs ul.tabs li.active:focus, .search-logo #tabs ul.tabs li:hover, .vehicle-tab #tabs ul.tabs li.active, .vehicle-tab #tabs ul.tabs li.active:focus, .vehicle-tab #tabs ul.tabs li:hover, .search-page a, .popup-video-banner a, .popup-video-banner a:hover i, .overview .overview-share .share ul li a:hover, .design-section #tabs .tabs li:hover, .design-section #tabs .tabs li.active, .specifications-box .title, .specifications .accordion .accordion-title a.active, .popup-video-banner a.popup-button, .popup-video-banner a.popup-button:hover i { background-color: #1551a1; }
+
+/*************************
+	 color
+*************************/
+.text-red, .car-item .car-content a, .car-item .car-overlay-banner ul li a:hover, .owl-carousel .owl-nav i, .custom-block-1 a, .blog-1 .blog-content a.link:hover, .testimonial-1 .testimonial-block .testimonial-avtar h6, .testimonial-1 .testimonial-block:hover .testimonial-content i, .usefull-link ul li a:hover, .recent-post-info a:hover, footer .copyright a, footer .copyright ul li a:hover, .content-box i, .counter.counter-style-1.counter-light b, .footer-2 .usefull-link ul li a:hover, .price-slide a.link, .content-box-2 i, .content-box-2 a.link:hover, .content-box-2 a.link:hover i, .feature-box-2 i, .car-item-2 .car-overlay-banner ul li a:hover, .car-item-2 .price span, .blog-2 .blog-content .blog-meta ul li a, .blog-2 .blog-description a:hover, .footer-3 .footer-nav ul li a:hover, .footer-3 .usefull-link ul li a:hover, .footer-3 .copyright ul li a:hover, .testimonial-4 .testimonial-block i, .isotope-filters  button.active, .isotope-filters  button:hover, .team .team-social a, ul.page-breadcrumb li a:hover, .list-style-1 li i, .career .career-info p a, .contact .contact-box i, .accordion .accordion-title a:hover, .accordion .accordion-title a:hover:after, .accordion .accordion-header .accordion-button.collapsed:hover, .accordion .accordion-header .accordion-button.collapsed:hover:after, #one+label:before, #one+label:after, .remember-checkbox a, .register-form p.link a, .error-page .error-content p a, .coming-soon .countdown li span, blockquote cite, .blog-sidebar .widget-link ul li a:hover, .privacy-policy a, .blog .entry-title a:hover, .blog .entry-meta ul li a:hover, .blog .entry-meta ul li a i, .navigation-previous:hover span, .navigation-next:hover span, .sorting-options .change-view-button a.active, .sorting-options .change-view-button a:hover, .car-details .car-price strong, .car-details .close:hover, .details-social ul li a:hover, .mega-menu .menu-links > li.active > a, .mega-menu .menu-links > li.active .drop-down-multilevel li.active > a, .mega-menu .menu-links > li.active .drop-down-multilevel a:hover, .mega-menu .menu-links > li > a:hover, .mega-menu .drop-down a:hover, .mega-menu .drop-down-tab-bar a:hover, .mega-menu .drop-down-multilevel li:hover > a, .mega-menu .menu-links > li:hover, .mega-menu .drop-down-multilevel li:hover > a i.fa, #header.topbar-dark .mega-menu .menu-links > li.active .drop-down-multilevel li.active a, #header.topbar-dark .mega-menu .menu-links > li.active .drop-down-multilevel li a:hover, #header.topbar-dark .mega-menu .menu-links > li.active a, #header.fancy .mega-menu .menu-links > li.active > a, #header.fancy .mega-menu .menu-links > li.active .drop-down-multilevel li.active a, #header.fancy .mega-menu .menu-links > li.active .drop-down-multilevel li a:hover, .car-item-3 .car-popup a, .mega-menu .menu-links > li.active .drop-down-multilevel li.active i, .mega-menu .menu-links > li.active .drop-down-multilevel li.active .drop-down-multilevel li.active a, .mega-menu .menu-links > li.active .drop-down li.active a, .mega-menu .menu-links > li.active .drop-down a:hover, .mega-menu .menu-links > li.active .drop-down-multilevel li.active .drop-down-multilevel li a:hover, .topbar .topbar-right li a:hover, #header.topbar-dark .mega-menu .menu-links > li > a:hover, #header.fancy .mega-menu .menu-links > li > a:hover, .search-top .search-btn:hover, .play-video .video-info a i, .counter.counter-style-1.light i:before, #header.fancy .search-top .search-btn:hover, #header.light .mega-menu .menu-links > li.active a, #header.light .mega-menu .menu-links > li.active .drop-down-multilevel li.active a, #header.light .mega-menu .menu-links > li.active .drop-down-multilevel li a:hover, #header.light .mega-menu .menu-links > li > a:hover, #header.light .search-top .search-btn:hover, .product-listing .car-grid .price span, .car-item-2 .car-content a:hover { color: #1551a1 }
+
+ 
+ /*v2.0*/
+ .isotope-filters.vartical-filter button.active span, .footer.footer-white .copyright ul li a:hover, .isotope-filters.vartical-filter button:hover span, .footer.footer-white .usefull-link ul li a:hover, .footer.footer-white .recent-post-info a:hover, .footer.footer-black .usefull-link ul li a:hover, .footer.footer-black .recent-post-info a:hover, .footer.footer-black .copyright ul li a:hover, .play-video-2 .video-info a i { color: #1551a1 }
+
+  /*v2.2*/
+  .why-choose-counter .counter-box .icon i:before, .testimonial-5 .testimonial-avtar span, .testimonial-5:hover .testimonial-content i, #header.header-dark.topbar-dark .mega-menu .menu-links > li.active > a, #header.header-dark.topbar-dark .topbar-profile ul li a i, #header.header-dark.topbar-dark .topbar-profile ul li a:hover, #header.header-dark.topbar-dark .mega-menu .menu-links > li > a:hover, .footer-3.footer-simple .social ul li a i:hover, .popup-video-banner a i, .popup-video-banner a:hover strong, .overview .overview-share .info a:hover, .horsepower ul li, .specifications h2.title, .specifications-box .info .icon i, #header.header-dark.topbar-dark .mega-menu .menu-links > li.active > a, #header.header-dark.topbar-dark .topbar-profile ul li a i, #header.header-dark.topbar-dark .topbar-profile ul li a:hover, #header.header-dark.topbar-dark .mega-menu .menu-links > li > a:hover, .footer-3.footer-simple .social ul li a i:hover, .popup-video-banner a i, .popup-video-banner a:hover strong, .overview .overview-share .info a:hover, .horsepower ul li, .specifications h2.title, .specifications-box .info .icon i, .popup-video-banner a.popup-button i, .popup-video-banner a.popup-button:hover strong { color: #1551a1; }
+
+/*************************
+	 border color
+*************************/
+ .owl-carousel .owl-nav i:hover, .footer .news-letter .form-control:focus, .footer-2 .input-group.divcenter.input-group .form-control:focus, .footer-2 .input-group-btn button, .footer-2 .input-group-btn button:hover, .footer-2 .footer-box .box-link a, .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default, .content-box-2, .feature-box-3:hover .icon, .feature-box-3:hover .icon i, .isotope-filters  button.active, .isotope-filters  button:hover, .gray-form input:focus, .gray-form textarea:focus, #tabs ul.tabs li.active, #tabs ul.tabs li.active:focus, #tabs ul.tabs li:hover, .accordion .accordion-title a.active, .remember-checkbox label:before, .accordion .accordion-header .accordion-button, .blog-sidebar .widget-search input:focus, .blog-sidebar .widget-link ul li a:hover, .blog-sidebar .sidebar-widget .tags li a:hover, .pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover, .pagination li a:focus, .pagination li a:hover, .pagination li span:focus, .pagination li span:hover, .product-listing .price-search input:focus, .details-nav ul li a:hover, .slider-for .slick-prev:hover, .slider-for .slick-prev:focus, .slider-for .slick-next:hover, .slider-for .slick-next:focus, .mega-menu .drop-down-multilevel, .mega-menu .drop-down, .mega-menu .drop-down-tab-bar, .testimonial-2 .testimonial-info .testimonial-avatar img, .search-box, .news-letter-main .news-letter-form input:focus { border-color: #1551a1 }
+
+.testimonial-2 .testimonial-content:before, .testimonial-3 .testimonial-content:before { border-color: #1551a1 transparent transparent transparent; }
+.timeline > li:hover > .timeline-panel:after { border-left-color: #1551a1; }
+.timeline > li.timeline-inverted:hover > .timeline-panel:after { border-right-color: #1551a1; }
+.gray-form input:focus, .gray-form textarea:focus { border-color: #1551a1 !important; }
+
+
+ /*v2.0*/
+ .search-block.red-bg, .footer.footer-white .footer-box .box-link a, .footer.footer-black .footer-box .box-link a, .specifications .accordion .accordion-title a.active { border-color: #1551a1 }
+ 
+.isotope-filters.vartical-filter button.active span, .isotope-filters.vartical-filter button:hover span { border-left-color: #1551a1; }
+
+ 
+ 
+/*************************
+	 overlay
+*************************/
+.car-item .car-overlay-banner, .car-item-2 .car-overlay-banner { background: rgba(21, 81, 161, 0.7); }
+.bg-overlay-red-90:before { background: rgba(21, 81, 161, 0.9); }
+.play-video .video-info:before { background: rgba(21, 81, 161, 0.8); }
+
+/*v2.0*/
+.play-video-2 .video-info:before { background: rgba(21, 81, 161, 0.8); }  
