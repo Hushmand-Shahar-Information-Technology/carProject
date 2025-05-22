@@ -14,5 +14,6 @@ class CarSeeder extends Seeder
     {
         //
 
+
     }
 }
