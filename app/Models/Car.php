@@ -12,5 +12,9 @@ class Car extends Model
 
 
     protected $guarded = [];
+    protected $casts = [
+        'location' => 'array',
+        'image' => 'array'
+    ];
 
 }
