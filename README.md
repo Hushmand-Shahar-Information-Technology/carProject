@@ -1,6 +1,6 @@
 # Car Dealer
 
-A professional, modern, and highly customizable Laravel package for building car dealerships websites.
+A professional, modern, and highly customizable Laravel Project car dealerships websites.
 
 ## Features
 
