@@ -15,6 +15,8 @@ return new class extends Migration {
             $table->string('title')->nullable();
             $table->string('year')->nullable();
             $table->string('make')->nullable();
+
+            $table->json('location')->nullable();
             $table->string('model')->nullable();
             $table->string('VIN_number')->nullable();
             $table->decimal('regular_price', 10, 2)->nullable();
