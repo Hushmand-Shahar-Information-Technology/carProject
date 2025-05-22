@@ -89,7 +89,7 @@
                             <!-- menu logo -->
                             <ul class="menu-logo">
                                 <li>
-                                    <a href="index.html"><img id="logo_img" src="images/logo-light.png" alt="logo"> </a>
+                                    <a href="index.html"><img id="logo_img" src="{{asset('images/logo-light.png')}}" alt="logo"> </a>
                                 </li>
                             </ul>
                             <!-- menu links -->
@@ -368,7 +368,7 @@
     <div class="row">
       <div class="col-lg-3 col-md-6">
         <div class="about-content">
-          <img class="img-fluid" id="logo-footer" src="images/logo-light.png" alt="">
+          <img class="img-fluid" id="logo-footer" src="{{asset('images/logo-light.png')}}" alt="">
           <p>We provide everything you need to build an amazing dealership website developed especially for car sellers dealers or auto motor retailers.</p>
         </div>
         <div class="address">
@@ -396,7 +396,7 @@
         <h6 class="text-white">recent posts </h6>
           <div class="recent-post">
             <div class="recent-post-image">
-              <img class="img-fluid" src="images/car/01.jpg" alt="">
+              <img class="img-fluid" src="{{asset('images/car/01.jpg')}}" alt="">
             </div>
             <div class="recent-post-info">
                 <a href="#">Time to change your </a>
@@ -405,7 +405,7 @@
          </div>
          <div class="recent-post">
             <div class="recent-post-image">
-              <img class="img-fluid" src="images/car/02.jpg" alt="">
+              <img class="img-fluid" src="{{asset('images/car/02.jpg')}}" alt="">
             </div>
             <div class="recent-post-info">
                 <a href="#">The best time to </a>
@@ -414,7 +414,7 @@
          </div>
          <div class="recent-post">
             <div class="recent-post-image">
-              <img class="img-fluid" src="images/car/03.jpg" alt="">
+              <img class="img-fluid" src="{{asset('images/car/03.jpg')}}" alt="">
             </div>
             <div class="recent-post-info">
                 <a href="#">Replacing a timing </a>
@@ -461,7 +461,7 @@
  back to top -->
 
 <div class="car-top">
-  <span><img src="images/car.png" alt=""></span>
+  <span><img src="{{asset('images/car.png')}}" alt=""></span>
 </div>
 
     <!--=================================

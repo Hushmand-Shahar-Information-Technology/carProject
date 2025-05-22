@@ -3,7 +3,7 @@
   <div class="container">
    <div class="row">
     <div class="col-md-12">
-      <div class="section-title" style="margin-top: 5rem">
+      <div class="section-title">
          <span class="text-white">Check out our recent cars</span>
          <h2 class="text-white">Feature Car </h2>
          <div class="separator"></div>
@@ -51,7 +51,7 @@
      <div class="item">
        <div class="car-item text-center">
          <div class="car-image">
-           <img class="img-fluid" src="images/car/02.jpg" alt="">
+           <img class="img-fluid" src="{{asset('images/car/02.jpg')}}" alt="">
            <div class="car-overlay-banner">
             <ul>
               <li><a href="#"><i class="fa fa-link"></i></a></li>
@@ -86,7 +86,7 @@
      <div class="item">
        <div class="car-item text-center">
          <div class="car-image">
-           <img class="img-fluid" src="images/car/03.jpg" alt="">
+           <img class="img-fluid" src="{{asset('images/car/03.jpg')}}" alt="">
            <div class="car-overlay-banner">
             <ul>
               <li><a href="#"><i class="fa fa-link"></i></a></li>
@@ -121,7 +121,7 @@
      <div class="item">
        <div class="car-item text-center">
          <div class="car-image">
-           <img class="img-fluid" src="images/car/04.jpg" alt="">
+           <img class="img-fluid" src="{{asset('images/car/04.jpg')}}" alt="">
            <div class="car-overlay-banner">
             <ul>
               <li><a href="#"><i class="fa fa-link"></i></a></li>
@@ -156,7 +156,7 @@
       <div class="item">
        <div class="car-item text-center">
          <div class="car-image">
-           <img class="img-fluid" src="images/car/05.jpg" alt="">
+           <img class="img-fluid" src="{{asset('images/car/05.jpg')}}" alt="">
            <div class="car-overlay-banner">
             <ul>
               <li><a href="#"><i class="fa fa-link"></i></a></li>
