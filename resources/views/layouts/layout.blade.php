@@ -234,7 +234,7 @@
                                 <li><a href="javascript:void(0)">Car listing  <i class="fa fa-angle-down fa-indicator"></i></a>
                                 <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
-                                        <li><a href="listing-01.html">listing 01</a></li>
+                                        <li><a href="{{route('car.index')}}">listing 01</a></li>
                                         <li><a href="listing-02.html">listing 02</a></li>
                                     </ul>
                                 </li>
