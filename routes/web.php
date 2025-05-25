@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('car')->group(function () {
     Route::get('index',[CarController::class, 'index'])->name('car.index');
+    Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
 });
 
 require __DIR__.'/auth.php';
