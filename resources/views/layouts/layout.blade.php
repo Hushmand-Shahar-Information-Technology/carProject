@@ -208,7 +208,7 @@
                                 <li><a href="javascript:void(0)">blog <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
-                                        <li><a href="javascript:void(0)">blog classic <i class="fa fa-angle-right fa-indicator"></i> </a>
+                                        <li><a href="javascript:void(0)">blog classic <i class="fa-solid fa-angle-right"></i></a>
                                             <!-- drop down second level -->
                                             <ul class="drop-down-multilevel">
                                             <li><a href="blog-left-sidebar.html">left sidebar</a></li>
@@ -216,7 +216,7 @@
                                             <li><a href="blog-fullwidth.html">fullwidth</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="javascript:void(0)">Masonry  <i class="fa fa-angle-right fa-indicator"></i> </a>
+                                        <li><a href="javascript:void(0)">Masonry  <i class="fa-solid fa-angle-right"></i></a>
                                         <!-- drop down second level -->
                                             <ul class="drop-down-multilevel">
                                                 <li><a href="blog-masonry-2-collums.html"> 2 column </a> </li>
@@ -226,7 +226,7 @@
                                             <li><a href="blog-masonry-right-sidebar.html">right sidebar</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="javascript:void(0)">blog single <i class="fa fa-angle-right fa-indicator"></i> </a>
+                                        <li><a href="javascript:void(0)">blog single <i class="fa-solid fa-angle-right"></i></a>
                                         <!-- drop down second level -->
                                             <ul class="drop-down-multilevel">
                                                 <li><a href="blog-single-01.html">blog single 01 </a> </li>
@@ -259,7 +259,10 @@
                                     </ul>
                                 </li>
                                 <li>
-                                <div class="search-top"> <a class="search-btn not_click d-none d-lg-block" href="javascript:void(0);">Search Button</a>
+                                <div class="search-top">
+                                    <a class="search-btn not_click d-none d-lg-block" href="javascript:void(0);">
+                                        <i class="fa-solid fa-search"></i>
+                                    </a>
                                     <div class="search-box not-click">
                                     <div class="row">
                                         <div class="col-xl-2 col-md-4 col-sm-6">
@@ -361,12 +364,12 @@
      <div class="col-md-12">
       <div class="social">
         <ul>
-          <li><a class="facebook" href="#">facebook <i class="fa fa-facebook"></i> </a></li>
-          <li><a class="twitter" href="#">twitter <i class="fa fa-twitter"></i> </a></li>
-          <li><a class="pinterest" href="#">pinterest <i class="fa fa-pinterest-p"></i> </a></li>
-          <li><a class="dribbble" href="#">dribbble <i class="fa fa-dribbble"></i> </a></li>
-          <li><a class="google-plus" href="#">google plus <i class="fa fa-google-plus"></i> </a></li>
-          <li><a class="behance" href="#">behance <i class="fa fa-behance"></i> </a></li>
+          <li><a class="facebook nav-link hover:text-gray-100" href="#">facebook <i class="fa-brands fa-facebook"></i> </a></li>
+          <li><a class="twitter nav-link hover:text-gray-100" href="#">twitter <i class="fa-brands fa-twitter"></i> </a></li>
+          <li><a class="pinterest nav-link hover:text-gray-100" href="#">pinterest <i class="fa-brands fa-pinterest-p"></i> </a></li>
+          <li><a class="dribbble nav-link hover:text-gray-100" href="#">dribbble <i class="fa-brands fa-dribbble"></i> </a></li>
+          <li><a class="google-plus nav-link hover:text-gray-100" href="#">google plus <i class="fa-brands fa-google-plus"></i> </a></li>
+          <li><a class="behance nav-link hover:text-gray-100" href="#">behance <i class="fa-brands fa-behance"></i> </a></li>
         </ul>
        </div>
       </div>
