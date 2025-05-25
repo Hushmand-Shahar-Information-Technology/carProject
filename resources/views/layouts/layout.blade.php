@@ -19,7 +19,7 @@
 {{-- <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/> --}}
 
 <!-- flaticon -->
-<link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/> --}}
 
 <!-- mega menu -->
 <link rel="stylesheet" href="{{asset('css/mega-menu/mega_menu.css')}}"/>
@@ -28,14 +28,14 @@
 {{-- <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/> --}}
 
 <!-- owl-carousel -->
-{{-- <link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/>
 
 <!-- magnific-popup -->
 {{-- <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/> --}}
 
 
 <!-- revolution -->
-{{-- <link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/>
 
 <!-- main style -->
 <link rel="stylesheet" href="{{asset('css/style.css')}}"/>
