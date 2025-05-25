@@ -58,11 +58,11 @@
                 <div class="col-lg-6 col-md-12">
                     <div class="topbar-left text-lg-start text-center">
                     <ul class="list-inline">
-                <li> <i class="fa fa-envelope-o"> </i> support@website.com</li>
+                <li> <i class="fa-solid fa-envelope"> </i> support@website.com</li>
 
 
 
-                <li> <i class="fa fa-clock-o"></i> Mon - Sat 8.00 - 18.00. Sunday CLOSED</li>
+                <li> <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Sunday CLOSED</li>
             </ul>
                     </div>
                 </div>
@@ -70,10 +70,10 @@
                     <div class="topbar-right text-lg-end text-center">
                         <ul class="list-inline">
                 <li> <i class="fa fa-phone"></i> (007) 123 456 7890</li>
-                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                <li><a href="#"><i class="fa fa-youtube-play"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
             </ul>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                             <!-- menu links -->
                             <ul class="menu-links">
                                 <!-- active class -->
-                                <li class="active"><a href="javascript:void(0)">Home <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li class="active"><a href="javascript:void(0)">Home <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down full width -->
                                     <div class="drop-down menu-bg grid-col-12">
                                         <!--grid row-->
@@ -152,7 +152,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li><a href="javascript:void(0)">Pages <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">Pages <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down full width -->
                                     <div class="drop-down menu-bg grid-col-12">
                                         <!--grid row-->
@@ -205,7 +205,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li><a href="javascript:void(0)">blog <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">blog <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
                                         <li><a href="javascript:void(0)">blog classic <i class="fa fa-angle-right fa-indicator"></i> </a>
@@ -235,14 +235,14 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:void(0)">Car listing  <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">Car listing  <i class="fa-solid fa-angle-down"></i></a>
                                 <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
                                         <li><a href="{{route('car.index')}}">listing 01</a></li>
                                         <li><a href="listing-02.html">listing 02</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:void(0)">Car details  <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">Car details  <i class="fa-solid fa-angle-down"></i></a>
                                 <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
                                         <li><a href="details-01.html">details 01</a></li>
@@ -250,7 +250,7 @@
                                         <li><a href="vehicle-view-360.html">Vehicle View 360° <span class="label-new">New</span></a></li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:void(0)"> Contact <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)"> Contact <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel right-menu">
                                     <li><a href="contact-01.html">contact 01</a></li>
