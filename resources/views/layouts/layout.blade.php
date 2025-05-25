@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="{{asset('images/favicon.ico')}}"/>
 
 <!-- bootstrap -->
-<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/> --}}
 
 <!-- flaticon -->
 <link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/>
@@ -25,23 +25,26 @@
 <link rel="stylesheet" href="{{asset('css/mega-menu/mega_menu.css')}}"/>
 
 <!-- font awesome -->
-<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/> --}}
 
 <!-- owl-carousel -->
-<link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/> --}}
 
 <!-- magnific-popup -->
-<link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/> --}}
 
 
 <!-- revolution -->
-<link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/> --}}
 
 <!-- main style -->
 <link rel="stylesheet" href="{{asset('css/style.css')}}"/>
 
 <!-- responsive -->
 <link rel="stylesheet" href="{{asset('css/responsive.css')}}"/>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+@vite(['resources/js/app.js', 'resources/css/app.css'])
+
 
 </head>
 <body>
@@ -56,6 +59,9 @@
                     <div class="topbar-left text-lg-start text-center">
                     <ul class="list-inline">
                 <li> <i class="fa fa-envelope-o"> </i> support@website.com</li>
+
+
+
                 <li> <i class="fa fa-clock-o"></i> Mon - Sat 8.00 - 18.00. Sunday CLOSED</li>
             </ul>
                     </div>
@@ -89,7 +95,7 @@
                             <!-- menu logo -->
                             <ul class="menu-logo">
                                 <li>
-                                    <a href="index.html"><img id="logo_img" src="{{asset('images/logo-light.png')}}" alt="logo"> </a>
+                                    <a href="{{route('home.index')}}"><img id="logo_img" src="{{asset('images/logo-light.png')}}" alt="logo"> </a>
                                 </li>
                             </ul>
                             <!-- menu links -->
