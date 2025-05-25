@@ -16,34 +16,37 @@
 <link rel="stylesheet" href="{{asset('images/favicon.ico')}}"/>
 
 <!-- bootstrap -->
-<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/> --}}
 
 <!-- flaticon -->
-<link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/> --}}
 
 <!-- mega menu -->
-<link rel="stylesheet" href="{{asset('css/mega-menu/mega_menu.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/mega-menu/mega_menu.css')}}"/> --}}
 
 <!-- font awesome -->
-<link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/> --}}
 
 <!-- owl-carousel -->
-<link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/> --}}
 
 <!-- magnific-popup -->
-<link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/> --}}
 
 
 <!-- revolution -->
-<link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/> --}}
 
 <!-- main style -->
-<link rel="stylesheet" href="{{asset('css/style.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/style.css')}}"/> --}}
 
 <!-- responsive -->
-<link rel="stylesheet" href="{{asset('css/responsive.css')}}"/>
+{{-- <link rel="stylesheet" href="{{asset('css/responsive.css')}}"/> --}}
 
+
+<link rel="stylesheet" href="{{ asset('vendor/flaticon/flaticon.css') }}">
 @vite(['resources/css/app.css', 'resources/js/app.js'])
+
 
 </head>
 <body>
@@ -91,7 +94,7 @@
                             <!-- menu logo -->
                             <ul class="menu-logo">
                                 <li>
-                                    <a href="index.html"><img id="logo_img" src="{{asset('images/logo-light.png')}}" alt="logo"> </a>
+                                    <a href="{{route('home.index')}}"><img id="logo_img" src="{{asset('images/logo-light.png')}}" alt="logo"> </a>
                                 </li>
                             </ul>
                             <!-- menu links -->

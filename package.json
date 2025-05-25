@@ -1,21 +1,36 @@
 {
     "private": true,
     "type": "module",
+    "name": "carProject",
+    "version": "1.0.0",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "build:memory": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
         "@tailwindcss/vite": "^4.0.0",
         "alpinejs": "^3.4.2",
-        "autoprefixer": "^10.4.2",
+        "autoprefixer": "^10.4.21",
         "axios": "^1.8.2",
         "concurrently": "^9.0.1",
+        "cross-env": "^7.0.3",
         "esbuild": "^0.25.4",
         "laravel-vite-plugin": "^1.2.0",
-        "postcss": "^8.4.31",
-        "tailwindcss": "^3.1.0",
-        "vite": "^5.4.19"
+        "postcss": "^8.5.3",
+        "tailwindcss": "^3.4.17",
+        "vite": "^5.4.19",
+        "vite-plugin-static-copy": "^3.0.0"
+    },
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.7.2",
+        "bootstrap": "^5.3.6",
+        "flaticon": "^0.1.0",
+        "font-awesome": "^4.7.0",
+        "jquery": "^3.7.1",
+        "magnific-popup": "^1.2.0",
+        "owl.carousel": "^2.3.4",
+        "swiper": "^11.2.8"
     }
 }

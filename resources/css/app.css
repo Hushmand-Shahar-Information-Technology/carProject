@@ -1,3 +1,36 @@
+/* Font Awesome */
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+
+/* Bootstrap */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+/* Owl Carousel */
+@import "owl.carousel/dist/assets/owl.carousel.css";
+
+/* Magnific Popup */
+@import "magnific-popup/dist/magnific-popup.css";
+
+
+
+
+
+/* Swiper */
+
+@import "flaticon/flaticon.css";
+
+
+@import url('/vendor/mega-menu/mega_menu.css');
+@import url('/vendor/revolution-slider/css/settings.css');
+
+
+
+/* Your custom styles */
+@import "style.css";
+@import "responsive.css";
+
+
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
