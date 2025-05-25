@@ -19,10 +19,10 @@
 {{-- <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/> --}}
 
 <!-- flaticon -->
-{{-- <link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/>
 
 <!-- mega menu -->
-{{-- <link rel="stylesheet" href="{{asset('css/mega-menu/mega_menu.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/mega-menu/mega_menu.css')}}"/>
 
 <!-- font awesome -->
 {{-- <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/> --}}
@@ -38,14 +38,12 @@
 {{-- <link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/> --}}
 
 <!-- main style -->
-{{-- <link rel="stylesheet" href="{{asset('css/style.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/style.css')}}"/>
 
 <!-- responsive -->
-{{-- <link rel="stylesheet" href="{{asset('css/responsive.css')}}"/> --}}
-
-
-<link rel="stylesheet" href="{{ asset('vendor/flaticon/flaticon.css') }}">
-@vite(['resources/css/app.css', 'resources/js/app.js'])
+<link rel="stylesheet" href="{{asset('css/responsive.css')}}"/>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+@vite(['resources/js/app.js', 'resources/css/app.css'])
 
 
 </head>
@@ -61,6 +59,9 @@
                     <div class="topbar-left text-lg-start text-center">
                     <ul class="list-inline">
                 <li> <i class="fa fa-envelope-o"> </i> support@website.com</li>
+
+
+
                 <li> <i class="fa fa-clock-o"></i> Mon - Sat 8.00 - 18.00. Sunday CLOSED</li>
             </ul>
                     </div>

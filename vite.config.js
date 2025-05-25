@@ -8,29 +8,29 @@ export default defineConfig({
     plugins: [
         viteStaticCopy({
             targets: [
-                 {
-                    src: 'resources/vendor/flaticon/fonts',
-                    dest: 'assets/fonts/fonts' // ✅ Correct
-                }
+                // {
+                // src: 'node_modules/owl.carousel/dist/assets/*.woff2',
+                // dest: 'assets/fonts'
+                // }
             ]
         }),
         laravel({
             input: [
-                'resources/css/app.css',
                 'resources/js/app.js',
+                'resources/css/app.css',
             ],
             refresh: true,
         }),
         viteStaticCopy({
             targets: [
-                {
-                    src: 'node_modules/@fortawesome/fontawesome-free/webfonts',
-                    dest: 'fonts'
-                },
-                {
-                    src: 'node_modules/owl.carousel/dist/assets/*.woff2',
-                    dest: 'fonts'
-                }
+                // {
+                //     src: 'node_modules/@fortawesome/fontawesome-free/webfonts',
+                //     dest: 'fonts'
+                // },
+                // {
+                //     src: 'node_modules/owl.carousel/dist/assets/*.woff2',
+                //     dest: 'fonts'
+                // }
             ]
         })
     ],
