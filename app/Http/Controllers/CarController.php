@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CarController extends Controller
 {
-    
+
     /**
      * Display the car index.
      */
@@ -20,12 +20,13 @@ class CarController extends Controller
     /**
      * Filter the cars.
      */
-   public function filter(Request $request)
+    public function filter(Request $request)
     {
         $cars = Car::query();
 
         if ($request->filled('year')) {
-            $cars->whereIn('year', $request->year);
+            $year = is_array($request->year) ? $request->year : [$request->year];
+            $cars->whereIn('year', $year);
         }
         if ($request->filled('condition')) {
             $cars->whereIn('condition', $request->condition);
@@ -40,8 +41,5 @@ class CarController extends Controller
         if ($request->ajax()) {
             return view('car.car-results', compact('filteredCars'))->render();
         }
-        
     }
-
-
 }
