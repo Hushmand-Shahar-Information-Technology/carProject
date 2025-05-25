@@ -16,10 +16,10 @@
 <link rel="stylesheet" href="{{asset('images/favicon.ico')}}"/>
 
 <!-- bootstrap -->
-{{-- <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
 
 <!-- flaticon -->
-{{-- <link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/>
 
 <!-- mega menu -->
 <link rel="stylesheet" href="{{asset('css/mega-menu/mega_menu.css')}}"/>
@@ -43,7 +43,7 @@
 <!-- responsive -->
 <link rel="stylesheet" href="{{asset('css/responsive.css')}}"/>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-@vite(['resources/js/app.js', 'resources/css/app.css'])
+{{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
 
 
 </head>
@@ -361,19 +361,20 @@
 <footer class="footer bg-2 bg-overlay-black-90">
   <div class="container">
     <div class="row">
-     <div class="col-md-12">
-      <div class="social">
+    <div class="col-md-12">
+        <div class="social">
         <ul>
-          <li><a class="facebook nav-link hover:text-gray-100" href="#">facebook <i class="fa-brands fa-facebook"></i> </a></li>
-          <li><a class="twitter nav-link hover:text-gray-100" href="#">twitter <i class="fa-brands fa-twitter"></i> </a></li>
-          <li><a class="pinterest nav-link hover:text-gray-100" href="#">pinterest <i class="fa-brands fa-pinterest-p"></i> </a></li>
-          <li><a class="dribbble nav-link hover:text-gray-100" href="#">dribbble <i class="fa-brands fa-dribbble"></i> </a></li>
-          <li><a class="google-plus nav-link hover:text-gray-100" href="#">google plus <i class="fa-brands fa-google-plus"></i> </a></li>
-          <li><a class="behance nav-link hover:text-gray-100" href="#">behance <i class="fa-brands fa-behance"></i> </a></li>
+            <li><a class="facebook nav-link hover:text-gray-100" href="#">facebook <i class="fa-brands fa-facebook"></i> </a></li>
+            <li><a class="twitter nav-link hover:text-gray-100" href="#">twitter <i class="fa-brands fa-twitter"></i> </a></li>
+            <li><a class="pinterest nav-link hover:text-gray-100" href="#">pinterest <i class="fa-brands fa-pinterest-p"></i> </a></li>
+            <li><a class="dribbble nav-link hover:text-gray-100" href="#">dribbble <i class="fa-brands fa-dribbble"></i> </a></li>
+            <li><a class="google-plus nav-link hover:text-gray-100" href="#">google plus <i class="fa-brands fa-google-plus"></i> </a></li>
+            <li><a class="behance nav-link hover:text-gray-100" href="#">behance <i class="fa-brands fa-behance"></i> </a></li>
         </ul>
-       </div>
-      </div>
+        </div>
     </div>
+    </div>
+
     <div class="row">
       <div class="col-lg-3 col-md-6">
         <div class="about-content">
@@ -384,7 +385,7 @@
           <ul>
             <li> <i class="fa fa-map-marker"></i><span>220E Front St. Burlington NC 27215</span> </li>
             <li> <i class="fa fa-phone"></i><span>(007) 123 456 7890</span> </li>
-            <li> <i class="fa fa-envelope-o"></i><span>support@website.com</span> </li>
+            <li> <i class="fa-solid fa-envelope"></i><span>support@website.com</span> </li>
           </ul>
         </div>
       </div>

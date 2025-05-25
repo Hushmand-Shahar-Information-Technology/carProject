@@ -14,11 +14,6 @@
 
 
 
-/* Owl Carousel */
-@import "owl.carousel/dist/assets/owl.carousel.css";
-
-/* Magnific Popup */
-@import "magnific-popup/dist/magnific-popup.css";
 
 
 
@@ -29,10 +24,6 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-
-
-@import "style.css";
-@import "responsive.css";
 
 /* Your custom styles */
 
