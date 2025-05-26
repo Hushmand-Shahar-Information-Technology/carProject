@@ -17,6 +17,17 @@
  banner -->
 
 <section class="slider-parallax bg-overlay-black-50 bg-17">
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <button type="button" onclick="this.parentElement.parentElement.remove();" class="text-green-700">
+                    &times;
+                </button>
+            </span>
+        </div>
+    @endif
+
   <div class="slider-content-middle">
   <div class="container">
      <div class="row">
@@ -572,10 +583,10 @@ car-listing-sidebar -->
 
 <script>
 
-  
+
 document.addEventListener('DOMContentLoaded', function () {
     const filters = document.querySelectorAll('.filter-option');
-  console.log(filters); 
+  console.log(filters);
     filters.forEach(function (filter) {
         filter.addEventListener('change', function () {
             applyFilters();
