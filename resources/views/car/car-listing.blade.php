@@ -109,9 +109,6 @@ car-listing-sidebar -->
          </div>
         </div>
        </div>
-     {{-- <div class="isotope column-5" id="car-results">
-             @include('car.car-results', ['filteredCars' => $cars])
-          </div> --}}
           <div id="car-results" class="isotope column-5">
               <!-- Car items will be injected here by JS -->
           </div>

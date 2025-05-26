@@ -52,19 +52,18 @@ class CarController extends Controller
             $query->whereIn('color', $colors);
         }
         // Handle sorting
-        switch ($request->input('sort')) {
-            case 'name':
-                $query->orderBy('model');
-                break;
-            case 'price':
-                $query->orderBy('sale_price');
-                break;
-            case 'date':
-                $query->orderBy('created_at', 'desc');
-                break;
-            default:
-                $query->latest(); // Default sort
+        $sort = $request->input('sort');
+        // dd($sort); 
+        if ($sort === 'name') {
+            $query->whereNotNull('model')->orderBy('model');
+        } elseif ($sort === 'price') {
+            $query->whereNotNull('sale_price')->orderBy('sale_price');
+        } elseif ($sort === 'date') {
+            $query->orderBy('created_at', 'desc');
+        } else {
+            $query->latest(); // Default sort
         }
+
         $cars = $query->get();
 
         return response()->json($cars);
