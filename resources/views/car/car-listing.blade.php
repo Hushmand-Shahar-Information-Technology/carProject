@@ -90,11 +90,11 @@ car-listing-sidebar -->
          <div class="col-xl-3 col-xxl-2 col-md-12 ms-auto">
             <div class="selected-box">
            <span>Sort by</span>
-             <select>
-              <option>Sort by Default </option>
-              <option>Sort by Name</option>
-              <option>Sort by Price </option>
-              <option>Sort by Date </option>
+             <select id="sort-select" class="form-control">
+                <option value="">Sort by Default</option>
+                <option value="name">Sort by Name</option>
+                <option value="price">Sort by Price</option>
+                <option value="date">Sort by Date</option>
              </select>
            </div>
          </div>
@@ -137,17 +137,17 @@ car-listing-sidebar -->
 </style>
 
 <script>
-
- 
-const API_URL = "{{ route('cars.filter') }}"; // Use Blade interpolation
+const API_URL = "{{ route('cars.filter') }}"; // Laravel route
 const container = document.getElementById('car-results');
 
+// ===========================
+// Fetch & Render Cars
+// ===========================
 function fetchFilteredCars(query = '') {
-  // console.log("hello");
   axios.get(API_URL + '?' + query)
     .then(response => {
       const cars = response.data;
-      container.innerHTML = ''; // Clear current results
+      container.innerHTML = ''; // Clear results
 
       if (!cars.length) {
         container.innerHTML = '<p style="font-size: 24px; text-align: center; padding: 16px 0; font-weight: bold; color: red; ">No cars found.</p>';
@@ -157,7 +157,7 @@ function fetchFilteredCars(query = '') {
       cars.forEach(car => {
         const images = JSON.parse(car.images || '[]');
         const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
-        // console.log(images);
+
         const carDiv = document.createElement('div');
         carDiv.className = 'grid-item';
 
@@ -200,17 +200,51 @@ function fetchFilteredCars(query = '') {
       });
     })
     .catch(error => {
-      console.error('Error fetching cars:', error.response ?? error.message ?? error);
-      if (error.response && error.response.data) {
-        console.error('Server Response:', error.response.data);
-      }
+      console.error('Error fetching cars:', error);
       container.innerHTML = '<p>Failed to load cars.</p>';
     });
+}
 
+// ===========================
+// Apply Filters
+// ===========================
+function applyFilters() {
+  const formData = new FormData();
+
+  document.querySelectorAll('.filter-option:checked').forEach(input => {
+    if (input.value !== '*') {
+      const name = input.name.replace('[]', '');
+      formData.append(name + '[]', input.value);
+    }
+  });
+
+  const keyword = document.getElementById('car-search').value;
+  if (keyword.trim()) {
+    formData.append('keyword', keyword.trim());
   }
-fetchFilteredCars(); // On page load
 
-// filtering ..........................
+  // Add sort option
+  const sortValue = document.getElementById('sort-select').value;
+  if (sortValue) {
+    formData.append('sort', sortValue);
+  }
+
+  const queryString = new URLSearchParams(formData).toString();
+  fetchFilteredCars(queryString);
+}
+
+
+// ===========================
+// Sorting Events
+// ===========================
+
+document.getElementById('sort-select').addEventListener('change', function () {
+  applyFilters();
+});
+
+// ===========================
+// DOMContentLoaded Events
+// ===========================
 document.addEventListener('DOMContentLoaded', function () {
   const filters = document.querySelectorAll('.filter-option');
 
@@ -220,7 +254,6 @@ document.addEventListener('DOMContentLoaded', function () {
       const group = document.querySelectorAll(`input[name="${name}[]"]`);
       const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
 
-      // If "All" was clicked
       if (this.value === '*') {
         if (this.checked) {
           group.forEach(box => {
@@ -231,7 +264,6 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
       }
 
-      // If any other checkbox is checked, uncheck the "All" box
       if (this.checked && allCheckbox) {
         allCheckbox.checked = false;
       }
@@ -240,57 +272,30 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   });
 
-function applyFilters() {
-  const formData = new FormData();
-
-  // Collect all checked checkboxes
-  document.querySelectorAll('.filter-option:checked').forEach(input => {
-    if (input.value !== '*') {
-      const name = input.name.replace('[]', '');
-      formData.append(name + '[]', input.value);
-    }
-  });
-
-  // Include search keyword
-  const keyword = document.getElementById('car-search').value;
-  if (keyword.trim()) {
-    formData.append('keyword', keyword.trim());
-  }
-
-  const queryString = new URLSearchParams(formData).toString();
-  fetchFilteredCars(queryString);
-}
-
-  fetchFilteredCars(); // Initial load
-});
-
-// filter by search input
-
-document.addEventListener('DOMContentLoaded', function () {
+  // Search Input Live
   const searchInput = document.getElementById('car-search');
-
   searchInput.addEventListener('input', function () {
-    applyFilters(); // Use the same function used by checkboxes
+    applyFilters();
   });
+
+  // Initial Load
+  fetchFilteredCars();
 });
 
+// ===========================
+// Collapsible Filter Section
+// ===========================
+document.addEventListener("DOMContentLoaded", function () {
+  const items = document.querySelectorAll(".list-group-item > a");
 
-// ***************************************************************************
-  document.addEventListener("DOMContentLoaded", function () {
-    const items = document.querySelectorAll(".list-group-item > a");
-
-    items.forEach(function (item) {
-      item.addEventListener("click", function (e) {
-        e.preventDefault();
-        const submenu = this.nextElementSibling;
-        if (submenu.style.display === "block") {
-          submenu.style.display = "none";
-        } else {
-          submenu.style.display = "block";
-        }
-      });
+  items.forEach(function (item) {
+    item.addEventListener("click", function (e) {
+      e.preventDefault();
+      const submenu = this.nextElementSibling;
+      submenu.style.display = submenu.style.display === "block" ? "none" : "block";
     });
   });
+});
 </script>
 
  @endsection
