@@ -48,7 +48,7 @@ car-listing-sidebar -->
 
 <section class="car-listing-sidebar product-listing" data-sticky_parent>
   <div class="container-fluid p-0">
-     <div class="row g-0">
+     <div class="row g-0" style="height:100vh">
       <div class="car-listing-sidebar-left" >
        <div class="listing-sidebar scrollbar" data-sticky_column>
       <div class="widget">
@@ -112,7 +112,7 @@ car-listing-sidebar -->
      {{-- <div class="isotope column-5" id="car-results">
              @include('car.car-results', ['filteredCars' => $cars])
           </div> --}}
-          <div id="car-results" class="isotope column-5">
+          <div id="car-results" class="isotope column-5" style="height:100vh; overflow-y:auto">
               <!-- Car items will be injected here by JS -->
           </div>
       </div>
