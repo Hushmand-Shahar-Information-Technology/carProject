@@ -44,6 +44,7 @@
 <link rel="stylesheet" href="{{asset('css/responsive.css')}}"/>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 {{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
 
 </head>

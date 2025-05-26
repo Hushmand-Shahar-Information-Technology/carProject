@@ -13,8 +13,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::all();
-        return view('car.car-listing', compact('cars'));
+        return view('car.car-listing');
     }
 
     /**
@@ -22,26 +21,42 @@ class CarController extends Controller
      */
    public function filter(Request $request)
     {
-        $cars = Car::query();
+        $query = Car::query();
 
-        if ($request->filled('year')) {
-            $cars->whereIn('year', $request->year);
+        if ($keyword = $request->input('keyword')) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('model', 'like', "%$keyword%")
+                ->orWhere('year', 'like', "%$keyword%")
+                ->orWhere('color', 'like', "%$keyword%")
+                ->orWhere('transmission_type', 'like', "%$keyword%");
+            });
         }
-        if ($request->filled('condition')) {
-            $cars->whereIn('condition', $request->condition);
-        }
-        if ($request->filled('model')) {
-            $cars->whereIn('model', $request->model);
-        }
-        // ... Add more filters as needed ...
 
-        $filteredCars = $cars->latest()->get();
-
-        if ($request->ajax()) {
-            return view('car.car-results', compact('filteredCars'))->render();
+        if ($years = $request->input('Year', [])) {
+            $query->whereIn('year', $years);
         }
-        
+
+        if ($models = $request->input('Model', [])) {
+            $query->whereIn('model', $models);
+        }
+
+        if ($transmission = $request->input('Transmission', [])) {
+            $query->whereIn('transmission_type', $transmission);
+        }
+
+        if ($bodies = $request->input('Body', [])) {
+            $query->whereIn('body_type', $bodies);
+        }
+
+        if ($colors = $request->input('Color', [])) {
+            $query->whereIn('color', $colors);
+        }
+
+        $cars = $query->get();
+
+        return response()->json($cars);
     }
+
 
 
 }

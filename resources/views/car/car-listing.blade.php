@@ -66,7 +66,7 @@ car-listing-sidebar -->
                 $years = range(2000, now()->year);
             @endphp
             <x-car-filter name="Year" label="All Years" :options="$years" />
-            <x-car-filter name="Condition" label="All Conditions" :options="['Brand New', 'Slightly Used', 'Used']" />
+            <x-car-filter name="Transmission" label="All Transmission" :options="['Brand New', 'Slightly Used', 'Used']" />
             <x-car-filter name="Body" label="All Body Styles" :options="['2dr Car', '4dr Car', 'Convertible']" />
             <x-car-filter name="Model" label="All Models" :options="['Carrera', 'Boxster', 'GTS']" />
             <x-car-filter name="Color" label="All Color" :options="['Black', 'White', 'Red', 'Yello', 'Green']" />
@@ -103,51 +103,178 @@ car-listing-sidebar -->
             <span>Search cars</span>
              <div class="search">
               <i class="fa fa-search"></i>
-             <input type="search" class="form-control placeholder" placeholder="Search....">
+             <input type="search" id="car-search" class="form-control placeholder" placeholder="Search....">
             </div>
           </div>
          </div>
         </div>
        </div>
-     <div class="isotope column-5" id="car-results">
-
+     {{-- <div class="isotope column-5" id="car-results">
              @include('car.car-results', ['filteredCars' => $cars])
+          </div> --}}
+          <div id="car-results" class="isotope column-5">
+              <!-- Car items will be injected here by JS -->
           </div>
       </div>
    </div>
   </div>
 </section>
 
+
+<style>
+  .fixed-img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+  .car-item {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+  }
+</style>
+
 <script>
 
-  
-document.addEventListener('DOMContentLoaded', function () {
-    const filters = document.querySelectorAll('.filter-option');
-  console.log(filters); 
-    filters.forEach(function (filter) {
-        filter.addEventListener('change', function () {
-            applyFilters();
-        });
+ 
+const API_URL = "{{ route('cars.filter') }}"; // Use Blade interpolation
+const container = document.getElementById('car-results');
+
+function fetchFilteredCars(query = '') {
+  // console.log("hello");
+  axios.get(API_URL + '?' + query)
+    .then(response => {
+      const cars = response.data;
+      container.innerHTML = ''; // Clear current results
+
+      if (!cars.length) {
+        container.innerHTML = '<p style="font-size: 24px; text-align: center; padding: 16px 0; font-weight: bold; color: red; ">No cars found.</p>';
+        return;
+      }
+
+      cars.forEach(car => {
+        const images = JSON.parse(car.images || '[]');
+        const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
+        // console.log(images);
+        const carDiv = document.createElement('div');
+        carDiv.className = 'grid-item';
+
+        carDiv.innerHTML = `
+          <div class="car-item gray-bg text-center">
+            <div class="car-image">
+              <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
+              <div class="car-overlay-banner">
+                <ul>
+                  <li><a href="#"><i class="fa fa-link"></i></a></li>
+                  <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="car-list">
+              <ul class="list-inline">
+                <li><i class="fa fa-registered"></i> ${car.year}</li>
+                <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+              </ul>
+            </div>
+            <div class="car-content">
+              <div class="star">
+                <i class="fa fa-star orange-color"></i>
+                <i class="fa fa-star orange-color"></i>
+                <i class="fa fa-star orange-color"></i>
+                <i class="fa fa-star orange-color"></i>
+                <i class="fa fa-star-o orange-color"></i>
+              </div>
+              <a href="#">${car.model}</a>
+              <div class="separator"></div>
+              <div class="price">
+                <span class="old-price">$${car.regular_price}</span>
+                <span class="new-price">$${car.sale_price}</span>
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(carDiv);
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching cars:', error.response ?? error.message ?? error);
+      if (error.response && error.response.data) {
+        console.error('Server Response:', error.response.data);
+      }
+      container.innerHTML = '<p>Failed to load cars.</p>';
     });
 
-    function applyFilters() {
-        const formData = new FormData();
+  }
+fetchFilteredCars(); // On page load
 
-        document.querySelectorAll('.filter-option:checked').forEach((input) => {
-            formData.append(input.name, input.value);
-        });
+// filtering ..........................
+document.addEventListener('DOMContentLoaded', function () {
+  const filters = document.querySelectorAll('.filter-option');
 
-        fetch('{{ route('cars.filter') }}?' + new URLSearchParams(formData), {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('car-results').innerHTML = html;
-        });
+  filters.forEach(filter => {
+    filter.addEventListener('change', function () {
+      const name = this.name.replace('[]', '');
+      const group = document.querySelectorAll(`input[name="${name}[]"]`);
+      const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
+
+      // If "All" was clicked
+      if (this.value === '*') {
+        if (this.checked) {
+          group.forEach(box => {
+            if (box !== this) box.checked = false;
+          });
+        }
+        applyFilters();
+        return;
+      }
+
+      // If any other checkbox is checked, uncheck the "All" box
+      if (this.checked && allCheckbox) {
+        allCheckbox.checked = false;
+      }
+
+      applyFilters();
+    });
+  });
+
+function applyFilters() {
+  const formData = new FormData();
+
+  // Collect all checked checkboxes
+  document.querySelectorAll('.filter-option:checked').forEach(input => {
+    if (input.value !== '*') {
+      const name = input.name.replace('[]', '');
+      formData.append(name + '[]', input.value);
     }
+  });
+
+  // Include search keyword
+  const keyword = document.getElementById('car-search').value;
+  if (keyword.trim()) {
+    formData.append('keyword', keyword.trim());
+  }
+
+  const queryString = new URLSearchParams(formData).toString();
+  fetchFilteredCars(queryString);
+}
+
+  fetchFilteredCars(); // Initial load
 });
+
+// filter by search input
+
+document.addEventListener('DOMContentLoaded', function () {
+  const searchInput = document.getElementById('car-search');
+
+  searchInput.addEventListener('input', function () {
+    applyFilters(); // Use the same function used by checkboxes
+  });
+});
+
+
 // ***************************************************************************
   document.addEventListener("DOMContentLoaded", function () {
     const items = document.querySelectorAll(".list-group-item > a");
