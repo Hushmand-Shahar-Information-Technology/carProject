@@ -32,6 +32,7 @@ Route::prefix('car')->group(function () {
     Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
     Route::get('register', [CarController::class, 'create'])->name('car.create');
     Route::post('store', [CarController::class, 'store'])->name('car.store');
+    Route::get('search', [CarController::class, 'search'])->name('cars.search');
 });
 
 require __DIR__ . '/auth.php';

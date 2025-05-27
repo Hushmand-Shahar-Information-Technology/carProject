@@ -39,9 +39,83 @@
         .view-toggle button:hover:not(.active) {
             background: #f5f5f5;
         }
+
+        .fixed-img {
+            width: 100%;
+            aspect-ratio: 16 / 11;
+            object-fit: cover;
+        }
+
+        .car-item {
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .search-page {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-results-container {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .search-result-item {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .search-result-item:hover {
+            background-color: #f8f9fa;
+            cursor: pointer;
+        }
+
+        .search-result-item img {
+            width: 60px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 3px;
+        }
+
+        .search-result-info {
+            flex-grow: 1;
+        }
+
+        .search-result-title {
+            font-weight: 500;
+            margin-bottom: 2px;
+        }
+
+        .search-result-price {
+            color: #db2d2e;
+            font-size: 0.9em;
+        }
+
+        .show-all-results {
+            padding: 10px;
+            text-align: center;
+            background: #f8f9fa;
+            font-weight: 500;
+        }
     </style>
     <!--=================================
-                                                                                                                                                                                                                                                                                 banner -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -53,10 +127,13 @@
                             <strong class="text-white">Quality cars. Better prices. Test drives brought to you.</strong>
                             <div class="row justify-content-center">
                                 <div class="col-lg-6 col-md-12">
-                                    <div class="search-page">
-                                        <input type="text" class="form-control"
-                                            placeholder="Search your desired car... ">
-                                        <a href="#"> <i class="fa fa-search"></i> </a>
+                                    <div class="search-page position-relative">
+                                        <input type="text" id="general-search" class="form-control"
+                                            placeholder="Search your desired car...">
+                                        <div id="search-results" class="search-results-container"></div>
+                                        <a href="#" class="search-icon">
+                                            <i class="fa fa-search"></i>
+                                        </a>
                                     </div>
                                 </div>
                             </div>
@@ -68,11 +145,8 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                 banner -->
-
-
-    <!--=================================
-                                                                                                                                                                                                                                                                                car-listing-sidebar -->
+                                                                                                                                                                                                                                                <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -161,22 +235,72 @@
             </div>
         </div>
     </section>
+    <script type="module">
+        $("#general-search").on('input', function() {
+            const keyword = $(this).val().trim();
+            const resultsContainer = $('#search-results');
 
+            if (keyword.length < 2) {
+                resultsContainer.hide().empty();
+                return;
+            }
 
-    <style>
-        .fixed-img {
-            width: 100%;
-            aspect-ratio: 16 / 11;
-            object-fit: cover;
-        }
+            axios.get(`/car/search?keyword=${keyword}&limit=4`)
+                .then(response => {
+                    const results = response.data.slice(0, 4); // Get first 4 results
+                    resultsContainer.empty();
 
-        .car-item {
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
-        }
-    </style>
-    <script>
+                    if (results.length === 0) {
+                        resultsContainer.html('<div class="search-result-item">No results found</div>');
+                        resultsContainer.show();
+                        return;
+                    }
+
+                    results.forEach(car => {
+                        const carDiv = $('<div>').addClass('search-result-item');
+                        carDiv.html(`
+                            <img src="/${JSON.parse(car.images)[0]}" style="width: 100px; height: 100px;" alt="${car.title}">
+                            <div class="search-result-info">
+                                <div class="search-result-title">${car.year} ${car.make} ${car.model}</div>
+                                <div class="search-result-vin">VIN: ${car.VIN_number}</div>
+                                <div class="search-result-price">$${car.sale_price}</div>
+                            </div>
+                        `);
+                        carDiv.click(() => window.location.href = `/cars/${car.id}`);
+                        resultsContainer.append(carDiv);
+                    });
+
+                    // Add "Show all" link if there are more results
+                    if (response.data.length > 4) {
+                        const showAll = $('<div>').addClass('show-all-results');
+                        showAll.html(
+                            `<a href="/cars/search?q=${keyword}">Show all ${response.data.length} results</a>`
+                        );
+                        resultsContainer.append(showAll);
+                    }
+
+                    resultsContainer.show();
+                })
+                .catch(error => {
+                    console.error('Error fetching cars:', error);
+                    resultsContainer.html('<div class="search-result-item">Error loading results</div>').show();
+                });
+        });
+
+        // Hide results when clicking outside
+        $(document).click(function(e) {
+            if (!$(e.target).closest('.search-page').length) {
+                $('#search-results').hide();
+            }
+        });
+
+        // Hide results when pressing ESC
+        $(document).keyup(function(e) {
+            if (e.key === "Escape") {
+                $('#search-results').hide();
+            }
+        });
+
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
@@ -228,7 +352,7 @@
             <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
                 <div class="car-item gray-bg text-center">
                     <div class="car-image">
-                        <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
+                        <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
                         <div class="car-overlay-banner">
                             <ul>
                                 <li><a href="#"><i class="fa fa-link"></i></a></li>
@@ -243,22 +367,22 @@
                 <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                     ${currentView === 'list' 
                         ? `
-                                        <div class="car-title">
-                                            <a href="#">${car.title}</a>
-                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                        </div>
-                                    `
+                                                                                                                                                                                                                                                                                        <div class="car-title">
+                                                                                                                                                                                                                                                                                            <a href="#">${car.title}</a>
+                                                                                                                                                                                                                                                                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                    `
                         : `
-                                        <div class="star">
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star-o orange-color"></i>
-                                        </div>
-                                        <a href="#">${car.model}</a>
-                                        <div class="separator"></div>
-                                    `
+                                                                                                                                                                                                                                                                                        <div class="star">
+                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                            <i class="fa fa-star-o orange-color"></i>
+                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                        <a href="#">${car.model}</a>
+                                                                                                                                                                                                                                                                                        <div class="separator"></div>
+                                                                                                                                                                                                                                                                                    `
                     }
                     <div class="price">
                         <span class="old-price">$${car.regular_price}</span>
