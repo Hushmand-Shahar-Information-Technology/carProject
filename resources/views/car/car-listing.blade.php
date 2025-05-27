@@ -13,9 +13,35 @@
             display: none;
             padding-left: 20px;
         }
+
+        /* ... your existing styles ... */
+
+
+        .view-toggle button {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .view-toggle button.active {
+            background: #db2d2e;
+            color: white;
+            border-color: #db2d2e;
+        }
+
+        .view-toggle button:hover:not(.active) {
+            background: #f5f5f5;
+        }
     </style>
     <!--=================================
-                                                                                                                                                     banner -->
+                                                                                                                                                                                                                             banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -42,11 +68,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                     banner -->
+                                                                                                                                                                                                                             banner -->
 
 
     <!--=================================
-                                                                                                                                                    car-listing-sidebar -->
+                                                                                                                                                                                                                            car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -92,13 +118,28 @@
                             </div>
                             <div class="col-xl-3 col-xxl-2 col-md-12 ms-auto">
                                 <div class="selected-box">
-                                    <span>Sort by</span>
-                                    <select class="form-control" id="sort-select" name="sort" onchange="applyFilters()">
-                                        <option value="">Sort by Default</option>
-                                        <option value="name">Sort by Name</option>
-                                        <option value="price">Sort by Price</option>
-                                        <option value="date">Sort by Date</option>
-                                    </select>
+                                    <div class="d-flex align-items-end gap-3">
+                                        <div class="view-toggle d-flex align-items-center gap-3 justify-content-center"
+                                            style="margin-bottom: 5px">
+                                            <button class="btn btn-sm active" id="grid-view">
+                                                <i class="fa fa-th"></i>
+                                            </button>
+                                            <button class="btn btn-sm" id="list-view">
+                                                <i class="fa fa-list"></i>
+                                            </button>
+                                        </div>
+
+                                        <div class="flex-grow-1">
+                                            <span>Sort by</span>
+                                            <select class="form-control" id="sort-select" name="sort"
+                                                onchange="applyFilters()">
+                                                <option value="">Sort by Default</option>
+                                                <option value="name">Sort by Name</option>
+                                                <option value="price">Sort by Price</option>
+                                                <option value="date">Sort by Date</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-xl-3 col-xxl-2 col-md-12">
@@ -135,128 +176,123 @@
             background-color: #f9f9f9;
         }
     </style>
-
     <script>
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
         const container = document.getElementById('car-results');
+        let currentView = 'grid'; // Default view
 
-        // ===========================
-        // Fetch & Render Cars
-        // ===========================
+        function setView(view) {
+            currentView = view;
+            document.getElementById('grid-view').classList.toggle('active', view === 'grid');
+            document.getElementById('list-view').classList.toggle('active', view === 'list');
+            applyFilters();
+        }
 
         function fetchFilteredCars(query = '') {
-            const isFiltered = query.length > 0; // <== New flag
-
             axios.get(API_URL + '?' + query)
                 .then(response => {
                     const cars = response.data;
                     container.innerHTML = '';
-                    const error_img = `/images/car/23.png`
+                    const error_img = `/images/car/23.png`;
+
                     if (!cars.length) {
                         container.innerHTML = `
-            <section class="error-page page-section-ptb">
-              <div class="container">
-                <div class="row">
-                <div class="col-md-12">
-                    <div class="error-content text-center">
-                      <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
-                      <h3 class="text-red">Ooopps:( </h3>
-                      <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
-                      <p>Can't find what you looking for? Take a moment and do a search again!</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>`;
+                            <section class="error-page page-section-ptb">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="error-content text-center">
+                                                <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
+                                                <h3 class="text-red">Ooopps:( </h3>
+                                                <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
+                                                <p>Can't find what you looking for? Take a moment and do a search again!</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>`;
                         return;
                     }
 
                     cars.forEach(car => {
                         const images = JSON.parse(car.images || '[]');
                         const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
-
                         const carDiv = document.createElement('div');
 
-                        if (isFiltered) {
-                            // === LIST STYLE ===
-                            carDiv.className = 'car-grid'
-
+                        if (currentView === 'list') {
+                            carDiv.className = 'car-grid mb-3';
                             carDiv.innerHTML = `
-           <div class="row p-2">
-            <div class="col-lg-4 col-md-12">
-              <div class="car-item gray-bg text-center">
-               <div class="car-image">
-                 <img class="img-fluid fixed-img " src="${imageSrc}" alt="">
-                 <div class="car-overlay-banner">
-                  <ul>
-                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                   </ul>
-                 </div>
-               </div>
-              </div>
-             </div>
-              <div class="col-lg-8 col-md-12">
-                <div class="car-details">
-                <div class="car-title">
-                 <a href="#">${car.title}</a>
-                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero numquam repellendus non voluptate. Harum blanditiis ullam deleniti.</p>
-                  </div>
-                  <div class="price">
-                        <span class="old-price">$${car.regular_price}</span>
-                        <span class="new-price">$${car.sale_price}</span>
-                       <a class="button red float-end" href="#">Details</a>
-                     </div>
-                   <div class="car-list">
-                     <ul class="list-inline">
-                       <li><i class="fa fa-registered"></i>${car.year}</li>
-                       <li><i class="fa fa-cog"></i> ${car.transmission_type} </li>
-                       <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
-                     </ul>
-                   </div>
-                  </div>
-                </div>
-               </div>
-          `;
+                                <div class="row p-2">
+                                    <div class="col-lg-4 col-md-12">
+                                        <div class="car-item gray-bg text-center">
+                                            <div class="car-image">
+                                                <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
+                                                <div class="car-overlay-banner">
+                                                    <ul>
+                                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-8 col-md-12">
+                                        <div class="car-details">
+                                            <div class="car-title">
+                                                <a href="#">${car.title}</a>
+                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero numquam repellendus non voluptate. Harum blanditiis ullam deleniti.</p>
+                                            </div>
+                                            <div class="price">
+                                                <span class="old-price">$${car.regular_price}</span>
+                                                <span class="new-price">$${car.sale_price}</span>
+                                                <a class="button red float-end" href="#">Details</a>
+                                            </div>
+                                            <div class="car-list">
+                                                <ul class="list-inline">
+                                                    <li><i class="fa fa-registered"></i>${car.year}</li>
+                                                    <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                                    <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>`;
                         } else {
-                            // === DEFAULT GRID STYLE ===
                             carDiv.className = 'grid-item p-2';
-
                             carDiv.innerHTML = `
-            <div class="car-item gray-bg text-center">
-              <div class="car-image">
-                <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
-                <div class="car-overlay-banner">
-                  <ul>
-                    <li><a href="#"><i class="fa fa-link"></i></a></li>
-                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                  </ul>
-                </div>
-              </div>
-              <div class="car-list">
-                <ul class="list-inline">
-                  <li><i class="fa fa-registered"></i> ${car.year}</li>
-                  <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                  <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
-                </ul>
-              </div>
-              <div class="car-content">
-                <div class="star">
-                  <i class="fa fa-star orange-color"></i>
-                  <i class="fa fa-star orange-color"></i>
-                  <i class="fa fa-star orange-color"></i>
-                  <i class="fa fa-star orange-color"></i>
-                  <i class="fa fa-star-o orange-color"></i>
-                </div>
-                <a href="#">${car.model}</a>
-                <div class="separator"></div>
-                <div class="price">
-                  <span class="old-price">$${car.regular_price}</span>
-                  <span class="new-price">$${car.sale_price}</span>
-                </div>
-              </div>
-            </div>
-          `;
+                                <div class="car-item gray-bg text-center">
+                                    <div class="car-image">
+                                        <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
+                                        <div class="car-overlay-banner">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-registered"></i> ${car.year}</li>
+                                            <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                            <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="#">${car.model}</a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="old-price">$${car.regular_price}</span>
+                                            <span class="new-price">$${car.sale_price}</span>
+                                        </div>
+                                    </div>
+                                </div>`;
                         }
 
                         container.appendChild(carDiv);
@@ -268,14 +304,8 @@
                 });
         }
 
-
-
-        // ===========================
-        // Apply Filters
-        // ===========================
         function applyFilters() {
             const formData = new FormData();
-
             document.querySelectorAll('.filter-option:checked').forEach(input => {
                 if (input.value !== '*') {
                     const name = input.name.replace('[]', '');
@@ -284,83 +314,51 @@
             });
 
             const keyword = document.getElementById('car-search').value;
-            if (keyword.trim()) {
-                formData.append('keyword', keyword.trim());
-            }
+            if (keyword.trim()) formData.append('keyword', keyword.trim());
 
-            // Add sort option
             const sortValue = document.getElementById('sort-select').value;
-            if (sortValue) {
-                formData.append('sort', sortValue);
-            }
+            if (sortValue) formData.append('sort', sortValue);
 
-            const queryString = new URLSearchParams(formData).toString();
-            fetchFilteredCars(queryString);
+            fetchFilteredCars(new URLSearchParams(formData).toString());
         }
 
-
-        // ===========================
-        // Sorting Events
-        // ===========================
-
-        // document.getElementById('sort-select').addEventListener('change', function() {
-        //     console.log("ozair");
-        //     applyFilters();
-        // });
-
-        // ===========================
-        // DOMContentLoaded Events
-        // ===========================
         document.addEventListener('DOMContentLoaded', function() {
-            const filters = document.querySelectorAll('.filter-option');
+            // View toggle handlers
+            document.getElementById('grid-view').addEventListener('click', () => setView('grid'));
+            document.getElementById('list-view').addEventListener('click', () => setView('list'));
 
-            filters.forEach(filter => {
+            // Filter handlers
+            document.querySelectorAll('.filter-option').forEach(filter => {
                 filter.addEventListener('change', function() {
                     const name = this.name.replace('[]', '');
                     const group = document.querySelectorAll(`input[name="${name}[]"]`);
                     const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
 
                     if (this.value === '*') {
-                        if (this.checked) {
-                            group.forEach(box => {
-                                if (box !== this) box.checked = false;
-                            });
-                        }
+                        if (this.checked) group.forEach(box => box !== this && (box.checked =
+                            false));
                         applyFilters();
                         return;
                     }
-
-                    if (this.checked && allCheckbox) {
-                        allCheckbox.checked = false;
-                    }
-
+                    if (this.checked && allCheckbox) allCheckbox.checked = false;
                     applyFilters();
                 });
             });
 
-            // Search Input Live
-            const searchInput = document.getElementById('car-search');
-            searchInput.addEventListener('input', function() {
-                applyFilters();
-            });
+            // Search handler
+            document.getElementById('car-search').addEventListener('input', () => applyFilters());
 
-            // Initial Load
-            fetchFilteredCars();
-        });
-
-        // ===========================
-        // Collapsible Filter Section
-        // ===========================
-        document.addEventListener("DOMContentLoaded", function() {
-            const items = document.querySelectorAll(".list-group-item > a");
-
-            items.forEach(function(item) {
+            // Collapsible filters
+            document.querySelectorAll(".list-group-item > a").forEach(item => {
                 item.addEventListener("click", function(e) {
                     e.preventDefault();
                     const submenu = this.nextElementSibling;
                     submenu.style.display = submenu.style.display === "block" ? "none" : "block";
                 });
             });
+
+            // Initial load
+            fetchFilteredCars();
         });
     </script>
 
