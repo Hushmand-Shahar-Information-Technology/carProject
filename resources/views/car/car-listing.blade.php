@@ -41,7 +41,7 @@
         }
     </style>
     <!--=================================
-                                                                                                                                                                                                                             banner -->
+                                                                                                                                                                                                                                                                                 banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -68,11 +68,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                                                             banner -->
+                                                                                                                                                                                                                                                                                 banner -->
 
 
     <!--=================================
-                                                                                                                                                                                                                            car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -92,7 +92,7 @@
                                 <ul class="list-group">
                                     {{-- filter --}}
                                     @php
-                                        $years = range(2000, now()->year);
+                                        $years = range(1990, now()->year);
                                     @endphp
                                     <x-car-filter name="Year" label="All Years" :options="$years" />
                                     <x-car-filter name="Transmission" label="All Transmission" :options="['Brand New', 'Slightly Used', 'Used']" />
@@ -183,8 +183,8 @@
 
         function setView(view) {
             currentView = view;
-            document.getElementById('grid-view').classList.toggle('active', view === 'grid');
-            document.getElementById('list-view').classList.toggle('active', view === 'list');
+            $("#grid-view").toggleClass('active', view === 'grid');
+            $("#list-view").toggleClass('active', view === 'list');
             applyFilters();
         }
 
@@ -214,70 +214,41 @@
                         return;
                     }
 
-                    cars.forEach(car => {
+                    $.each(cars, function(index, car) {
                         const images = JSON.parse(car.images || '[]');
                         const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
-                        const carDiv = document.createElement('div');
+                        const carDiv = $('<div>');
 
-                        if (currentView === 'list') {
-                            carDiv.className = 'car-grid mb-3';
-                            carDiv.innerHTML = `
-                                <div class="row p-2">
-                                    <div class="col-lg-4 col-md-12">
-                                        <div class="car-item gray-bg text-center">
-                                            <div class="car-image">
-                                                <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
-                                                <div class="car-overlay-banner">
-                                                    <ul>
-                                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
+                        // Set dynamic class based on view
+                        carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item p-2');
+
+                        // Build HTML dynamically
+                        let html = `
+        ${currentView === 'list' ? '<div class="row p-2">' : ''}
+            <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
+                <div class="car-item gray-bg text-center">
+                    <div class="car-image">
+                        <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
+                        <div class="car-overlay-banner">
+                            <ul>
+                                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
+                <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
+                    ${currentView === 'list' 
+                        ? `
+                                        <div class="car-title">
+                                            <a href="#">${car.title}</a>
+                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-8 col-md-12">
-                                        <div class="car-details">
-                                            <div class="car-title">
-                                                <a href="#">${car.title}</a>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero numquam repellendus non voluptate. Harum blanditiis ullam deleniti.</p>
-                                            </div>
-                                            <div class="price">
-                                                <span class="old-price">$${car.regular_price}</span>
-                                                <span class="new-price">$${car.sale_price}</span>
-                                                <a class="button red float-end" href="#">Details</a>
-                                            </div>
-                                            <div class="car-list">
-                                                <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i>${car.year}</li>
-                                                    <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                                    <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>`;
-                        } else {
-                            carDiv.className = 'grid-item p-2';
-                            carDiv.innerHTML = `
-                                <div class="car-item gray-bg text-center">
-                                    <div class="car-image">
-                                        <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
-                                        <div class="car-overlay-banner">
-                                            <ul>
-                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="car-list">
-                                        <ul class="list-inline">
-                                            <li><i class="fa fa-registered"></i> ${car.year}</li>
-                                            <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                            <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
-                                        </ul>
-                                    </div>
-                                    <div class="car-content">
+                                    `
+                        : `
                                         <div class="star">
                                             <i class="fa fa-star orange-color"></i>
                                             <i class="fa fa-star orange-color"></i>
@@ -287,16 +258,29 @@
                                         </div>
                                         <a href="#">${car.model}</a>
                                         <div class="separator"></div>
-                                        <div class="price">
-                                            <span class="old-price">$${car.regular_price}</span>
-                                            <span class="new-price">$${car.sale_price}</span>
-                                        </div>
-                                    </div>
-                                </div>`;
-                        }
+                                    `
+                    }
+                    <div class="price">
+                        <span class="old-price">$${car.regular_price}</span>
+                        <span class="new-price">$${car.sale_price}</span>
+                        ${currentView === 'list' ? '<a class="button red float-end" href="#">Details</a>' : ''}
+                    </div>
+                    <div class="car-list">
+                        <ul class="list-inline">
+                            <li><i class="fa fa-registered"></i> ${car.year}</li>
+                            <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                            <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        ${currentView === 'list' ? '</div>' : ''}
+    `;
 
-                        container.appendChild(carDiv);
+                        carDiv.html(html);
+                        $('#car-results').append(carDiv);
                     });
+
                 })
                 .catch(error => {
                     console.error('Error fetching cars:', error);
@@ -324,39 +308,49 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             // View toggle handlers
-            document.getElementById('grid-view').addEventListener('click', () => setView('grid'));
-            document.getElementById('list-view').addEventListener('click', () => setView('list'));
+            $("#grid-view").click(function() {
+                setView('grid');
+            });
+            $("#list-view").click(function() {
+                setView('list');
+            });
 
             // Filter handlers
-            document.querySelectorAll('.filter-option').forEach(filter => {
-                filter.addEventListener('change', function() {
-                    const name = this.name.replace('[]', '');
-                    const group = document.querySelectorAll(`input[name="${name}[]"]`);
-                    const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
+            $(".filter-option").change(function() {
+                const name = $(this).attr('name').replace('[]', '');
+                const group = $(`input[name="${name}[]"]`);
+                const allCheckbox = $(`#all-${name.toLowerCase()}`);
 
-                    if (this.value === '*') {
-                        if (this.checked) group.forEach(box => box !== this && (box.checked =
-                            false));
-                        applyFilters();
-                        return;
+                if ($(this).val() === '*') {
+                    if ($(this).is(':checked')) {
+                        group.not(this).prop('checked', false);
                     }
-                    if (this.checked && allCheckbox) allCheckbox.checked = false;
                     applyFilters();
-                });
+                    return;
+                }
+                if ($(this).is(':checked') && allCheckbox.length) {
+                    allCheckbox.prop('checked', false);
+                }
+                applyFilters();
             });
 
             // Search handler
-            document.getElementById('car-search').addEventListener('input', () => applyFilters());
+            // document.getElementById('car-search').addEventListener('input', () => applyFilters());
+            $("#car-search").on('input', () => applyFilters());
 
             // Collapsible filters
-            document.querySelectorAll(".list-group-item > a").forEach(item => {
-                item.addEventListener("click", function(e) {
-                    e.preventDefault();
-                    const submenu = this.nextElementSibling;
-                    submenu.style.display = submenu.style.display === "block" ? "none" : "block";
-                });
+            // document.querySelectorAll(".list-group-item > a").forEach(item => {
+            //     item.addEventListener("click", function(e) {
+            //         e.preventDefault();
+            //         const submenu = this.nextElementSibling;
+            //         submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+            //     });
+            // });
+            $(".list-group-item > a").on('click', function(e) {
+                e.preventDefault();
+                const submenu = $(this).next();
+                submenu.toggle();
             });
-
             // Initial load
             fetchFilteredCars();
         });
