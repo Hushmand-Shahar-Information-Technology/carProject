@@ -11,7 +11,7 @@ Route::get('/', function () {
 });
 
 Route::prefix('home')->group(function () {
-    Route::get('index',[routeController::class, 'home'])->name('home.index');
+    Route::get('index', [routeController::class, 'home'])->name('home.index');
 });
 
 
@@ -28,10 +28,10 @@ Route::middleware('auth')->group(function () {
 Route::view("/test", "car/car-results");
 
 Route::prefix('car')->group(function () {
-    Route::get('index',[CarController::class, 'index'])->name('car.index');
+    Route::get('index', [CarController::class, 'index'])->name('car.index');
     Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
     Route::get('register', [CarController::class, 'create'])->name('car.create');
-    Route::post('store', [CarController::class,'store'])->name('car.store');
+    Route::post('store', [CarController::class, 'store'])->name('car.store');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
