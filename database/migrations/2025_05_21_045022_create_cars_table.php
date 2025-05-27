@@ -17,18 +17,20 @@ return new class extends Migration {
             $table->string('title')->nullable();
             $table->string('year')->nullable();
             $table->string('make')->nullable();
+            $table->string('VIN_number')->nullable();
 
             $table->json('location')->nullable();
             $table->string('model')->nullable();
             $table->string('color')->nullable();
 
-            $table->enum('transmission_type', array_column(TransmissionType::cases(), 'value'))->nullable(); 
-            $table->string('VIN_number')->nullable();
+            $table->enum('transmission_type', array_column(TransmissionType::cases(), 'value'))->nullable();
             $table->decimal('regular_price', 10, 2)->nullable();
+            $table->string('currency_type')->nullable();
             $table->decimal('sale_price', 10, 2)->nullable();
             $table->boolean('request_price_status')->default(false);
             $table->decimal('request_price', 10, 2)->nullable();
             $table->json('images')->nullable();
+            $table->json('video')->nullable();
             $table->timestamps();
         });
     }

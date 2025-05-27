@@ -17,6 +17,17 @@
  banner -->
 
 <section class="slider-parallax bg-overlay-black-50 bg-17">
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <button type="button" onclick="this.parentElement.parentElement.remove();" class="text-green-700">
+                    &times;
+                </button>
+            </span>
+        </div>
+    @endif
+
   <div class="slider-content-middle">
   <div class="container">
      <div class="row">
@@ -140,14 +151,15 @@ car-listing-sidebar -->
 const API_URL = "{{ route('cars.filter') }}"; // Laravel route
 const container = document.getElementById('car-results');
 
-// ===========================
-// Fetch & Render Cars
-// ===========================
-function fetchFilteredCars(query = '') {
-  axios.get(API_URL + '?' + query)
-    .then(response => {
-      const cars = response.data;
-      container.innerHTML = ''; // Clear results
+
+document.addEventListener('DOMContentLoaded', function () {
+    const filters = document.querySelectorAll('.filter-option');
+  console.log(filters);
+    filters.forEach(function (filter) {
+        filter.addEventListener('change', function () {
+            applyFilters();
+        });
+    });
 
       if (!cars.length) {
         container.innerHTML = '<p style="font-size: 24px; text-align: center; padding: 16px 0; font-weight: bold; color: red; ">No cars found.</p>';
@@ -245,6 +257,14 @@ document.getElementById('sort-select').addEventListener('change', function () {
 // ===========================
 // DOMContentLoaded Events
 // ===========================
+      </div>
+   </div>
+  </div>
+</section>
+
+<script>
+
+
 document.addEventListener('DOMContentLoaded', function () {
   const filters = document.querySelectorAll('.filter-option');
 
