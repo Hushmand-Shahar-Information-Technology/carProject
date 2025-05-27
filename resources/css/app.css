@@ -1,24 +1,14 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
 
 
 /* Font Awesome */
 @import "@fortawesome/fontawesome-free/css/all.css";
-
-
 /* Bootstrap */
 @import 'bootstrap/dist/css/bootstrap.min.css';
-
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 
 
-/* Owl Carousel */
-@import "owl.carousel/dist/assets/owl.carousel.css";
-
-/* Magnific Popup */
-@import "magnific-popup/dist/magnific-popup.css";
 
 
 
@@ -29,10 +19,6 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
-
-
-@import "style.css";
-@import "responsive.css";
 
 /* Your custom styles */
 

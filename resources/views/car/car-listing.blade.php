@@ -17,29 +17,39 @@
     <!--=================================
                              banner -->
 
-    <section class="slider-parallax bg-overlay-black-50 bg-17">
-        <div class="slider-content-middle">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="slider-content text-center">
-                            <h2 class="text-white">Let's Find Your Perfect Car</h2>
-                            <strong class="text-white">Quality cars. Better prices. Test drives brought to you.</strong>
-                            <div class="row justify-content-center">
-                                <div class="col-lg-6 col-md-12">
-                                    <div class="search-page">
-                                        <input type="text" class="form-control"
-                                            placeholder="Search your desired car... ">
-                                        <a href="#"> <i class="fa fa-search"></i> </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+<section class="slider-parallax bg-overlay-black-50 bg-17">
+    @if (session('success'))
+        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <button type="button" onclick="this.parentElement.parentElement.remove();" class="text-green-700">
+                    &times;
+                </button>
+            </span>
         </div>
-    </section>
+    @endif
+
+  <div class="slider-content-middle">
+  <div class="container">
+     <div class="row">
+      <div class="col-md-12">
+        <div class="slider-content text-center">
+           <h2 class="text-white">Let's Find Your Perfect Car</h2>
+           <strong class="text-white">Quality cars. Better prices. Test drives brought to you.</strong>
+              <div class="row justify-content-center">
+               <div class="col-lg-6 col-md-12">
+                 <div class="search-page">
+                  <input type="text" class="form-control" placeholder="Search your desired car... ">
+                  <a href="#">  <i class="fa fa-search"></i> </a>
+               </div>
+             </div>
+             </div>
+        </div>
+       </div>
+      </div>
+     </div>
+  </div>
+</section>
 
     <!--=================================
                              banner -->
@@ -619,15 +629,17 @@
         </div>
     </section>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const filters = document.querySelectorAll('.filter-option');
-            console.log(filters);
-            filters.forEach(function(filter) {
-                filter.addEventListener('change', function() {
-                    applyFilters();
-                });
-            });
+<script>
+
+
+document.addEventListener('DOMContentLoaded', function () {
+    const filters = document.querySelectorAll('.filter-option');
+  console.log(filters);
+    filters.forEach(function (filter) {
+        filter.addEventListener('change', function () {
+            applyFilters();
+        });
+    });
 
             function applyFilters() {
                 const params = new URLSearchParams();
@@ -688,4 +700,4 @@
         });
     </script>
 
-@endsection
+ @endsection

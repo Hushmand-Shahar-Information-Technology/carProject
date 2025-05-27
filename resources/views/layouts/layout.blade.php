@@ -16,7 +16,7 @@
 <link rel="stylesheet" href="{{asset('images/favicon.ico')}}"/>
 
 <!-- bootstrap -->
-{{-- <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}"/>
 
 <!-- flaticon -->
 <link rel="stylesheet" href="{{asset('css/flaticon.css')}}"/>
@@ -28,14 +28,14 @@
 {{-- <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/> --}}
 
 <!-- owl-carousel -->
-{{-- <link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('css/owl-carousel/owl.carousel.css')}}"/>
 
 <!-- magnific-popup -->
 {{-- <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/> --}}
 
 
 <!-- revolution -->
-{{-- <link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/> --}}
+<link rel="stylesheet" href="{{asset('revolution/css/settings.css')}}"/>
 
 <!-- main style -->
 <link rel="stylesheet" href="{{asset('css/style.css')}}"/>
@@ -43,7 +43,7 @@
 <!-- responsive -->
 <link rel="stylesheet" href="{{asset('css/responsive.css')}}"/>
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-@vite(['resources/js/app.js', 'resources/css/app.css'])
+{{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
 
 
 </head>
@@ -58,11 +58,11 @@
                 <div class="col-lg-6 col-md-12">
                     <div class="topbar-left text-lg-start text-center">
                     <ul class="list-inline">
-                <li> <i class="fa fa-envelope-o"> </i> support@website.com</li>
+                <li> <i class="fa-solid fa-envelope"> </i> support@website.com</li>
 
 
 
-                <li> <i class="fa fa-clock-o"></i> Mon - Sat 8.00 - 18.00. Sunday CLOSED</li>
+                <li> <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Sunday CLOSED</li>
             </ul>
                     </div>
                 </div>
@@ -70,10 +70,10 @@
                     <div class="topbar-right text-lg-end text-center">
                         <ul class="list-inline">
                 <li> <i class="fa fa-phone"></i> (007) 123 456 7890</li>
-                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                <li><a href="#"><i class="fa fa-instagram"></i></a></li>
-                <li><a href="#"><i class="fa fa-youtube-play"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
+                <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
             </ul>
                     </div>
                 </div>
@@ -101,7 +101,7 @@
                             <!-- menu links -->
                             <ul class="menu-links">
                                 <!-- active class -->
-                                <li class="active"><a href="javascript:void(0)">Home <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li class="active"><a href="javascript:void(0)">Home <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down full width -->
                                     <div class="drop-down menu-bg grid-col-12">
                                         <!--grid row-->
@@ -152,7 +152,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li><a href="javascript:void(0)">Pages <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">Pages <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down full width -->
                                     <div class="drop-down menu-bg grid-col-12">
                                         <!--grid row-->
@@ -205,10 +205,10 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li><a href="javascript:void(0)">blog <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">blog <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
-                                        <li><a href="javascript:void(0)">blog classic <i class="fa fa-angle-right fa-indicator"></i> </a>
+                                        <li><a href="javascript:void(0)">blog classic <i class="fa-solid fa-angle-right"></i></a>
                                             <!-- drop down second level -->
                                             <ul class="drop-down-multilevel">
                                             <li><a href="blog-left-sidebar.html">left sidebar</a></li>
@@ -216,7 +216,7 @@
                                             <li><a href="blog-fullwidth.html">fullwidth</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="javascript:void(0)">Masonry  <i class="fa fa-angle-right fa-indicator"></i> </a>
+                                        <li><a href="javascript:void(0)">Masonry  <i class="fa-solid fa-angle-right"></i></a>
                                         <!-- drop down second level -->
                                             <ul class="drop-down-multilevel">
                                                 <li><a href="blog-masonry-2-collums.html"> 2 column </a> </li>
@@ -226,7 +226,7 @@
                                             <li><a href="blog-masonry-right-sidebar.html">right sidebar</a></li>
                                             </ul>
                                         </li>
-                                        <li><a href="javascript:void(0)">blog single <i class="fa fa-angle-right fa-indicator"></i> </a>
+                                        <li><a href="javascript:void(0)">blog single <i class="fa-solid fa-angle-right"></i></a>
                                         <!-- drop down second level -->
                                             <ul class="drop-down-multilevel">
                                                 <li><a href="blog-single-01.html">blog single 01 </a> </li>
@@ -235,14 +235,14 @@
                                         </li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:void(0)">Car listing  <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">Car listing  <i class="fa-solid fa-angle-down"></i></a>
                                 <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
                                         <li><a href="{{route('car.index')}}">listing 01</a></li>
                                         <li><a href="listing-02.html">listing 02</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:void(0)">Car details  <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)">Car details  <i class="fa-solid fa-angle-down"></i></a>
                                 <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel">
                                         <li><a href="details-01.html">details 01</a></li>
@@ -250,7 +250,7 @@
                                         <li><a href="vehicle-view-360.html">Vehicle View 360° <span class="label-new">New</span></a></li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:void(0)"> Contact <i class="fa fa-angle-down fa-indicator"></i></a>
+                                <li><a href="javascript:void(0)"> Contact <i class="fa-solid fa-angle-down"></i></a>
                                     <!-- drop down multilevel  -->
                                     <ul class="drop-down-multilevel right-menu">
                                     <li><a href="contact-01.html">contact 01</a></li>
@@ -259,7 +259,10 @@
                                     </ul>
                                 </li>
                                 <li>
-                                <div class="search-top"> <a class="search-btn not_click d-none d-lg-block" href="javascript:void(0);">Search Button</a>
+                                <div class="search-top">
+                                    <a class="search-btn not_click d-none d-lg-block" href="javascript:void(0);">
+                                        <i class="fa-solid fa-search"></i>
+                                    </a>
                                     <div class="search-box not-click">
                                     <div class="row">
                                         <div class="col-xl-2 col-md-4 col-sm-6">
@@ -358,19 +361,20 @@
 <footer class="footer bg-2 bg-overlay-black-90">
   <div class="container">
     <div class="row">
-     <div class="col-md-12">
-      <div class="social">
+    <div class="col-md-12">
+        <div class="social">
         <ul>
-          <li><a class="facebook" href="#">facebook <i class="fa fa-facebook"></i> </a></li>
-          <li><a class="twitter" href="#">twitter <i class="fa fa-twitter"></i> </a></li>
-          <li><a class="pinterest" href="#">pinterest <i class="fa fa-pinterest-p"></i> </a></li>
-          <li><a class="dribbble" href="#">dribbble <i class="fa fa-dribbble"></i> </a></li>
-          <li><a class="google-plus" href="#">google plus <i class="fa fa-google-plus"></i> </a></li>
-          <li><a class="behance" href="#">behance <i class="fa fa-behance"></i> </a></li>
+            <li><a class="facebook nav-link hover:text-gray-100" href="#">facebook <i class="fa-brands fa-facebook"></i> </a></li>
+            <li><a class="twitter nav-link hover:text-gray-100" href="#">twitter <i class="fa-brands fa-twitter"></i> </a></li>
+            <li><a class="pinterest nav-link hover:text-gray-100" href="#">pinterest <i class="fa-brands fa-pinterest-p"></i> </a></li>
+            <li><a class="dribbble nav-link hover:text-gray-100" href="#">dribbble <i class="fa-brands fa-dribbble"></i> </a></li>
+            <li><a class="google-plus nav-link hover:text-gray-100" href="#">google plus <i class="fa-brands fa-google-plus"></i> </a></li>
+            <li><a class="behance nav-link hover:text-gray-100" href="#">behance <i class="fa-brands fa-behance"></i> </a></li>
         </ul>
-       </div>
-      </div>
+        </div>
     </div>
+    </div>
+
     <div class="row">
       <div class="col-lg-3 col-md-6">
         <div class="about-content">
@@ -381,7 +385,7 @@
           <ul>
             <li> <i class="fa fa-map-marker"></i><span>220E Front St. Burlington NC 27215</span> </li>
             <li> <i class="fa fa-phone"></i><span>(007) 123 456 7890</span> </li>
-            <li> <i class="fa fa-envelope-o"></i><span>support@website.com</span> </li>
+            <li> <i class="fa-solid fa-envelope"></i><span>support@website.com</span> </li>
           </ul>
         </div>
       </div>
