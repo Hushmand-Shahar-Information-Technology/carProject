@@ -8,12 +8,17 @@
 </style>
             @foreach($filteredCars as $car)
                 @php
-                        $images = json_decode($car->images, true);
+                        $images = $car->images;
                 @endphp
                 <div class="grid-item">
                     <div class="car-item gray-bg text-center">
                     <div class="car-image">
-                    <img class="img-fluid fixed-img" src="{{ asset($images[0]) }}" alt="">
+                    @if(is_array($images) && count($images) > 0)
+                        <img class="img-fluid fixed-img" src="{{ asset($images[0]) }}" alt="">
+                    @else
+                        <p>No image available</p>
+                    @endif
+
                     <div class="car-overlay-banner">
                         <ul>
                         <li><a href="#"><i class="fa fa-link"></i></a></li>
@@ -45,4 +50,4 @@
                     </div>
                 </div>
                 </div>
-            @endforeach   
+            @endforeach

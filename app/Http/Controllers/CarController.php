@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
+use App\Enums\CarColor;
 
 class CarController extends Controller
 {
@@ -23,6 +24,7 @@ class CarController extends Controller
      */
    public function filter(Request $request)
     {
+
         $cars = Car::query();
 
         if ($request->filled('year')) {
@@ -51,52 +53,58 @@ class CarController extends Controller
     {
         return view('car.register');
     }
-    public function store(StoreCarRequest $request)
-{
+ public function store(StoreCarRequest $request)
+    {
+        $data = $request->validated();
 
-    $data = $request->validated();
-    try {
-    // Handle multiple image uploads
-    $images = [];
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $images[] = $image->store('cars/images', 'public');
+        // Just save the car_color string from input (no enum)
+        $data['car_color'] = $request->car_color;
+        $data['car_condition'] = $request->car_condition;
+        $data['transmission_type'] = $request->transmission_type;
+        $data['car_documents'] = $request->car_documents;
+        $data['car_inside_color'] = $request->car_inside_color;
+        $data['VIN_number'] = strtoupper(bin2hex(random_bytes(8))); // Generate a random VIN number
+        $data['regular_price'] = $request->regular_price;
+        $data['sale_price'] = $request->sale_price;
+        $dara['title'] = $request->title;
+        $data['year'] = $request->year;
+        $data['make'] = $request->make;
+        $data['body_type'] = $request->body_type;
+        $data['model'] = $request->model;
+        $dara['description'] = $request->description;
+        $data['currency_type'] = $request->currency_type;
+        $data['model'] = $request->model;
+
+
+
+        // Images
+        $data['images'] = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $data['images'][] = $image->store('images/car/images', 'public');
+            }
         }
-    }
 
-    // Handle multiple video uploads
-    $videos = [];
-    if ($request->hasFile('videos')) {
-        foreach ($request->file('videos') as $video) {
-            $videos[] = $video->store('cars/videos', 'public');
+        // Videos
+        $data['videos'] = [];
+        if ($request->hasFile('videos')) {
+            foreach ($request->file('videos') as $video) {
+                $data['videos'][] = $video->store('images/car/videos', 'public');
+            }
         }
+
+        // Location: ensure array type
+        if (is_string($request->location)) {
+            $data['location'] = explode(',', $request->location);
+        } elseif (is_array($request->location)) {
+            $data['location'] = $request->location;
+        }
+
+        Car::create($data);
+
+        return redirect()->route('car.index')->with('success', 'Car registered successfully!');
     }
 
-    Car::create([
-        'title' => $data['title'],
-        'year' => $data['year'],
-        'make' => $data['make'],
-        'VIN_number' => $data['VIN_number'] ?? null,
-        'location' => isset($data['location']) ? json_encode($data['location']) : null,
-        'model' => $data['model'],
-        'color' => $data['color'],
-        'transmission_type' => $data['transmission_type'] ?? null,
-        'regular_price' => $data['regular_price'] ?? null,
-        'currency_type' => $data['currency_type'] ?? null,
-        'sale_price' => $data['sale_price'] ?? null,
-        'request_price_status' => $request->boolean('request_price_status'),
-        'request_price' => $data['request_price'] ?? null,
-        'images' => !empty($images) ? json_encode($images) : null,
-        'video' => !empty($videos) ? json_encode($videos) : null,
-    ]);
-
-    return redirect()->route('car.index')
-        ->with('success', 'Car created successfully.');
-        //code...
-    } catch (\Throwable $th) {
-        dd("error");
-    }
-}
 
 
 }

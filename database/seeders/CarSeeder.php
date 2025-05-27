@@ -2,66 +2,66 @@
 
 namespace Database\Seeders;
 
-use App\enum\TransmissionType;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use App\Models\Car;
+use App\Enums\CarColor;
+use App\Enums\TransmissionType;
 
 class CarSeeder extends Seeder
 {
-   
-public function run(): void
-{
-    $imageFiles = File::files(public_path('images/car'));
-    $imagePaths = array_map(function ($file) {
-        return 'images/car/' . $file->getFilename();
-    }, $imageFiles);
+    public function run()
+    {
+        $titles = ['Honda Accord', 'Toyota Camry', 'Ford Mustang', 'BMW X5', 'Audi A4'];
+        $years = ['2005', '2010', '2015', '2020', '2022'];
+        $makes = ['Honda', 'Toyota', 'Ford', 'BMW', 'Audi'];
+        $bodyTypes = ['Sedan', 'SUV', 'Coupe', 'Convertible', 'Hatchback'];
+        $carConditions = ['New', 'Used', 'Certified Pre-Owned'];
+        $carColors = ['black', 'white', 'red', 'blue', 'gray'];  // simple strings now
+        $carInsideColors = ['Beige', 'Black', 'Gray'];
+        $documents = ['Title', 'Registration', 'Insurance'];
+        $models = ['Accord', 'Camry', 'Mustang', 'X5', 'A4'];
+        $currencyTypes = ['USD', 'EUR', 'JPY'];
+        $transmissionTypes = ['automatic', 'manual', 'semi-automatic'];
 
-    $makes = ['Toyota', 'Ford', 'Chevrolet', 'Honda', 'BMW', 'Audi', 'Nissan', 'Ferrari', 'Bugati'];
-    $models = ['Corolla', 'Civic', 'Accord', 'Camry', 'Mustang', 'Altima', 'X5', '4Runner'];
-    
-    // Add your own color palette
-    $colors = [
-        'Ruby Red Metallic',
-        'Racing Yellow',
-        'Guards Red',
-        'Aqua Blue Metallic',
-        'White',
-        'Dark Blue Metallic',
-        'Black',
-        'Silver',
-        'Platinum Grey',
-    ];
+        $imagesList = [
+            ['images/car/01.jpg', 'images/car/02.jpg'],
+            ['images/car/03.jpg', 'images/car/04.jpg'],
+            ['images/car/05.jpg', 'images/car/06.jpg'],
+        ];
+        $videosList = [
+            ['videos/car/01.mp4'],
+            ['videos/car/02.mp4'],
+            [],
+        ];
 
-    for ($i = 0; $i < 20; $i++) {
-        $make = $makes[array_rand($makes)];
-        $model = $models[array_rand($models)];
-        $year = rand(2000, 2024);
-        $regularPrice = rand(5000, 30000);
-        $salePrice = rand(4000, $regularPrice);
-
-        $numImages = rand(1, 5);
-        $images = array_rand($imagePaths, min($numImages, count($imagePaths)));
-        $images = is_array($images) ? array_map(fn($i) => $imagePaths[$i], $images) : [$imagePaths[$images]];
-
-        Car::create([
-            'title' => "$year $make $model",
-            'year' => $year,
-            'make' => $make,
-            'location' => json_encode(['city' => 'Sample City', 'state' => 'CA']),
-            'model' => $model,
-            'VIN_number' => strtoupper(Str::random(17)),
-            'regular_price' => $regularPrice,
-            'sale_price' => $salePrice,
-            'request_price_status' => (bool)rand(0, 1),
-            'request_price' => rand(4000, 50000),
-            'images' => json_encode($images),
-
-            // New columns
-            'color' => $colors[array_rand($colors)],
-            'transmission_type' => TransmissionType::cases()[array_rand(TransmissionType::cases())]->value,
-        ]);
+        // Generate 10 cars
+        for ($i = 0; $i < 10; $i++) {
+            Car::create([
+                'title' => $titles[array_rand($titles)],
+                'year' => $years[array_rand($years)],
+                'make' => $makes[array_rand($makes)],
+                'body_type' => $bodyTypes[array_rand($bodyTypes)],
+                'car_condition' => $carConditions[array_rand($carConditions)],
+                'car_color' => $carColors[array_rand($carColors)],
+                'car_documents' => $documents[array_rand($documents)],
+                'car_inside_color' => $carInsideColors[array_rand($carInsideColors)],
+                'VIN_number' => strtoupper(bin2hex(random_bytes(8))),
+                'location' => [
+                    'city' => 'Sample City',
+                    'state' => 'Sample State',
+                    'country' => 'Sample Country'
+                ],
+                'model' => $models[array_rand($models)],
+                'transmission_type' => TransmissionType::cases()[array_rand(TransmissionType::cases())]->value,
+                'currency_type' => $currencyTypes[array_rand($currencyTypes)],
+                'regular_price' => rand(10000, 50000),
+                'sale_price' => rand(5000, 9000),
+                'request_price_status' => (bool)rand(0, 1),
+                'request_price' => rand(1000, 4000),
+                'images' => $imagesList[array_rand($imagesList)],
+                'videos' => $videosList[array_rand($videosList)],
+            ]);
+        }
     }
 }
-}
+

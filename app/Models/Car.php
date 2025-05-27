@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
-use App\enum\TransmissionType;
+use App\Enums\TransmissionType;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Enums\CarColor;
+
 
 class Car extends Model
 {
@@ -13,10 +16,41 @@ class Car extends Model
 
 
     protected $guarded = [];
+
+     protected $fillable = [
+        'title',
+        'year',
+        'make',
+        'body_type',
+        'car_condition',
+        'car_color',
+        'car_documents',
+        'car_inside_color',
+        'VIN_number',
+        'location',
+        'model',
+        'transmission_type',
+        'currency_type',
+        'regular_price',
+        'sale_price',
+        'request_price_status',
+        'request_price',
+        'images',
+        'videos',
+    ];
+
     protected $casts = [
         'location' => 'array',
-        'image' => 'array', 
-        'transmission_type'=>TransmissionType::class,
+        'images' => 'array',
+        'videos' => 'array',
+        'request_price_status' => 'boolean',
+        'regular_price' => 'decimal:2',
+        'sale_price' => 'decimal:2',
+        'request_price' => 'decimal:2',
+        // Remove enum casts:
+        // 'transmission_type' => TransmissionType::class,
+        // 'car_color' => CarColor::class,
     ];
+
 
 }
