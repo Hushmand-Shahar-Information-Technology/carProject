@@ -2,631 +2,366 @@
 @section('title', 'Car list')
 @section('content')
 
-<style>
-  .fixed-img {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-  }
-  .list-group-item ul {
-    display: none;
-    padding-left: 20px;
-  }
-</style>
-<!--=================================
- banner -->
+    <style>
+        .fixed-img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+        }
 
-<section class="slider-parallax bg-overlay-black-50 bg-17">
-    @if (session('success'))
-        <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <span class="block sm:inline">{{ session('success') }}</span>
-            <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                <button type="button" onclick="this.parentElement.parentElement.remove();" class="text-green-700">
-                    &times;
-                </button>
-            </span>
-        </div>
-    @endif
+        .list-group-item ul {
+            display: none;
+            padding-left: 20px;
+        }
+    </style>
+    <!--=================================
+                         banner -->
 
-  <div class="slider-content-middle">
-  <div class="container">
-     <div class="row">
-      <div class="col-md-12">
-        <div class="slider-content text-center">
-           <h2 class="text-white">Let's Find Your Perfect Car</h2>
-           <strong class="text-white">Quality cars. Better prices. Test drives brought to you.</strong>
-              <div class="row justify-content-center">
-               <div class="col-lg-6 col-md-12">
-                 <div class="search-page">
-                  <input type="text" class="form-control" placeholder="Search your desired car... ">
-                  <a href="#">  <i class="fa fa-search"></i> </a>
-               </div>
-             </div>
-             </div>
-        </div>
-       </div>
-      </div>
-     </div>
-  </div>
-</section>
-
-<!--=================================
- banner -->
-
-
-<!--=================================
-car-listing-sidebar -->
-
-<section class="car-listing-sidebar product-listing" data-sticky_parent>
-  <div class="container-fluid p-0">
-     <div class="row g-0">
-      <div class="car-listing-sidebar-left" >
-       <div class="listing-sidebar scrollbar" data-sticky_column>
-      <div class="widget">
-         <div class="widget-search">
-           <h5>Advanced Search</h5>
-           <ul class="list-style-none">
-             <li><i class="fa fa-star"> </i> Results Found <span class="float-end">(39)</span></li>
-             <li><i class="fa fa-shopping-cart"> </i> Compare Vehicles <span class="float-end">(10)</span></li>
-           </ul>
-       </div>
-       <div class="clearfix">
-         <ul class="list-group">
-            <li class="list-group-item">
-                <a href="#">Year</a>
-                <ul>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input filter-option" type="checkbox" value="*" id="invalidCheck01" required>
-                      <label class="form-check-label" for="invalidCheck01">
-                        All Years
-                      </label>
-                    </div>
-                  </li>
-                  @for ($year = 2000; $year <= now()->year; $year++)
-                    <li>
-                        <div class="form-check">
-                            <input class="form-check-input filter-option" type="checkbox" value="{{ $year }}" id="year{{ $year }}">
-                            <label class="form-check-label" for="year{{ $year }}">{{ $year }}</label>
+    <section class="slider-parallax bg-overlay-black-50 bg-17">
+        <div class="slider-content-middle">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="slider-content text-center">
+                            <h2 class="text-white">Let's Find Your Perfect Car</h2>
+                            <strong class="text-white">Quality cars. Better prices. Test drives brought to you.</strong>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6 col-md-12">
+                                    <div class="search-page">
+                                        <input type="text" class="form-control"
+                                            placeholder="Search your desired car... ">
+                                        <a href="#"> <i class="fa fa-search"></i> </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </li>
-                  @endfor
-                </ul>
-              </li>
-              <li class="list-group-item">
-                <a href="#">Condition</a>
-                <ul>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck09" required>
-                      <label class="form-check-label" for="invalidCheck09">
-                        All Conditions
-                      </label>
                     </div>
-                  </li>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck10" required>
-                      <label class="form-check-label" for="invalidCheck10">
-                        Brand New
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck11" required>
-                      <label class="form-check-label" for="invalidCheck11">
-                        Slightly Used
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck12" required>
-                      <label class="form-check-label" for="invalidCheck12">
-                        Used
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-              <li class="list-group-item">
-                <a href="#">Body</a>
-                <ul>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck13" required>
-                      <label class="form-check-label" for="invalidCheck13">
-                        All Body Styles
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck14" required>
-                      <label class="form-check-label" for="invalidCheck14">
-                        2dr Car
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck15" required>
-                      <label class="form-check-label" for="invalidCheck15">
-                        4dr Car
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck16" required>
-                      <label class="form-check-label" for="invalidCheck16">
-                        Convertible
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck17" required>
-                      <label class="form-check-label" for="invalidCheck17">
-                        Sedan
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck18" required>
-                      <label class="form-check-label" for="invalidCheck18">
-                        Sports Utility Vehicle
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-              <li class="list-group-item">
-                <a href="#">Model</a>
-                <ul>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck19" required>
-                      <label class="form-check-label" for="invalidCheck19">
-                        All Models
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck20" required>
-                      <label class="form-check-label" for="invalidCheck20">
-                        3-Series
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck21" required>
-                      <label class="form-check-label" for="invalidCheck21">
-                        Boxster
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck22" required>
-                      <label class="form-check-label" for="invalidCheck22">
-                        Carrera
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck23" required>
-                      <label class="form-check-label" for="invalidCheck23">
-                        Cayenne
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck24" required>
-                      <label class="form-check-label" for="invalidCheck24">
-                        F-type
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck25" required>
-                      <label class="form-check-label" for="invalidCheck25">
-                        GT-R
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck26" required>
-                      <label class="form-check-label" for="invalidCheck26">
-                        GTS
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck27" required>
-                      <label class="form-check-label" for="invalidCheck27">
-                        M6
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck28" required>
-                      <label class="form-check-label" for="invalidCheck28">
-                        Macan
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck29" required>
-                      <label class="form-check-label" for="invalidCheck29">
-                        Mazda6
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck30" required>
-                      <label class="form-check-label" for="invalidCheck30">
-                        RLX
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-              <li class="list-group-item">
-                <a href="#">Transmission</a>
-                <ul>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck52" required>
-                      <label class="form-check-label" for="invalidCheck52">
-                        All Transmissions
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck31" required>
-                      <label class="form-check-label" for="invalidCheck31">
-                        5-Speed Manual
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck32" required>
-                      <label class="form-check-label" for="invalidCheck32">
-                        6-Speed Automatic
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck33" required>
-                      <label class="form-check-label" for="invalidCheck33">
-                        6-Speed Manual
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck34" required>
-                      <label class="form-check-label" for="invalidCheck34">
-                        6-Speed Semi-Auto
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck35" required>
-                      <label class="form-check-label" for="invalidCheck35">
-                        7-Speed PDK
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck36" required>
-                      <label class="form-check-label" for="invalidCheck36">
-                        8-Speed Automatic
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck37" required>
-                      <label class="form-check-label" for="invalidCheck37">
-                        8-Speed Tiptronic
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-              <li class="list-group-item">
-                <a href="#">Exterior Color</a>
-                <ul>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck38" required>
-                      <label class="form-check-label" for="invalidCheck38">
-                        Ruby Red Metallic
-                      </label>
-                    </div>
-                  </li>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck39" required>
-                      <label class="form-check-label" for="invalidCheck39">
-                        Racing Yellow
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck40" required>
-                      <label class="form-check-label" for="invalidCheck40">
-                        Guards Red
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck41" required>
-                      <label class="form-check-label" for="invalidCheck41">
-                        Aqua Blue Metallic
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck42" required>
-                      <label class="form-check-label" for="invalidCheck42">
-                        White
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck43" required>
-                      <label class="form-check-label" for="invalidCheck43">
-                        Dark Blue Metallic
-                      </label>
-                    </div>
-                  </li>
-
-                </ul>
-              </li>
-              <li class="list-group-item">
-                <a href="#">Interior Color</a>
-                <ul>
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck44" required>
-                      <label class="form-check-label" for="invalidCheck44">
-                        Platinum Grey
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck45" required>
-                      <label class="form-check-label" for="invalidCheck45">
-                        Agate Grey
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck46" required>
-                      <label class="form-check-label" for="invalidCheck46">
-                        Marsala Red
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck47" required>
-                      <label class="form-check-label" for="invalidCheck47">
-                        Alcantara Black
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck48" required>
-                      <label class="form-check-label" for="invalidCheck48">
-                        Black
-                      </label>
-                    </div>
-                  </li>
-
-                  <li>
-                    <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="" id="invalidCheck49" required>
-                      <label class="form-check-label" for="invalidCheck49">
-                        Luxor Beige
-                      </label>
-                    </div>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-         </div>
-      </div>
-      </div>
-      <div class="car-listing-sidebar-right">
-       <div class="sorting-options-main">
-        <div class="row justify-content-between">
-        <div class="col-xl-3 col-md-12">
-          <div class="price-slide">
-           <div class="price">
-            <label for="amount">Price Range</label>
-              <input type="text" id="amount" class="amount" value="$50 - $300" />
-             <div id="slider-range"></div>
-           </div>
-          </div>
-         </div>
-         <div class="col-xl-3 col-xxl-2 col-md-12 ms-auto">
-            <div class="selected-box">
-           <span>Sort by</span>
-             <select>
-              <option>Sort by Default </option>
-              <option>Sort by Name</option>
-              <option>Sort by Price </option>
-              <option>Sort by Date </option>
-             </select>
-           </div>
-         </div>
-         <div class="col-xl-3 col-xxl-2 col-md-12">
-           <div class="price-search">
-            <span>Search cars</span>
-             <div class="search">
-              <i class="fa fa-search"></i>
-             <input type="search" class="form-control placeholder" placeholder="Search....">
+                </div>
             </div>
-          </div>
-         </div>
         </div>
-       </div>
-     <div class="isotope column-5" id="car-results">
-            {{-- @foreach ($cars as $car)
-            @php
-                    $images = json_decode($car->images, true);
-            @endphp
-            <div class="grid-item">
-                <div class="car-item gray-bg text-center">
-                <div class="car-image">
-                <img class="img-fluid fixed-img" src="{{ asset($images[0]) }}" alt="">
-                <div class="car-overlay-banner">
-                    <ul>
+    </section>
+
+    <!--=================================
+                         banner -->
+
+
+    <!--=================================
+                        car-listing-sidebar -->
+
+    <section class="car-listing-sidebar product-listing" data-sticky_parent>
+        <div class="container-fluid p-0">
+            <div class="row g-0 p-2">
+                <div class="col-md-2 p-2">
+                    <div class="listing-sidebar scrollbar" data-sticky_column>
+                        <div class="widget">
+                            <div class="widget-search">
+                                <h5>Advanced Search</h5>
+                                <ul class="list-style-none">
+                                    <li><i class="fa fa-star"> </i> Results Found <span class="float-end">(39)</span></li>
+                                    <li><i class="fa fa-shopping-cart"> </i> Compare Vehicles <span
+                                            class="float-end">(10)</span></li>
+                                </ul>
+                            </div>
+                            <div class="clearfix">
+                                <ul class="list-group">
+                                    {{-- filter --}}
+                                    @php
+                                        $years = range(2000, now()->year);
+                                    @endphp
+                                    <x-car-filter name="Year" label="All Years" :options="$years" />
+                                    <x-car-filter name="Transmission" label="All Transmission" :options="['Brand New', 'Slightly Used', 'Used']" />
+                                    <x-car-filter name="Body" label="All Body Styles" :options="['2dr Car', '4dr Car', 'Convertible']" />
+                                    <x-car-filter name="Model" label="All Models" :options="['Carrera', 'Boxster', 'GTS']" />
+                                    <x-car-filter name="Color" label="All Color" :options="['Black', 'White', 'Red', 'Yello', 'Green']" />
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 p-2">
+                    <div class="sorting-options-main">
+                        <div class="row justify-content-between">
+                            <div class="col-xl-3 col-md-12">
+                                <div class="price-slide">
+                                    <div class="price">
+                                        <label for="amount">Price Range</label>
+                                        <input type="text" id="amount" class="amount" value="$50 - $300" />
+                                        <div id="slider-range"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-xxl-2 col-md-12 ms-auto">
+                                <div class="selected-box">
+                                    <span>Sort by</span>
+                                    <select id="sort-select" class="form-control">
+                                        <option value="">Sort by Default</option>
+                                        <option value="name">Sort by Name</option>
+                                        <option value="price">Sort by Price</option>
+                                        <option value="date">Sort by Date</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-xxl-2 col-md-12">
+                                <div class="price-search">
+                                    <span>Search cars</span>
+                                    <div class="search">
+                                        <i class="fa fa-search"></i>
+                                        <input type="search" id="car-search" class="form-control placeholder"
+                                            placeholder="Search....">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="car-results" class="isotope column-5">
+                        <!-- Car items will be injected here by JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <style>
+        .fixed-img {
+            width: 100%;
+            aspect-ratio: 16 / 11;
+            object-fit: cover;
+        }
+
+        .car-item {
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+    </style>
+
+    <script>
+        const API_URL = "{{ route('cars.filter') }}"; // Laravel route
+        const container = document.getElementById('car-results');
+
+        // ===========================
+        // Fetch & Render Cars
+        // ===========================
+
+        function fetchFilteredCars(query = '') {
+            const isFiltered = query.length > 0; // <== New flag
+
+            axios.get(API_URL + '?' + query)
+                .then(response => {
+                    const cars = response.data;
+                    container.innerHTML = '';
+                    const error_img = `/images/car/23.png`
+                    if (!cars.length) {
+                        container.innerHTML = `
+            <section class="error-page page-section-ptb">
+              <div class="container">
+                <div class="row">
+                <div class="col-md-12">
+                    <div class="error-content text-center">
+                      <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
+                      <h3 class="text-red">Ooopps:( </h3>
+                      <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
+                      <p>Can't find what you looking for? Take a moment and do a search again!</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>`;
+                        return;
+                    }
+
+                    cars.forEach(car => {
+                        const images = JSON.parse(car.images || '[]');
+                        const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
+
+                        const carDiv = document.createElement('div');
+
+                        if (isFiltered) {
+                            // === LIST STYLE ===
+                            carDiv.className = 'car-grid'
+
+                            carDiv.innerHTML = `
+           <div class="row">
+            <div class="col-lg-4 col-md-12">
+              <div class="car-item gray-bg text-center">
+               <div class="car-image">
+                 <img class="img-fluid fixed-img " src="${imageSrc}" alt="">
+                 <div class="car-overlay-banner">
+                  <ul>
                     <li><a href="#"><i class="fa fa-link"></i></a></li>
                     <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                    </ul>
+                   </ul>
+                 </div>
+               </div>
+              </div>
+             </div>
+              <div class="col-lg-8 col-md-12">
+                <div class="car-details">
+                <div class="car-title">
+                 <a href="#">${car.title}</a>
+                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero numquam repellendus non voluptate. Harum blanditiis ullam deleniti.</p>
+                  </div>
+                  <div class="price">
+                        <span class="old-price">$${car.regular_price}</span>
+                        <span class="new-price">$${car.sale_price}</span>
+                       <a class="button red float-end" href="#">Details</a>
+                     </div>
+                   <div class="car-list">
+                     <ul class="list-inline">
+                       <li><i class="fa fa-registered"></i>${car.year}</li>
+                       <li><i class="fa fa-cog"></i> ${car.transmission_type} </li>
+                       <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                     </ul>
+                   </div>
+                  </div>
                 </div>
+               </div>
+          `;
+                        } else {
+                            // === DEFAULT GRID STYLE ===
+                            carDiv.className = 'grid-item';
+
+                            carDiv.innerHTML = `
+            <div class="car-item gray-bg text-center">
+              <div class="car-image">
+                <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
+                <div class="car-overlay-banner">
+                  <ul>
+                    <li><a href="#"><i class="fa fa-link"></i></a></li>
+                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                  </ul>
                 </div>
-                <div class="car-list">
+              </div>
+              <div class="car-list">
                 <ul class="list-inline">
-                    <li><i class="fa fa-registered"></i>{{$car->year}}</li>
-                    <li><i class="fa fa-cog"></i> {{$car->transmission_type}} </li>
-                    <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                  <li><i class="fa fa-registered"></i> ${car.year}</li>
+                  <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                  <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
                 </ul>
-                </div>
-                <div class="car-content">
+              </div>
+              <div class="car-content">
                 <div class="star">
-                <i class="fa fa-star orange-color"></i>
-                    <i class="fa fa-star orange-color"></i>
-                    <i class="fa fa-star orange-color"></i>
-                    <i class="fa fa-star orange-color"></i>
-                    <i class="fa fa-star-o orange-color"></i>
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star-o orange-color"></i>
                 </div>
-                <a href="#">{{$car->model}}</a>
+                <a href="#">${car.model}</a>
                 <div class="separator"></div>
                 <div class="price">
-                    <span class="old-price">${{$car->regular_price}}</span>
-                    <span class="new-price">${{$car->sale_price}}</span>
+                  <span class="old-price">$${car.regular_price}</span>
+                  <span class="new-price">$${car.sale_price}</span>
                 </div>
-                </div>
+              </div>
             </div>
-            </div>
-            @endforeach    --}}
-             @include('car.car-results', ['filteredCars' => $cars])
-          </div>
-      </div>
-   </div>
-  </div>
-</section>
+          `;
+                        }
 
-<script>
+                        container.appendChild(carDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching cars:', error);
+                    container.innerHTML = '<p>Failed to load cars.</p>';
+                });
+        }
 
 
-document.addEventListener('DOMContentLoaded', function () {
-    const filters = document.querySelectorAll('.filter-option');
-  console.log(filters);
-    filters.forEach(function (filter) {
-        filter.addEventListener('change', function () {
+
+        // ===========================
+        // Apply Filters
+        // ===========================
+        function applyFilters() {
+            const formData = new FormData();
+
+            document.querySelectorAll('.filter-option:checked').forEach(input => {
+                if (input.value !== '*') {
+                    const name = input.name.replace('[]', '');
+                    formData.append(name + '[]', input.value);
+                }
+            });
+
+            const keyword = document.getElementById('car-search').value;
+            if (keyword.trim()) {
+                formData.append('keyword', keyword.trim());
+            }
+
+            // Add sort option
+            const sortValue = document.getElementById('sort-select').value;
+            if (sortValue) {
+                formData.append('sort', sortValue);
+            }
+
+            const queryString = new URLSearchParams(formData).toString();
+            fetchFilteredCars(queryString);
+        }
+
+
+        // ===========================
+        // Sorting Events
+        // ===========================
+
+        document.getElementById('sort-select').addEventListener('change', function() {
+            console.log("ozair");
             applyFilters();
         });
-    });
 
-    function applyFilters() {
-        const formData = new FormData();
+        // ===========================
+        // DOMContentLoaded Events
+        // ===========================
+        document.addEventListener('DOMContentLoaded', function() {
+            const filters = document.querySelectorAll('.filter-option');
 
-        document.querySelectorAll('.filter-option:checked').forEach((input) => {
-            formData.append(input.name, input.value);
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    const name = this.name.replace('[]', '');
+                    const group = document.querySelectorAll(`input[name="${name}[]"]`);
+                    const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
+
+                    if (this.value === '*') {
+                        if (this.checked) {
+                            group.forEach(box => {
+                                if (box !== this) box.checked = false;
+                            });
+                        }
+                        applyFilters();
+                        return;
+                    }
+
+                    if (this.checked && allCheckbox) {
+                        allCheckbox.checked = false;
+                    }
+
+                    applyFilters();
+                });
+            });
+
+            // Search Input Live
+            const searchInput = document.getElementById('car-search');
+            searchInput.addEventListener('input', function() {
+                applyFilters();
+            });
+
+            // Initial Load
+            fetchFilteredCars();
         });
 
-        fetch('{{ route('cars.filter') }}?' + new URLSearchParams(formData), {
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('car-results').innerHTML = html;
+        // ===========================
+        // Collapsible Filter Section
+        // ===========================
+        document.addEventListener("DOMContentLoaded", function() {
+            const items = document.querySelectorAll(".list-group-item > a");
+
+            items.forEach(function(item) {
+                item.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    const submenu = this.nextElementSibling;
+                    submenu.style.display = submenu.style.display === "block" ? "none" : "block";
+                });
+            });
         });
-    }
-});
-// ***************************************************************************
-  document.addEventListener("DOMContentLoaded", function () {
-    const items = document.querySelectorAll(".list-group-item > a");
+    </script>
 
-    items.forEach(function (item) {
-      item.addEventListener("click", function (e) {
-        e.preventDefault();
-        const submenu = this.nextElementSibling;
-        if (submenu.style.display === "block") {
-          submenu.style.display = "none";
-        } else {
-          submenu.style.display = "block";
-        }
-      });
-    });
-  });
-</script>
-
- @endsection
+@endsection

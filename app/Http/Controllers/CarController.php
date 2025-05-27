@@ -15,8 +15,7 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::all();
-        return view('car.car-listing', compact('cars'));
+        return view('car.car-listing');
     }
 
     /**
@@ -24,27 +23,56 @@ class CarController extends Controller
      */
    public function filter(Request $request)
     {
+        $query = Car::query();
 
         $cars = Car::query();
 
-        if ($request->filled('year')) {
-            $cars->whereIn('year', $request->year);
-        }
-        if ($request->filled('condition')) {
-            $cars->whereIn('condition', $request->condition);
-        }
-        if ($request->filled('model')) {
-            $cars->whereIn('model', $request->model);
-        }
-        // ... Add more filters as needed ...
-
-        $filteredCars = $cars->latest()->get();
-
-        if ($request->ajax()) {
-            return view('car.car-results', compact('filteredCars'))->render();
+        if ($keyword = $request->input('keyword')) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('model', 'like', "%$keyword%")
+                ->orWhere('year', 'like', "%$keyword%")
+                ->orWhere('color', 'like', "%$keyword%")
+                ->orWhere('transmission_type', 'like', "%$keyword%");
+            });
         }
 
+        if ($years = $request->input('Year', [])) {
+            $query->whereIn('year', $years);
+        }
+
+        if ($models = $request->input('Model', [])) {
+            $query->whereIn('model', $models);
+        }
+
+        if ($transmission = $request->input('Transmission', [])) {
+            $query->whereIn('transmission_type', $transmission);
+        }
+
+        if ($bodies = $request->input('Body', [])) {
+            $query->whereIn('body_type', $bodies);
+        }
+
+        if ($colors = $request->input('Color', [])) {
+            $query->whereIn('color', $colors);
+        }
+        // Handle sorting
+        $sort = $request->input('sort');
+        // dd($sort);
+        if ($sort === 'name') {
+            $query->whereNotNull('model')->orderBy('model');
+        } elseif ($sort === 'price') {
+            $query->whereNotNull('sale_price')->orderBy('sale_price');
+        } elseif ($sort === 'date') {
+            $query->orderBy('created_at', 'desc');
+        } else {
+            $query->latest(); // Default sort
+        }
+
+        $cars = $query->get();
+
+        return response()->json($cars);
     }
+
 
     /**
      * Show the form for creating a new car.
@@ -108,4 +136,3 @@ class CarController extends Controller
 
 
 }
-
