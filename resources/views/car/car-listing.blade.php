@@ -15,20 +15,9 @@
         }
     </style>
     <!--=================================
-     banner -->
+                         banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
-        @if (session('success'))
-            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
-                <span class="block sm:inline">{{ session('success') }}</span>
-                <span class="absolute top-0 bottom-0 right-0 px-4 py-3">
-                    <button type="button" onclick="this.parentElement.parentElement.remove();" class="text-green-700">
-                        &times;
-                    </button>
-                </span>
-            </div>
-        @endif
-
         <div class="slider-content-middle">
             <div class="container">
                 <div class="row">
@@ -53,16 +42,16 @@
     </section>
 
     <!--=================================
-     banner -->
+                         banner -->
 
 
     <!--=================================
-    car-listing-sidebar -->
+                        car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
-            <div class="row g-0" style="height:100vh">
-                <div class="car-listing-sidebar-left">
+            <div class="row g-0 p-2">
+                <div class="col-md-2 p-2">
                     <div class="listing-sidebar scrollbar" data-sticky_column>
                         <div class="widget">
                             <div class="widget-search">
@@ -89,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-10 p-2">
                     <div class="sorting-options-main">
                         <div class="row justify-content-between">
                             <div class="col-xl-3 col-md-12">
@@ -124,10 +113,7 @@
                             </div>
                         </div>
                     </div>
-                    {{-- <div class="isotope column-5" id="car-results">
-             @include('car.car-results', ['filteredCars' => $cars])
-          </div> --}}
-                    <div id="car-results" class="isotope column-5" style="height:100vh; overflow-y:auto">
+                    <div id="car-results" class="isotope column-5">
                         <!-- Car items will be injected here by JS -->
                     </div>
                 </div>
@@ -154,18 +140,20 @@
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
         const container = document.getElementById('car-results');
 
+        // ===========================
+        // Fetch & Render Cars
+        // ===========================
 
-        document.addEventListener('DOMContentLoaded', function() {
-                const filters = document.querySelectorAll('.filter-option');
-                console.log(filters);
-                filters.forEach(function(filter) {
-                    filter.addEventListener('change', function() {
-                        applyFilters();
-                    });
-                });
+        function fetchFilteredCars(query = '') {
+            const isFiltered = query.length > 0; // <== New flag
 
-                if (!cars.length) {
-                    container.innerHTML = `
+            axios.get(API_URL + '?' + query)
+                .then(response => {
+                    const cars = response.data;
+                    container.innerHTML = '';
+                    const error_img = `/images/car/23.png`
+                    if (!cars.length) {
+                        container.innerHTML = `
             <section class="error-page page-section-ptb">
               <div class="container">
                 <div class="row">
@@ -180,20 +168,20 @@
                 </div>
               </div>
             </section>`;
-                    return;
-                }
+                        return;
+                    }
 
-                cars.forEach(car => {
-                    const images = JSON.parse(car.images || '[]');
-                    const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
+                    cars.forEach(car => {
+                        const images = JSON.parse(car.images || '[]');
+                        const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
 
-                    const carDiv = document.createElement('div');
+                        const carDiv = document.createElement('div');
 
-                    if (isFiltered) {
-                        // === LIST STYLE ===
-                        carDiv.className = 'car-grid'
+                        if (isFiltered) {
+                            // === LIST STYLE ===
+                            carDiv.className = 'car-grid'
 
-                        carDiv.innerHTML = `
+                            carDiv.innerHTML = `
            <div class="row">
             <div class="col-lg-4 col-md-12">
               <div class="car-item gray-bg text-center">
@@ -230,11 +218,11 @@
                 </div>
                </div>
           `;
-                    } else {
-                        // === DEFAULT GRID STYLE ===
-                        carDiv.className = 'grid-item';
+                        } else {
+                            // === DEFAULT GRID STYLE ===
+                            carDiv.className = 'grid-item';
 
-                        carDiv.innerHTML = `
+                            carDiv.innerHTML = `
             <div class="car-item gray-bg text-center">
               <div class="car-image">
                 <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
@@ -269,15 +257,15 @@
               </div>
             </div>
           `;
-                    }
+                        }
 
-                    container.appendChild(carDiv);
+                        container.appendChild(carDiv);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching cars:', error);
+                    container.innerHTML = '<p>Failed to load cars.</p>';
                 });
-            })
-            .catch(error => {
-                console.error('Error fetching cars:', error);
-                container.innerHTML = '<p>Failed to load cars.</p>';
-            });
         }
 
 
@@ -323,52 +311,42 @@
         // ===========================
         // DOMContentLoaded Events
         // ===========================
-        <
-        /div> <
-        /div> <
-        /div> <
-        /section>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filters = document.querySelectorAll('.filter-option');
 
-        <
-        script >
+            filters.forEach(filter => {
+                filter.addEventListener('change', function() {
+                    const name = this.name.replace('[]', '');
+                    const group = document.querySelectorAll(`input[name="${name}[]"]`);
+                    const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
 
-
-            document.addEventListener('DOMContentLoaded', function() {
-                const filters = document.querySelectorAll('.filter-option');
-
-                filters.forEach(filter => {
-                    filter.addEventListener('change', function() {
-                        const name = this.name.replace('[]', '');
-                        const group = document.querySelectorAll(`input[name="${name}[]"]`);
-                        const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
-
-                        if (this.value === '*') {
-                            if (this.checked) {
-                                group.forEach(box => {
-                                    if (box !== this) box.checked = false;
-                                });
-                            }
-                            applyFilters();
-                            return;
+                    if (this.value === '*') {
+                        if (this.checked) {
+                            group.forEach(box => {
+                                if (box !== this) box.checked = false;
+                            });
                         }
-
-                        if (this.checked && allCheckbox) {
-                            allCheckbox.checked = false;
-                        }
-
                         applyFilters();
-                    });
-                });
+                        return;
+                    }
 
-                // Search Input Live
-                const searchInput = document.getElementById('car-search');
-                searchInput.addEventListener('input', function() {
+                    if (this.checked && allCheckbox) {
+                        allCheckbox.checked = false;
+                    }
+
                     applyFilters();
                 });
-
-                // Initial Load
-                fetchFilteredCars();
             });
+
+            // Search Input Live
+            const searchInput = document.getElementById('car-search');
+            searchInput.addEventListener('input', function() {
+                applyFilters();
+            });
+
+            // Initial Load
+            fetchFilteredCars();
+        });
 
         // ===========================
         // Collapsible Filter Section
