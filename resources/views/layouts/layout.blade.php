@@ -42,6 +42,7 @@
 
 <!-- responsive -->
 <link rel="stylesheet" href="{{asset('css/responsive.css')}}"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 {{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>

@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::view("/test", "car/car-results");
 
 Route::prefix('car')->group(function () {
     Route::get('index',[CarController::class, 'index'])->name('car.index');

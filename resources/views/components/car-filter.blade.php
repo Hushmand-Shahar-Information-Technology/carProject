@@ -1,6 +1,7 @@
 @props(['name', 'label', 'options'])
 
 <li class="list-group-item">
+   
     <a href="#">{{ $name }}</a>
     <ul>
         <li>
@@ -25,3 +26,4 @@
         @endforeach
     </ul>
 </li>
+               

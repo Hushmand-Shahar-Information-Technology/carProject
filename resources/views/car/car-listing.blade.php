@@ -49,7 +49,7 @@ car-listing-sidebar -->
 <section class="car-listing-sidebar product-listing" data-sticky_parent>
   <div class="container-fluid p-0">
      <div class="row g-0">
-      <div class="car-listing-sidebar-left" >
+      <div class="col-md-2" >
        <div class="listing-sidebar scrollbar" data-sticky_column>
       <div class="widget">
          <div class="widget-search">
@@ -61,7 +61,7 @@ car-listing-sidebar -->
        </div>
        <div class="clearfix">
          <ul class="list-group">
-              {{-- Year filter --}}
+              {{-- filter --}}
              @php
                 $years = range(2000, now()->year);
             @endphp
@@ -75,7 +75,7 @@ car-listing-sidebar -->
          </div>
       </div>
       </div>
-      <div class="car-listing-sidebar-right">
+      <div class="col-md-10">
        <div class="sorting-options-main">
         <div class="row justify-content-between">
         <div class="col-xl-3 col-md-12">
@@ -121,14 +121,12 @@ car-listing-sidebar -->
 <style>
   .fixed-img {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 11;
     object-fit: cover;
   }
   .car-item {
-    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
     background-color: #f9f9f9;
   }
 </style>
@@ -140,59 +138,122 @@ const container = document.getElementById('car-results');
 // ===========================
 // Fetch & Render Cars
 // ===========================
+
 function fetchFilteredCars(query = '') {
+  const isFiltered = query.length > 0; // <== New flag
+
   axios.get(API_URL + '?' + query)
     .then(response => {
       const cars = response.data;
-      container.innerHTML = ''; // Clear results
-
+      container.innerHTML = '';
+      const error_img = `/images/car/23.png`
       if (!cars.length) {
-        container.innerHTML = '<p style="font-size: 24px; text-align: center; padding: 16px 0; font-weight: bold; color: red; ">No cars found.</p>';
+        container.innerHTML = `
+            <section class="error-page page-section-ptb">
+              <div class="container">
+                <div class="row">
+                <div class="col-md-12">
+                    <div class="error-content text-center">
+                      <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
+                      <h3 class="text-red">Ooopps:( </h3>
+                      <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
+                      <p>Can't find what you looking for? Take a moment and do a search again!</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>`;
         return;
       }
-
+    
       cars.forEach(car => {
         const images = JSON.parse(car.images || '[]');
         const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
 
         const carDiv = document.createElement('div');
-        carDiv.className = 'grid-item';
 
-        carDiv.innerHTML = `
-          <div class="car-item gray-bg text-center">
-            <div class="car-image">
-              <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
-              <div class="car-overlay-banner">
-                <ul>
-                  <li><a href="#"><i class="fa fa-link"></i></a></li>
-                  <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+        if (isFiltered) {
+          // === LIST STYLE ===
+          carDiv.className = 'car-grid'
+
+          carDiv.innerHTML = `
+           <div class="row">
+            <div class="col-lg-4 col-md-12">
+              <div class="car-item gray-bg text-center">
+               <div class="car-image">
+                 <img class="img-fluid fixed-img " src="${imageSrc}" alt="">
+                 <div class="car-overlay-banner">
+                  <ul>
+                    <li><a href="#"><i class="fa fa-link"></i></a></li>
+                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                   </ul>
+                 </div>
+               </div>
+              </div>
+             </div>
+              <div class="col-lg-8 col-md-12">
+                <div class="car-details">
+                <div class="car-title">
+                 <a href="#">${car.title}</a>
+                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero numquam repellendus non voluptate. Harum blanditiis ullam deleniti.</p>
+                  </div>
+                  <div class="price">
+                        <span class="old-price">$${car.regular_price}</span>
+                        <span class="new-price">$${car.sale_price}</span>
+                       <a class="button red float-end" href="#">Details</a>
+                     </div>
+                   <div class="car-list">
+                     <ul class="list-inline">
+                       <li><i class="fa fa-registered"></i>${car.year}</li>
+                       <li><i class="fa fa-cog"></i> ${car.transmission_type} </li>
+                       <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                     </ul>
+                   </div>
+                  </div>
+                </div>
+               </div>
+          `;
+        } else {
+          // === DEFAULT GRID STYLE ===
+          carDiv.className = 'grid-item';
+
+          carDiv.innerHTML = `
+            <div class="car-item gray-bg text-center">
+              <div class="car-image">
+                <img class="img-fluid fixed-img" src="${imageSrc}" alt="">
+                <div class="car-overlay-banner">
+                  <ul>
+                    <li><a href="#"><i class="fa fa-link"></i></a></li>
+                    <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="car-list">
+                <ul class="list-inline">
+                  <li><i class="fa fa-registered"></i> ${car.year}</li>
+                  <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                  <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
                 </ul>
               </div>
-            </div>
-            <div class="car-list">
-              <ul class="list-inline">
-                <li><i class="fa fa-registered"></i> ${car.year}</li>
-                <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
-              </ul>
-            </div>
-            <div class="car-content">
-              <div class="star">
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star-o orange-color"></i>
-              </div>
-              <a href="#">${car.model}</a>
-              <div class="separator"></div>
-              <div class="price">
-                <span class="old-price">$${car.regular_price}</span>
-                <span class="new-price">$${car.sale_price}</span>
+              <div class="car-content">
+                <div class="star">
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star orange-color"></i>
+                  <i class="fa fa-star-o orange-color"></i>
+                </div>
+                <a href="#">${car.model}</a>
+                <div class="separator"></div>
+                <div class="price">
+                  <span class="old-price">$${car.regular_price}</span>
+                  <span class="new-price">$${car.sale_price}</span>
+                </div>
               </div>
             </div>
-          </div>
-        `;
+          `;
+        }
+
         container.appendChild(carDiv);
       });
     })
@@ -201,6 +262,8 @@ function fetchFilteredCars(query = '') {
       container.innerHTML = '<p>Failed to load cars.</p>';
     });
 }
+
+
 
 // ===========================
 // Apply Filters
@@ -236,6 +299,7 @@ function applyFilters() {
 // ===========================
 
 document.getElementById('sort-select').addEventListener('change', function () {
+  console.log("ozair"); 
   applyFilters();
 });
 
