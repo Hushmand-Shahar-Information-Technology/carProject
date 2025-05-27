@@ -15,7 +15,7 @@
         }
     </style>
     <!--=================================
-                         banner -->
+                                                                             banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -42,11 +42,11 @@
     </section>
 
     <!--=================================
-                         banner -->
+                                                                             banner -->
 
 
     <!--=================================
-                        car-listing-sidebar -->
+                                                                            car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -78,7 +78,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-10 p-2">
+                <div class="col-md-10 p-2 ">
                     <div class="sorting-options-main">
                         <div class="row justify-content-between">
                             <div class="col-xl-3 col-md-12">
@@ -182,7 +182,7 @@
                             carDiv.className = 'car-grid'
 
                             carDiv.innerHTML = `
-           <div class="row">
+           <div class="row p-2">
             <div class="col-lg-4 col-md-12">
               <div class="car-item gray-bg text-center">
                <div class="car-image">
@@ -220,7 +220,7 @@
           `;
                         } else {
                             // === DEFAULT GRID STYLE ===
-                            carDiv.className = 'grid-item';
+                            carDiv.className = 'grid-item p-2';
 
                             carDiv.innerHTML = `
             <div class="car-item gray-bg text-center">
