@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="section-title">
-                    <span class="text-white">Check out our recent cars</span>
+                    <span class="text-white mt-5">Check out our recent cars</span>
                     <h2 class="text-white">Feature Car </h2>
                     <div class="separator"></div>
                 </div>
