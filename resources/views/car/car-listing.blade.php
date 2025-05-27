@@ -15,7 +15,7 @@
         }
     </style>
     <!--=================================
-                                                                             banner -->
+                                                                                                                                                     banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -42,11 +42,11 @@
     </section>
 
     <!--=================================
-                                                                             banner -->
+                                                                                                                                                     banner -->
 
 
     <!--=================================
-                                                                            car-listing-sidebar -->
+                                                                                                                                                    car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -93,7 +93,7 @@
                             <div class="col-xl-3 col-xxl-2 col-md-12 ms-auto">
                                 <div class="selected-box">
                                     <span>Sort by</span>
-                                    <select id="sort-select" class="form-control">
+                                    <select class="form-control" id="sort-select" name="sort" onchange="applyFilters()">
                                         <option value="">Sort by Default</option>
                                         <option value="name">Sort by Name</option>
                                         <option value="price">Sort by Price</option>
@@ -303,10 +303,10 @@
         // Sorting Events
         // ===========================
 
-        document.getElementById('sort-select').addEventListener('change', function() {
-            console.log("ozair");
-            applyFilters();
-        });
+        // document.getElementById('sort-select').addEventListener('change', function() {
+        //     console.log("ozair");
+        //     applyFilters();
+        // });
 
         // ===========================
         // DOMContentLoaded Events

@@ -524,7 +524,6 @@
     <!-- jquery  -->
     <script type="text/javascript" src="{{ asset('js/jquery-3.6.0.min.js') }}"></script>
 
-    <!-- bootstrap -->
     <script type="text/javascript" src="{{ asset('js/popper.js') }}"></script>
     <script type="text/javascript" src="{{ asset('js/bootstrap.min.js') }}"></script>
 
@@ -541,7 +540,7 @@
     <script type="text/javascript" src="{{ asset('js/owl-carousel/owl.carousel.min.js') }}"></script>
 
     <!-- select -->
-    <script type="text/javascript" src="{{ asset('js/select/jquery-select.js') }}"></script>
+    {{-- <script type="text/javascript" src="{{ asset('js/select/jquery-select.js') }}"></script> --}}
 
     <!-- magnific popup -->
     <script type="text/javascript" src="{{ asset('js/magnific-popup/jquery.magnific-popup.min.js') }}"></script>
@@ -569,7 +568,7 @@
     <script type="text/javascript" src="{{ asset('revolution/js/extensions/revolution.extension.video.min.js') }}">
     </script>
 
-    <!-- custom -->
+    {{-- <!-- custom -->
     <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
 
     <script type="text/javascript">
@@ -633,7 +632,7 @@
                 }
             });
         })(jQuery);
-    </script>
+    </script> --}}
 </body>
 
 </html>
