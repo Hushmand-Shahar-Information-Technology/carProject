@@ -279,7 +279,7 @@
 
 <!--=================================
  welcome -->
-
+ 
 <section class="welcome-block objects-car page-section-ptb white-bg">
  <div class="objects-left left"><img class="img-fluid objects-1" src="{{asset('images/objects/01.jpg')}}" alt=""></div>
  <div class="objects-right right"><img class="img-fluid objects-2" src="{{asset('images/objects/02.jpg')}}" alt=""></div>
