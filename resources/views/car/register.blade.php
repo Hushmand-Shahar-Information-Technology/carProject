@@ -79,6 +79,34 @@
                 </select>
                 </div>
 
+                {{-- نوع بادی --}}
+                <div>
+                <label class="block font-medium">نوع یادی</label>
+                <select x-model="form.body_type" class="w-full border rounded p-2 select2" name="body_type">
+                    <option value="">نوع بادی موتر</option>
+                    <option value="convertible">convertible</option>
+                    <option value="coupe">Coupe</option>
+                    <option value="CUV">CUV</option>
+                    <option value="micro">MICRO</option>
+                    <option value="supercar">SUPERCAR</option>
+                    <option value="sedan">SEDAN</option>
+                    <option value="pick-up">PICK-UP</option>
+                    <option value="minivan">MINIVAN</option>
+                </select>
+                </div>
+
+
+                {{-- وضعیت ټکر --}}
+                <div>
+                <label class="block font-medium">وضعیت ټکر</label>
+                <select x-model="form.car_condition" class="w-full border rounded p-2 select2 text-right" name="car_condition">
+                    <option value="">وضعیت موتر</option>
+                    <option value="تصادفی">تصادفی</option>
+                    <option value="سالم">سالم</option>
+                    <option value="تصادفی اما تعمیر شده">تصادفی اما تعمیر شده</option>
+                </select>
+                </div>
+
                 <div>
                 <label class="block font-medium">VIN Number</label>
                 <input type="text" x-model="form.vin_number" class="w-full border rounded p-2" placeholder="Title of the car" name="VIN_number" />
@@ -109,10 +137,94 @@
                 </select>
                 </div>
 
-                <div>
-                <label class="block font-medium">Color</label>
-                <input type="text" x-model="form.color" class="w-full border rounded p-2" placeholder="Color of the car" name="color"/>
+                {{-- رنګ باډی موتر --}}
+               <div>
+                    <label class="block font-medium">رنګ بادی موتر</label>
+                    <select x-model="form.car_color" class="w-full border rounded p-2 select2 text-right" name="car_color">
+                        <option value="">رنګ بادی موتر را انتخاب کنید</option>
+                        <option value="سیاه">سیاه</option>
+                        <option value="سفید">سفید</option>
+                        <option value="خاکستری">خاکستری</option>
+                        <option value="نقره‌ای">نقره‌ای</option>
+                        <option value="سرمه‌ای">سرمه‌ای</option>
+                        <option value="آبی">آبی</option>
+                        <option value="زر">زر</option>
+                        <option value="زرد">زرد</option>
+                        <option value="قرمز">قرمز</option>
+                        <option value="سبز">سبز</option>
+                        <option value="قهوه‌ای">قهوه‌ای</option>
+                        <option value="خرمایی">خرمایی</option>
+                        <option value="نارنجی">نارنجی</option>
+                        <option value="بنفش">بنفش</option>
+                        <option value="مرجانی">مرجانی</option>
+                        <option value="یاقوتی">یاقوتی</option>
+                        <option value="آبی آسمانی">آبی آسمانی</option>
+                        <option value="زیتونی">زیتونی</option>
+                        <option value="فیروزه‌ای">فیروزه‌ای</option>
+                        <option value="یخی">یخی</option>
+                    </select>
                 </div>
+
+                {{-- رنک داخلي موتر --}}
+
+                <div>
+                    <label class="block font-medium">رنګ بادی موتر</label>
+                    <select x-model="form.car_inside_color" class="w-full border rounded p-2 select2 text-right" name="car_inside_color">
+                        <option value="">رنګ بادی موتر را انتخاب کنید</option>
+                        <option value="سیاه">سیاه</option>
+                        <option value="سفید">سفید</option>
+                        <option value="خاکستری">خاکستری</option>
+                        <option value="نقره‌ای">نقره‌ای</option>
+                        <option value="سرمه‌ای">سرمه‌ای</option>
+                        <option value="آبی">آبی</option>
+                        <option value="زر">زر</option>
+                        <option value="زرد">زرد</option>
+                        <option value="قرمز">قرمز</option>
+                        <option value="سبز">سبز</option>
+                        <option value="قهوه‌ای">قهوه‌ای</option>
+                        <option value="خرمایی">خرمایی</option>
+                        <option value="نارنجی">نارنجی</option>
+                        <option value="بنفش">بنفش</option>
+                        <option value="مرجانی">مرجانی</option>
+                        <option value="یاقوتی">یاقوتی</option>
+                        <option value="آبی آسمانی">آبی آسمانی</option>
+                        <option value="زیتونی">زیتونی</option>
+                        <option value="فیروزه‌ای">فیروزه‌ای</option>
+                        <option value="یخی">یخی</option>
+                    </select>
+                </div>
+
+
+                {{-- اسناد موتر  --}}
+
+                <div>
+                    <label class="block font-medium">اسناد موتر</label>
+                    <select x-model="form.car_documents" class="w-full border rounded p-2 select2 text-right" name="car_documents">
+                        <option value="">نوع سند موتر را انتخاب کنید</option>
+                        <option value="سند گمرک">سند گمرک</option>
+                        <option value="سند ثبت موتر">سند ثبت موتر</option>
+                        <option value="سند مالکیت">سند مالکیت</option>
+                        <option value="سند ترانسپورت">سند ترانسپورت</option>
+                        <option value="سند بیمه">سند بیمه</option>
+                        <option value="سند فابریکه">سند فابریکه</option>
+                        <option value="سند نمبر پلیت">سند نمبر پلیت</option>
+                        <option value="سند انتقال ملکیت">سند انتقال ملکیت</option>
+                        <option value="سند پاسپورت موتر">سند پاسپورت موتر</option>
+                        <option value="سند تخنیکی معاینه">سند تخنیکی معاینه</option>
+                        <option value="سند تصدیق ترانزیت">سند تصدیق ترانزیت</option>
+                        <option value="سند اجازه تردد">سند اجازه تردد</option>
+                        <option value="سند تصدیق گمرک قبلی">سند تصدیق گمرک قبلی</option>
+                        <option value="سند تایید انجین">سند تایید انجین</option>
+                        <option value="سند تایید شاسی">سند تایید شاسی</option>
+                        <option value="سند ترافیکی">سند ترافیکی</option>
+                        <option value="سند موقت">سند موقت</option>
+                        <option value="سند نمبر انجن">سند نمبر انجن</option>
+                        <option value="سند نمبر شاسی">سند نمبر شاسی</option>
+                        <option value="سند نمبرگذاری">سند نمبرگذاری</option>
+                    </select>
+                </div>
+
+
 
                 <div>
                 <label class="block font-medium">Transmission Type</label>
@@ -243,10 +355,14 @@
             <template x-if="form.title"><div><strong>Title:</strong> <span x-text="form.title"></span></div></template>
             <template x-if="form.year"><div><strong>Year:</strong> <span x-text="form.year"></span></div></template>
             <template x-if="form.make"><div><strong>Make:</strong> <span x-text="form.make"></span></div></template>
+            <template x-if="form.body_type"><div><strong>body_type:</strong> <span x-text="form.body_type"></span></div></template>
+            <template x-if="form.car_condition"><div><strong>car_condition:</strong> <span x-text="form.car_condition"></span></div></template>
             <template x-if="form.vin_number"><div><strong>VIN Number:</strong> <span x-text="form.vin_number"></span></div></template>
             <template x-if="form.location"><div><strong>Location:</strong> <span x-text="form.location"></span></div></template>
             <template x-if="form.model"><div><strong>Model:</strong> <span x-text="form.model"></span></div></template>
-            <template x-if="form.color"><div><strong>Color:</strong> <span x-text="form.color"></span></div></template>
+            <template x-if="form.car_color"><div><strong>car_color:</strong> <span x-text="form.car_color"></span></div></template>
+            <template x-if="form.car_inside_color"><div><strong>car_color:</strong> <span x-text="form.car_inside_color"></span></div></template>
+            <template x-if="form.car_documents"><div><strong>car_documents:</strong> <span x-text="form.car_documents"></span></div></template>
             <template x-if="form.transmission_type"><div><strong>Transmission:</strong> <span x-text="form.transmission_type"></span></div></template>
             <div class="flex">
                 <template x-if="form.regular_price"><div><strong>Regular Price:</strong> <span x-text="form.regular_price"> </span> &nbsp; </div></template>
@@ -293,10 +409,14 @@
             title: '',
             year: '',
             make: '',
+            body_type: '',
+            car_condition: '',
+            car_color: '',
+            car_documents: '',
+            car_inside_color: '',
             vin_number: '',
             location: '',
             model: '',
-            color: '',
             transmission_type: '',
             currency_type: '',
             regular_price: '',
@@ -353,16 +473,20 @@
             if (!this.form.title.trim()) errors.push('Title is required.');
             if (!this.form.year) errors.push('Year is required.');
             if (!this.form.make) errors.push('Make is required.');
+            if (!this.form.body_type) errors.push('Body type is required.');
+            if (!this.form.car_condition) errors.push('Car condition is required.');
             if (!this.form.vin_number.trim()) errors.push('VIN Number is required.');
             if (!this.form.location) errors.push('Location is required.');
             }
             else if (this.step === 2) {
             if (!this.form.model) errors.push('Model is required.');
-            if (!this.form.color.trim()) errors.push('Color is required.');
+            if (!this.form.car_color) errors.push('Car color is required.');
+            if (!this.form.car_inside_color) errors.push('Car inside color is required.');
             if (!this.form.transmission_type) errors.push('Transmission type is required.');
             if (!this.form.currency_type) errors.push('Currency Type is required.');
             if (!this.form.regular_price || this.form.regular_price <= 0) errors.push('Regular price must be greater than zero.');
             if (!this.form.sale_price || this.form.sale_price <= 0) errors.push('Sale price must be greater than zero.');
+            if (this.form.regular_price < this.form.sale_price) errors.push('Sale price must be less than or equal to regular price.');
             }
             else if (this.step === 3) {
             if (this.imageFiles.length < 1) errors.push('At least one image is required.');
@@ -489,17 +613,23 @@
             this.step = 1;
             this.progress = 33;
 
-            this.form = {
+            this.form =  {
             title: '',
             year: '',
             make: '',
+            body_type: '',
+            car_condition: '',
+            car_color: '',
+            car_documents: '',
+            car_inside_color: '',
+            vin_number: '',
             location: '',
             model: '',
-            color: '',
             transmission_type: '',
+            currency_type: '',
             regular_price: '',
             sale_price: '',
-            };
+        },
 
             this.imageFiles = [];
             this.imagePreviews = [];
