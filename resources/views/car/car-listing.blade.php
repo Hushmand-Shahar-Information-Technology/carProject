@@ -59,8 +59,8 @@ car-listing-sidebar -->
 
 <section class="car-listing-sidebar product-listing" data-sticky_parent>
   <div class="container-fluid p-0">
-     <div class="row g-0">
-      <div class="col-md-2" >
+     <div class="row g-0" style="height:100vh">
+      <div class="car-listing-sidebar-left" >
        <div class="listing-sidebar scrollbar" data-sticky_column>
       <div class="widget">
          <div class="widget-search">
@@ -120,7 +120,10 @@ car-listing-sidebar -->
          </div>
         </div>
        </div>
-          <div id="car-results" class="isotope column-5">
+     {{-- <div class="isotope column-5" id="car-results">
+             @include('car.car-results', ['filteredCars' => $cars])
+          </div> --}}
+          <div id="car-results" class="isotope column-5" style="height:100vh; overflow-y:auto">
               <!-- Car items will be injected here by JS -->
           </div>
       </div>
@@ -146,18 +149,16 @@ car-listing-sidebar -->
 const API_URL = "{{ route('cars.filter') }}"; // Laravel route
 const container = document.getElementById('car-results');
 
-// ===========================
-// Fetch & Render Cars
-// ===========================
 
-function fetchFilteredCars(query = '') {
-  const isFiltered = query.length > 0; // <== New flag
+document.addEventListener('DOMContentLoaded', function () {
+    const filters = document.querySelectorAll('.filter-option');
+  console.log(filters);
+    filters.forEach(function (filter) {
+        filter.addEventListener('change', function () {
+            applyFilters();
+        });
+    });
 
-  axios.get(API_URL + '?' + query)
-    .then(response => {
-      const cars = response.data;
-      container.innerHTML = '';
-      const error_img = `/images/car/23.png`
       if (!cars.length) {
         container.innerHTML = `
             <section class="error-page page-section-ptb">
@@ -317,6 +318,14 @@ document.getElementById('sort-select').addEventListener('change', function () {
 // ===========================
 // DOMContentLoaded Events
 // ===========================
+      </div>
+   </div>
+  </div>
+</section>
+
+<script>
+
+
 document.addEventListener('DOMContentLoaded', function () {
   const filters = document.querySelectorAll('.filter-option');
 
