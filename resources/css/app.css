@@ -1,3 +1,33 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Font Awesome */
+@import "@fortawesome/fontawesome-free/css/all.css";
+
+
+/* Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+
+
+
+
+
+
+
+/* Swiper */
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+
+/* Your custom styles */
+
+
+
+
+
