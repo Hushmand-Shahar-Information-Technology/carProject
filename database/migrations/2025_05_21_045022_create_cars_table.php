@@ -1,44 +1,41 @@
 <?php
 
-use App\enum\TransmissionType;
-use App\enum\TypeTransmission;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Enums\TransmissionType;
 
-return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+return new class extends Migration
+{
+    public function up()
     {
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
             $table->string('title')->nullable();
             $table->string('year')->nullable();
             $table->string('make')->nullable();
+            $table->string('body_type')->nullable();
+            $table->string('car_condition')->nullable();
+            $table->string('car_color')->nullable();
+            $table->string('car_documents')->nullable();
+            $table->string('car_inside_color')->nullable();
             $table->string('VIN_number')->nullable();
-
             $table->json('location')->nullable();
             $table->string('model')->nullable();
-            $table->string('color')->nullable();
-
-            $table->enum('transmission_type', array_column(TransmissionType::cases(), 'value'))->nullable();
-            $table->decimal('regular_price', 10, 2)->nullable();
+            $table->enum('transmission_type', TransmissionType::values())->nullable();
             $table->string('currency_type')->nullable();
+            $table->decimal('regular_price', 10, 2)->nullable();
             $table->decimal('sale_price', 10, 2)->nullable();
+            $table->text('description')->nullable();
             $table->boolean('request_price_status')->default(false);
             $table->decimal('request_price', 10, 2)->nullable();
             $table->json('images')->nullable();
-            $table->json('video')->nullable();
+            $table->json('videos')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
         Schema::dropIfExists('cars');
     }
