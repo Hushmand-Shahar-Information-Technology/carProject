@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
+use Illuminate\Support\Facades\Log;
+
 
 class CarController extends Controller
 {
+
 
     /**
      * Display the car index.
@@ -24,11 +27,13 @@ class CarController extends Controller
     {
         $query = Car::query();
 
+        $cars = Car::query();
+
         if ($keyword = $request->input('keyword')) {
             $query->where(function ($q) use ($keyword) {
                 $q->where('model', 'like', "%$keyword%")
                     ->orWhere('year', 'like', "%$keyword%")
-                    ->orWhere('color', 'like', "%$keyword%")
+                    ->orWhere('car_color', 'like', "%$keyword%")
                     ->orWhere('transmission_type', 'like', "%$keyword%");
             });
         }
@@ -50,11 +55,12 @@ class CarController extends Controller
         }
 
         if ($colors = $request->input('Color', [])) {
-            $query->whereIn('color', $colors);
+            $query->whereIn('car_color', $colors);
         }
         // Handle sorting
         $sort = $request->input('sort');
-        // dd($sort); 
+        // dd($sort);
+        // dd($sort);
         if ($sort === 'name') {
             $query->whereNotNull('model')->orderBy('model');
         } elseif ($sort === 'price') {
@@ -78,24 +84,28 @@ class CarController extends Controller
     {
         return view('car.register');
     }
+
+
     public function store(StoreCarRequest $request)
     {
-
         $data = $request->validated();
+
         try {
-            // Handle multiple image uploads
+            Log::info('Car store method started');
+
+            // Handle image uploads
             $images = [];
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $images[] = $image->store('cars/images', 'public');
+                    $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
                 }
             }
 
-            // Handle multiple video uploads
+            // Handle video uploads
             $videos = [];
             if ($request->hasFile('videos')) {
                 foreach ($request->file('videos') as $video) {
-                    $videos[] = $video->store('cars/videos', 'public');
+                    $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
                 }
             }
 
@@ -106,22 +116,27 @@ class CarController extends Controller
                 'VIN_number' => $data['VIN_number'] ?? null,
                 'location' => isset($data['location']) ? json_encode($data['location']) : null,
                 'model' => $data['model'],
-                'color' => $data['color'],
+                'car_color' => $data['car_color'],
                 'transmission_type' => $data['transmission_type'] ?? null,
                 'regular_price' => $data['regular_price'] ?? null,
+                'body_type' => $data['body_type'] ?? null,
+                'car_condition' => $data['car_condition'] ?? null,
+                'car_documents' => $data['car_documents'] ?? null,
+                'car_inside_color' => $data['car_inside_color'] ?? null,
                 'currency_type' => $data['currency_type'] ?? null,
                 'sale_price' => $data['sale_price'] ?? null,
                 'request_price_status' => $request->boolean('request_price_status'),
                 'request_price' => $data['request_price'] ?? null,
-                'images' => !empty($images) ? json_encode($images) : null,
-                'video' => !empty($videos) ? json_encode($videos) : null,
+                'images' => $images, // saved as actual array (use JSON column in DB)
+                'video' => $videos,  // same for videos
             ]);
 
-            return redirect()->route('car.index')
-                ->with('success', 'Car created successfully.');
-            //code...
+            return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Throwable $th) {
-            dd("error");
+            Log::error('Error storing car: ' . $th->getMessage());
+            // return back()->withErrors('Something went wrong while saving the car.');
+            dd($th->getMessage());
+
         }
     }
 

@@ -115,7 +115,7 @@
         }
     </style>
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     banner -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -145,8 +145,8 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                                                                                                    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -239,10 +239,10 @@
         Scripts    
     ===============-->
     <script type="module">
-        $("#sort-select").on('change', function() {
+        $("#sort-select").on('change', function () {
             applyFilters();
         });
-        $("#general-search").on('input', function() {
+        $("#general-search").on('input', function () {
             const keyword = $(this).val().trim();
             const resultsContainer = $('#search-results');
 
@@ -264,16 +264,15 @@
 
                     results.forEach(car => {
                         const carDiv = $('<div>').addClass('search-result-item');
+                        const imageSrc = `/storage/${car.images[0]}`;
                         carDiv.html(`
-                         <img src="/${JSON.parse(car.images)[0]}"  
-                            style="width: 20%; aspect-ratio: 16 / 11; object-fit: contain;" 
-                            alt="${car.title}">
-                            <div class="search-result-info">
-                                <div class="search-result-title">${car.year} ${car.make} ${car.model}</div>
-                                <div class="search-result-vin">VIN: ${car.VIN_number}</div>
-                                <div class="search-result-price">$${car.sale_price}</div>
-                            </div>
-                        `);
+                                        <img src="${imageSrc}" style="object-fit: cover;" alt="${car.title}">
+                                        <div class="search-result-info">
+                                            <div class="search-result-title">${car.year} ${car.make} ${car.model}</div>
+                                            <div class="search-result-vin">VIN: ${car.VIN_number}</div>
+                                            <div class="search-result-price">$${car.sale_price}</div>
+                                        </div>
+                                    `);
                         carDiv.click(() => window.location.href = `/cars/${car.id}`);
                         resultsContainer.append(carDiv);
                     });
@@ -296,14 +295,14 @@
         });
 
         // Hide results when clicking outside
-        $(document).click(function(e) {
+        $(document).click(function (e) {
             if (!$(e.target).closest('.search-page').length) {
                 $('#search-results').hide();
             }
         });
 
         // Hide results when pressing ESC
-        $(document).keyup(function(e) {
+        $(document).keyup(function (e) {
             if (e.key === "Escape") {
                 $('#search-results').hide();
             }
@@ -329,26 +328,40 @@
 
                     if (!cars.length) {
                         container.innerHTML = `
-                            <section class="error-page page-section-ptb">
-                                <div class="container">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="error-content text-center">
-                                                <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
-                                                <h3 class="text-red">Ooopps:( </h3>
-                                                <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
-                                                <p>Can't find what you looking for? Take a moment and do a search again!</p>
+                                        <section class="error-page page-section-ptb">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-md-12">
+                                                        <div class="error-content text-center">
+                                                            <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
+                                                            <h3 class="text-red">Ooopps:( </h3>
+                                                            <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
+                                                            <p>Can't find what you looking for? Take a moment and do a search again!</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>`;
+                                        </section>`;
                         return;
                     }
-                    const car_show = `{{route('car.show', [ 'id' => '__ID__'])}}`;  
-                    $.each(cars, function(index, car) {
-                        const images = JSON.parse(car.images || '[]');
-                        const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
+
+                    $.each(cars, function (index, car) {
+                        let images;
+                        // try {
+                        //     images = JSON.parse(car.images || '[]');
+                        // } catch (e) {
+                        //     console.log('second')
+                        //     // If parsing fails, treat it as a single string
+                        //     images = car.images ? [car.images] : [];
+                        // }
+                        // if images are json 
+                        if (typeof car.images === 'object') {
+                            images = car.images;
+                            console.log(images);
+                        } else {
+                            images = car.images ? [car.images] : [];
+                        }
+                        const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const carDiv = $('<div>');
                         const url = car_show.replace('__ID__', car.id); 
                         const details_button = `<a class="button red float-end" href="${url}">Details</a>`;
@@ -358,58 +371,58 @@
 
                         // Build HTML dynamically
                         let html = `
-        ${currentView === 'list' ? '<div class="row p-2">' : ''}
-            <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
-                <div class="car-item gray-bg text-center">
-                    <div class="car-image">
-                        <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
-                        <div class="car-overlay-banner">
-                            <ul>
-                                <li><a href="${url}"><i class="fa fa-link"></i></a></li>
-                                <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
+                    ${currentView === 'list' ? '<div class="row p-2">' : ''}
+                        <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
+                            <div class="car-item gray-bg text-center">
+                                <div class="car-image">
+                                    <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
+                                    <div class="car-overlay-banner">
+                                        <ul>
+                                            <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
 
-            <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
-                <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
-                    ${currentView === 'list' 
-                        ? `
-                                                                                                                                                                                                                                                                                                            <div class="car-title">
-                                                                                                                                                                                                                                                                                                                <a href="#">${car.title}</a>
-                                                                                                                                                                                                                                                                                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                        `
-                        : `
-                                                                                                                                                                                                                                                                                                            <div class="star">
-                                                                                                                                                                                                                                                                                                                <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                <i class="fa fa-star-o orange-color"></i>
-                                                                                                                                                                                                                                                                                                            </div>
-                                                                                                                                                                                                                                                                                                            <a href="#">${car.model}</a>
-                                                                                                                                                                                                                                                                                                            <div class="separator"></div>
-                                                                                                                                                                                                                                                                                                        `
-                    }
-                    <div class="price">
-                        <span class="old-price">$${car.regular_price}</span>
-                        <span class="new-price">$${car.sale_price}</span>
-                        ${currentView === 'list' ? details_button : ''}
-                    </div>
-                    <div class="car-list">
-                        <ul class="list-inline">
-                            <li><i class="fa fa-registered"></i> ${car.year}</li>
-                            <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                            <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        ${currentView === 'list' ? '</div>' : ''}
-    `;
+                        <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
+                            <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
+                                ${currentView === 'list'
+                                ? `
+                                                                                                                                                                                                                                                                                                                        <div class="car-title">
+                                                                                                                                                                                                                                                                                                                            <a href="#">${car.title}</a>
+                                                                                                                                                                                                                                                                                                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                    `
+                                : `
+                                                                                                                                                                                                                                                                                                                        <div class="star">
+                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star-o orange-color"></i>
+                                                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                                                        <a href="#">${car.model}</a>
+                                                                                                                                                                                                                                                                                                                        <div class="separator"></div>
+                                                                                                                                                                                                                                                                                                                    `
+                            }
+                                <div class="price">
+                                    <span class="old-price">$${car.regular_price}</span>
+                                    <span class="new-price">$${car.sale_price}</span>
+                                    ${currentView === 'list' ? '<a class="button red float-end" href="#">Details</a>' : ''}
+                                </div>
+                                <div class="car-list">
+                                    <ul class="list-inline">
+                                        <li><i class="fa fa-registered"></i> ${car.year}</li>
+                                        <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                        <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    ${currentView === 'list' ? '</div>' : ''}
+                `;
 
                         carDiv.html(html);
                         $('#car-results').append(carDiv);
@@ -440,17 +453,17 @@
             fetchFilteredCars(new URLSearchParams(formData).toString());
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // View toggle handlers
-            $("#grid-view").click(function() {
+            $("#grid-view").click(function () {
                 setView('grid');
             });
-            $("#list-view").click(function() {
+            $("#list-view").click(function () {
                 setView('list');
             });
 
             // Filter handlers
-            $(".filter-option").change(function() {
+            $(".filter-option").change(function () {
                 const name = $(this).attr('name').replace('[]', '');
                 const group = $(`input[name="${name}[]"]`);
                 const allCheckbox = $(`#all-${name.toLowerCase()}`);
@@ -480,7 +493,7 @@
             //         submenu.style.display = submenu.style.display === "block" ? "none" : "block";
             //     });
             // });
-            $(".list-group-item > a").on('click', function(e) {
+            $(".list-group-item > a").on('click', function (e) {
                 e.preventDefault();
                 const submenu = $(this).next();
                 submenu.toggle();

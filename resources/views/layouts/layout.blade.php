@@ -568,7 +568,6 @@
     <script type="text/javascript" src="{{ asset('revolution/js/extensions/revolution.extension.video.min.js') }}">
     </script>
 
-     <!-- custom -->
     <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
 
     <script type="text/javascript">
