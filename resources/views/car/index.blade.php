@@ -610,7 +610,7 @@ product-listing  -->
                 @endphp
                 <div class="col-lg-4 col-sm-6">
                     <div class="car-item gray-bg text-center">
-                    <div class="car-image">    
+                    <div class="car-image">
                        <img class="img-fluid fixed-img" src="{{ asset($images[0]) }}" alt="">
                     <div class="car-overlay-banner">
                         <ul>
