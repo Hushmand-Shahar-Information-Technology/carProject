@@ -9,6 +9,7 @@ use App\Http\Requests\StoreCarRequest;
 class CarController extends Controller
 {
 
+
     /**
      * Display the car index.
      */
@@ -117,20 +118,13 @@ class CarController extends Controller
                 'video' => !empty($videos) ? json_encode($videos) : null,
             ]);
 
-            return redirect()->route('car.index')
-                ->with('success', 'Car created successfully.');
-            //code...
-        } catch (\Throwable $th) {
-            dd("error");
-        }
+    return redirect()->route('car.index')
+        ->with('success', 'Car created successfully.');
+        //code...
+    } catch (\Throwable $th) {
+        dd("error");
     }
+}
 
 
-
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $cars = Car::where('model', 'like', "%$keyword%")->get();
-        return response()->json($cars);
-    }
 }
