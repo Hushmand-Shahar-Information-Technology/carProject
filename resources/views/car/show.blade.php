@@ -1066,7 +1066,7 @@ car-details -->
       <h6>Recently Vehicle</h6>
       <div class="row">
         <div class="col-md-12">
-           <div class="owl-carousel" data-nav-arrow="true" data-nav-dots="false" data-items="4" data-md-items="4" data-sm-items="2" data-xs-items="2" data-space="15">
+           <div class="owl-carousel" id="feature-car" data-nav-arrow="true" data-nav-dots="false" data-items="4" data-md-items="4" data-sm-items="2" data-xs-items="2" data-space="15">
           <div class="item">
            <div class="car-item gray-bg text-center">
              <div class="car-image">
@@ -1102,147 +1102,6 @@ car-details -->
              </div>
            </div>
          </div>
-         <div class="item">
-           <div class="car-item gray-bg text-center">
-             <div class="car-image">
-               <img class="img-fluid" src="images/car/02.jpg" alt="">
-               <div class="car-overlay-banner">
-                <ul>
-                  <li><a href="#"><i class="fa fa-link"></i></a></li>
-                  <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                 </ul>
-               </div>
-             </div>
-             <div class="car-list">
-               <ul class="list-inline">
-                 <li><i class="fa fa-registered"></i> 2016</li>
-                 <li><i class="fa fa-cog"></i> Manual </li>
-                 <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-               </ul>
-            </div>
-             <div class="car-content">
-              <div class="star">
-               <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star-o orange-color"></i>
-               </div>
-               <a href="#">Lexus GS 450h</a>
-               <div class="separator"></div>
-               <div class="price">
-                 <span class="old-price">$35,568</span>
-                 <span class="new-price">$32,698 </span>
-               </div>
-             </div>
-           </div>
-         </div>
-         <div class="item">
-           <div class="car-item gray-bg text-center">
-             <div class="car-image">
-               <img class="img-fluid" src="images/car/03.jpg" alt="">
-               <div class="car-overlay-banner">
-                <ul>
-                  <li><a href="#"><i class="fa fa-link"></i></a></li>
-                  <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                 </ul>
-               </div>
-             </div>
-             <div class="car-list">
-               <ul class="list-inline">
-                 <li><i class="fa fa-registered"></i> 2016</li>
-                 <li><i class="fa fa-cog"></i> Manual </li>
-                 <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-               </ul>
-            </div>
-             <div class="car-content">
-              <div class="star">
-               <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star-o orange-color"></i>
-               </div>
-               <a href="#">GTA 5 Lowriders DLC</a>
-               <div class="separator"></div>
-               <div class="price">
-                 <span class="old-price">$35,568</span>
-                 <span class="new-price">$32,698 </span>
-               </div>
-             </div>
-           </div>
-         </div>
-         <div class="item">
-           <div class="car-item gray-bg text-center">
-             <div class="car-image">
-               <img class="img-fluid" src="images/car/04.jpg" alt="">
-               <div class="car-overlay-banner">
-                <ul>
-                  <li><a href="#"><i class="fa fa-link"></i></a></li>
-                  <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                 </ul>
-               </div>
-             </div>
-             <div class="car-list">
-               <ul class="list-inline">
-                 <li><i class="fa fa-registered"></i> 2016</li>
-                 <li><i class="fa fa-cog"></i> Manual </li>
-                 <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-               </ul>
-            </div>
-             <div class="car-content">
-              <div class="star">
-               <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star-o orange-color"></i>
-               </div>
-               <a href="#">Toyota avalon hybrid </a>
-               <div class="separator"></div>
-               <div class="price">
-                 <span class="old-price">$35,568</span>
-                 <span class="new-price">$32,698 </span>
-               </div>
-             </div>
-           </div>
-         </div>
-         <div class="item">
-           <div class="car-item gray-bg text-center">
-             <div class="car-image">
-               <img class="img-fluid" src="images/car/05.jpg" alt="">
-               <div class="car-overlay-banner">
-                <ul>
-                  <li><a href="#"><i class="fa fa-link"></i></a></li>
-                  <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                 </ul>
-               </div>
-             </div>
-             <div class="car-list">
-               <ul class="list-inline">
-                 <li><i class="fa fa-registered"></i> 2016</li>
-                 <li><i class="fa fa-cog"></i> Manual </li>
-                 <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-               </ul>
-            </div>
-             <div class="car-content">
-              <div class="star">
-               <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star orange-color"></i>
-                <i class="fa fa-star-o orange-color"></i>
-               </div>
-               <a href="#">Hyundai santa fe sport </a>
-               <div class="separator"></div>
-               <div class="price">
-                 <span class="old-price">$35,568</span>
-                 <span class="new-price">$32,698 </span>
-               </div>
-             </div>
-           </div>
-         </div>
-        </div>
        </div>
       </div>
    </div>
@@ -1306,149 +1165,71 @@ $(document).ready(function(){
     focusOnSelect: true
   });
 });
+        const API_URL = "{{ route('cars.feature') }}"; // Laravel route
+        const container = document.getElementById('feature-car');
+        
+        function fetchFilteredCars(query = '') {
+            axios.get(API_URL + '?' + query)
+                .then(response => {
+                    const cars = response.data;
+                    container.innerHTML = '';
+
+                    $.each(cars, function(index, car) {
+                        const images = JSON.parse(car.images || '[]');
+                        const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
+                        const carDiv = $('<div>');
+                        const url = car_show.replace('__ID__', car.id); 
+                        const details_button = `<a class="button red float-end" href="${url}">Details</a>`;
+
+                        // Build HTML dynamically
+                        let html = `
+                        <div class="item">
+                            <div class="car-item gray-bg text-center">
+                              <div class="car-image">
+                                <img class="img-fluid" src="${imageSrc}" alt="">
+                                <div class="car-overlay-banner">
+                                  <ul>
+                                    <li><a href="${url}"><i class="fa fa-link"></i></a></li>
+                                    <li><a href="${url}"><i class="fa fa-dashboard"></i></a></li>
+                                  </ul>
+                                </div>
+                              </div>
+                              <div class="car-list">
+                                <ul class="list-inline">
+                                  <li><i class="fa fa-registered"></i>${car->year}</li>
+                                  <li><i class="fa fa-cog"></i> ${car->transmission_type} </li>
+                                  <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                                </ul>
+                              </div>
+                              <div class="car-content">
+                                <div class="star">
+                                <i class="fa fa-star orange-color"></i>
+                                  <i class="fa fa-star orange-color"></i>
+                                  <i class="fa fa-star orange-color"></i>
+                                  <i class="fa fa-star orange-color"></i>
+                                  <i class="fa fa-star-o orange-color"></i>
+                                </div>
+                                <a href="#"> Acura Rsx</a>
+                                <div class="separator"></div>
+                                <div class="price">
+                                  <span class="old-price">$${car.regular_price}</span>
+                                  <span class="new-price">$${car.sale_price}</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>`;
+
+                        carDiv.html(html);
+                        $('#car-results').append(carDiv);
+                    });
+
+                })
+                .catch(error => {
+                    console.error('Error fetching cars:', error);
+                    container.innerHTML = '<p>Failed to load cars.</p>';
+                });
+        }
 </script>
-
-{{-- <script>
-  $(document).ready(function(){
-  $('.slider-for').slick({
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    arrows: false,
-    fade: true,
-    asNavFor: '.slider-nav'
-  });
-
-  $('.slider-nav').slick({
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    asNavFor: '.slider-for',
-    dots: false,
-    centerMode: true,
-    focusOnSelect: true
-  });
-});
-
-</script> --}}
-
-
-{{-- 
-<script>
-
-    (function($) {
-    $.fn.appear = function(fn, options) {
-    var settings = $.extend({
-    //arbitrary data to pass to fn
-    data: undefined,
-    //call fn only on the first appear?
-    one: true,
-    // X & Y accuracy
-    accX: 0,
-    accY: 0
-    }, options);
-
-    return this.each(function() {
-    var t = $(this);
-    //whether the element is currently visible
-    t.appeared = false;
-    if (!fn) {
-        //trigger the custom event
-        t.trigger('appear', settings.data);
-        return;
-    }
-
-    var w = $(window);
-    //fires the appear event when appropriate
-    var check = function() {
-        //is the element hidden?
-        if (!t.is(':visible')) {
-        //it became hidden
-        t.appeared = false;
-        return;
-        }
-        //is the element inside the visible window?
-        var a = w.scrollLeft();
-        var b = w.scrollTop();
-        var o = t.offset();
-        var x = o.left;
-        var y = o.top;
-
-        var ax = settings.accX;
-        var ay = settings.accY;
-        var th = t.height();
-        var wh = w.height();
-        var tw = t.width();
-        var ww = w.width();
-
-        if (y + th + ay >= b &&
-        y <= b + wh + ay &&
-        x + tw + ax >= a &&
-        x <= a + ww + ax) {
-
-        //trigger the custom event
-        if (!t.appeared) t.trigger('appear', settings.data);
-        } else {
-        //it scrolled out of view
-        t.appeared = false;
-        }
-    };
-    //create a modified fn with some additional logic
-    var modifiedFn = function() {
-        //mark the element as visible
-        t.appeared = true;
-        //is this supposed to happen only once?
-        if (settings.one) {
-        //remove the check
-        w.unbind('scroll', check);
-        var i = $.inArray(check, $.fn.appear.checks);
-        if (i >= 0) $.fn.appear.checks.splice(i, 1);
-        }
-        //trigger the original fn
-        fn.apply(this, arguments);
-    };
-    //bind the modified fn to the element
-    if (settings.one) t.one('appear', settings.data, modifiedFn);
-    else t.bind('appear', settings.data, modifiedFn);
-    //check whenever the window scrolls
-    w.scroll(check);
-    //check whenever the dom changes
-    $.fn.appear.checks.push(check);
-    //check now
-    (check)();
-    });
-    };
-    //keep a queue of appearance checks
-    $.extend($.fn.appear, {
-    checks: [],
-    timeout: null,
-    //process the queue
-    checkAll: function() {
-    var length = $.fn.appear.checks.length;
-    if (length > 0)
-        while (length--)($.fn.appear.checks[length])();
-    },
-    //check the queue asynchronously
-    run: function() {
-    if ($.fn.appear.timeout) clearTimeout($.fn.appear.timeout);
-    $.fn.appear.timeout = setTimeout($.fn.appear.checkAll, 20);
-    }
-    });
-    //run checks when these methods are called
-    $.each(['append', 'prepend', 'after', 'before', 'attr',
-    'removeAttr', 'addClass', 'removeClass', 'toggleClass',
-    'remove', 'css', 'show', 'hide'
-    ], function(i, n) {
-    var old = $.fn[n];
-    if (old) {
-    $.fn[n] = function() {
-        var r = old.apply(this, arguments);
-        $.fn.appear.run();
-        return r;
-    }
-    }
-    });
-
-    })(jQuery);
-</script> --}}
 
 
 @endsection

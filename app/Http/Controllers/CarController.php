@@ -132,7 +132,7 @@ class CarController extends Controller
     public function show($id)
     {
         $car = Car::findOrFail($id); 
-        dd($car->location);
+        // dd($car->location);
         return view('car.show', compact('car'));
     }
 
@@ -141,5 +141,13 @@ class CarController extends Controller
         $keyword = $request->input('keyword');
         $cars = Car::where('model', 'like', "%$keyword%")->get();
         return response()->json($cars);
+    }
+    /**
+     * Show the form for creating a new car.
+     */
+    public function feature()
+    {
+        $car = Car::findOrFail($id); 
+        return view('car.show', compact('car'));
     }
 }

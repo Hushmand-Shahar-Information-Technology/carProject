@@ -568,7 +568,7 @@
     <script type="text/javascript" src="{{ asset('revolution/js/extensions/revolution.extension.video.min.js') }}">
     </script>
 
-    {{-- <!-- custom -->
+     <!-- custom -->
     <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
 
     <script type="text/javascript">
@@ -632,7 +632,7 @@
                 }
             });
         })(jQuery);
-    </script> --}}
+    </script>
 </body>
 
 </html>
