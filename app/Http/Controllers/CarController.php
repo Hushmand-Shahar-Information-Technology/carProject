@@ -126,6 +126,15 @@ class CarController extends Controller
     }
 
 
+    /**
+     * Show the form for creating a new car.
+     */
+    public function show($id)
+    {
+        $car = Car::findOrFail($id); 
+        dd($car->location);
+        return view('car.show', compact('car'));
+    }
 
     public function search(Request $request)
     {

@@ -86,12 +86,12 @@
             cursor: pointer;
         }
 
-        .search-result-item img {
+        /* .search-result-item img {
             width: 60px;
             height: 40px;
             object-fit: cover;
             border-radius: 3px;
-        }
+        } */
 
         .search-result-info {
             flex-grow: 1;
@@ -234,6 +234,10 @@
             </div>
         </div>
     </section>
+        
+    <!--===============
+        Scripts    
+    ===============-->
     <script type="module">
         $("#sort-select").on('change', function() {
             applyFilters();
@@ -261,7 +265,9 @@
                     results.forEach(car => {
                         const carDiv = $('<div>').addClass('search-result-item');
                         carDiv.html(`
-                            <img src="/${JSON.parse(car.images)[0]}" style="object-fit: cover; " alt="${car.title}">
+                         <img src="/${JSON.parse(car.images)[0]}"  
+                            style="width: 20%; aspect-ratio: 16 / 11; object-fit: contain;" 
+                            alt="${car.title}">
                             <div class="search-result-info">
                                 <div class="search-result-title">${car.year} ${car.make} ${car.model}</div>
                                 <div class="search-result-vin">VIN: ${car.VIN_number}</div>
@@ -339,14 +345,16 @@
                             </section>`;
                         return;
                     }
-
+                    const car_show = `{{route('car.show', [ 'id' => '__ID__'])}}`;  
                     $.each(cars, function(index, car) {
                         const images = JSON.parse(car.images || '[]');
                         const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
                         const carDiv = $('<div>');
+                        const url = car_show.replace('__ID__', car.id); 
+                        const details_button = `<a class="button red float-end" href="${url}">Details</a>`;
 
                         // Set dynamic class based on view
-                        carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item p-2');
+                        carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2');
 
                         // Build HTML dynamically
                         let html = `
@@ -357,8 +365,8 @@
                         <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
                         <div class="car-overlay-banner">
                             <ul>
-                                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                <li><a href="${url}"><i class="fa fa-link"></i></a></li>
+                                <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
                             </ul>
                         </div>
                     </div>
@@ -389,7 +397,7 @@
                     <div class="price">
                         <span class="old-price">$${car.regular_price}</span>
                         <span class="new-price">$${car.sale_price}</span>
-                        ${currentView === 'list' ? '<a class="button red float-end" href="#">Details</a>' : ''}
+                        ${currentView === 'list' ? details_button : ''}
                     </div>
                     <div class="car-list">
                         <ul class="list-inline">
