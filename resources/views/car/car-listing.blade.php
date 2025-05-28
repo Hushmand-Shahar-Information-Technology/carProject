@@ -8,12 +8,24 @@
             aspect-ratio: 16 / 9;
             object-fit: cover;
         }
+<<<<<<< HEAD
+=======
+
+        .list-group-item ul {
+            display: none;
+            padding-left: 20px;
+        }
+    </style>
+    <!--=================================
+                             banner -->
+>>>>>>> aa6985bb24c39b14b5e69d490d07102c3fc961b6
 
         .list-group-item ul {
             display: none;
             padding-left: 20px;
         }
 
+<<<<<<< HEAD
         /* ... your existing styles ... */
 
 
@@ -29,6 +41,36 @@
             cursor: pointer;
             transition: all 0.3s ease;
         }
+=======
+  <div class="slider-content-middle">
+  <div class="container">
+     <div class="row">
+      <div class="col-md-12">
+        <div class="slider-content text-center">
+           <h2 class="text-white">Let's Find Your Perfect Car</h2>
+           <strong class="text-white">Quality cars. Better prices. Test drives brought to you.</strong>
+              <div class="row justify-content-center">
+               <div class="col-lg-6 col-md-12">
+                 <div class="search-page">
+                  <input type="text" class="form-control" placeholder="Search your desired car... ">
+                  <a href="#">  <i class="fa fa-search"></i> </a>
+               </div>
+             </div>
+             </div>
+        </div>
+       </div>
+      </div>
+     </div>
+  </div>
+</section>
+
+    <!--=================================
+                             banner -->
+
+
+    <!--=================================
+                            car-listing-sidebar -->
+>>>>>>> aa6985bb24c39b14b5e69d490d07102c3fc961b6
 
         .view-toggle button.active {
             background: #db2d2e;
@@ -52,6 +94,7 @@
             background-color: #f9f9f9;
         }
 
+<<<<<<< HEAD
         .search-page {
             position: relative;
             margin-bottom: 15px;
@@ -71,6 +114,11 @@
             overflow-y: auto;
             display: none;
         }
+=======
+// ===========================
+// Fetch & Render Cars
+// ===========================
+>>>>>>> aa6985bb24c39b14b5e69d490d07102c3fc961b6
 
         .search-result-item {
             padding: 10px;
@@ -374,17 +422,18 @@
                   <div class="price">
                         <span class="old-price">$${car.regular_price}</span>
                         <span class="new-price">$${car.sale_price}</span>
-                       <a class="button red float-end" href="#">Details</a>
-                     </div>
-                   <div class="car-list">
-                     <ul class="list-inline">
-                       <li><i class="fa fa-registered"></i>${car.year}</li>
-                       <li><i class="fa fa-cog"></i> ${car.transmission_type} </li>
-                       <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
-                     </ul>
-                   </div>
-                  </div>
+                        ${currentView === 'list' ? '<a class="button red float-end" href="#">Details</a>' : ''}
+                    </div>
+                    <div class="car-list">
+                        <ul class="list-inline">
+                            <li><i class="fa fa-registered"></i> ${car.year}</li>
+                            <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                            <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                        </ul>
+                    </div>
                 </div>
+<<<<<<< HEAD
+=======
                </div>
           `;
                         } else {
@@ -956,6 +1005,7 @@
                   <span class="new-price">$${car.sale_price}</span>
                 </div>
               </div>
+>>>>>>> aa6985bb24c39b14b5e69d490d07102c3fc961b6
             </div>
         ${currentView === 'list' ? '</div>' : ''}
     `;
@@ -986,8 +1036,36 @@
             const sortValue = document.getElementById('sort-select').value;
             if (sortValue) formData.append('sort', sortValue);
 
+<<<<<<< HEAD
             fetchFilteredCars(new URLSearchParams(formData).toString());
-        }
+=======
+// ===========================
+// Apply Filters
+// ===========================
+function applyFilters() {
+  const formData = new FormData();
+
+  document.querySelectorAll('.filter-option:checked').forEach(input => {
+    if (input.value !== '*') {
+      const name = input.name.replace('[]', '');
+      formData.append(name + '[]', input.value);
+    }
+  });
+
+  const keyword = document.getElementById('car-search').value;
+  if (keyword.trim()) {
+    formData.append('keyword', keyword.trim());
+  }
+
+  // Add sort option
+  const sortValue = document.getElementById('sort-select').value;
+  if (sortValue) {
+    formData.append('sort', sortValue);
+  }
+
+  const queryString = new URLSearchParams(formData).toString();
+  fetchFilteredCars(queryString);
+}
 
 
         // ===========================
@@ -1023,20 +1101,30 @@ document.addEventListener('DOMContentLoaded', function () {
                     const group = document.querySelectorAll(`input[name="${name}[]"]`);
                     const allCheckbox = document.querySelector(`#all-${name.toLowerCase()}`);
 
-                    if (this.value === '*') {
-                        if (this.checked) {
-                            group.forEach(box => {
-                                if (box !== this) box.checked = false;
-                            });
-                        }
-                        applyFilters();
-                        return;
-                    }
+      if (this.value === '*') {
+        if (this.checked) {
+          group.forEach(box => {
+            if (box !== this) box.checked = false;
+          });
+>>>>>>> aa6985bb24c39b14b5e69d490d07102c3fc961b6
+        }
 
-                    if (this.checked && allCheckbox) {
-                        allCheckbox.checked = false;
-                    }
+        document.addEventListener('DOMContentLoaded', function() {
+            // View toggle handlers
+            $("#grid-view").click(function() {
+                setView('grid');
+            });
+            $("#list-view").click(function() {
+                setView('list');
+            });
 
+<<<<<<< HEAD
+            // Filter handlers
+            $(".filter-option").change(function() {
+                const name = $(this).attr('name').replace('[]', '');
+                const group = $(`input[name="${name}[]"]`);
+                const allCheckbox = $(`#all-${name.toLowerCase()}`);
+=======
       applyFilters();
     });
   });
@@ -1047,10 +1135,18 @@ document.addEventListener('DOMContentLoaded', function () {
             applyFilters();
         });
     });
+>>>>>>> aa6985bb24c39b14b5e69d490d07102c3fc961b6
 
-            // Search Input Live
-            const searchInput = document.getElementById('car-search');
-            searchInput.addEventListener('input', function() {
+                if ($(this).val() === '*') {
+                    if ($(this).is(':checked')) {
+                        group.not(this).prop('checked', false);
+                    }
+                    applyFilters();
+                    return;
+                }
+                if ($(this).is(':checked') && allCheckbox.length) {
+                    allCheckbox.prop('checked', false);
+                }
                 applyFilters();
             });
 
@@ -1058,6 +1154,7 @@ document.addEventListener('DOMContentLoaded', function () {
             // document.getElementById('car-search').addEventListener('input', () => applyFilters());
             $("#car-search").on('input', () => applyFilters());
 
+<<<<<<< HEAD
             // Collapsible filters
             // document.querySelectorAll(".list-group-item > a").forEach(item => {
             //     item.addEventListener("click", function(e) {
@@ -1074,7 +1171,10 @@ document.addEventListener('DOMContentLoaded', function () {
             // Initial load
             fetchFilteredCars();
         });
+    </script>
 
+@endsection
+=======
 // ===========================
 // Collapsible Filter Section
 // ===========================
@@ -1148,4 +1248,5 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     </script>
 
-@endsection
+ @endsection
+>>>>>>> aa6985bb24c39b14b5e69d490d07102c3fc961b6
