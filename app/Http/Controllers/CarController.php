@@ -83,6 +83,9 @@ class CarController extends Controller
         return view('car.register');
     }
     public function store(StoreCarRequest $request){
+
+        // dd($request->hasFile('images'), $request->file('images'), $request->all());
+
         try {
             $data = $request->validated();
 

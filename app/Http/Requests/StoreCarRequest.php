@@ -38,7 +38,7 @@ class StoreCarRequest extends FormRequest
             'regular_price' => 'required|numeric|min:0',
             'sale_price' => 'required|numeric|min:0|lte:regular_price',
             'images' => 'required|array|min:1|max:11',
-            'images.*' => 'file|image|max:5120',
+            'images.*' => 'file|image|max:20120',
             'videos' => 'nullable|array|max:2',
             'videos.*' => 'file|mimetypes:video/mp4,video/avi,video/mpeg|max:10240',
         ];

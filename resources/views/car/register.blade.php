@@ -352,14 +352,9 @@
 
                 <div>
                     <label class="block font-medium">Upload Car Images (1–11)</label>
-                    <input
-                        type="file"
-                        id="imageInput"
-                        @change="handleImages($event)"
-                        multiple
-                        name="images[]"
-                        class="w-full border rounded p-2 @error('images') border-red-500 @enderror"
-                    />
+
+
+                    <input type="file" name="images[]" id="imageInput" @change="handleImages($event)">
 
                     @error('images')
                         <p class="image-error text-red-500 text-sm mt-1"> خدآقل یک عکس باید آبلوډ شود</p>
@@ -621,7 +616,7 @@
                 reader.readAsDataURL(file);
             });
 
-            event.target.value = null;
+            // event.target.value = null;
             this.watchProgress(); // Track image update
         },
 
@@ -845,6 +840,23 @@
         }
     });
 });
+
+
+
+const form = document.querySelector('form');
+const formData = new FormData(form);
+
+fetch(form.action, {
+  method: 'POST',
+  body: formData,
+  headers: {
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+  }
+})
+.then(response => response.json())
+.then(data => console.log(data))
+.catch(error => console.error(error));
+
 </script>
     </body>
     </html>
