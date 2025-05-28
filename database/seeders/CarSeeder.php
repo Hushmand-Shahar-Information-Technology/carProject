@@ -89,17 +89,20 @@ class CarSeeder extends Seeder
         foreach($imagesList as $imageGroup) {
             $groupImages = [];
             foreach($imageGroup as $imagePath) {
-                // Copy from public to storage
-                $sourcePath = public_path($imagePath);
-                $destinationPath = storage_path('app/public/' . $imagePath);
+                // Normalize paths for cross-platform compatibility
+                $sourcePath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, public_path($imagePath));
+                $destinationPath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, storage_path('app/public/' . $imagePath));
                 
                 // Create directory if it doesn't exist
-                if (!file_exists(dirname($destinationPath))) {
-                    mkdir(dirname($destinationPath), 0755, true);
+                $directory = dirname($destinationPath);
+                if (!file_exists($directory)) {
+                    mkdir($directory, 0755, true);
                 }
                 
-                // Copy the file
-                copy($sourcePath, $destinationPath);
+                // Copy the file with error handling
+                if (!copy($sourcePath, $destinationPath)) {
+                    throw new \RuntimeException("Failed to copy file from {$sourcePath} to {$destinationPath}");
+                }
                 
                 // Add to group with storage path
                 $groupImages[] = $imagePath;
