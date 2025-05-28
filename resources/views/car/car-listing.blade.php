@@ -341,8 +341,22 @@
                     }
 
                     $.each(cars, function(index, car) {
-                        const images = JSON.parse(car.images || '[]');
-                        const imageSrc = images.length ? `/${images[0]}` : '/images/no-image.png';
+                        let images;
+                        // try {
+                        //     images = JSON.parse(car.images || '[]');
+                        // } catch (e) {
+                        //     console.log('second')
+                        //     // If parsing fails, treat it as a single string
+                        //     images = car.images ? [car.images] : [];
+                        // }
+                        // if images are json 
+                        if (typeof car.images === 'object') {
+                            images = car.images;
+                            console.log(images);
+                        } else {
+                            images = car.images ? [car.images] : [];
+                        }
+                        const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const carDiv = $('<div>');
 
                         // Set dynamic class based on view

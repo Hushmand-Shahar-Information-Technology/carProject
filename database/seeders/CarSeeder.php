@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Car;
 use App\Enums\CarColor;
 use App\Enums\TransmissionType;
+use Storage;
 
 class CarSeeder extends Seeder
 {
@@ -82,6 +83,32 @@ class CarSeeder extends Seeder
             ['images/car/03.jpg', 'images/car/04.jpg'],
             ['images/car/05.jpg', 'images/car/06.jpg'],
         ];
+        
+        // Upload images to storage
+        $uploadedImages = [];
+        foreach($imagesList as $imageGroup) {
+            $groupImages = [];
+            foreach($imageGroup as $imagePath) {
+                // Copy from public to storage
+                $sourcePath = public_path($imagePath);
+                $destinationPath = storage_path('app/public/' . $imagePath);
+                
+                // Create directory if it doesn't exist
+                if (!file_exists(dirname($destinationPath))) {
+                    mkdir(dirname($destinationPath), 0755, true);
+                }
+                
+                // Copy the file
+                copy($sourcePath, $destinationPath);
+                
+                // Add to group with storage path
+                $groupImages[] = $imagePath;
+            }
+            $uploadedImages[] = $groupImages;
+        }
+        
+        // Replace original imagesList with uploaded paths
+        $imagesList = $uploadedImages;
         $videosList = [
             ['videos/car/01.mp4'],
             ['videos/car/02.mp4'],
