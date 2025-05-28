@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
+use App\Enums\CarColor;
 
 class CarController extends Controller
 {
+
 
     /**
      * Display the car index.
@@ -23,6 +25,8 @@ class CarController extends Controller
     public function filter(Request $request)
     {
         $query = Car::query();
+
+        $cars = Car::query();
 
         if ($keyword = $request->input('keyword')) {
             $query->where(function ($q) use ($keyword) {
@@ -54,7 +58,7 @@ class CarController extends Controller
         }
         // Handle sorting
         $sort = $request->input('sort');
-        // dd($sort); 
+        // dd($sort);
         if ($sort === 'name') {
             $query->whereNotNull('model')->orderBy('model');
         } elseif ($sort === 'price') {
@@ -78,20 +82,37 @@ class CarController extends Controller
     {
         return view('car.register');
     }
-    public function store(StoreCarRequest $request)
-    {
-
-        $data = $request->validated();
+    public function store(StoreCarRequest $request){
         try {
-            // Handle multiple image uploads
+            $data = $request->validated();
+
+            $data['car_color'] = $request->car_color;
+            $data['car_condition'] = $request->car_condition;
+            $data['transmission_type'] = $request->transmission_type;
+            $data['car_documents'] = $request->car_documents;
+            $data['car_inside_color'] = $request->car_inside_color;
+            $data['VIN_number'] = strtoupper(bin2hex(random_bytes(8)));
+            $data['regular_price'] = $request->regular_price;
+            $data['sale_price'] = $request->sale_price;
+            $data['title'] = $request->title; // Fixed typo: was $dara
+            $data['year'] = $request->year;
+            $data['make'] = $request->make;
+            $data['body_type'] = $request->body_type;
+            $data['model'] = $request->model;
+            $data['description'] = $request->description; // Fixed typo: was $dara
+            $data['currency_type'] = $request->currency_type;
+            $data['location'] = $request->location;
+            $data['request_price'] = $request->request_price;
+
+            // Handle images
             $images = [];
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
-                    $images[] = $image->store('cars/images', 'public');
+                    $images[] = $image->store('images/car/images', 'public');
                 }
             }
 
-            // Handle multiple video uploads
+            // Handle videos
             $videos = [];
             if ($request->hasFile('videos')) {
                 foreach ($request->file('videos') as $video) {
@@ -106,7 +127,7 @@ class CarController extends Controller
                 'VIN_number' => $data['VIN_number'] ?? null,
                 'location' => isset($data['location']) ? json_encode($data['location']) : null,
                 'model' => $data['model'],
-                'color' => $data['color'],
+                'color' => $data['car_color'] ?? null,
                 'transmission_type' => $data['transmission_type'] ?? null,
                 'regular_price' => $data['regular_price'] ?? null,
                 'currency_type' => $data['currency_type'] ?? null,
@@ -117,20 +138,13 @@ class CarController extends Controller
                 'video' => !empty($videos) ? json_encode($videos) : null,
             ]);
 
-            return redirect()->route('car.index')
-                ->with('success', 'Car created successfully.');
-            //code...
+            return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Throwable $th) {
-            dd("error");
+            // Log or handle the error as needed
+            return redirect()->back()->withErrors(['error' => 'An error occurred while saving the car.']);
         }
     }
 
 
 
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $cars = Car::where('model', 'like', "%$keyword%")->get();
-        return response()->json($cars);
-    }
 }

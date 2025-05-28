@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Requests;
-
+use App\Enums\CarColor;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCarRequest extends FormRequest
@@ -20,28 +21,28 @@ class StoreCarRequest extends FormRequest
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array{
-    return [
-        'title' => 'required|string|max:255',
-        'year' => 'required|max:4',
-        'make' => 'required|string|max:255',
-        'VIN_number' => 'nullable|string|max:255',
+        return [
+            'title' => 'required|string|max:255',
+            'year' => 'required|integer|min:1990|max:' . now()->year,
+            'make' => 'required|string',
+            'body_type' => 'required|string',
+            'car_condition' => 'required|string',
+            'VIN_number' => 'required',
+            'location' => 'required|string',
+            'model' => 'required|string',
+            'car_color' => ['required', Rule::in(CarColor::values())],
+            'car_inside_color' => 'required|string',
+            'car_documents' => 'nullable|string',
+            'transmission_type' => 'required|string',
+            'currency_type' => 'required|string',
+            'regular_price' => 'required|numeric|min:0',
+            'sale_price' => 'required|numeric|min:0|lte:regular_price',
+            'images' => 'required|array|min:1|max:11',
+            'images.*' => 'file|image|max:5120',
+            'videos' => 'nullable|array|max:2',
+            'videos.*' => 'file|mimetypes:video/mp4,video/avi,video/mpeg|max:10240',
+        ];
+    }
 
-        'location' => 'nullable',
-
-        'model' => 'required|string|max:255',
-        'color' => 'required|string|max:255',
-        'transmission_type' => 'nullable|in:automatic,manual',
-
-        'regular_price' => 'nullable|numeric',
-        'currency_type' => 'nullable|string|max:10',
-        'sale_price' => 'nullable|numeric',
-
-        'images' => 'nullable|array|max:11',
-        'images.*' => 'image|mimes:jpg,jpeg,png|max:20000',
-
-        'videos' => 'nullable|array|max:2',
-        'videos.*' => 'file|mimetypes:video/mp4,video/avi,video/mpeg|max:200000',
-    ];
-}
 
 }

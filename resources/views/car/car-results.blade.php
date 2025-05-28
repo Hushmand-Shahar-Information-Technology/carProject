@@ -33,7 +33,7 @@
                   </div>
                 </div>
                </div>
-{{-- 
+{{--
 // function fetchFilteredCars(query = '') {
 //   axios.get(API_URL + '?' + query)
 //     .then(response => {
