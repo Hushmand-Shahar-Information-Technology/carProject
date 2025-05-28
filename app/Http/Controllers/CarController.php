@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 class CarController extends Controller
 {
 
+
     /**
      * Display the car index.
      */
@@ -25,6 +26,8 @@ class CarController extends Controller
     public function filter(Request $request)
     {
         $query = Car::query();
+
+        $cars = Car::query();
 
         if ($keyword = $request->input('keyword')) {
             $query->where(function ($q) use ($keyword) {
@@ -56,6 +59,7 @@ class CarController extends Controller
         }
         // Handle sorting
         $sort = $request->input('sort');
+        // dd($sort);
         // dd($sort);
         if ($sort === 'name') {
             $query->whereNotNull('model')->orderBy('model');
@@ -138,10 +142,4 @@ public function store(StoreCarRequest $request)
 
 
 
-    public function search(Request $request)
-    {
-        $keyword = $request->input('keyword');
-        $cars = Car::where('model', 'like', "%$keyword%")->get();
-        return response()->json($cars);
-    }
 }
