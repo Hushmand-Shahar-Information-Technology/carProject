@@ -30,7 +30,7 @@ class StoreCarRequest extends FormRequest
             'VIN_number' => 'required',
             'location' => 'required|string',
             'model' => 'required|string',
-            'car_color' => ['required', Rule::in(array_map(fn($color) => $color->value, CarColor::values()))],
+            'car_color' => ['required', Rule::in(CarColor::values())],
             'car_inside_color' => 'required|string',
             'car_documents' => 'nullable|string',
             'transmission_type' => 'required|string',

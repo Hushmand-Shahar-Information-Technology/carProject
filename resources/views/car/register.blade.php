@@ -356,11 +356,11 @@
                         type="file"
                         id="imageInput"
                         @change="handleImages($event)"
-                        accept="image/*"
                         multiple
-                        class="w-full border rounded p-2 @error('images') border-red-500 @enderror" name="images[]"
-                        x-model="form.images"
+                        name="images[]"
+                        class="w-full border rounded p-2 @error('images') border-red-500 @enderror"
                     />
+
                     @error('images')
                         <p class="image-error text-red-500 text-sm mt-1"> خدآقل یک عکس باید آبلوډ شود</p>
                     @enderror
