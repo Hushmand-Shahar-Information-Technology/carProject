@@ -26,13 +26,15 @@
     <link rel="stylesheet" href="{{ asset('css/mega-menu/mega_menu.css') }}" />
 
     <!-- font awesome -->
-    {{-- <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}"/> --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" /> --}}
 
     <!-- owl-carousel -->
     <link rel="stylesheet" href="{{ asset('css/owl-carousel/owl.carousel.css') }}" />
 
     <!-- magnific-popup -->
-    {{-- <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/> --}}
+    {{--
+    <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}" /> --}}
 
 
     <!-- revolution -->
@@ -63,18 +65,18 @@
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-left text-lg-start text-center">
                             <ul class="list-inline">
-                                <li> <i class="fa-solid fa-envelope"> </i> support@website.com</li>
+                                <li> <i class="fa-solid fa-envelope"> </i> support@motarsal.com</li>
 
 
 
-                                <li> <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Sunday CLOSED</li>
+                                <li> <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Fridy CLOSED</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-right text-lg-end text-center">
                             <ul class="list-inline">
-                                <li> <i class="fa fa-phone"></i> (007) 123 456 7890</li>
+                                <li> <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532 </li>
                                 <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
                                 <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
                                 <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
@@ -104,188 +106,11 @@
                                                 src="{{ asset('images/logo-light.png') }}" alt="logo"> </a>
                                     </li>
                                 </ul>
-                                <!-- menu links -->
                                 <ul class="menu-links">
-                                    <!-- active class -->
-                                    <li class="active"><a href="javascript:void(0)">Home <i
-                                                class="fa-solid fa-angle-down"></i></a>
-                                        <!-- drop down full width -->
-                                        <div class="drop-down menu-bg grid-col-12">
-                                            <!--grid row-->
-                                            <div class="grid-row">
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <div class="menu-heading">Home Modern</div>
-                                                    <ul>
-                                                        <li><a href="modern-home-1.html">Home Modern 1 <span
-                                                                    class="label-new">New</span></a></li>
-                                                        <li><a href="modern-home-2.html">Home Modern 2 <span
-                                                                    class="label-new">New</span></a></li>
-                                                        <li><a href="modern-home-3.html">Home Modern 3 <span
-                                                                    class="label-new">New</span></a></li>
-                                                        <li><a href="electro-home.html">Home Electro <span
-                                                                    class="label-new">New</span></a></li>
-                                                        <li><a href="#">Coming Soon...</a></li>
-                                                    </ul>
-                                                </div>
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <div class="menu-heading">Home Classic</div>
-                                                    <ul>
-                                                        <li class="active"><a href="index.html">Home 01</a></li>
-                                                        <li><a href="index-2.html">Home 02</a></li>
-                                                        <li><a href="index-3.html">Home 03</a></li>
-                                                        <li><a href="index-4.html">Home 04</a></li>
-                                                        <li><a href="index-5.html">Home 05</a></li>
-                                                    </ul>
-                                                </div>
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <div class="menu-heading">Home Classic</div>
-                                                    <ul>
-                                                        <li><a href="index-6.html">Home 06</a></li>
-                                                        <li><a href="index-7.html">Home 07</a></li>
-                                                        <li><a href="index-8.html">Home 08</a></li>
-                                                        <li><a href="index-9.html">Home 09</a></li>
-                                                        <li><a href="index-10.html">Home 10</a></li>
-                                                    </ul>
-                                                </div>
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <div class="menu-heading">Home Classic</div>
-                                                    <ul>
-                                                        <li><a href="index-car-service.html">Car service </a></li>
-                                                        <li><a href="index-car-directory.html">Car directory</a></li>
-                                                        <li><a href="index-car-listing.html">Car listing </a></li>
-                                                        <li><a href="index-landing-page.html">landing page</a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <li class="active"><a href="javascript:void(0)">Home </a></li>
+                                    <li><a href="{{ route('car.index') }}">Car listing </a>
                                     </li>
-                                    <li><a href="javascript:void(0)">Pages <i class="fa-solid fa-angle-down"></i></a>
-                                        <!-- drop down full width -->
-                                        <div class="drop-down menu-bg grid-col-12">
-                                            <!--grid row-->
-                                            <div class="grid-row">
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <ul>
-                                                        <li><a href="about-01.html">About 01</a></li>
-                                                        <li><a href="about-02.html">About 02</a></li>
-                                                        <li><a href="about-modern.html">About Modern <span
-                                                                    class="label-new">New</span></a></li>
-                                                        <li><a href="service-01.html">service 01</a></li>
-                                                        <li><a href="service-02.html">service 02</a></li>
-                                                        <li><a href="services-modern.html">Services Modern <span
-                                                                    class="label-new">New</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <ul>
-                                                        <li><a href="team-01.html">team 01</a></li>
-                                                        <li><a href="team-02.html">team 02</a></li>
-                                                        <li><a href="team-single.html">Team Single <span
-                                                                    class="label-new">New</span></a></li>
-                                                        <li><a href="contact-01.html">contact 01</a></li>
-                                                        <li><a href="contact-02.html">contact 02</a></li>
-                                                        <li><a href="contact-modern.html">Contact Modern <span
-                                                                    class="label-new">New</span></a></li>
-                                                    </ul>
-                                                </div>
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <ul>
-                                                        <li><a href="career.html">career</a></li>
-                                                        <li><a href="faq.html">faq</a></li>
-                                                        <li><a href="login.html">login</a></li>
-                                                        <li><a href="register.html">register</a></li>
-                                                        <li><a href="error-404.html">error 404</a></li>
-                                                        <li><a href="coming-soon.html">coming soon</a></li>
-                                                    </ul>
-                                                </div>
-                                                <!--grid column 3-->
-                                                <div class="grid-col-3">
-                                                    <ul>
-                                                        <li><a href="typography.html">typography</a></li>
-                                                        <li><a href="page-left-sidebar.html">page left sidebar </a>
-                                                        </li>
-                                                        <li><a href="page-right-sidebar.html">page right sidebar </a>
-                                                        </li>
-                                                        <li><a href="page-both-sidebar.html">page both sidebar </a>
-                                                        </li>
-                                                        <li><a href="terms-and-conditions.html">terms and conditions
-                                                            </a></li>
-                                                        <li><a href="privacy-policy.html">privacy policy </a></li>
-                                                    </ul>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li><a href="javascript:void(0)">blog <i class="fa-solid fa-angle-down"></i></a>
-                                        <!-- drop down multilevel  -->
-                                        <ul class="drop-down-multilevel">
-                                            <li><a href="javascript:void(0)">blog classic <i
-                                                        class="fa-solid fa-angle-right"></i></a>
-                                                <!-- drop down second level -->
-                                                <ul class="drop-down-multilevel">
-                                                    <li><a href="blog-left-sidebar.html">left sidebar</a></li>
-                                                    <li><a href="blog-right-sidebar.html">right sidebar</a></li>
-                                                    <li><a href="blog-fullwidth.html">fullwidth</a></li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="javascript:void(0)">Masonry <i
-                                                        class="fa-solid fa-angle-right"></i></a>
-                                                <!-- drop down second level -->
-                                                <ul class="drop-down-multilevel">
-                                                    <li><a href="blog-masonry-2-collums.html"> 2 column </a> </li>
-                                                    <li><a href="blog-masonry-3-collums.html"> 3 column </a> </li>
-                                                    <li><a href="blog-masonry-4-collums.html"> 4 column </a> </li>
-                                                    <li><a href="blog-masonry-left-sidebar.html">left sidebar</a></li>
-                                                    <li><a href="blog-masonry-right-sidebar.html">right sidebar</a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                            <li><a href="javascript:void(0)">blog single <i
-                                                        class="fa-solid fa-angle-right"></i></a>
-                                                <!-- drop down second level -->
-                                                <ul class="drop-down-multilevel">
-                                                    <li><a href="blog-single-01.html">blog single 01 </a> </li>
-                                                    <li><a href="blog-single-02.html">blog single 02 </a> </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="javascript:void(0)">Car listing <i
-                                                class="fa-solid fa-angle-down"></i></a>
-                                        <!-- drop down multilevel  -->
-                                        <ul class="drop-down-multilevel">
-                                            <li><a href="{{ route('car.index') }}">listing 01</a></li>
-                                            <li><a href="listing-02.html">listing 02</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="javascript:void(0)">Car details <i
-                                                class="fa-solid fa-angle-down"></i></a>
-                                        <!-- drop down multilevel  -->
-                                        <ul class="drop-down-multilevel">
-                                            <li><a href="details-01.html">details 01</a></li>
-                                            <li><a href="details-02.html">details 02</a></li>
-                                            <li><a href="vehicle-view-360.html">Vehicle View 360° <span
-                                                        class="label-new">New</span></a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="javascript:void(0)"> Contact <i
-                                                class="fa-solid fa-angle-down"></i></a>
-                                        <!-- drop down multilevel  -->
-                                        <ul class="drop-down-multilevel right-menu">
-                                            <li><a href="contact-01.html">contact 01</a></li>
-                                            <li><a href="contact-02.html">contact 02</a></li>
-                                            <li><a href="contact-modern.html">Contact Modern <span
-                                                        class="label-new">New</span></a></li>
-                                        </ul>
-                                    </li>
+                                    <li><a href="javascript:void(0)"> Contact </a></li>
                                     <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
@@ -397,12 +222,10 @@
                                         class="fa-brands fa-facebook"></i> </a></li>
                             <li><a class="twitter nav-link hover:text-gray-100" href="#">twitter <i
                                         class="fa-brands fa-twitter"></i> </a></li>
-                            <li><a class="pinterest nav-link hover:text-gray-100" href="#">pinterest <i
-                                        class="fa-brands fa-pinterest-p"></i> </a></li>
-                            <li><a class="dribbble nav-link hover:text-gray-100" href="#">dribbble <i
-                                        class="fa-brands fa-dribbble"></i> </a></li>
-                            <li><a class="google-plus nav-link hover:text-gray-100" href="#">google plus <i
-                                        class="fa-brands fa-google-plus"></i> </a></li>
+                            <!-- <li><a class="pinterest nav-link hover:text-gray-100" href="#">pinterest <i
+                                        class="fa-brands fa-pinterest-p"></i> </a></li> -->
+                            <!-- <li><a class="google-plus nav-link hover:text-gray-100" href="#">google plus <i
+                                        class="fa-brands fa-google-plus"></i> </a></li> -->
                             <li><a class="behance nav-link hover:text-gray-100" href="#">behance <i
                                         class="fa-brands fa-behance"></i> </a></li>
                         </ul>
@@ -413,16 +236,15 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <div class="about-content">
-                        <img class="img-fluid" id="logo-footer" src="{{ asset('images/logo-light.png') }}"
-                            alt="">
+                        <img class="img-fluid" id="logo-footer" src="{{ asset('images/logo-light.png') }}" alt="">
                         <p>We provide everything you need to build an amazing dealership website developed especially
                             for car sellers dealers or auto motor retailers.</p>
                     </div>
                     <div class="address">
                         <ul>
                             <li> <i class="fa fa-map-marker"></i><span>220E Front St. Burlington NC 27215</span> </li>
-                            <li> <i class="fa fa-phone"></i><span>(007) 123 456 7890</span> </li>
-                            <li> <i class="fa-solid fa-envelope"></i><span>support@website.com</span> </li>
+                            <li> <i class="fa fa-phone"></i><span>077 9600 2750 / 072 806 3532 </span> </li>
+                            <li> <i class="fa-solid fa-envelope"></i><span>support@motarsal.com</span> </li>
                         </ul>
                     </div>
                 </div>
@@ -447,32 +269,25 @@
                     <div class="recent-post-block">
                         <h6 class="text-white">recent posts </h6>
                         <div class="recent-post">
-                            <div class="recent-post-image">
-                                <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}" alt="">
-                            </div>
-                            <div class="recent-post-info">
-                                <a href="#">Time to change your </a>
-                                <span class="post-date"><i class="fa fa-calendar"></i>September 10, 2021</span>
-                            </div>
+                            <!-- Started here -->
+                            @php
+                                $cars = App\Models\Car::all()->take(3);
+                            @endphp
+                            @foreach($cars as $car)
+                                <div class="recent-post">
+                                    <div class="recent-post-image">
+                                        <img class="img-fluid" src="{{  '/' . $car->images[0] }}" alt="{{ $car->title }}">
+                                    </div>
+                                    <div class=" recent-post-info">
+                                        <a href="#">{{ $car->title }} </a>
+                                        <span class="post-date"><i class="fa fa-calendar"></i>
+                                            {{ Carbon\Carbon::parse($car->created_at)->diffForHumans() }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                            <!-- End here -->
                         </div>
-                        <div class="recent-post">
-                            <div class="recent-post-image">
-                                <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
-                            </div>
-                            <div class="recent-post-info">
-                                <a href="#">The best time to </a>
-                                <span class="post-date"><i class="fa fa-calendar"></i>September 10, 2021</span>
-                            </div>
-                        </div>
-                        <div class="recent-post">
-                            <div class="recent-post-image">
-                                <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
-                            </div>
-                            <div class="recent-post-info">
-                                <a href="#">Replacing a timing </a>
-                                <span class="post-date"><i class="fa fa-calendar"></i>September 10, 2021</span>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
@@ -540,7 +355,8 @@
     <script type="text/javascript" src="{{ asset('js/owl-carousel/owl.carousel.min.js') }}"></script>
 
     <!-- select -->
-    {{-- <script type="text/javascript" src="{{ asset('js/select/jquery-select.js') }}"></script> --}}
+    {{--
+    <script type="text/javascript" src="{{ asset('js/select/jquery-select.js') }}"></script> --}}
 
     <!-- magnific popup -->
     <script type="text/javascript" src="{{ asset('js/magnific-popup/jquery.magnific-popup.min.js') }}"></script>
@@ -571,12 +387,12 @@
     <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
 
     <script type="text/javascript">
-        (function($) {
+        (function ($) {
             "use strict";
 
             var tpj = jQuery;
             var revapi2;
-            tpj(document).ready(function() {
+            tpj(document).ready(function () {
                 if (tpj("#rev_slider_2_1").revolution == undefined) {
                     revslider_showDoubleJqueryError("#rev_slider_2_1");
                 } else {
