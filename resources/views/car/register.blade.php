@@ -1,27 +1,6 @@
+@extends('layouts.layout')
 
-<!DOCTYPE html>
-    <html lang="en" >
-    <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-
-    <title>Car Registration</title>
-
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Alpine.js -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-
-    <!-- Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
+{{-- @section('title', ['title' => 'Car Registration']) --}}
     <style>
         .preview-controls {
         position: absolute;
@@ -36,8 +15,25 @@
         border-radius: 4px;
         }
     </style>
-    </head>
-    <body class="bg-gray-100">
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<!-- Tailwind CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+
+<!-- Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+@section('content')
+<div class="r p-auto m-auto" style="height: 400px; width: 100%; background-image: url('{{ asset('images/bg/01.jpg') }}'); background-size: cover; background-position:center; background-blend-mode: darken; background-color: rgba(0, 0, 0, 0.5);">
+</div>
+
+
         @if ($errors->any())
     <div class="alert alert-danger">
         <ul>
@@ -48,8 +44,8 @@
     </div>
 @endif
 
-    <div class="container mx-auto py-10" x-data="carForm()" x-init="initSelect2()">
-        <div class="bg-white p-6 rounded shadow-md max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="container mx-auto py-10" x-data="carForm()" x-init="initSelect2()" >
+        <div class="bg-white p-6 rounded shadow-md max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6" style="box-shadow: 0 0 2px black; margin: 1rem 0;">
         <div x-data="carForm()" x-init="initSelect2(); watchProgress()" x-effect="watchProgress()">
 
             <h1 class="text-2xl font-bold mb-6">🚗 Car Registration Form</h1>
@@ -64,7 +60,7 @@
                 <p class="text-sm text-center text-gray-700" x-text="`${progress}% completed`"></p>
 
             </div>
-            <form action="{{ route('car.store') }}" method="post" enctype="multipart/form-data">
+            <form action="{{ route('car.store') }}" method="post" enctype="multipart/form-data" >
                 @csrf
             <!-- Step 1 -->
             <div x-show="step === 1" class="space-y-4">
@@ -817,5 +813,5 @@
 
 
 </script>
-    </body>
-    </html>
+
+@endsection
