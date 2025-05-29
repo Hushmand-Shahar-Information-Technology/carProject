@@ -2,6 +2,7 @@
 @section('title', 'Car list')
 @section('content')
 
+@include('car.slick')
 
 <!--=================================
  inner-intro -->
@@ -220,9 +221,7 @@ car-details -->
           </div>
             
         </div>
-     
-        
-        
+
 
         <div id="tabs">
           <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -583,94 +582,94 @@ car-details -->
 
 <!--=================================
 car-details  -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-<script>
-// $(document).ready(function(){
-//   $('.slider-for').slick({
-//     slidesToShow: 1,
-//     slidesToScroll: 1,
-//     arrows: false,
-//     fade: true,
-//     asNavFor: '.slider-nav'
-//   });
 
-//   $('.slider-nav').slick({
-//     slidesToShow: 4,
-//     slidesToScroll: 1,
-//     asNavFor: '.slider-for',
-//     dots: false,
-//     centerMode: true,
-//     focusOnSelect: true
-//   });
-// });
+<script>
+
+    $(document).ready(function(){
+        $('.slider-for').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.slider-nav'
+        });
+
+        $('.slider-nav').slick({
+            slidesToShow: 4,
+            slidesToScroll: 1,
+            asNavFor: '.slider-for',
+            dots: false,
+            centerMode: true,
+            focusOnSelect: true
+        });
+    });
         // Define the dynamic route (replace '__ID__' later in JS)
     const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
     const API_URL = "{{ route('cars.feature') }}"; // Laravel API route
          const container = $('#feature-cars');
 
-    function fetchFilteredCars(query = '') {
-        axios.get(API_URL + '?' + query)
-            .then(response => {
-                const cars = response.data;
-                container.trigger('destroy.owl.carousel'); // Remove previous Owl
-                container.html('').removeClass('owl-loaded'); // Clear container
+    // function fetchFilteredCars(query = '') {
+    //     axios.get(API_URL + '?' + query)
+    //         .then(response => {
+    //             const cars = response.data;
+    //             container.trigger('destroy.owl.carousel'); // Remove previous Owl
+    //             container.html('').removeClass('owl-loaded'); // Clear container
 
-                $.each(cars, function(index, car) {
-                    const images = JSON.parse(car.images || '[]');
-                    const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
-                    const url = car_show.replace('__ID__', car.id);
+    //             $.each(cars, function(index, car) {
+    //                 const images = JSON.parse(car.images || '[]');
+    //                 const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
+    //                 const url = car_show.replace('__ID__', car.id);
 
-                    let html = `
-                        <div class="item">
-                            <div class="car-item gray-bg text-center">
-                                <div class="car-image">
-                                    <img class="img-fluid" src="${imageSrc}" alt="">
-                                    <div class="car-overlay-banner">
-                                        <ul>
-                                            <li><a href="${url}"><i class="fa fa-link"></i></a></li>
-                                            <li><a href="${url}"><i class="fa fa-dashboard"></i></a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                                <div class="car-list">
-                                    <ul class="list-inline">
-                                        <li><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                    </ul>
-                                </div>
-                                <div class="car-content">
-                                    <div class="star">
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star-o orange-color"></i>
-                                    </div>
-                                    <a href="#">${car.name || 'Unknown Car'}</a>
-                                    <div class="separator"></div>
-                                    <div class="price">
-                                        <span class="old-price">$${car.regular_price}</span>
-                                        <span class="new-price">$${car.sale_price}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+    //                 let html = `
+    //                     <div class="item">
+    //                         <div class="car-item gray-bg text-center">
+    //                             <div class="car-image">
+    //                                 <img class="img-fluid" src="${imageSrc}" alt="">
+    //                                 <div class="car-overlay-banner">
+    //                                     <ul>
+    //                                         <li><a href="${url}"><i class="fa fa-link"></i></a></li>
+    //                                         <li><a href="${url}"><i class="fa fa-dashboard"></i></a></li>
+    //                                     </ul>
+    //                                 </div>
+    //                             </div>
+    //                             <div class="car-list">
+    //                                 <ul class="list-inline">
+    //                                     <li><i class="fa fa-registered"></i> ${car.year}</li>
+    //                                     <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+    //                                     <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+    //                                 </ul>
+    //                             </div>
+    //                             <div class="car-content">
+    //                                 <div class="star">
+    //                                     <i class="fa fa-star orange-color"></i>
+    //                                     <i class="fa fa-star orange-color"></i>
+    //                                     <i class="fa fa-star orange-color"></i>
+    //                                     <i class="fa fa-star orange-color"></i>
+    //                                     <i class="fa fa-star-o orange-color"></i>
+    //                                 </div>
+    //                                 <a href="#">${car.name || 'Unknown Car'}</a>
+    //                                 <div class="separator"></div>
+    //                                 <div class="price">
+    //                                     <span class="old-price">$${car.regular_price}</span>
+    //                                     <span class="new-price">$${car.sale_price}</span>
+    //                                 </div>
+    //                             </div>
+    //                         </div>
+    //                     </div>
+    //                 `;
 
-                    container.append(html);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching cars:', error);
-                container.html('<p>Failed to load cars.</p>');
-            });
-    }
+    //                 container.append(html);
+    //             });
+    //         })
+    //         .catch(error => {
+    //             console.error('Error fetching cars:', error);
+    //             container.html('<p>Failed to load cars.</p>');
+    //         });
+    // }
 
-    $(document).ready(function () {
-        fetchFilteredCars();
-    });
+    // $(document).ready(function () {
+    //     fetchFilteredCars();
+    // });
 </script>
 
 

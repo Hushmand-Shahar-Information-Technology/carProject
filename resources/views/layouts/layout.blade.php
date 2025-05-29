@@ -32,12 +32,15 @@
     <!-- owl-carousel -->
     <link rel="stylesheet" href="{{ asset('css/owl-carousel/owl.carousel.css') }}" />
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+
     <!-- magnific-popup -->
     {{--
     <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}" /> --}}
 
-    <link rel="stylesheet" type="text/css" href="css/slick/slick.css" />
-    <link rel="stylesheet" type="text/css" href="css/slick/slick-theme.css" />
+    {{-- <link rel="stylesheet" type="text/css" href="css/slick/slick.css" /> --}}
+    {{-- <link rel="stylesheet" type="text/css" href="css/slick/slick-theme.css" /> --}}
 
     <!-- revolution -->
     <link rel="stylesheet" href="{{ asset('revolution/css/settings.css') }}" />
@@ -385,8 +388,12 @@
     </script>
     <script type="text/javascript" src="{{ asset('revolution/js/extensions/revolution.extension.video.min.js') }}">
     </script>
-
+<!-- Custom JS -->
     <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
+
+    <!-- Slick JS (Add this!) -->
+    <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+
 
     <script type="text/javascript">
         (function ($) {
