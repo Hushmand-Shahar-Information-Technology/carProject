@@ -95,10 +95,13 @@
                 <select x-model="form.make" class="w-full border rounded p-2 select2 make-select @error('make') border-red-500 @enderror" name="make">
                     <option value="">Select Make</option>
                     <option value="toyota" {{ old('make', $car->make ?? '') == 'toyota' ? 'selected' : '' }}>Toyota</option>
-                    <option value="ford" {{ old('make', $car->make ?? '') == 'ford' ? 'selected' : '' }}>Ford</option>
                     <option value="bmw" {{ old('make', $car->make ?? '') == 'bmw' ? 'selected' : '' }}>BMW</option>
                     <option value="honda" {{ old('make', $car->make ?? '') == 'honda' ? 'selected' : '' }}>Honda</option>
                     <option value="marcedes" {{ old('make', $car->make ?? '') == 'marcedes' ? 'selected' : '' }}>Mercedes</option>
+                    <option value="Hyundai" {{ old('make', $car->make ?? '') == 'Hyundai' ? 'selected' : '' }}>Hyundai</option>
+                    <option value="Nissan" {{ old('make', $car->make ?? '') == 'Nissan' ? 'selected' : '' }}>Nissan</option>
+                    <option value="Kia" {{ old('make', $car->make ?? '') == 'Kia' ? 'selected' : '' }}>Kia</option>
+                    <option value="ford" {{ old('make', $car->make ?? '') == 'ford' ? 'selected' : '' }}>Ford</option>
                 </select>
 
                 @error('make')
