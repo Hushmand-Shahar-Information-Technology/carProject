@@ -309,6 +309,7 @@
         });
 
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
+        const car_show = "{{route('car.show', ['id' => '__ID__'])}}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
 
@@ -363,12 +364,12 @@
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const carDiv = $('<div>');
-                        const url = car_show.replace('__ID__', car.id);
+                        const url = car_show.replace('__ID__', car.id); 
+                        
                         const details_button = `<a class="button red float-end" href="${url}">Details</a>`;
 
                         // Set dynamic class based on view
                         carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2');
-
                         // Build HTML dynamically
                         let html = `
                     ${currentView === 'list' ? '<div class="row p-2">' : ''}
@@ -378,8 +379,8 @@
                                     <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
                                     <div class="car-overlay-banner">
                                         <ul>
-                                            <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                            <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                                            <li><a href="${url}"><i class="fa fa-link"></i></a></li>
+                                            <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -410,7 +411,7 @@
                                 <div class="price">
                                     <span class="old-price">$${car.regular_price}</span>
                                     <span class="new-price">$${car.sale_price}</span>
-                                    ${currentView === 'list' ? '<a class="button red float-end" href="#">Details</a>' : ''}
+                                    ${currentView === 'list' ? details_button : ''}
                                 </div>
                                 <div class="car-list">
                                     <ul class="list-inline">
