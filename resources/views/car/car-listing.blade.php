@@ -87,11 +87,11 @@
         }
 
         /* .search-result-item img {
-            width: 60px;
-            height: 40px;
-            object-fit: cover;
-            border-radius: 3px;
-        } */
+                    width: 60px;
+                    height: 40px;
+                    object-fit: cover;
+                    border-radius: 3px;
+                } */
 
         .search-result-info {
             flex-grow: 1;
@@ -115,7 +115,7 @@
         }
     </style>
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 banner -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -145,8 +145,8 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                        <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -234,15 +234,15 @@
             </div>
         </div>
     </section>
-        
+
     <!--===============
-        Scripts    
-    ===============-->
+                Scripts
+            ===============-->
     <script type="module">
-        $("#sort-select").on('change', function () {
+        $("#sort-select").on('change', function() {
             applyFilters();
         });
-        $("#general-search").on('input', function () {
+        $("#general-search").on('input', function() {
             const keyword = $(this).val().trim();
             const resultsContainer = $('#search-results');
 
@@ -266,7 +266,7 @@
                         const carDiv = $('<div>').addClass('search-result-item');
                         const imageSrc = `/storage/${car.images[0]}`;
                         carDiv.html(`
-                                        <img src="${imageSrc}" style="object-fit: cover;" alt="${car.title}">
+                                        <img src="${imageSrc}" style="object-fit: cover;width: 80px;height: 80px;" alt="${car.title}">
                                         <div class="search-result-info">
                                             <div class="search-result-title">${car.year} ${car.make} ${car.model}</div>
                                             <div class="search-result-vin">VIN: ${car.VIN_number}</div>
@@ -295,14 +295,14 @@
         });
 
         // Hide results when clicking outside
-        $(document).click(function (e) {
+        $(document).click(function(e) {
             if (!$(e.target).closest('.search-page').length) {
                 $('#search-results').hide();
             }
         });
 
         // Hide results when pressing ESC
-        $(document).keyup(function (e) {
+        $(document).keyup(function(e) {
             if (e.key === "Escape") {
                 $('#search-results').hide();
             }
@@ -346,7 +346,7 @@
                         return;
                     }
 
-                    $.each(cars, function (index, car) {
+                    $.each(cars, function(index, car) {
                         let images;
                         // try {
                         //     images = JSON.parse(car.images || '[]');
@@ -391,22 +391,22 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `
-                                                                                                                                                                                                                                                                                                                        <div class="car-title">
-                                                                                                                                                                                                                                                                                                                            <a href="#">${car.title}</a>
-                                                                                                                                                                                                                                                                                                                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                    `
+                                                                                                                                                                                                                                                                                                                                <div class="car-title">
+                                                                                                                                                                                                                                                                                                                                    <a href="#">${car.title}</a>
+                                                                                                                                                                                                                                                                                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
+                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                            `
                                 : `
-                                                                                                                                                                                                                                                                                                                        <div class="star">
-                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                            <i class="fa fa-star-o orange-color"></i>
-                                                                                                                                                                                                                                                                                                                        </div>
-                                                                                                                                                                                                                                                                                                                        <a href="#">${car.model}</a>
-                                                                                                                                                                                                                                                                                                                        <div class="separator"></div>
-                                                                                                                                                                                                                                                                                                                    `
+                                                                                                                                                                                                                                                                                                                                <div class="star">
+                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
+                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star-o orange-color"></i>
+                                                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                                                                <a href="#">${car.model}</a>
+                                                                                                                                                                                                                                                                                                                                <div class="separator"></div>
+                                                                                                                                                                                                                                                                                                                            `
                             }
                                 <div class="price">
                                     <span class="old-price">$${car.regular_price}</span>
@@ -454,17 +454,17 @@
             fetchFilteredCars(new URLSearchParams(formData).toString());
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // View toggle handlers
-            $("#grid-view").click(function () {
+            $("#grid-view").click(function() {
                 setView('grid');
             });
-            $("#list-view").click(function () {
+            $("#list-view").click(function() {
                 setView('list');
             });
 
             // Filter handlers
-            $(".filter-option").change(function () {
+            $(".filter-option").change(function() {
                 const name = $(this).attr('name').replace('[]', '');
                 const group = $(`input[name="${name}[]"]`);
                 const allCheckbox = $(`#all-${name.toLowerCase()}`);
@@ -494,7 +494,7 @@
             //         submenu.style.display = submenu.style.display === "block" ? "none" : "block";
             //     });
             // });
-            $(".list-group-item > a").on('click', function (e) {
+            $(".list-group-item > a").on('click', function(e) {
                 e.preventDefault();
                 const submenu = $(this).next();
                 submenu.toggle();
