@@ -495,7 +495,7 @@
         });
 
 
-        // code fo getting the body type filters from the URL and making an API call
+        code fo getting the body type filters from the URL and making an API call
         document.addEventListener('DOMContentLoaded', function () {
             const urlParams = new URLSearchParams(window.location.search);
             const searchInput = document.getElementById('car-search');
