@@ -57,6 +57,10 @@ class CarController extends Controller
         if ($colors = $request->input('Color', [])) {
             $query->whereIn('car_color', $colors);
         }
+
+        if ($makes = $request->input('Make', [])) {
+            $query->whereIn('make', $makes);
+        }
         // Handle sorting
         $sort = $request->input('sort');
         // dd($sort);
@@ -146,7 +150,7 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::findOrFail($id); 
+        $car = Car::findOrFail($id);
         // dd($car->location);
         return view('car.show', compact('car'));
     }
@@ -162,7 +166,29 @@ class CarController extends Controller
      */
     public function feature()
     {
-        $cars = Car::orderBy('id', 'desc')->take(15)->get(); 
+        $cars = Car::orderBy('id', 'desc')->take(15)->get();
         return response()->json($cars);
+    }
+
+
+    public function CarDirectory(){
+        // Define logos and their corresponding car makes
+        $logos = [
+            ['image' => '01.png', 'make' => 'Toyota'],
+            ['image' => '02.png', 'make' => 'BMW'],
+            ['image' => '03.png', 'make' => 'Honda'],
+            ['image' => '04.png', 'make' => 'Ford'],
+            ['image' => '05.png', 'make' => 'Hyundai'],
+            ['image' => '06.png', 'make' => 'Nissan'],
+            ['image' => '07.png', 'make' => 'Kia'],
+            ['image' => '08.png', 'make' => 'Mercedes'],
+        ];
+
+        // Add dynamic count to each
+        foreach ($logos as &$logo) {
+            $logo['count'] = Car::where('make', $logo['make'])->count();
+        }
+
+        return view('car.directory', compact('logos'));
     }
 }

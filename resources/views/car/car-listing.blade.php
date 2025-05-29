@@ -144,6 +144,10 @@
         </div>
     </section>
 
+    <div id="car-list">
+        <!-- Filtered cars will be loaded here -->
+    </div>
+
     <!--=================================
                                                                                                                                                                                                                                                                                         <!--=================================
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         car-listing-sidebar -->
@@ -238,6 +242,7 @@
     <!--===============
                 Scripts
             ===============-->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
         $("#sort-select").on('change', function() {
             applyFilters();
@@ -355,7 +360,7 @@
                         //     // If parsing fails, treat it as a single string
                         //     images = car.images ? [car.images] : [];
                         // }
-                        // if images are json 
+                        // if images are json
                         if (typeof car.images === 'object') {
                             images = car.images;
                             console.log(images);
@@ -364,8 +369,8 @@
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const carDiv = $('<div>');
-                        const url = car_show.replace('__ID__', car.id); 
-                        
+                        const url = car_show.replace('__ID__', car.id);
+
                         const details_button = `<a class="button red float-end" href="${url}">Details</a>`;
 
                         // Set dynamic class based on view
@@ -390,23 +395,9 @@
                         <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
-                                ? `
-                                                                                                                                                                                                                                                                                                                                <div class="car-title">
-                                                                                                                                                                                                                                                                                                                                    <a href="#">${car.title}</a>
-                                                                                                                                                                                                                                                                                                                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                                                                                                                                                                                                                                                                                                                                </div>
+                                ? `                                                                                                                                                                                                                                                                                                </div>
                                                                                                                                                                                                                                                                                                                             `
-                                : `
-                                                                                                                                                                                                                                                                                                                                <div class="star">
-                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star orange-color"></i>
-                                                                                                                                                                                                                                                                                                                                    <i class="fa fa-star-o orange-color"></i>
-                                                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                <a href="#">${car.model}</a>
-                                                                                                                                                                                                                                                                                                                                <div class="separator"></div>
-                                                                                                                                                                                                                                                                                                                            `
+                                : `                                                                                                                                                                                                                                                                                  `
                             }
                                 <div class="price">
                                     <span class="old-price">$${car.regular_price}</span>
@@ -502,6 +493,77 @@
             // Initial load
             fetchFilteredCars();
         });
+
+
+        // code fo getting the body type filters from the URL and making an API call
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchInput = document.getElementById('car-search');
+            const container = document.getElementById('car-results');
+
+            // If Body[] is present, show it in the search bar as a comma separated string
+            const bodies = urlParams.getAll('Body[]');
+            if (bodies.length > 0) {
+                searchInput.value = bodies.join(', ');
+                fetchFilteredCars(urlParams.toString());
+            } else {
+                // Load all cars initially if no filters
+                fetchFilteredCars();
+            }
+
+            // Listen for input changes on search bar
+            searchInput.addEventListener('input', function () {
+                const keyword = searchInput.value.trim();
+
+                if (keyword === '') {
+                    // If search input is empty, show all cars
+                    fetchFilteredCars();
+                } else {
+                    // Use keyword as filter param, assuming backend supports 'keyword' param for searching Body or other fields
+                    // Note: you may want to adapt backend to search body types by keyword or modify this to fit your needs
+                    const query = new URLSearchParams();
+                    query.append('keyword', keyword);
+                    fetchFilteredCars(query.toString());
+                }
+            });
+        });
+
+
+        // search for make car company code
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const searchInput = document.getElementById('car-search');
+            const container = document.getElementById('car-results');
+
+            // If Body[] is present, show it in the search bar as a comma separated string
+            const bodies = urlParams.getAll('make');
+            if (bodies.length > 0) {
+                searchInput.value = bodies.join(', ');
+                fetchFilteredCars(urlParams.toString());
+            } else {
+                // Load all cars initially if no filters
+                fetchFilteredCars();
+            }
+
+            // Listen for input changes on search bar
+            searchInput.addEventListener('input', function () {
+                const keyword = searchInput.value.trim();
+
+                if (keyword === '') {
+                    // If search input is empty, show all cars
+                    fetchFilteredCars();
+                } else {
+                    // Use keyword as filter param, assuming backend supports 'keyword' param for searching Body or other fields
+                    // Note: you may want to adapt backend to search body types by keyword or modify this to fit your needs
+                    const query = new URLSearchParams();
+                    query.append('keyword', keyword);
+                    fetchFilteredCars(query.toString());
+                }
+            });
+        });
+
+
+
     </script>
 
 @endsection

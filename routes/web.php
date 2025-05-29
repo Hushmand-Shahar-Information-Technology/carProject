@@ -33,6 +33,7 @@ Route::prefix('car')->group(function () {
     Route::post('store', [CarController::class, 'store'])->name('car.store');
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
+    Route::get('directory', [CarController::class,'CarDirectory'])->name('car.directory');
 });
 
 require __DIR__ . '/auth.php';
