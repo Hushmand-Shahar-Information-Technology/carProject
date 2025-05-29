@@ -8,7 +8,7 @@
 	color: #FFF;
 	display: inline-block;
 	zoom: 1;
- *display: inline;/*IE7 life-saver */
+ 	display: inline;/*IE7 life-saver */
 	margin-top: -18px;
 	padding: 3px 10px;
 	font-size: 0;
@@ -137,3 +137,4 @@
 	opacity: .75;
 	color: black;
 }
+

@@ -158,11 +158,11 @@ class CarController extends Controller
         return response()->json($cars);
     }
     /**
-     * Show the form for creating a new car.
+     * Feature for the new cars.
      */
     public function feature()
     {
-        $car = Car::findOrFail($id); 
-        return view('car.show', compact('car'));
+        $cars = Car::orderBy('id', 'desc')->take(15)->get(); 
+        return response()->json($cars);
     }
 }

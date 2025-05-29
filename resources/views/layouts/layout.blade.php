@@ -34,6 +34,8 @@
     <!-- magnific-popup -->
     {{-- <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}"/> --}}
 
+    <link rel="stylesheet" type="text/css" href="css/slick/slick.css" />
+    <link rel="stylesheet" type="text/css" href="css/slick/slick-theme.css" />
 
     <!-- revolution -->
     <link rel="stylesheet" href="{{ asset('revolution/css/settings.css') }}" />
