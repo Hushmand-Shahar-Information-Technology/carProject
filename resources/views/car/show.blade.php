@@ -15,9 +15,9 @@
            </div>
            <div class="col-md-6 text-md-end float-end">
              <ul class="page-breadcrumb">
-                <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i></li>
-                <li><a href="#">pages</a> <i class="fa fa-angle-double-right"></i></li>
-                <li><span> details 02</span> </li>
+                <li><a href="{{route('home.index')}}"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i></li>
+                <li><a href="{{route('car.index')}}">car-list</a> <i class="fa fa-angle-double-right"></i></li>
+                <li><span> details</span> </li>
              </ul>
            </div>
      </div>
@@ -189,8 +189,8 @@ car-details -->
     <div class="row">
       <div class="col-md-8">
         <div class="slider-slick">
-          <div class="cars-image-gallery">
-            <div class="slider slider-for detail-big-car-gallery">
+          <div class="cars-image-gallery ">
+            <div class="slider slider-for detail-big-car-gallery ">
               <img class="img-fluid" src="{{asset('images/car/01.jpg')}}" alt="">
               <img class="img-fluid" src="{{asset('images/car/02.jpg')}}" alt="">
               <img class="img-fluid" src="{{asset('images/car/03.jpg')}}" alt="">
@@ -330,155 +330,155 @@ car-details -->
           </div>
         </div>
         </div>
-  <div class="feature-car">
-   <h6>Recently Vehicle</h6>
-    <div class="row">
-     <div class="col-md-12">
-       <div class="owl-carousel" data-nav-arrow="true" data-nav-dots="true" data-items="3" data-md-items="3" data-sm-items="2" data-space="15">
-        <div class="item">
-         <div class="car-item gray-bg text-center">
-           <div class="car-image">
-             <img class="img-fluid" src="{{asset('images/car/01.jpg')}}" alt="">
-             <div class="car-overlay-banner">
-              <ul>
-                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-               </ul>
-             </div>
-           </div>
-           <div class="car-list">
-             <ul class="list-inline">
-               <li><i class="fa fa-registered"></i> 2016</li>
-               <li><i class="fa fa-cog"></i> Manual </li>
-               <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-             </ul>
+        <div class="feature-car">
+        <h6>Recently Vehicle</h6>
+          <div class="row">
+          <div class="col-md-12">
+            <div class="owl-carousel" data-nav-arrow="true" data-nav-dots="true" data-items="3" data-md-items="3" data-sm-items="2" data-space="15">
+              <div class="item">
+              <div class="car-item gray-bg text-center">
+                <div class="car-image">
+                  <img class="img-fluid" src="{{asset('images/car/01.jpg')}}" alt="">
+                  <div class="car-overlay-banner">
+                    <ul>
+                      <li><a href="#"><i class="fa fa-link"></i></a></li>
+                      <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="car-list">
+                  <ul class="list-inline">
+                    <li><i class="fa fa-registered"></i> 2016</li>
+                    <li><i class="fa fa-cog"></i> Manual </li>
+                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                  </ul>
+                </div>
+                <div class="car-content">
+                  <div class="star">
+                  <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star-o orange-color"></i>
+                  </div>
+                  <a href="#">Acura Rsx</a>
+                  <div class="separator"></div>
+                  <div class="price">
+                    <span class="old-price">$35,568</span>
+                    <span class="new-price">$32,698 </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="car-item gray-bg text-center">
+                <div class="car-image">
+                  <img class="img-fluid" src="{{asset('images/car/02.jpg')}}" alt="">
+                  <div class="car-overlay-banner">
+                    <ul>
+                      <li><a href="#"><i class="fa fa-link"></i></a></li>
+                      <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="car-list">
+                  <ul class="list-inline">
+                    <li><i class="fa fa-registered"></i> 2016</li>
+                    <li><i class="fa fa-cog"></i> Manual </li>
+                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                  </ul>
+                </div>
+                <div class="car-content">
+                  <div class="star">
+                  <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star-o orange-color"></i>
+                  </div>
+                  <a href="#">Lexus GS 450h</a>
+                  <div class="separator"></div>
+                  <div class="price">
+                    <span class="old-price">$35,568</span>
+                    <span class="new-price">$32,698 </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="item">
+              <div class="car-item gray-bg text-center">
+                <div class="car-image">
+                  <img class="img-fluid" src="{{asset('images/car/03.jpg')}}" alt="">
+                  <div class="car-overlay-banner">
+                    <ul>
+                      <li><a href="#"><i class="fa fa-link"></i></a></li>
+                      <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="car-list">
+                  <ul class="list-inline">
+                    <li><i class="fa fa-registered"></i> 2016</li>
+                    <li><i class="fa fa-cog"></i> Manual </li>
+                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                  </ul>
+                </div>
+                <div class="car-content">
+                  <div class="star">
+                  <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star-o orange-color"></i>
+                  </div>
+                  <a href="#">GTA 5 Lowriders DLC</a>
+                  <div class="separator"></div>
+                  <div class="price">
+                    <span class="old-price">$35,568</span>
+                    <span class="new-price">$32,698 </span>
+                  </div>
+                </div>
+              </div>
+              </div>
+              <div class="item">
+              <div class="car-item gray-bg text-center">
+                <div class="car-image">
+                  <img class="img-fluid" src="{{asset('images/car/04.jpg')}}" alt="">
+                  <div class="car-overlay-banner">
+                    <ul>
+                      <li><a href="#"><i class="fa fa-link"></i></a></li>
+                      <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="car-list">
+                  <ul class="list-inline">
+                    <li><i class="fa fa-registered"></i> 2016</li>
+                    <li><i class="fa fa-cog"></i> Manual </li>
+                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                  </ul>
+                </div>
+                <div class="car-content">
+                  <div class="star">
+                  <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star-o orange-color"></i>
+                  </div>
+                  <a href="#"> Toyota avalon hybrid </a>
+                  <div class="separator"></div>
+                  <div class="price">
+                    <span class="old-price">$35,568</span>
+                    <span class="new-price">$32,698 </span>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+            </div>
           </div>
-           <div class="car-content">
-            <div class="star">
-             <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star-o orange-color"></i>
-             </div>
-             <a href="#">Acura Rsx</a>
-             <div class="separator"></div>
-             <div class="price">
-               <span class="old-price">$35,568</span>
-               <span class="new-price">$32,698 </span>
-             </div>
-           </div>
-         </div>
-       </div>
-       <div class="item">
-         <div class="car-item gray-bg text-center">
-           <div class="car-image">
-             <img class="img-fluid" src="{{asset('images/car/02.jpg')}}" alt="">
-             <div class="car-overlay-banner">
-              <ul>
-                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-               </ul>
-             </div>
-           </div>
-           <div class="car-list">
-             <ul class="list-inline">
-               <li><i class="fa fa-registered"></i> 2016</li>
-               <li><i class="fa fa-cog"></i> Manual </li>
-               <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-             </ul>
           </div>
-           <div class="car-content">
-            <div class="star">
-             <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star-o orange-color"></i>
-             </div>
-             <a href="#">Lexus GS 450h</a>
-             <div class="separator"></div>
-             <div class="price">
-               <span class="old-price">$35,568</span>
-               <span class="new-price">$32,698 </span>
-             </div>
-           </div>
-         </div>
-       </div>
-       <div class="item">
-         <div class="car-item gray-bg text-center">
-           <div class="car-image">
-             <img class="img-fluid" src="{{asset('images/car/03.jpg')}}" alt="">
-             <div class="car-overlay-banner">
-              <ul>
-                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-               </ul>
-             </div>
-           </div>
-           <div class="car-list">
-             <ul class="list-inline">
-               <li><i class="fa fa-registered"></i> 2016</li>
-               <li><i class="fa fa-cog"></i> Manual </li>
-               <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-             </ul>
-          </div>
-           <div class="car-content">
-            <div class="star">
-             <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star-o orange-color"></i>
-             </div>
-             <a href="#">GTA 5 Lowriders DLC</a>
-             <div class="separator"></div>
-             <div class="price">
-               <span class="old-price">$35,568</span>
-               <span class="new-price">$32,698 </span>
-             </div>
-           </div>
-         </div>
-        </div>
-        <div class="item">
-         <div class="car-item gray-bg text-center">
-           <div class="car-image">
-             <img class="img-fluid" src="{{asset('images/car/04.jpg')}}" alt="">
-             <div class="car-overlay-banner">
-              <ul>
-                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-               </ul>
-             </div>
-           </div>
-           <div class="car-list">
-             <ul class="list-inline">
-               <li><i class="fa fa-registered"></i> 2016</li>
-               <li><i class="fa fa-cog"></i> Manual </li>
-               <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-             </ul>
-          </div>
-           <div class="car-content">
-            <div class="star">
-             <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star orange-color"></i>
-              <i class="fa fa-star-o orange-color"></i>
-             </div>
-             <a href="#"> Toyota avalon hybrid </a>
-             <div class="separator"></div>
-             <div class="price">
-               <span class="old-price">$35,568</span>
-               <span class="new-price">$32,698 </span>
-             </div>
-           </div>
-         </div>
-        </div>
-       </div>
-      </div>
-     </div>
-    </div>
    </div>
    <div class="col-md-4">
        <div class="car-details-sidebar">
