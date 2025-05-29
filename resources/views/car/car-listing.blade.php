@@ -273,7 +273,7 @@
                                             <div class="search-result-price">$${car.sale_price}</div>
                                         </div>
                                     `);
-                        carDiv.click(() => window.location.href = `/cars/${car.id}`);
+                        carDiv.click(() => window.location.href = `/car/show/${car.id}`);
                         resultsContainer.append(carDiv);
                     });
 
