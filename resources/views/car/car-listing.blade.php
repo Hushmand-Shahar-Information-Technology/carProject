@@ -403,6 +403,7 @@
                                     <span class="old-price">$${car.regular_price}</span>
                                     <span class="new-price">$${car.sale_price}</span>
                                     ${currentView === 'list' ? details_button : ''}
+                                    
                                 </div>
                                 <div class="car-list">
                                     <ul class="list-inline">
