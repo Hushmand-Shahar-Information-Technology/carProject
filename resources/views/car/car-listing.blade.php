@@ -278,7 +278,7 @@
                                             <div class="search-result-price">$${car.sale_price}</div>
                                         </div>
                                     `);
-                        carDiv.click(() => window.location.href = `/car/show/${car.id}`);
+                        carDiv.click(() => window.location.href = `/cars/${car.id}`);
                         resultsContainer.append(carDiv);
                     });
 
@@ -403,7 +403,6 @@
                                     <span class="old-price">$${car.regular_price}</span>
                                     <span class="new-price">$${car.sale_price}</span>
                                     ${currentView === 'list' ? details_button : ''}
-                                    
                                 </div>
                                 <div class="car-list">
                                     <ul class="list-inline">
@@ -496,74 +495,61 @@
         });
 
 
-        code fo getting the body type filters from the URL and making an API call
-        document.addEventListener('DOMContentLoaded', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const searchInput = document.getElementById('car-search');
-            const container = document.getElementById('car-results');
+    // code fo getting the body type filters from the URL and making an API call
+    // Block 1: For Body[] (array)
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const hasBody = urlParams.has('Body[]');
+        if (!hasBody) return; // Only run if Body[] exists
 
-            // If Body[] is present, show it in the search bar as a comma separated string
-            const bodies = urlParams.getAll('Body[]');
-            if (bodies.length > 0) {
-                searchInput.value = bodies.join(', ');
-                fetchFilteredCars(urlParams.toString());
-            } else {
-                // Load all cars initially if no filters
+        const searchInput = document.getElementById('car-search');
+        const bodies = urlParams.getAll('Body[]');
+
+        if (bodies.length > 0) {
+            searchInput.value = bodies.join(', ');
+            fetchFilteredCars(urlParams.toString());
+        } else {
+            fetchFilteredCars();
+        }
+
+        searchInput.addEventListener('input', function () {
+            const keyword = searchInput.value.trim();
+            if (keyword === '') {
                 fetchFilteredCars();
-            }
-
-            // Listen for input changes on search bar
-            searchInput.addEventListener('input', function () {
-                const keyword = searchInput.value.trim();
-
-                if (keyword === '') {
-                    // If search input is empty, show all cars
-                    fetchFilteredCars();
-                } else {
-                    // Use keyword as filter param, assuming backend supports 'keyword' param for searching Body or other fields
-                    // Note: you may want to adapt backend to search body types by keyword or modify this to fit your needs
-                    const query = new URLSearchParams();
-                    query.append('keyword', keyword);
-                    fetchFilteredCars(query.toString());
-                }
-            });
-        });
-
-
-        // search for make car company code
-        document.addEventListener('DOMContentLoaded', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const searchInput = document.getElementById('car-search');
-            const container = document.getElementById('car-results');
-
-            // If Body[] is present, show it in the search bar as a comma separated string
-            const bodies = urlParams.getAll('make');
-            if (bodies.length > 0) {
-                searchInput.value = bodies.join(', ');
-                fetchFilteredCars(urlParams.toString());
             } else {
-                // Load all cars initially if no filters
-                fetchFilteredCars();
+                const query = new URLSearchParams();
+                query.append('keyword', keyword);
+                fetchFilteredCars(query.toString());
             }
-
-            // Listen for input changes on search bar
-            searchInput.addEventListener('input', function () {
-                const keyword = searchInput.value.trim();
-
-                if (keyword === '') {
-                    // If search input is empty, show all cars
-                    fetchFilteredCars();
-                } else {
-                    // Use keyword as filter param, assuming backend supports 'keyword' param for searching Body or other fields
-                    // Note: you may want to adapt backend to search body types by keyword or modify this to fit your needs
-                    const query = new URLSearchParams();
-                    query.append('keyword', keyword);
-                    fetchFilteredCars(query.toString());
-                }
-            });
         });
+    });
 
+    // Block 2: For make (single value)
+    document.addEventListener('DOMContentLoaded', function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const make = urlParams.get('make');
+        if (!make) return; // Only run if 'make' exists
 
+        const searchInput = document.getElementById('car-search');
+        searchInput.value = make;
+
+        // 🔁 Trigger search as if user typed it
+        const initialQuery = new URLSearchParams();
+        initialQuery.append('keyword', make);
+        fetchFilteredCars(initialQuery.toString());
+
+        // 🔁 Live input listener for user typing
+        searchInput.addEventListener('input', function () {
+            const keyword = searchInput.value.trim();
+            if (keyword === '') {
+                fetchFilteredCars();
+            } else {
+                const query = new URLSearchParams();
+                query.append('keyword', keyword);
+                fetchFilteredCars(query.toString());
+            }
+        });
+    });
 
     </script>
 
