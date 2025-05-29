@@ -57,6 +57,10 @@ class CarController extends Controller
         if ($colors = $request->input('Color', [])) {
             $query->whereIn('car_color', $colors);
         }
+
+        if ($makes = $request->input('Make', [])) {
+            $query->whereIn('make', $makes);
+        }
         // Handle sorting
         $sort = $request->input('sort');
         // dd($sort);

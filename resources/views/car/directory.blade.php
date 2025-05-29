@@ -341,17 +341,17 @@
                 <div class="tab-pane fade show active" id="browse-make" role="tabpanel" aria-labelledby="browse-make-tab">
                   <div class="row">
                     @foreach($logos as $logo)
-                    <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="#">
-                            <div class="search-logo-box">
-                                <img class="img-fluid center-block"
-                                     src="{{ asset('images/clients/logo/' . $logo['image']) }}"
-                                     alt="{{ $logo['make'] }}">
-                                <span>{{ $logo['count'] }}</span>
-                            </div>
-                        </a>
-                    </div>
-                @endforeach
+                        <div class="col-lg-3 col-md-4 col-sm-4 col-6 car-logo-item" data-make="{{ strtolower($logo['make']) }}">
+                            <a href="{{ route('car.index', ['make' => strtolower($logo['make'])]) }}">
+                                <div class="search-logo-box">
+                                    <img class="img-fluid center-block" src="{{ asset('images/clients/logo/' . $logo['image']) }}" alt="{{ $logo['make'] }}">
+                                    <span>{{ $logo['count'] }}</span>
+                                </div>
+                            </a>
+                        </div>
+                    @endforeach
+
+
                 </div>
             </div>
 
