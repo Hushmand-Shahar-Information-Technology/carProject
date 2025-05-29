@@ -50,6 +50,8 @@
     <!-- revolution -->
     <link rel="stylesheet" href="{{ asset('revolution/css/settings.css') }}" />
 
+    <!-- Bootstrap Bundle JS (includes Popper) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- main style -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
 
