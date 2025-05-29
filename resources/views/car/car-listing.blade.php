@@ -278,7 +278,7 @@
                                             <div class="search-result-price">$${car.sale_price}</div>
                                         </div>
                                     `);
-                        carDiv.click(() => window.location.href = `/cars/${car.id}`);
+                        carDiv.click(() => window.location.href = `/car/show/${car.id}`);
                         resultsContainer.append(carDiv);
                     });
 
@@ -403,6 +403,7 @@
                                     <span class="old-price">$${car.regular_price}</span>
                                     <span class="new-price">$${car.sale_price}</span>
                                     ${currentView === 'list' ? details_button : ''}
+                                    
                                 </div>
                                 <div class="car-list">
                                     <ul class="list-inline">

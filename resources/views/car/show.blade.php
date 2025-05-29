@@ -4,8 +4,16 @@
 
     {{-- @include('car.slick') --}}
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
                      inner-intro -->
+    <style>
+        .fixed-img {
+            width: 100%;
+            aspect-ratio: 16 / 11;
+            object-fit: cover;
+        }
+    </style>                 
 
     <section class="inner-intro bg-6 bg-overlay-black-70">
         <div class="container">
@@ -15,10 +23,10 @@
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
-                        <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i>
+                        <li><a href="{{route('home.index')}}"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i>
                         </li>
-                        <li><a href="#">pages</a> <i class="fa fa-angle-double-right"></i></li>
-                        <li><span> details 02</span> </li>
+                        <li><a href="{{route('car.index')}}">car-list</a> <i class="fa fa-angle-double-right"></i></li>
+                        <li><span> details </span> </li>
                     </ul>
                 </div>
             </div>
@@ -220,9 +228,9 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="slider-slick">
-                        <div class="cars-image-gallery">
-                            <div class="slider slider-for detail-big-car-gallery">
-                                <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}" alt="">
+                        <div class="cars-image-gallery" style="">
+                            <div class="slider slider-for detail-big-car-gallery" >
+                                <img class="img-fluid" style="" src="{{ asset('images/car/01.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/04.jpg') }}" alt="">
@@ -236,21 +244,17 @@
                                     <a class="popup-youtube" href="https://www.youtube.com/watch?v=Xd0Ok-MkqoE"><i
                                             class="fa fa-play"></i> Vehicle video</a>
                                 </div>
-                                <div class="view-360-btn">
-                                    <a class="btn-open-vehicle-view360" href="#" data-bs-toggle="modal"
-                                        data-bs-target="#modal360"><i class="fas fa-custom-view360"></i></a>
-                                </div>
                             </div>
                         </div>
                         <div class="slider slider-nav">
-                            <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}" alt="">
-                            <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
-                            <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
-                            <img class="img-fluid" src="{{ asset('images/car/04.jpg') }}" alt="">
-                            <img class="img-fluid" src="{{ asset('images/car/05.jpg') }}" alt="">
-                            <img class="img-fluid" src="{{ asset('images/car/06.jpg') }}" alt="">
-                            <img class="img-fluid" src="{{ asset('images/car/07.jpg') }}" alt="">
-                            <img class="img-fluid" src="{{ asset('images/car/08.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/02.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/03.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/04.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/05.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/06.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/07.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/08.jpg') }}" alt="">
                         </div>
 
                     </div>
@@ -695,6 +699,15 @@
                 dots: false,
                 centerMode: true,
                 focusOnSelect: true
+            });
+        });
+         $(document).ready(function() {
+            $('.popup-youtube').magnificPopup({
+                type: 'iframe',
+                mainClass: 'mfp-fade',
+                removalDelay: 160,
+                preloader: false,
+                fixedContentPos: false
             });
         });
         // Define the dynamic route (replace '__ID__' later in JS)
