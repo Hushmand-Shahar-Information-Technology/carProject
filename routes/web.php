@@ -25,14 +25,14 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::view("/test", "car/car-results");
-
 Route::prefix('car')->group(function () {
     Route::get('index', [CarController::class, 'index'])->name('car.index');
     Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
     Route::get('register', [CarController::class, 'create'])->name('car.create');
+    Route::get('show/{id}', [CarController::class, 'show'])->name('car.show');
     Route::post('store', [CarController::class, 'store'])->name('car.store');
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
+    Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
 });
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');

@@ -141,10 +141,28 @@ class CarController extends Controller
     }
 
 
+    /**
+     * Show the form for creating a new car.
+     */
+    public function show($id)
+    {
+        $car = Car::findOrFail($id); 
+        // dd($car->location);
+        return view('car.show', compact('car'));
+    }
+
     public function search(Request $request)
     {
         $keyword = $request->input('keyword');
         $cars = Car::where('model', 'like', "%$keyword%")->get();
+        return response()->json($cars);
+    }
+    /**
+     * Feature for the new cars.
+     */
+    public function feature()
+    {
+        $cars = Car::orderBy('id', 'desc')->take(15)->get(); 
         return response()->json($cars);
     }
 }
