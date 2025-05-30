@@ -111,6 +111,11 @@
                                     <li><a href="{{ route('car.index') }}">Car listing </a>
                                     </li>
                                     <li><a href="javascript:void(0)"> Contact </a></li>
+                                    <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
+                                        class="btn btn-primary">
+                                        Chat Now
+                                    </a>
+
                                     <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
