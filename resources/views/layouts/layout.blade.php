@@ -122,6 +122,11 @@
                                     <li class="active"><a href="javascript:void(0)">Home </a></li>
                                     <li><a href="{{ route('car.index') }}">Car listing </a></li>
                                     <li><a href="javascript:void(0)"> Contact </a></li>
+                                    <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
+                                        class="btn btn-primary">
+                                        Chat Now
+                                    </a>
+
                                     <li><a href="{{route('car.directory')}}">Car directory</a></li>
                                     <li><a href="{{route('car.create')}}">Car Register</a></li>
                                     <li>

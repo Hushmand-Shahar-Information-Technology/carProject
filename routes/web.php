@@ -36,4 +36,6 @@ Route::prefix('car')->group(function () {
     Route::get('directory', [CarController::class,'CarDirectory'])->name('car.directory');
 });
 
+Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
+
 require __DIR__ . '/auth.php';
