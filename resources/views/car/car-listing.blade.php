@@ -113,6 +113,14 @@
             background: #f8f9fa;
             font-weight: 500;
         }
+        .link-style{
+            display: block ; 
+            border-radius: none !important; 
+            border: none !important;
+        }
+        .link-style:hover{
+            background-color: none !; 
+        }
     </style>
     <!--=================================
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          banner -->
@@ -160,12 +168,12 @@
                         <div class="widget">
                             <div class="widget-search">
                                 <h5>Advanced Search</h5>
-                                <ul class="list-style-none">
+                                {{-- <ul class="list-style-none">
                                     <li><i class="fa fa-star"> </i> Results Found <span class="float-end">(39)</span></li>
                                     <li><i class="fa fa-shopping-cart"> </i> Compare Vehicles <span
                                             class="float-end">(10)</span></li>
-                                </ul>
-                            </div>
+                                </ul> --}}
+                            </div> 
                             <div class="clearfix">
                                 <ul class="list-group">
                                     {{-- filter --}}
@@ -231,9 +239,9 @@
                             </div>
                         </div>
                     </div>
-                    <div id="car-results" class="isotope column-5">
-                        <!-- Car items will be injected here by JS -->
-                    </div>
+                        <div id="car-results"  class="isotope column-5">
+                            <!-- Car items will be injected here by JS -->
+                        </div>
                 </div>
             </div>
         </div>
@@ -242,6 +250,7 @@
     <!--===============
                 Scripts
             ===============-->
+            
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
         $("#sort-select").on('change', function() {
@@ -368,17 +377,44 @@
                             images = car.images ? [car.images] : [];
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
-                        const carDiv = $('<div>');
                         const url = car_show.replace('__ID__', car.id);
-
-                        const details_button = `<a class="button red float-end" href="${url}">Details</a>`;
+                        const carDiv = $(`<a href="${url}" style="color: #a0a0a0">`);
+                        const title =`<h4>${car.title}</h4>`;
+                        const details_button = `    
+                        <div>
+                            <a class="button red float-end" href="${url}">Details</a>
+                        </div>`;
+                        const description = `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
+                        const details = `
+                                <div class="row" style="margin-bottom: 6px;">
+                            <div class="col-lg-2 col-sm-4">
+                                <ul class="list-style-1">
+                                    <li><i class="fa fa-check"></i> ${car.make}</li>
+                                    <li><i class="fa fa-check"></i> ${car.model}</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <ul class="list-style-1">
+                                    <li><i class="fa fa-check"></i> ${car.car_condition}</li>
+                                    <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <ul class="list-style-1">
+                                    <li><i class="fa fa-check"></i> ${car.currency_type} </li>
+                                     <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
+                                </ul>
+                            </div>
+                        </div>`
 
                         // Set dynamic class based on view
-                        carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2');
+                        carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1');
                         // Build HTML dynamically
                         let html = `
                     ${currentView === 'list' ? '<div class="row p-2">' : ''}
+                        
                         <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
+                           
                             <div class="car-item gray-bg text-center">
                                 <div class="car-image">
                                     <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
@@ -390,6 +426,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                         </div>
 
                         <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
@@ -399,14 +436,16 @@
                                                                                                                                                                                                                                                                                                                             `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
+                                ${currentView == 'list' ? title: ""}
+                                ${currentView == 'list' ? description  : ""}
+                                ${currentView == 'list' ? details : ""}
                                 <div class="price">
+                                     ${currentView === 'list' ? details_button : ''}
                                     <span class="old-price">$${car.regular_price}</span>
                                     <span class="new-price">$${car.sale_price}</span>
-                                    ${currentView === 'list' ? details_button : ''}
-                                    
                                 </div>
                                 <div class="car-list">
-                                    <ul class="list-inline">
+                                    <ul class="list-inline" style="font-size: 12px;">
                                         <li><i class="fa fa-registered"></i> ${car.year}</li>
                                         <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
                                         <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
