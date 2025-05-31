@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 
@@ -17,7 +18,16 @@ class CarController extends Controller
      */
     public function index()
     {
-        return view('car.car-listing');
+        $distinctValues = [
+            'colors' => DB::table('cars')->whereNotNull('car_color')->distinct()->pluck('car_color'),
+            'models' => DB::table('cars')->whereNotNull('model')->distinct()->pluck('model'),
+            'make' => DB::table('cars')->whereNotNull('make')->distinct()->pluck('make'),
+            'body_type' => DB::table('cars')->whereNotNull('body_type')->distinct()->pluck('body_type'),
+            'condition' => DB::table('cars')->whereNotNull('car_condition')->distinct()->pluck('car_condition'),
+            'transmissions' => DB::table('cars')->whereNotNull('transmission_type')->distinct()->pluck('transmission_type'),
+        ];
+        // dd($distinctValues);
+        return view('car.car-listing', compact('distinctValues') );
     }
 
     /**
@@ -32,11 +42,15 @@ class CarController extends Controller
                         ->orWhere('year', 'like', "%$keyword%")
                         ->orWhere('car_color', 'like', "%$keyword%")
                         ->orWhere('make', 'like', "%$keyword%")
+                        ->orWhere('car_condition', 'like', "%$keyword%")
                         ->orWhere('transmission_type', 'like', "%$keyword%");
                 });
             })
             ->when($request->input('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);
+            })
+            ->when($request->input('Make', []), function ($q, $models) {
+                $q->whereIn('make', $models);
             })
             ->when($request->input('Model', []), function ($q, $models) {
                 $q->whereIn('model', $models);
@@ -49,6 +63,9 @@ class CarController extends Controller
             })
             ->when($request->input('Color', []), function ($q, $colors) {
                 $q->whereIn('car_color', $colors);
+            })
+            ->when($request->input('Condition', []), function ($q, $condition) {
+                $q->whereIn('car_condition', $condition);
             })
             ->when($request->input('sort'), function ($q, $sort) {
                 match ($sort) {

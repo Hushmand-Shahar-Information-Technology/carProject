@@ -181,10 +181,11 @@
                                         $years = range(1990, now()->year);
                                     @endphp
                                     <x-car-filter name="Year" label="All Years" :options="$years" />
-                                    <x-car-filter name="Transmission" label="All Transmission" :options="['Brand New', 'Slightly Used', 'Used']" />
-                                    <x-car-filter name="Body" label="All Body Styles" :options="['2dr Car', '4dr Car', 'Convertible']" />
-                                    <x-car-filter name="Model" label="All Models" :options="['Carrera', 'Boxster', 'GTS']" />
-                                    <x-car-filter name="Color" label="All Color" :options="['Black', 'White', 'Red', 'Yello', 'Green']" />
+                                    <x-car-filter name="Make" label="All Company" :options="$distinctValues['make']" />
+                                    <x-car-filter name="Transmission" label="All Transmission" :options="$distinctValues['transmissions']" />
+                                    <x-car-filter name="Body" label="All Body Styles" :options="$distinctValues['body_type']" />
+                                    <x-car-filter name="Model" label="All Models" :options="$distinctValues['models']" />
+                                    <x-car-filter name="Color" label="All Color" :options="$distinctValues['colors']" />
                                 </ul>
                             </div>
                         </div>
@@ -314,6 +315,23 @@
                 $('#search-results').hide();
             }
         });
+        
+        // Search button on the navbar
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
+
+            filters.forEach(filter => {
+                const values = urlParams.getAll(`${filter}[]`);
+                values.forEach(val => {
+                    $(`input[name="${filter}[]"][value="${val}"]`).prop('checked', true);
+                });
+            });
+
+            // Optionally trigger filtering after setting checkboxes
+            fetchFilteredCars(urlParams.toString());
+        });
+
 
         // Hide results when pressing ESC
         $(document).keyup(function(e) {
