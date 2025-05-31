@@ -10,6 +10,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::view('/otp', 'auth.otp');
+
 Route::prefix('home')->group(function () {
     Route::get('index', [routeController::class, 'home'])->name('home.index');
 });
