@@ -154,6 +154,7 @@
 
     <div id="car-list">
         <!-- Filtered cars will be loaded here -->
+        {{-- @include('components.feature-car') --}}
     </div>
 
     <!--=================================
@@ -197,7 +198,7 @@
                             <div class="col-xl-3 col-md-12">
                                 <div class="price-slide">
                                     <div class="price">
-                                        <label for="amount">Price Range</label>
+                                        {{-- <label for="amount">Price Range</label> --}}
                                         <input type="text" id="amount" class="amount" value="$50 - $300" />
                                         <div id="slider-range"></div>
                                     </div>
@@ -217,7 +218,7 @@
                                         </div>
 
                                         <div class="flex-grow-1">
-                                            <span>Sort by</span>
+                                            {{-- <span>Sort by</span> --}}
                                             <select class="form-control" id="sort-select" name="sort">
                                                 <option value="">Sort by Default</option>
                                                 <option value="name">Sort by Name</option>
@@ -230,11 +231,11 @@
                             </div>
                             <div class="col-xl-3 col-xxl-2 col-md-12">
                                 <div class="price-search">
-                                    <span>Search cars</span>
+                                    {{-- <span>Search cars</span> --}}
                                     <div class="search">
                                         <i class="fa fa-search"></i>
                                         <input type="search" id="car-search" class="form-control placeholder"
-                                            placeholder="Search....">
+                                            placeholder="Search Cars....">
                                     </div>
                                 </div>
                             </div>
