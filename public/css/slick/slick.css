@@ -168,7 +168,7 @@
 
 .slick-list {
     position: relative;
-
+   
     display: block;
     overflow: hidden;
 
@@ -219,9 +219,11 @@
     height: 100%;
     min-height: 1px;
 }
+
 [dir="rtl"] .slick-slide {
     float: right;
 }
+
 .slick-slide img {
     display: block;
 }
@@ -238,6 +240,7 @@
 .slider-nav .slick-slide.slick-active {
     opacity: 0.5;
 }
+
 .slider-nav .slick-slide:hover,
 .slider-nav .slick-slide.slick-active.slick-center {
     opacity: 1;

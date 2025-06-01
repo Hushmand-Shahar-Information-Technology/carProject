@@ -10,6 +10,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::view('/otp', 'auth.otp');
+
 Route::prefix('home')->group(function () {
     Route::get('index', [routeController::class, 'home'])->name('home.index');
 });
@@ -33,6 +35,7 @@ Route::prefix('car')->group(function () {
     Route::post('store', [CarController::class, 'store'])->name('car.store');
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
+    Route::get('directory', [CarController::class,'CarDirectory'])->name('car.directory');
 });
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
