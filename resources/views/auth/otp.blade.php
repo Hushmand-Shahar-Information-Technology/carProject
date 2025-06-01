@@ -71,7 +71,14 @@
     <div class="position-relative">
         <div class="card p-2 text-center">
             <form action="">
-                <h6>Verify</h6>
+                <div class="d_flex mb-3" style="display: flex; align-items: center; justify-content: center; gap: 2px;">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="blue" viewBox="0 0 16 16">
+                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.93 10.588L4.5 8.162l-.708.707L6.93 12l6-6-.707-.707-5.293 5.293z"/>
+                        </svg>
+                    </div>
+                    <h6 style="transform: translate(8px, 5px);">Verify Your Accounts</h6>
+                </div>
                 <div> <span>A code has been sent to</span> <small id="maskedNumber">*******9897</small> </div>
                 <div id="otp" class="inputs d-flex flex-row justify-content-center mt-2">
                     <input class="m-2 text-center form-control rounded" type="text" id="first" maxlength="1" />
