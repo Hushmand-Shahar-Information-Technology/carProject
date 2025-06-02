@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="{{ asset('css/owl-carousel/owl.carousel.css') }}" />
     <!-- Magnific Popup CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup/dist/magnific-popup.css">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Magnific Popup JS -->
     <script src="https://cdn.jsdelivr.net/npm/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
 
@@ -156,6 +156,9 @@
                                               </form>    
                                             </div>
                                         </div>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('user.profile')}}">profile</a>
                                     </li>
                                 </ul>
                             </div>

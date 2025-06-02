@@ -1,7 +1,7 @@
 {{-- feature cards --}}
-<section class="feature-car bg-2 bg-overlay-black-70 page-section-ptb">
+{{-- <section class="feature-car bg-2 bg-overlay-black-70 page-section-ptb"> --}}
     <div class="container">
-        <div class="row">
+        {{-- <div class="row">
             <div class="col-md-12">
                 <div class="section-title">
                     <span class="text-white mt-5">Check out our recent cars</span>
@@ -9,9 +9,9 @@
                     <div class="separator"></div>
                 </div>
             </div>
-        </div>
+        </div> --}}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-8">
                 <div class="owl-carousel owl-theme" data-nav-arrow="true" data-items="4" data-md-items="4"
                     data-sm-items="2" data-xs-items="1" data-space="20">
                     <div class="item">
@@ -40,11 +40,11 @@
                                     <i class="fa fa-star orange-color"></i>
                                     <i class="fa fa-star-o orange-color"></i>
                                 </div>
-                                <a href="#">Acura Rsx</a>
+                                <a href="#" style="font-size: 12px;">Acura Rsx</a>
                                 <div class="separator"></div>
                                 <div class="price">
-                                    <span class="old-price">$35,568</span>
-                                    <span class="new-price">$32,698 </span>
+                                    <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                    <span class="new-price" style="font-size: 10px;">$32,698 </span>
                                 </div>
                             </div>
                         </div>
@@ -78,8 +78,8 @@
                                 <a href="#">Lexus GS 450h</a>
                                 <div class="separator"></div>
                                 <div class="price">
-                                    <span class="old-price">$35,568</span>
-                                    <span class="new-price">$32,698 </span>
+                                    <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                    <span class="new-price" style="font-size: 10px;">$32,698 </span>
                                 </div>
                             </div>
                         </div>
@@ -110,11 +110,11 @@
                                     <i class="fa fa-star orange-color"></i>
                                     <i class="fa fa-star-o orange-color"></i>
                                 </div>
-                                <a href="#">GTA 5 Lowriders DLC</a>
+                                <a href="#" style="font-size: 12px;">GTA 5 Lowriders DLC</a>
                                 <div class="separator"></div>
-                                <div class="price">
-                                    <span class="old-price">$35,568</span>
-                                    <span class="new-price">$32,698 </span>
+                                <div class="price" > 
+                                    <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                    <span class="new-price" style="font-size: 10px;">$32,698 </span>
                                 </div>
                             </div>
                         </div>
@@ -145,11 +145,11 @@
                                     <i class="fa fa-star orange-color"></i>
                                     <i class="fa fa-star-o orange-color"></i>
                                 </div>
-                                <a href="#">Toyota avalon hybrid </a>
+                                <a href="#" style="font-size: 12px;">Toyota avalon hybrid </a>
                                 <div class="separator"></div>
                                 <div class="price">
-                                    <span class="old-price">$35,568</span>
-                                    <span class="new-price">$32,698 </span>
+                                    <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                    <span class="new-price" style="font-size: 10px;">$32,698 </span>
                                 </div>
                             </div>
                         </div>
@@ -180,7 +180,7 @@
                                     <i class="fa fa-star orange-color"></i>
                                     <i class="fa fa-star-o orange-color"></i>
                                 </div>
-                                <a href="#">Hyundai santa fe sport </a>
+                                <a href="#" style="font-size: 12px;">Hyundai santa fe sport </a>
                                 <div class="separator"></div>
                                 <div class="price">
                                     <span class="old-price">$35,568</span>
@@ -193,6 +193,6 @@
             </div>
         </div>
     </div>
-</section>
+{{-- </section> --}}
 
 <!-- Feature Car End -->

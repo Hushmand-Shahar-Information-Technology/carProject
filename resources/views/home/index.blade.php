@@ -272,7 +272,10 @@
     <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div> </div>
     </div>
   </section>
-
+<div style="margin: 0 auto; z-index: 9999;">
+  {{-- feature car --> --}}
+  @include('components.feature-car')
+</div>
 <!--=================================
   rev slider -->
 
@@ -356,8 +359,8 @@
 
 
 <!-- ==================================
- feature car -->
-@include('components.feature-car')
+ {{-- feature car -->
+@include('components.feature-car') --}}
 
 <!--=================================
  feature car -->
