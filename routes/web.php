@@ -6,17 +6,15 @@ use App\Http\Controllers\routeController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::view('/', 'home.index')->name('home.index');
 
 Route::view('/otp', 'auth.otp');
 
-Route::prefix('home')->group(function () {
-    Route::get('index', [routeController::class, 'home'])->name('home.index');
-});
+// Route::prefix('home')->group(function () {
+//     Route::get('index', [routeController::class, 'home'])->name('home.index');
+// });
 
-
+Route::view('/wizard', 'home.wizard');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');

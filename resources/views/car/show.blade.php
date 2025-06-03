@@ -230,14 +230,16 @@
                     <div class="slider-slick">
                         <div class="cars-image-gallery" style="">
                             <div class="slider slider-for detail-big-car-gallery" >
-                                <img class="img-fluid" style="" src="{{ asset('images/car/01.jpg') }}" alt="">
-                                <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
+                                @foreach ($car->images as $image)
+                                    <img class="img-fluid" style="" src="/storage/{{$image}}" alt="">
+                                @endforeach
+                                {{-- <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/04.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/05.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/06.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/07.jpg') }}" alt="">
-                                <img class="img-fluid" src="{{ asset('images/car/08.jpg') }}" alt="">
+                                <img class="img-fluid" src="{{ asset('images/car/08.jpg') }}" alt=""> --}}
                             </div>
                             <div class="watch-video-btn">
                                 <div class="video-info">
@@ -247,14 +249,17 @@
                             </div>
                         </div>
                         <div class="slider slider-nav">
-                            <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="">
+                            @foreach ($car->images as $image)
+                                    <img class="img-fluid fixed-img" style="" src="/storage/{{$image}}" alt="">
+                            @endforeach
+                            {{-- <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/02.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/03.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/04.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/05.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/06.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/07.jpg') }}" alt="">
-                            <img class="img-fluid fixed-img" src="{{ asset('images/car/08.jpg') }}" alt="">
+                            <img class="img-fluid fixed-img" src="{{ asset('images/car/08.jpg') }}" alt=""> --}}
                         </div>
 
                     </div>
@@ -266,16 +271,6 @@
                                 <button class="nav-link active" id="general-information-tab" data-bs-toggle="tab"
                                     data-bs-target="#general-information" type="button" role="tab"
                                     aria-controls="general-information" aria-selected="true">General Information</button>
-                            </li>
-                            <li class="nav-item icon-list" role="presentation">
-                                <button class="nav-link" id="features-options-tab" data-bs-toggle="tab"
-                                    data-bs-target="#features-options" type="button" role="tab"
-                                    aria-controls="features-options" aria-selected="false">Features & Options</button>
-                            </li>
-                            <li class="nav-item icon-equalizer" role="presentation">
-                                <button class="nav-link " id="vehicle-overview-tab" data-bs-toggle="tab"
-                                    data-bs-target="#vehicle-overview" type="button" role="tab"
-                                    aria-controls="vehicle-overview" aria-selected="false">Vehicle Overview</button>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
@@ -297,114 +292,7 @@
                                     dolores tempora iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa,
                                     illo a You will begin to realize why, consectetur adipisicing elit. Commodi, doloribus,
                                     earum modi consectetur molestias asperiores.
-
-                                    <br /><br />
-                                    Voluptatem adipisicing elit. Dicta, amet quia ad debitis fugiat neque dolores tempora
-                                    iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa, illo a You will
-                                    begin to realize why, consectetur adipisicing elit. Commodi, You will begin to realize
-                                    why, consectetur adipisicing elit. Laudantium nisi eaque maxime totam, iusto accusantium
-                                    esse placeat rem at temporibus minus architecto ipsum eveniet. Delectus cum sunt, ea
-                                    cumque quas! doloribus, earum modi consectetur molestias asperiores sequi ipsam neque
-                                    error itaque veniam culpa eligendi similique ducimus nulla, blanditiis, perspiciatis
-                                    atque saepe! veritatis.
                                 </p>
-                            </div>
-                            <div class="tab-pane fade" id="features-options" role="tabpanel"
-                                aria-labelledby="features-options-tab">
-                                <h6>consectetur adipisicing elit</h6>
-                                <table class="table table-bordered">
-                                    <tbody>
-                                        <tr>
-                                            <th scope="row"> Air conditioning</th>
-                                            <td>Mark</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> Alloy Wheels</th>
-                                            <td>Jacob</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> Anti-Lock Brakes (ABS)</th>
-                                            <td>Larry</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row"> Anti-Theft</th>
-                                            <td>Larry</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Anti-Starter</th>
-                                            <td>Larry</td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row">Alloy Wheels</th>
-                                            <td>Larry</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="tab-pane fade" id="vehicle-overview" role="tabpanel"
-                                aria-labelledby="vehicle-overview-tab">
-                                <h6>consectetur adipisicing elit</h6>
-                                <p>Temporibus possimus quasi beatae, consectetur adipisicing elit. Obcaecati unde molestias
-                                    sunt officiis aliquid sapiente, numquam, porro perspiciatis neque voluptatem sint hic
-                                    quam eveniet ad adipisci laudantium corporis ipsam ea!
-                                    <br /><br />
-                                    Consectetur adipisicing elit. Dicta, amet quia ad debitis fugiat voluptatem neque
-                                    dolores tempora iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa,
-                                    illo a You will begin to realize why, consectetur adipisicing elit. Commodi, doloribus,
-                                    earum modi consectetur molestias asperiores sequi ipsam neque error itaque veniam culpa
-                                    eligendi similique ducimus nulla, blanditiis, perspiciatis atque saepe! veritatis.
-
-                                    <br /><br />
-                                    Adipisicing consectetur elit. Dicta, amet quia ad debitis fugiat voluptatem neque
-                                    dolores tempora iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa,
-                                    illo a You will begin to realize why, consectetur adipisicing elit. Commodi, doloribus,
-                                    earum modi consectetur molestias asperiores.
-
-                                    <br /><br />
-                                    Voluptatem adipisicing elit. Dicta, amet quia ad debitis fugiat neque dolores tempora
-                                    iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa, illo a You will
-                                    begin to realize why, consectetur adipisicing elit. Commodi, You will begin to realize
-                                    why, consectetur adipisicing elit. Laudantium nisi eaque maxime totam, iusto accusantium
-                                    esse placeat rem at temporibus minus architecto ipsum eveniet. Delectus cum sunt, ea
-                                    cumque quas! doloribus, earum modi consectetur molestias asperiores sequi ipsam neque
-                                    error itaque veniam culpa eligendi similique ducimus nulla, blanditiis, perspiciatis
-                                    atque saepe! veritatis.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="extra-feature">
-                        <h6> extra feature</h6>
-                        <div class="row">
-                            <div class="col-lg-4 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> Security System</li>
-                                    <li><i class="fa fa-check"></i> Air conditioning</li>
-                                    <li><i class="fa fa-check"></i> Alloy Wheels</li>
-                                    <li><i class="fa fa-check"></i> Anti-Lock Brakes (ABS)</li>
-                                    <li><i class="fa fa-check"></i> Anti-Theft</li>
-                                    <li><i class="fa fa-check"></i> Anti-Starter </li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> Security System</li>
-                                    <li><i class="fa fa-check"></i> Air conditioning</li>
-                                    <li><i class="fa fa-check"></i> Alloy Wheels</li>
-                                    <li><i class="fa fa-check"></i> Anti-Lock Brakes (ABS)</li>
-                                    <li><i class="fa fa-check"></i> Anti-Theft</li>
-                                    <li><i class="fa fa-check"></i> Anti-Starter </li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> Security System</li>
-                                    <li><i class="fa fa-check"></i> Air conditioning</li>
-                                    <li><i class="fa fa-check"></i> Alloy Wheels</li>
-                                    <li><i class="fa fa-check"></i> Anti-Lock Brakes (ABS)</li>
-                                    <li><i class="fa fa-check"></i> Anti-Theft</li>
-                                    <li><i class="fa fa-check"></i> Anti-Starter </li>
-                                </ul>
                             </div>
                         </div>
                     </div>
@@ -637,41 +525,6 @@
                                     <p>Call our seller to get the best price </p>
                                 </div>
                             </div>
-                        </div>
-                        <div class="details-form contact-2">
-                            <form id="financing-calculator-01" class="gray-form">
-                                <h5>Financing Calculator</h5>
-                                <div class="mb-3">
-                                    <label class="form-label">Vehicle Price ($)*</label>
-                                    <input type="number" class="form-control" placeholder="Price" id="loan-amount"
-                                        name="loan-amount">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Down Payment *</label>
-                                    <input type="number" class="form-control" placeholder="Payment" id="down-payment"
-                                        name="down-payment">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Interest rate (%)*</label>
-                                    <input type="number" class="form-control" placeholder="Rate" id="interest-rate"
-                                        name="interest-rate">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Period (Month)*</label>
-                                    <input type="number" class="form-control" placeholder="Month" id="period"
-                                        name="period">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Payment</label>
-                                    <div class="cal_text payment-box">
-                                        <div id="txtPayment"></div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <a class="button red calculate_finance" href="javascript:void(0)"
-                                        data-form-id="financing-calculator-01">Estimate Payment</a>
-                                </div>
-                            </form>
                         </div>
                     </div>
                 </div>
