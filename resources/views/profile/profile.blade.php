@@ -186,11 +186,11 @@
         }
         
         @media (max-width: 768px) {
-            .profile-header {
+            /* .profile-header {
                 flex-direction: column;
                 text-align: center;
                 gap: 20px;
-            }
+            } */
             
             .profile-pic {
                 width: 120px;
@@ -203,18 +203,7 @@
         }
 
 
-    .main-body { padding: 15px; } 
-    .card { box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06); } 
-    .card { position: relative; 
-        display: flex; flex-direction: 
-        column; min-width: 0; word-wrap:
-        break-word; background-color: #fff; 
-        background-clip: border-box; border: 0 solid rgba(0,0,0,.125); border-radius: .25rem; } 
-    .card-body { flex: 1 1 auto; min-height: 1px; padding: 1rem; } 
-    .gutters-sm { margin-right: -8px; margin-left: -8px; } 
-    .gutters-sm>.col, .gutters-sm>[class*=col-] { padding-right: 8px; padding-left: 8px; } 
-    .mb-3, .my-3 { margin-bottom: 1rem!important; } .bg-gray-300 { background-color: #e2e8f0; }
-    .h-100 { height: 100%!important; } .shadow-none { box-shadow: none!important; }
+        
     </style>
      <!--================================ -->
     <section class="inner-intro bg-8 bg-overlay-black-70">
@@ -234,38 +223,18 @@
         </div>
     </section>
 
-    <div class="container mt-5">
-        <!-- Profile Header -->
-        <div class="container">
-  <div class="main-body">
-    <div class="row gutters-sm">
-      <!-- Left Column -->
-      <div class="col-md-4 mb-3">
-        <div class="card">
-          <div class="card-body text-center">
-            <img src="{{asset('images/02.png')}}" alt="Admin" class="rounded-circle" width="150">
-            <div class="mt-3">
-              <h4>John Doe</h4>
-              <p class="text-secondary mb-1">Full Stack Developer</p>
-              <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
-              <button class="btn btn-outline-primary">Message</button>
-            </div>
-          </div>
-        </div>
 
-        <div class="card mt-3">
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-        {{-- <div class="profile-header">
+<div class="container">
+   
+        <div class="profile-header mt-5">
             <img src="{{asset('images/02.png')}}" alt="Profile Picture" class="profile-pic">
             
             <div class="profile-info">
                 <h1>
                     {{$profile->name}}
-                    <button class="btn btn-custom">Edit profile</button>
+                    <a href="{{route('profile.edit')}}">
+                        <button class="btn btn-custom">Edit profile</button>
+                    </a>
                     <i class="fas fa-cog" style="color: #a8a8a8; cursor: pointer;"></i>
                 </h1>
                 
@@ -276,7 +245,7 @@
                     </div>
                 </div>
             </div>
-        </div> --}}
+        </div> 
         
         <!-- New Post Section -->
         <a href="{{route('car.create')}}">
