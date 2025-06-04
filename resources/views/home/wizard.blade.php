@@ -1,9 +1,3 @@
-{{-- <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<meta http-equiv="X-UA-Compatible" content="ie=edge" /> --}}
 
 <!-- Bootstrap 5.3.3 CSS -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -188,9 +182,6 @@
     }
   }
 </style>
-{{-- </head> --}}
-{{-- <div class="body-div"> --}}
-{{-- <div class="containerw"> --}}
   <div class="wizard">
     <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
       <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top" title="Step 1">
@@ -219,20 +210,20 @@
       <div class="tab-pane fade show active mt-3" role="tabpanel" id="step1" aria-labelledby="step1-tab">
         <h3>What's your dream car model?</h3>
         <div class="form-check mt-2">
-          <input class="form-check-input" type="checkbox" name="dreamCarModel" value="Tesla Model S" id="car1" />
-          <label class="form-check-label" for="car1">Tesla Model S</label>
+          <input class="form-check-input" type="checkbox" name="model" value="Audi" id="car1" />
+          <label class="form-check-label" for="car1">Audi</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="dreamCarModel" value="BMW M3" id="car2" />
+          <input class="form-check-input" type="checkbox" name="model" value="BMW" id="car2" />
           <label class="form-check-label" for="car2">BMW M3</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="dreamCarModel" value="Ford Mustang" id="car3" />
+          <input class="form-check-input" type="checkbox" name="model" value="Ford" id="car3" />
           <label class="form-check-label" for="car3">Ford Mustang</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="dreamCarModel" value="Lamborghini Huracán" id="car4" />
-          <label class="form-check-label" for="car4">Lamborghini Huracán</label>
+          <input class="form-check-input" type="checkbox" name="model" value="Hunda" id="car4" />
+          <label class="form-check-label" for="car4">Hunda</label>
         </div>
         <div class="d-flex justify-content-between mt-4">
           <span></span>
@@ -242,18 +233,14 @@
 
         <!-- Step 2 -->
         <div class="tab-pane fade" role="tabpanel" id="step2" aria-labelledby="step2-tab">
-            <h3>Do you prefer classic or modern cars?</h3>
+            <h3>You looking for which car conditions?</h3>
             <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="carEraPreference" value="Classic" id="classic">
-                <label class="form-check-label" for="classic">Classic</label>
+                <input class="form-check-input" type="checkbox" name="car_condition" value="new" id="classic">
+                <label class="form-check-label" for="classic">New</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="carEraPreference" value="Modern" id="modern">
-                <label class="form-check-label" for="modern">Modern</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="carEraPreference" value="Both" id="both">
-                <label class="form-check-label" for="both">Both equally</label>
+                <input class="form-check-input" type="checkbox" name="car_condition" value="used" id="modern">
+                <label class="form-check-label" for="modern">Used</label>
             </div>
             <div class="d-flex justify-content-between mt-3">
                 <a class="btn btn-secondary previous"><i class="fas fa-angle-left"></i> Back</a>
@@ -263,21 +250,21 @@
 
         <!-- Step 3 -->
         <div class="tab-pane fade" role="tabpanel" id="step3" aria-labelledby="step3-tab">
-            <h3>What type of car do you drive daily?</h3>
+            <h3>Which car color do you prefer?</h3>
             <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="dailyDriver" value="Honda Civic" id="daily1">
-                <label class="form-check-label" for="daily1">Honda Civic</label>
+                <input class="form-check-input" type="checkbox" name="colors" value="white" id="daily1">
+                <label class="form-check-label" for="daily1">White</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="dailyDriver" value="Jeep Wrangler" id="daily2">
-                <label class="form-check-label" for="daily2">Jeep Wrangler</label>
+                <input class="form-check-input" type="checkbox" name="colors" value="black" id="daily2">
+                <label class="form-check-label" for="daily2">Black</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="dailyDriver" value="Toyota Camry" id="daily3">
-                <label class="form-check-label" for="daily3">Toyota Camry</label>
+                <input class="form-check-input" type="checkbox" name="colors" value="silver" id="daily3">
+                <label class="form-check-label" for="daily3">Silver</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="dailyDriver" value="Other" id="daily4">
+                <input class="form-check-input" type="checkbox" name="colors" value="Other" id="daily4">
                 <label class="form-check-label" for="daily4">Other</label>
             </div>
             <div class="d-flex justify-content-between mt-3">
@@ -290,19 +277,19 @@
       <div class="tab-pane fade" role="tabpanel" id="step4" aria-labelledby="step4-tab">
         <h3>Which car body style do you like most?</h3>
         <div class="form-check mt-2">
-          <input class="form-check-input" type="checkbox" name="favoriteBodyStyle" value="SUV" id="style1" />
+          <input class="form-check-input" type="checkbox" name="body_type" value="SUV" id="style1" />
           <label class="form-check-label" for="style1">SUV</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="favoriteBodyStyle" value="Sedan" id="style2" />
+          <input class="form-check-input" type="checkbox" name="body_type" value="Sedan" id="style2" />
           <label class="form-check-label" for="style2">Sedan</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="favoriteBodyStyle" value="Coupe" id="style3" />
+          <input class="form-check-input" type="checkbox" name="body_type" value="Coupe" id="style3" />
           <label class="form-check-label" for="style3">Coupe</label>
         </div>
         <div class="form-check">
-          <input class="form-check-input" type="checkbox" name="favoriteBodyStyle" value="Convertible" id="style4" />
+          <input class="form-check-input" type="checkbox" name="body_type" value="Convertible" id="style4" />
           <label class="form-check-label" for="style4">Convertible</label>
         </div>
         <div class="d-flex justify-content-between mt-4">
@@ -311,60 +298,4 @@
         </div>
       </div>
     </div>
-  {{-- </div> --}}
-{{-- </div> --}}
-<script>
-  $(document).ready(function () {
-    let currentStep = 1;
-    const totalSteps = $(".tab-pane").length;
-
-    function showStep(step) {
-      const targetTab = $(`#step${step}`);
-      if (targetTab.length) {
-        const tabTrigger = $(`a[data-bs-target="#step${step}"]`);
-        if (tabTrigger.length) {
-          new bootstrap.Tab(tabTrigger[0]).show();
-        } else {
-          $(".tab-pane").removeClass("active show");
-          targetTab.addClass("active show");
-        }
-        currentStep = step;
-      }
-    }
-
-    function collectAnswers() {
-      const answers = {};
-      $(".tab-pane input:checked").each(function () {
-        const name = $(this).attr("name");
-        const value = $(this).val();
-        if (!answers[name]) {
-          answers[name] = [];
-        }
-        answers[name].push(value);
-      });
-      return answers;
-    }
-
-    $(".next").click(function () {
-      const nextStep = currentStep + 1;
-      if (nextStep <= totalSteps) {
-        showStep(nextStep);
-      } else {
-        // Last step - submit
-        const answers = collectAnswers();
-        localStorage.setItem("carSurveyAnswers", JSON.stringify(answers));
-        alert("Your answers:\n" + JSON.stringify(answers, null, 2));
-      }
-    });
-
-    $(".previous").click(function () {
-      const prevStep = currentStep - 1;
-      if (prevStep >= 1) {
-        showStep(prevStep);
-      }
-    });
-  });
-</script>
-
 </div>
-{{-- </html> --}}

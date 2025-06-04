@@ -334,16 +334,24 @@
     <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div> </div>
     </div>
   </section>
-    
-  {{-- <div style="margin: 0 auto; z-index: 9999;"> --}}
+   
+  <!--=================================
+    rev slider -->
     @include('components.feature-car')
-  {{-- </div> --}}
-<!--=================================
-  rev slider -->
+    
+  <!--================================= -->
+ {{-- Car list cart --}}
+     <div class="col-md-12">
+         <div class="section-title mb-4 pb-0">
+           {{-- <span>Welcome to our website</span> --}}
+           <h2>Our Stocks</h2>
+           <div class="separator"></div>
+      </div>
+        <div class="container border row p-5 mb-5 mx-auto" id="carListContainer">
+        </div>
 
-
-<!--=================================
- welcome -->
+  <!-- =================================
+  welcome -->
  
 <section class="welcome-block objects-car page-section-ptb white-bg" style="padding-top: 0px ;">
  <div class="objects-left left"><img class="img-fluid objects-1" src="{{asset('images/objects/01.jpg')}}" alt=""></div>
@@ -589,41 +597,191 @@
   <!-- Your JS scripts here -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ 
+ <script>
+  $(document).ready(function () {
+    const $modal = $('#wizardModal');
+    const $mainContent = $('#mainContent');
+    const savedAnswers = JSON.parse(localStorage.getItem("carSurveyAnswers"));
+    let currentStep = 1;
+    let filtersAlreadyApplied = false;
 
-  <script>
-    // Your modal open/close + form JS here
-    $(document).ready(function () {
-      const $modal = $('#wizardModal');
-      const $mainContent = $('#mainContent');
+    const totalSteps = $(".tab-pane").length;
 
-      function showModal() {
-        $modal.show();
-        $mainContent.addClass('blurred');
-      }
+    function showModal() {
+      $modal.show();
+      $mainContent.addClass('blurred');
+    }
 
-      function hideModal() {
-        $modal.hide();
-        $mainContent.removeClass('blurred');
-      }
+    function hideModal() {
+      $modal.hide();
+      $mainContent.removeClass('blurred');
+    }
 
-      // Show modal on page load
-      showModal();
-
-      // Close modal on clicking close button
-      $modal.find('.close-modal').on('click', function () {
-        hideModal();
-      });
-
-      // Close modal on clicking outside modal content (overlay background)
-      $modal.on('click', function (e) {
-        if ($(e.target).is('#wizardModal')) {
-          hideModal();
+    function showStep(step) {
+      const targetTab = $(`#step${step}`);
+      if (targetTab.length) {
+        const tabTrigger = $(`a[data-bs-target="#step${step}"]`);
+        if (tabTrigger.length) {
+          new bootstrap.Tab(tabTrigger[0]).show();
+        } else {
+          $(".tab-pane").removeClass("active show");
+          targetTab.addClass("active show");
         }
+        currentStep = step;
+      }
+    }
+
+    function collectAnswers() {
+      const answers = {};
+      $(".tab-pane input:checked").each(function () {
+        const name = $(this).attr("name");
+        const value = $(this).val();
+        if (!answers[name]) {
+          answers[name] = [];
+        }
+        answers[name].push(value);
       });
+      return answers;
+    }
+
+    function renderCarList(cars) {
+      const $container = $('#carListContainer');
+      $container.empty();
+
+      if (cars.length === 0) {
+        $container.append('<p>No cars found matching your criteria.</p>');
+        return;
+      }
+
+      const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
+
+      cars.forEach(car => {
+        const url = car_show.replace('__ID__', car.id);
+        const carHtml = `
+          <div class="col-lg-3 col-sm-4 col-md-5">
+            <div class="car-item gray-bg text-center">
+              <div class="car-image">
+                <img class="img-fluid" src="/storage/${car.images[0]}" alt="">
+                <div class="car-overlay-banner">
+                  <ul>
+                    <li><a href="${url}"><i class="fa fa-link"></i></a></li>
+                    <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="car-list">
+                <ul class="list-inline">
+                  <li><i class="fa fa-registered"></i> ${car.year}</li>
+                  <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                  <li><i class="fa fa-shopping-cart"></i> 50000 mi</li>
+                </ul>
+              </div>
+              <div class="car-content">
+                <a href="${url}">${car.make} ${car.model}</a>
+                <div class="separator"></div>
+                <div class="price">
+                  <span class="old-price">$${car.regular_price}</span>
+                  <span class="new-price">$${car.sale_price}</span>
+                </div>
+              </div>
+            </div>
+          </div>`;
+        $container.append(carHtml);
+      });
+    }
+
+    // Handle next button (final step submission)
+    $(".next").click(function () {
+      const nextStep = currentStep + 1;
+      if (nextStep <= totalSteps) {
+        showStep(nextStep);
+      } else if (!filtersAlreadyApplied) {
+        const answers = collectAnswers();
+        localStorage.setItem("carSurveyAnswers", JSON.stringify(answers));
+        hideModal();
+
+        filtersAlreadyApplied = true;
+
+        $.ajax({
+          url: '/home/filter-cars',
+          method: 'POST',
+          contentType: 'application/json',
+          dataType: 'json',
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          },
+          data: JSON.stringify({ filters: answers }),
+          success: function (response) {
+            renderCarList(response.cars);
+          },
+          error: function (xhr) {
+            console.error(xhr);
+            alert('Error retrieving cars.');
+          }
+        });
+      }
     });
 
-  </script>
- @endsection
+    $(".previous").click(function () {
+      const prevStep = currentStep - 1;
+      if (prevStep >= 1) {
+        showStep(prevStep);
+      }
+    });
+
+    // Close modal logic
+    $modal.find('.close-modal').on('click', function () {
+      hideModal();
+    });
+
+    $modal.on('click', function (e) {
+      if ($(e.target).is('#wizardModal')) {
+        hideModal();
+      }
+    });
+
+    // Load filters from localStorage or default
+    if (savedAnswers && Object.keys(savedAnswers).length > 0) {
+      hideModal(); // Hide modal if previously answered
+      filtersAlreadyApplied = true;
+
+      $.ajax({
+        url: '/home/filter-cars',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: JSON.stringify({ filters: savedAnswers }),
+        success: function (response) {
+          renderCarList(response.cars);
+        },
+        error: function () {
+          alert('Error loading saved filtered cars.');
+        }
+      });
+    } else {
+      showModal(); // Show modal if no answers
+      $.ajax({
+        url: '/default-cars',
+        method: 'GET',
+        success: function (response) {
+          renderCarList(response.cars);
+        },
+        error: function () {
+          alert('Error loading default cars.');
+        }
+      });
+    }
+
+  });
+</script>
+
+ 
+ 
+  @endsection
 
 
 
