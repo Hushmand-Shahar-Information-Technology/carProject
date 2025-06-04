@@ -58,4 +58,8 @@ class Car extends Model
         return $this->hasMany(User::class);
     }
 
+    protected function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
 }

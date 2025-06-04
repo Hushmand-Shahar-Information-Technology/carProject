@@ -4,6 +4,7 @@
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\routeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OfferController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home.index')->name('home.index');
@@ -37,7 +38,10 @@ Route::prefix('car')->group(function () {
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
     Route::get('directory', [CarController::class,'CarDirectory'])->name('car.directory');
     Route::post('carts', [CarController::class, 'cart'])->name('carts.show'); 
+    Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
 });
+
+
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
 

@@ -2,6 +2,13 @@
 @section('title', 'Car list')
 @section('content')
 
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     {{-- @include('car.slick') --}}
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
@@ -13,7 +20,11 @@
             aspect-ratio: 16 / 11;
             object-fit: cover;
         }
-    </style>                 
+        /* Force SweetAlert2 to always appear on top of modals */
+        .swal2-container {
+            z-index: 200000 !important;
+        }
+    </style>            
 
     <section class="inner-intro bg-6 bg-overlay-black-70">
         <div class="container">
@@ -174,37 +185,8 @@
                                                             class="form-control">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Financing Required*</label>
-                                                        <div class="selected-box">
-                                                            <select class="selectpicker" id="mao_financing"
-                                                                name="mao_financing">
-                                                                <option value="Yes">Yes </option>
-                                                                <option value="No">No</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3">
                                                         <label class="form-label">additional Comments/Conditions*</label>
                                                         <textarea class="form-control input-message" rows="4" id="mao_comments" name="mao_comments"></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label pe-3">Preferred Contact*</label>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault001">
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault001">
-                                                                Email
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault002" checked>
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault002">
-                                                                Phone
-                                                            </label>
-                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <div id="recaptcha3"></div>
@@ -429,7 +411,8 @@
  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const make = @json($car->make);
-
+        const car_id = @json($car->id);
+        // console.log(car_id); 
         $(document).ready(function() {
             $('.slider-for').slick({
                 slidesToShow: 1,
@@ -457,7 +440,83 @@
                 fixedContentPos: false
             });
         });
-        
+
+        $(document).ready(function () {
+            $('#make_an_offer_submit').on('click', function (e) {
+                e.preventDefault();
+                $('.btn-loader').show();
+                console.log(car_id); 
+                var formData = {
+                    mao_name: $('#mao_name').val(),
+                    mao_email: $('#mao_email').val(),
+                    mao_phone: $('#mao_phone').val(),
+                    mao_price: $('#mao_price').val(),
+                    mao_comments: $('#mao_comments').val(),
+                    mao_car_id: car_id
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/car/offer', // Replace with your actual route
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        $('.btn-loader').hide();
+                        $('#mao_form')[0].reset();
+
+                        // Hide the modal
+                        $('#exampleModal3').modal('hide');
+
+                        // Show alert after modal is fully hidden
+                        $('#exampleModal3').on('hidden.bs.modal', function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                heightAuto: false,  // prevents body scrollbar shift
+                                willClose: () => {
+                                    // Remove modal-related classes and reset overflow to re-enable scrolling
+                                    $('body').removeClass('modal-open').css('overflow', '');
+                                    $('.modal-backdrop').remove();
+                                }
+                            });
+
+                            $('#exampleModal3').off('hidden.bs.modal');
+                        });
+                    },
+                    error: function (xhr) {
+                        $('.btn-loader').hide();
+
+                        let swalOptions = {
+                            icon: 'error',
+                            heightAuto: false,
+                            willClose: () => {
+                                $('body').removeClass('modal-open').css('overflow', '');
+                                $('.modal-backdrop').remove();
+                            }
+                        };
+
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessages = Object.values(errors).map(msgArray => msgArray[0]).join('<br>');
+                            swalOptions.title = 'Validation Error';
+                            swalOptions.html = errorMessages;
+                        } else {
+                            swalOptions.title = 'Server Error';
+                            swalOptions.text = xhr.responseJSON?.message || 'An unexpected error occurred.';
+                        }
+
+                        Swal.fire(swalOptions);
+                    }
+                });
+            });
+        });
+
+
+
         // $(document).ready(function() { 
         //     console.log('ozair'); 
         //     $.ajax({
@@ -538,10 +597,6 @@
     //     container.append(carHtml);
     //   });
     // }
-
-
-
-
 
     </script>
 
