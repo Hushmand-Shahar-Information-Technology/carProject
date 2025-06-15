@@ -131,6 +131,9 @@
                                     <li><a href="{{route('car.directory')}}">Car directory</a></li>
                                     <li><a href="{{route('car.create')}}">Car Register</a></li>
                                     <li>
+                                        <a href="{{route('user.profile')}}">profile</a>
+                                    </li>
+                                    <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
                                                 href="javascript:void(0);">
@@ -157,9 +160,6 @@
                                               </form>    
                                             </div>
                                         </div>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('user.profile')}}">profile</a>
                                     </li>
                                 </ul>
                             </div>
