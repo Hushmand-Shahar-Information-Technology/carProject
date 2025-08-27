@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+
 use App\Enums\CarColor;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,7 +21,8 @@ class StoreCarRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array{
+    public function rules(): array
+    {
         return [
             'title' => 'required|string|max:255',
             'year' => 'required|integer|min:1990|max:' . now()->year,
@@ -40,9 +42,9 @@ class StoreCarRequest extends FormRequest
             'images' => 'required|array|min:1|max:11',
             'images.*' => 'file|image|max:20120',
             'videos' => 'nullable|array|max:2',
-            'videos.*' => 'file|mimetypes:video/mp4,video/avi,video/mpeg|max:10240',
+            'videos.*' => 'file|mimes:mp4,avi,mpeg,webm,mov,3gp,3gpp|max:51200',
+            'request_price_status' => 'sometimes|boolean',
+            'request_price' => 'nullable|numeric|min:0',
         ];
     }
-
-
 }
