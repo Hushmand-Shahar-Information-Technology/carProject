@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 
@@ -22,61 +23,52 @@ class CarController extends Controller
 
     /**
      * Filter the cars.
-     */
+     */    
     public function filter(Request $request)
     {
-        $query = Car::query();
-
-        $cars = Car::query();
-
-        if ($keyword = $request->input('keyword')) {
-            $query->where(function ($q) use ($keyword) {
-                $q->where('model', 'like', "%$keyword%")
-                    ->orWhere('year', 'like', "%$keyword%")
-                    ->orWhere('make', 'like', "%$keyword%")
-                    ->orWhere('car_color', 'like', "%$keyword%")
-                    ->orWhere('transmission_type', 'like', "%$keyword%");
-            });
-        }
-
-        if ($years = $request->input('Year', [])) {
-            $query->whereIn('year', $years);
-        }
-
-        if ($models = $request->input('Model', [])) {
-            $query->whereIn('model', $models);
-        }
-
-        if ($transmission = $request->input('Transmission', [])) {
-            $query->whereIn('transmission_type', $transmission);
-        }
-
-        if ($bodies = $request->input('Body', [])) {
-            $query->whereIn('body_type', $bodies);
-        }
-
-        if ($colors = $request->input('Color', [])) {
-            $query->whereIn('car_color', $colors);
-        }
-
-        if ($makes = $request->input('Make', [])) {
-            $query->whereIn('make', $makes);
-        }
-        // Handle sorting
-        $sort = $request->input('sort');
-        // dd($sort);
-        // dd($sort);
-        if ($sort === 'name') {
-            $query->whereNotNull('model')->orderBy('model');
-        } elseif ($sort === 'price') {
-            $query->whereNotNull('sale_price')->orderBy('sale_price');
-        } elseif ($sort === 'date') {
-            $query->orderBy('created_at', 'desc');
-        } else {
-            $query->latest(); // Default sort
-        }
-
-        $cars = $query->get();
+        $cars = Car::query()
+            ->when($request->input('keyword'), function ($q, $keyword) {
+                $q->where(function ($q2) use ($keyword) {
+                    $q2->where('model', 'like', "%$keyword%")
+                        ->orWhere('year', 'like', "%$keyword%")
+                        ->orWhere('car_color', 'like', "%$keyword%")
+                        ->orWhere('make', 'like', "%$keyword%")
+                        ->orWhere('car_condition', 'like', "%$keyword%")
+                        ->orWhere('transmission_type', 'like', "%$keyword%");
+                });
+            })
+            ->when($request->input('Year', []), function ($q, $years) {
+                $q->whereIn('year', $years);
+            })
+            ->when($request->input('Make', []), function ($q, $models) {
+                $q->whereIn('make', $models);
+            })
+            ->when($request->input('Model', []), function ($q, $models) {
+                $q->whereIn('model', $models);
+            })
+            ->when($request->input('Transmission', []), function ($q, $transmissions) {
+                $q->whereIn('transmission_type', $transmissions);
+            })
+            ->when($request->input('Body', []), function ($q, $bodies) {
+                $q->whereIn('body_type', $bodies);
+            })
+            ->when($request->input('Color', []), function ($q, $colors) {
+                $q->whereIn('car_color', $colors);
+            })
+            ->when($request->input('Condition', []), function ($q, $condition) {
+                $q->whereIn('car_condition', $condition);
+            })
+            ->when($request->input('sort'), function ($q, $sort) {
+                match ($sort) {
+                    'name' => $q->whereNotNull('model')->orderBy('model'),
+                    'price' => $q->whereNotNull('sale_price')->orderBy('sale_price'),
+                    'date' => $q->orderByDesc('created_at'),
+                    default => $q->latest(),
+                };
+            }, function ($q) {
+                $q->latest();
+            })
+            ->get();
 
         return response()->json($cars);
     }

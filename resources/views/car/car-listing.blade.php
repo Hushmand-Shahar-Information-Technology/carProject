@@ -87,11 +87,11 @@
         }
 
         /* .search-result-item img {
-                    width: 60px;
-                    height: 40px;
-                    object-fit: cover;
-                    border-radius: 3px;
-                } */
+                        width: 60px;
+                        height: 40px;
+                        object-fit: cover;
+                        border-radius: 3px;
+                    } */
 
         .search-result-info {
             flex-grow: 1;
@@ -113,9 +113,19 @@
             background: #f8f9fa;
             font-weight: 500;
         }
+
+        .link-style {
+            display: block;
+            border-radius: none !important;
+            border: none !important;
+        }
+
+        .link-style:hover {
+            background-color: none !;
+        }
     </style>
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         banner -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -146,11 +156,12 @@
 
     <div id="car-list">
         <!-- Filtered cars will be loaded here -->
+        {{-- @include('components.feature-car') --}}
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                        <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                            <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -160,11 +171,11 @@
                         <div class="widget">
                             <div class="widget-search">
                                 <h5>Advanced Search</h5>
-                                <ul class="list-style-none">
+                                {{-- <ul class="list-style-none">
                                     <li><i class="fa fa-star"> </i> Results Found <span class="float-end">(39)</span></li>
                                     <li><i class="fa fa-shopping-cart"> </i> Compare Vehicles <span
                                             class="float-end">(10)</span></li>
-                                </ul>
+                                </ul> --}}
                             </div>
                             <div class="clearfix">
                                 <ul class="list-group">
@@ -173,10 +184,11 @@
                                         $years = range(1990, now()->year);
                                     @endphp
                                     <x-car-filter name="Year" label="All Years" :options="$years" />
-                                    <x-car-filter name="Transmission" label="All Transmission" :options="['Brand New', 'Slightly Used', 'Used']" />
-                                    <x-car-filter name="Body" label="All Body Styles" :options="['2dr Car', '4dr Car', 'Convertible']" />
-                                    <x-car-filter name="Model" label="All Models" :options="['Carrera', 'Boxster', 'GTS']" />
-                                    <x-car-filter name="Color" label="All Color" :options="['Black', 'White', 'Red', 'Yello', 'Green']" />
+                                    <x-car-filter name="Make" label="All Company" :options="$distinctValues['make']" />
+                                    <x-car-filter name="Transmission" label="All Transmission" :options="$distinctValues['transmissions']" />
+                                    <x-car-filter name="Body" label="All Body Styles" :options="$distinctValues['body_type']" />
+                                    <x-car-filter name="Model" label="All Models" :options="$distinctValues['models']" />
+                                    <x-car-filter name="Color" label="All Color" :options="$distinctValues['colors']" />
                                 </ul>
                             </div>
                         </div>
@@ -188,7 +200,7 @@
                             <div class="col-xl-3 col-md-12">
                                 <div class="price-slide">
                                     <div class="price">
-                                        <label for="amount">Price Range</label>
+                                        {{-- <label for="amount">Price Range</label> --}}
                                         <input type="text" id="amount" class="amount" value="$50 - $300" />
                                         <div id="slider-range"></div>
                                     </div>
@@ -208,7 +220,7 @@
                                         </div>
 
                                         <div class="flex-grow-1">
-                                            <span>Sort by</span>
+                                            {{-- <span>Sort by</span> --}}
                                             <select class="form-control" id="sort-select" name="sort">
                                                 <option value="">Sort by Default</option>
                                                 <option value="name">Sort by Name</option>
@@ -221,11 +233,11 @@
                             </div>
                             <div class="col-xl-3 col-xxl-2 col-md-12">
                                 <div class="price-search">
-                                    <span>Search cars</span>
+                                    {{-- <span>Search cars</span> --}}
                                     <div class="search">
                                         <i class="fa fa-search"></i>
                                         <input type="search" id="car-search" class="form-control placeholder"
-                                            placeholder="Search....">
+                                            placeholder="Search Cars....">
                                     </div>
                                 </div>
                             </div>
@@ -240,9 +252,10 @@
     </section>
 
     <!--===============
-                Scripts
-            ===============-->
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+                    Scripts
+                ===============-->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
         $("#sort-select").on('change', function() {
             applyFilters();
@@ -306,6 +319,23 @@
             }
         });
 
+        // Search button on the navbar
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
+
+            filters.forEach(filter => {
+                const values = urlParams.getAll(`${filter}[]`);
+                values.forEach(val => {
+                    $(`input[name="${filter}[]"][value="${val}"]`).prop('checked', true);
+                });
+            });
+
+            // Optionally trigger filtering after setting checkboxes
+            fetchFilteredCars(urlParams.toString());
+        });
+
+
         // Hide results when pressing ESC
         $(document).keyup(function(e) {
             if (e.key === "Escape") {
@@ -314,7 +344,7 @@
         });
 
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
-        const car_show = "{{route('car.show', ['id' => '__ID__'])}}";
+        const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
 
@@ -368,17 +398,45 @@
                             images = car.images ? [car.images] : [];
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
-                        const carDiv = $('<div>');
                         const url = car_show.replace('__ID__', car.id);
-
-                        const details_button = `<a class="button red float-end" href="${url}">Details</a>`;
+                        const carDiv = $(`<a href="${url}" style="color: #a0a0a0">`);
+                        const title = `<h4>${car.title}</h4>`;
+                        const details_button = `
+                        <div>
+                            <a class="button red float-end" href="${url}">Details</a>
+                        </div>`;
+                        const description =
+                            `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
+                        const details = `
+                                <div class="row" style="margin-bottom: 6px;">
+                            <div class="col-lg-2 col-sm-4">
+                                <ul class="list-style-1">
+                                    <li><i class="fa fa-check"></i> ${car.make}</li>
+                                    <li><i class="fa fa-check"></i> ${car.model}</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <ul class="list-style-1">
+                                    <li><i class="fa fa-check"></i> ${car.car_condition}</li>
+                                    <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-sm-4">
+                                <ul class="list-style-1">
+                                    <li><i class="fa fa-check"></i> ${car.currency_type} </li>
+                                     <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
+                                </ul>
+                            </div>
+                        </div>`
 
                         // Set dynamic class based on view
-                        carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2');
+                        carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1');
                         // Build HTML dynamically
                         let html = `
                     ${currentView === 'list' ? '<div class="row p-2">' : ''}
+
                         <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
+
                             <div class="car-item gray-bg text-center">
                                 <div class="car-image">
                                     <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
@@ -390,22 +448,26 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
+                                ${currentView == 'list' ? title: ""}
+                                ${currentView == 'list' ? description  : ""}
+                                ${currentView == 'list' ? details : ""}
                                 <div class="price">
+                                     ${currentView === 'list' ? details_button : ''}
                                     <span class="old-price">$${car.regular_price}</span>
                                     <span class="new-price">$${car.sale_price}</span>
-                                    ${currentView === 'list' ? details_button : ''}
                                 </div>
                                 <div class="car-list">
-                                    <ul class="list-inline">
+                                    <ul class="list-inline" style="font-size: 12px;">
                                         <li><i class="fa fa-registered"></i> ${car.year}</li>
                                         <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
                                         <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
@@ -495,62 +557,61 @@
         });
 
 
-    // code fo getting the body type filters from the URL and making an API call
-    // Block 1: For Body[] (array)
-    document.addEventListener('DOMContentLoaded', function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const hasBody = urlParams.has('Body[]');
-        if (!hasBody) return; // Only run if Body[] exists
+        // code fo getting the body type filters from the URL and making an API call
+        // Block 1: For Body[] (array)
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const hasBody = urlParams.has('Body[]');
+            if (!hasBody) return; // Only run if Body[] exists
 
-        const searchInput = document.getElementById('car-search');
-        const bodies = urlParams.getAll('Body[]');
+            const searchInput = document.getElementById('car-search');
+            const bodies = urlParams.getAll('Body[]');
 
-        if (bodies.length > 0) {
-            searchInput.value = bodies.join(', ');
-            fetchFilteredCars(urlParams.toString());
-        } else {
-            fetchFilteredCars();
-        }
-
-        searchInput.addEventListener('input', function () {
-            const keyword = searchInput.value.trim();
-            if (keyword === '') {
-                fetchFilteredCars();
+            if (bodies.length > 0) {
+                searchInput.value = bodies.join(', ');
+                fetchFilteredCars(urlParams.toString());
             } else {
-                const query = new URLSearchParams();
-                query.append('keyword', keyword);
-                fetchFilteredCars(query.toString());
-            }
-        });
-    });
-
-    // Block 2: For make (single value)
-    document.addEventListener('DOMContentLoaded', function () {
-        const urlParams = new URLSearchParams(window.location.search);
-        const make = urlParams.get('make');
-        if (!make) return; // Only run if 'make' exists
-
-        const searchInput = document.getElementById('car-search');
-        searchInput.value = make;
-
-        // 🔁 Trigger search as if user typed it
-        const initialQuery = new URLSearchParams();
-        initialQuery.append('keyword', make);
-        fetchFilteredCars(initialQuery.toString());
-
-        // 🔁 Live input listener for user typing
-        searchInput.addEventListener('input', function () {
-            const keyword = searchInput.value.trim();
-            if (keyword === '') {
                 fetchFilteredCars();
-            } else {
-                const query = new URLSearchParams();
-                query.append('keyword', keyword);
-                fetchFilteredCars(query.toString());
             }
-        });
-    });
 
+            searchInput.addEventListener('input', function() {
+                const keyword = searchInput.value.trim();
+                if (keyword === '') {
+                    fetchFilteredCars();
+                } else {
+                    const query = new URLSearchParams();
+                    query.append('keyword', keyword);
+                    fetchFilteredCars(query.toString());
+                }
+            });
+        });
+
+        // Block 2: For make (single value)
+        document.addEventListener('DOMContentLoaded', function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const make = urlParams.get('make');
+            if (!make) return; // Only run if 'make' exists
+
+            const searchInput = document.getElementById('car-search');
+            searchInput.value = make;
+
+            // 🔁 Trigger search as if user typed it
+            const initialQuery = new URLSearchParams();
+            initialQuery.append('keyword', make);
+            fetchFilteredCars(initialQuery.toString());
+
+            // 🔁 Live input listener for user typing
+            searchInput.addEventListener('input', function() {
+                const keyword = searchInput.value.trim();
+                if (keyword === '') {
+                    fetchFilteredCars();
+                } else {
+                    const query = new URLSearchParams();
+                    query.append('keyword', keyword);
+                    fetchFilteredCars(query.toString());
+                }
+            });
+        });
     </script>
 
 @endsection

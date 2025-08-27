@@ -6,6 +6,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Car;
 use App\Enums\CarColor;
 use App\Enums\TransmissionType;
+use App\Models\User;
 use Storage;
 
 class CarSeeder extends Seeder
@@ -77,7 +78,7 @@ class CarSeeder extends Seeder
         $models = ['Accord', 'Camry', 'Mustang', 'X5', 'A4'];
         $currencyTypes = ['USD', 'EUR', 'JPY'];
         $transmissionTypes = ['automatic', 'manual', 'semi-automatic'];
-
+        $userId = User::pluck('id')->toArray();
         $imagesList = [
             ['images/car/01.jpg', 'images/car/02.jpg'],
             ['images/car/03.jpg', 'images/car/04.jpg'],
@@ -122,6 +123,7 @@ class CarSeeder extends Seeder
         for ($i = 0; $i < 10; $i++) {
             Car::create([
                 'title' => $titles[array_rand($titles)],
+                'user_id' => $userId[array_rand($userId)],
                 'year' => $years[array_rand($years)],
                 'make' => $makes[array_rand($makes)],
                 'body_type' => $bodyTypes[array_rand($bodyTypes)],

@@ -33,7 +33,7 @@
     <link rel="stylesheet" href="{{ asset('css/owl-carousel/owl.carousel.css') }}" />
     <!-- Magnific Popup CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup/dist/magnific-popup.css">
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Magnific Popup JS -->
     <script src="https://cdn.jsdelivr.net/npm/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
 
@@ -70,7 +70,7 @@
     <!--=================================
  header -->
 
-    <header id="header" class="defualt">
+    <header id="header" class="defualt"> 
         <div class="topbar">
             <div class="container">
                 <div class="row">
@@ -119,9 +119,14 @@
                                     </li>
                                 </ul>
                                 <ul class="menu-links">
-                                    <li class="active"><a href="javascript:void(0)">Home </a></li>
+                                    <li class="active"><a href="{{route("home.index")}}">Home </a></li>
                                     <li><a href="{{ route('car.index') }}">Car listing </a></li>
                                     <li><a href="javascript:void(0)"> Contact </a></li>
+                                    <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
+                                        class="btn btn-primary">
+                                        Chat Now
+                                    </a>
+
                                     <li><a href="{{route('car.directory')}}">Car directory</a></li>
                                     <li><a href="{{route('car.create')}}">Car Register</a></li>
                                     <li>
@@ -131,79 +136,29 @@
                                                 <i class="fa-solid fa-search"></i>
                                             </a>
                                             <div class="search-box not-click">
+                                              <form id="searchForm" action="{{ route('car.index') }}" method="GET">
                                                 <div class="row">
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="selected-box">
-                                                            <select class="selectpicker">
-                                                                <option>Make </option>
-                                                                <option>BMW</option>
-                                                                <option>Honda </option>
-                                                                <option>Hyundai </option>
-                                                                <option>Nissan </option>
-                                                                <option>Mercedes Benz </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="selected-box">
-                                                            <select class="selectpicker">
-                                                                <option>Model</option>
-                                                                <option>3-Series</option>
-                                                                <option>Carrera</option>
-                                                                <option>GT-R</option>
-                                                                <option>Cayenne</option>
-                                                                <option>Mazda6</option>
-                                                                <option>Macan</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="selected-box">
-                                                            <select class="selectpicker">
-                                                                <option>Year</option>
-                                                                <option>2010</option>
-                                                                <option>2011</option>
-                                                                <option>2012</option>
-                                                                <option>2013</option>
-                                                                <option>2014</option>
-                                                                <option>2015</option>
-                                                                <option>2016</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="selected-box">
-                                                            <select class="selectpicker">
-                                                                <option>Body style</option>
-                                                                <option>2dr Car</option>
-                                                                <option>4dr Car</option>
-                                                                <option>Convertible</option>
-                                                                <option>Sedan</option>
-                                                                <option>Sports Utility</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="selected-box">
-                                                            <select class="selectpicker">
-                                                                <option>Vehicle Status</option>
-                                                                <option>Condition</option>
-                                                                <option>All Conditions</option>
-                                                                <option>Condition</option>
-                                                                <option>Brand New</option>
-                                                                <option>Slightly Used</option>
-                                                                <option>Used</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
+                                                    @php
+                                                        $years = range(1990, now()->year);
+                                                    @endphp
+                                                    <x-search-option name="Make[]" label="Make" :options="$distinctValues['make']" />
+                                                    <x-search-option name="Model[]" label="Models" :options="$distinctValues['models']" />
+                                                    <x-search-option name="Year[]" label="Years" :options="$years" />
+                                                    <x-search-option name="Body[]" label="Body Styles" :options="$distinctValues['body_type']" />
+                                                    <x-search-option name="Color[]" label="Color" :options="$distinctValues['colors']" />
+                                                    {{-- <x-search-option name="Condition[]" label="Vehicle Status" :options="$distinctValues['car_condition']" /> --}}
                                                     <div class="col-xl-2 col-md-4 col-sm-6">
                                                         <div class="text-center">
-                                                            <button class="button red" type="button">Search</button>
+                                                            <button class="button red" type="submit">Search</button>
                                                         </div>
                                                     </div>
                                                 </div>
+                                              </form>    
                                             </div>
                                         </div>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('user.profile')}}">profile</a>
                                     </li>
                                 </ul>
                             </div>

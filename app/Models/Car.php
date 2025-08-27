@@ -20,6 +20,7 @@ class Car extends Model
      protected $fillable = [
         'title',
         'year',
+        'user_id',
         'make',
         'body_type',
         'car_condition',
@@ -52,5 +53,9 @@ class Car extends Model
         // 'car_color' => CarColor::class,
     ];
 
+    protected function user()
+    {
+        return $this->hasMany(User::class);
+    }
 
 }

@@ -3,6 +3,68 @@
 @section('content')
 
 
+<style>
+    /* Modal Overlay (full screen, centered) */
+    .modal-overlay {
+    display: none; 
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(5px);
+    z-index: 1050;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    }
+
+    /* Modal Content */
+    .modal-content {
+    background: white;
+    border-radius: 15px;
+    padding: 30px 25px;
+    max-width: 700px;
+    width: 90vw;
+    position: relative;
+    /* box-shadow: 0 12px 30px rgba(0,0,0,0.2); */
+    }
+
+    .body-div {
+    /* background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%); */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 15px;
+  }
+
+
+  .containerw {
+    max-width: 700px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    padding: 40px 35px;
+    position: relative;
+  }
+
+    /* Close Button */
+    .close-modal {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 28px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    }
+
+</style>
 <!--=================================
  rev slider -->
 <section class="slider">
@@ -272,7 +334,10 @@
     <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div> </div>
     </div>
   </section>
-
+    
+  {{-- <div style="margin: 0 auto; z-index: 9999;"> --}}
+    @include('components.feature-car')
+  {{-- </div> --}}
 <!--=================================
   rev slider -->
 
@@ -280,7 +345,7 @@
 <!--=================================
  welcome -->
  
-<section class="welcome-block objects-car page-section-ptb white-bg">
+<section class="welcome-block objects-car page-section-ptb white-bg" style="padding-top: 0px ;">
  <div class="objects-left left"><img class="img-fluid objects-1" src="{{asset('images/objects/01.jpg')}}" alt=""></div>
  <div class="objects-right right"><img class="img-fluid objects-2" src="{{asset('images/objects/02.jpg')}}" alt=""></div>
   <div class="container">
@@ -356,8 +421,8 @@
 
 
 <!-- ==================================
- feature car -->
-@include('components.feature-car')
+ {{-- feature car -->
+@include('components.feature-car') --}}
 
 <!--=================================
  feature car -->
@@ -509,6 +574,55 @@
  testimonial -->
 
 
+  <!-- Modal code goes here -->
+  <div id="wizardModal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="body-div">
+        <div class="containerw">
+          <button class="close-modal btn btn-sm btn-danger position-absolute m-2">&times;</button>
+          @include('home.wizard')
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Your JS scripts here -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Your modal open/close + form JS here
+    $(document).ready(function () {
+      const $modal = $('#wizardModal');
+      const $mainContent = $('#mainContent');
+
+      function showModal() {
+        $modal.show();
+        $mainContent.addClass('blurred');
+      }
+
+      function hideModal() {
+        $modal.hide();
+        $mainContent.removeClass('blurred');
+      }
+
+      // Show modal on page load
+      showModal();
+
+      // Close modal on clicking close button
+      $modal.find('.close-modal').on('click', function () {
+        hideModal();
+      });
+
+      // Close modal on clicking outside modal content (overlay background)
+      $modal.on('click', function (e) {
+        if ($(e.target).is('#wizardModal')) {
+          hideModal();
+        }
+      });
+    });
+
+  </script>
  @endsection
 
 
