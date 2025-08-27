@@ -23,7 +23,7 @@ class CarController extends Controller
 
     /**
      * Filter the cars.
-     */    
+     */
     public function filter(Request $request)
     {
         $cars = Car::query()
@@ -133,7 +133,6 @@ class CarController extends Controller
             Log::error('Error storing car: ' . $th->getMessage());
             // return back()->withErrors('Something went wrong while saving the car.');
             dd($th->getMessage());
-
         }
     }
 
@@ -144,9 +143,15 @@ class CarController extends Controller
     public function show($id)
     {
         $car = Car::findOrFail($id);
-        // dd($car->location);
-        return view('car.show', compact('car'));
+
+        $recentCars = Car::where('id', '!=', $id)
+            ->latest()
+            ->take(3)
+            ->get();
+
+        return view('car.show', compact('car', 'recentCars'));
     }
+
 
     public function search(Request $request)
     {
@@ -164,7 +169,8 @@ class CarController extends Controller
     }
 
 
-    public function CarDirectory(){
+    public function CarDirectory()
+    {
         // Define logos and their corresponding car makes
         $logos = [
             ['image' => '01.png', 'make' => 'Toyota'],
