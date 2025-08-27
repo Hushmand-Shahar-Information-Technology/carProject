@@ -87,11 +87,11 @@
         }
 
         /* .search-result-item img {
-                        width: 60px;
-                        height: 40px;
-                        object-fit: cover;
-                        border-radius: 3px;
-                    } */
+                            width: 60px;
+                            height: 40px;
+                            object-fit: cover;
+                            border-radius: 3px;
+                        } */
 
         .search-result-info {
             flex-grow: 1;
@@ -125,7 +125,7 @@
         }
     </style>
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             banner -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 banner -->
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -160,8 +160,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                            <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -183,12 +183,12 @@
                                     @php
                                         $years = range(1990, now()->year);
                                     @endphp
-                                    <x-car-filter name="Year" label="All Years" :options="$years" />
+                                    {{-- <x-car-filter name="Year" label="All Years" :options="$years" />
                                     <x-car-filter name="Make" label="All Company" :options="$distinctValues['make']" />
                                     <x-car-filter name="Transmission" label="All Transmission" :options="$distinctValues['transmissions']" />
                                     <x-car-filter name="Body" label="All Body Styles" :options="$distinctValues['body_type']" />
                                     <x-car-filter name="Model" label="All Models" :options="$distinctValues['models']" />
-                                    <x-car-filter name="Color" label="All Color" :options="$distinctValues['colors']" />
+                                    <x-car-filter name="Color" label="All Color" :options="$distinctValues['colors']" /> --}}
                                 </ul>
                             </div>
                         </div>
@@ -252,8 +252,8 @@
     </section>
 
     <!--===============
-                    Scripts
-                ===============-->
+                        Scripts
+                    ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
@@ -455,7 +455,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                `
+                                                                                                                                                                                                                                                                                                                                    `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
