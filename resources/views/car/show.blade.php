@@ -6,14 +6,14 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                     inner-intro -->
+                         inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
             aspect-ratio: 16 / 11;
             object-fit: cover;
         }
-    </style>                 
+    </style>
 
     <section class="inner-intro bg-6 bg-overlay-black-70">
         <div class="container">
@@ -23,9 +23,10 @@
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
-                        <li><a href="{{route('home.index')}}"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i>
+                        <li><a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home</a> <i
+                                class="fa fa-angle-double-right"></i>
                         </li>
-                        <li><a href="{{route('car.index')}}">car-list</a> <i class="fa fa-angle-double-right"></i></li>
+                        <li><a href="{{ route('car.index') }}">car-list</a> <i class="fa fa-angle-double-right"></i></li>
                         <li><span> details </span> </li>
                     </ul>
                 </div>
@@ -34,12 +35,12 @@
     </section>
 
     <!--=================================
-                     inner-intro -->
+                         inner-intro -->
 
 
 
     <!--=================================
-                    car-details -->
+                        car-details -->
 
     <section class="car-details page-section-ptb">
         <div class="container">
@@ -229,9 +230,10 @@
                 <div class="col-md-8">
                     <div class="slider-slick">
                         <div class="cars-image-gallery" style="">
-                            <div class="slider slider-for detail-big-car-gallery" >
+                            <div class="slider slider-for detail-big-car-gallery">
                                 @foreach ($car->images as $image)
-                                    <img class="img-fluid" style="" src="/storage/{{$image}}" alt="">
+                                    <img class="img-fluid" style="" src="/storage/{{ $image }}"
+                                        alt="">
                                 @endforeach
                                 {{-- <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
@@ -250,7 +252,8 @@
                         </div>
                         <div class="slider slider-nav">
                             @foreach ($car->images as $image)
-                                    <img class="img-fluid fixed-img" style="" src="/storage/{{$image}}" alt="">
+                                <img class="img-fluid fixed-img" style="" src="/storage/{{ $image }}"
+                                    alt="">
                             @endforeach
                             {{-- <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/02.jpg') }}" alt="">
@@ -270,32 +273,42 @@
                             <li class="nav-item icon-diamond" role="presentation">
                                 <button class="nav-link active" id="general-information-tab" data-bs-toggle="tab"
                                     data-bs-target="#general-information" type="button" role="tab"
-                                    aria-controls="general-information" aria-selected="true">General Information</button>
+                                    aria-controls="general-information" aria-selected="true">
+                                    General Information
+                                </button>
                             </li>
                         </ul>
                         <div class="tab-content" id="myTabContent">
                             <div class="tab-pane fade show active" id="general-information" role="tabpanel"
                                 aria-labelledby="general-information-tab">
-                                <h6>consectetur adipisicing elit</h6>
-                                <p>Temporibus possimus quasi beatae, consectetur adipisicing elit. Obcaecati unde molestias
-                                    sunt officiis aliquid sapiente, numquam, porro perspiciatis neque voluptatem sint hic
-                                    quam eveniet ad adipisci laudantium corporis ipsam ea!
+                                <h6>Welcome to Top Motors</h6>
+                                <p>
+                                    <strong>Top Motors</strong> is your trusted destination for buying and selling quality
+                                    cars.
+                                    We specialize in connecting car buyers with the best deals, offering a wide range of
+                                    vehicles
+                                    from brand-new models to well-maintained used cars.
                                     <br /><br />
-                                    Consectetur adipisicing elit. Dicta, amet quia ad debitis fugiat voluptatem neque
-                                    dolores tempora iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa,
-                                    illo a You will begin to realize why, consectetur adipisicing elit. Commodi, doloribus,
-                                    earum modi consectetur molestias asperiores sequi ipsam neque error itaque veniam culpa
-                                    eligendi similique ducimus nulla, blanditiis, perspiciatis atque saepe! veritatis.
-
+                                    At Top Motors, our mission is to make car ownership simple, affordable, and reliable.
+                                    Whether you are looking for a luxury vehicle, a family car, or a budget-friendly ride,
+                                    we provide complete details, transparent pricing, and expert guidance to help you make
+                                    the right choice.
                                     <br /><br />
-                                    Adipisicing consectetur elit. Dicta, amet quia ad debitis fugiat voluptatem neque
-                                    dolores tempora iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa,
-                                    illo a You will begin to realize why, consectetur adipisicing elit. Commodi, doloribus,
-                                    earum modi consectetur molestias asperiores.
+                                    Our platform is designed to ensure a smooth process, offering:
+                                <ul>
+                                    <li>✔ Wide selection of cars from trusted sellers</li>
+                                    <li>✔ Secure and transparent transactions</li>
+                                    <li>✔ Car financing and installment options</li>
+                                    <li>✔ Reliable after-sales support and services</li>
+                                </ul>
+                                <br />
+                                With <strong>Top Motors</strong>, you are not just buying a car—you are investing in
+                                quality, safety, and peace of mind. Join us today and drive your dream car with confidence!
                                 </p>
                             </div>
                         </div>
                     </div>
+
                     <div class="feature-car">
                         <h6>Recently Vehicle</h6>
                         <div class="row">
@@ -533,7 +546,7 @@
 
 
     <!--=================================
-                    car-details  -->
+                        car-details  -->
 
     <script>
         $(document).ready(function() {
@@ -554,7 +567,7 @@
                 focusOnSelect: true
             });
         });
-         $(document).ready(function() {
+        $(document).ready(function() {
             $('.popup-youtube').magnificPopup({
                 type: 'iframe',
                 mainClass: 'mfp-fade',
