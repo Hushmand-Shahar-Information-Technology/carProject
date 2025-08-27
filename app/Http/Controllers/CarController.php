@@ -122,10 +122,11 @@ class CarController extends Controller
                 'car_inside_color' => $data['car_inside_color'] ?? null,
                 'currency_type' => $data['currency_type'] ?? null,
                 'sale_price' => $data['sale_price'] ?? null,
-                'request_price_status' => $request->boolean('request_price_status'),
+                // Auto-set request_price_status if request_price provided
                 'request_price' => $data['request_price'] ?? null,
+                'request_price_status' => isset($data['request_price']) && $data['request_price'] !== null && $data['request_price'] !== '' && (float) $data['request_price'] > 0,
                 'images' => $images, // saved as actual array (use JSON column in DB)
-                'video' => $videos,  // same for videos
+                'videos' => $videos, // same for videos
             ]);
 
             return redirect()->route('car.index')->with('success', 'Car created successfully.');
