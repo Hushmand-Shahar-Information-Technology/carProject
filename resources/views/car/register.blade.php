@@ -49,8 +49,7 @@
     <div class="container mx-auto py-10" x-data="carForm()" x-init="initSelect2()">
         <div class="bg-white p-6 rounded shadow-md max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6"
             style="box-shadow: 0 0 2px black; margin: 1rem 0;">
-            <div x-data="carForm()" x-init="initSelect2();
-            watchProgress()" x-effect="watchProgress()">
+            <div x-init="watchProgress()" x-effect="watchProgress()">
 
                 <h1 class="text-2xl font-bold mb-6">🚗 Car Registration Form</h1>
 
@@ -73,250 +72,251 @@
                             <input type="text" x-model="form.title"
                                 class="w-full border rounded p-2 title-input @error('title') border-red-500 @enderror"
                                 placeholder="Title of the car" name="title" " />
-                        @error('title')
+                                            @error('title')
         <p class="title-error text-red-500 text-sm mt-1"> عنوان برای پوست تان انتخاب کنید</p>
     @enderror
 
-                    </div>
+                                        </div>
 
-                    <div>
-                    <label class="block font-medium">Year</label>
-                   <select x-model="form.year" class="w-full border rounded p-2 select2 year-input @error('year') border-red-500 @enderror" name="year">
-                        <option value="">Select Year</option>
-                        <template x-for="y in years" :key="y">
-                            <option :value="y" x-text="y" :selected="y == form.year"></option>
-                        </template>
-                    </select>
+                                        <div>
+                                        <label class="block font-medium">Year</label>
+                                       <select x-model="form.year" class="w-full border rounded p-2 select2 year-input @error('year') border-red-500 @enderror" name="year">
+                                            <option value="">Select Year</option>
+                                            <template x-for="y in years" :key="y">
+                                                <option :value="y" x-text="y" :selected="y == form.year"></option>
+                                            </template>
+                                        </select>
 
-                    @error('year')
+                                        @error('year')
         <p class="year-error text-red-500 text-sm mt-1"> سال تولید موتر را انتخاب کنید</p>
     @enderror
 
 
 
-                    </div>
+                                        </div>
 
-                    <div>
-                    <label class="block font-medium">Make (Company)</label>
-                    <select x-model="form.make" class="w-full border rounded p-2 select2 make-select @error('make') border-red-500 @enderror" name="make">
-                        <option value="">Select Make</option>
-                        <option value="toyota" {{ old('make', $car->make ?? '') == 'toyota' ? 'selected' : '' }}>Toyota</option>
-                        <option value="bmw" {{ old('make', $car->make ?? '') == 'bmw' ? 'selected' : '' }}>BMW</option>
-                        <option value="honda" {{ old('make', $car->make ?? '') == 'honda' ? 'selected' : '' }}>Honda</option>
-                        <option value="marcedes" {{ old('make', $car->make ?? '') == 'marcedes' ? 'selected' : '' }}>Mercedes</option>
-                        <option value="Hyundai" {{ old('make', $car->make ?? '') == 'Hyundai' ? 'selected' : '' }}>Hyundai</option>
-                        <option value="Nissan" {{ old('make', $car->make ?? '') == 'Nissan' ? 'selected' : '' }}>Nissan</option>
-                        <option value="Kia" {{ old('make', $car->make ?? '') == 'Kia' ? 'selected' : '' }}>Kia</option>
-                        <option value="ford" {{ old('make', $car->make ?? '') == 'ford' ? 'selected' : '' }}>Ford</option>
-                    </select>
+                                        <div>
+                                        <label class="block font-medium">Make (Company)</label>
+                                        <select x-model="form.make" class="w-full border rounded p-2 select2 make-select @error('make') border-red-500 @enderror" name="make">
+                                            <option value="">Select Make</option>
+                                            <option value="toyota" {{ old('make', $car->make ?? '') == 'toyota' ? 'selected' : '' }}>Toyota</option>
+                                            <option value="bmw" {{ old('make', $car->make ?? '') == 'bmw' ? 'selected' : '' }}>BMW</option>
+                                            <option value="honda" {{ old('make', $car->make ?? '') == 'honda' ? 'selected' : '' }}>Honda</option>
+                                            <option value="marcedes" {{ old('make', $car->make ?? '') == 'marcedes' ? 'selected' : '' }}>Mercedes</option>
+                                            <option value="Hyundai" {{ old('make', $car->make ?? '') == 'Hyundai' ? 'selected' : '' }}>Hyundai</option>
+                                            <option value="Nissan" {{ old('make', $car->make ?? '') == 'Nissan' ? 'selected' : '' }}>Nissan</option>
+                                            <option value="Kia" {{ old('make', $car->make ?? '') == 'Kia' ? 'selected' : '' }}>Kia</option>
+                                            <option value="ford" {{ old('make', $car->make ?? '') == 'ford' ? 'selected' : '' }}>Ford</option>
+                                        </select>
 
-                    @error('make')
+                                        @error('make')
         <p class="make-error text-red-500 text-sm mt-1"> کمپنی موتر را انتخاب کنید</p>
     @enderror
 
-                    </div>
+                                        </div>
 
-                    {{-- نوع بادی --}}
-                    <div>
-                    <label class="block font-medium ">نوع یادی</label>
-                    <select x-model="form.body_type" class="w-full border rounded p-2 select2 @error('body_type') border-red-500 @enderror" name="body_type">
-                        <option value="">نوع بادی موتر</option>
-                        <option value="convertible" {{ old('body_type', $car->body_type ?? '') == 'convertible' ? 'selected' : '' }}>Convertible</option>
-                        <option value="coupe" {{ old('body_type', $car->body_type ?? '') == 'coupe' ? 'selected' : '' }}>Coupe</option>
-                        <option value="CUV" {{ old('body_type', $car->body_type ?? '') == 'CUV' ? 'selected' : '' }}>CUV</option>
-                        <option value="micro" {{ old('body_type', $car->body_type ?? '') == 'micro' ? 'selected' : '' }}>Micro</option>
-                        <option value="supercar" {{ old('body_type', $car->body_type ?? '') == 'supercar' ? 'selected' : '' }}>Supercar</option>
-                        <option value="sedan" {{ old('body_type', $car->body_type ?? '') == 'sedan' ? 'selected' : '' }}>Sedan</option>
-                        <option value="pick-up" {{ old('body_type', $car->body_type ?? '') == 'pick-up' ? 'selected' : '' }}>Pick-up</option>
-                        <option value="minivan" {{ old('body_type', $car->body_type ?? '') == 'minivan' ? 'selected' : '' }}>Minivan</option>
-                    </select>
+                                        {{-- نوع بادی --}}
+                                        <div>
+                                        <label class="block font-medium ">نوع یادی</label>
+                                        <select x-model="form.body_type" class="w-full border rounded p-2 select2 @error('body_type') border-red-500 @enderror" name="body_type">
+                                            <option value="">نوع بادی موتر</option>
+                                            <option value="convertible" {{ old('body_type', $car->body_type ?? '') == 'convertible' ? 'selected' : '' }}>Convertible</option>
+                                            <option value="coupe" {{ old('body_type', $car->body_type ?? '') == 'coupe' ? 'selected' : '' }}>Coupe</option>
+                                            <option value="CUV" {{ old('body_type', $car->body_type ?? '') == 'CUV' ? 'selected' : '' }}>CUV</option>
+                                            <option value="micro" {{ old('body_type', $car->body_type ?? '') == 'micro' ? 'selected' : '' }}>Micro</option>
+                                            <option value="supercar" {{ old('body_type', $car->body_type ?? '') == 'supercar' ? 'selected' : '' }}>Supercar</option>
+                                            <option value="sedan" {{ old('body_type', $car->body_type ?? '') == 'sedan' ? 'selected' : '' }}>Sedan</option>
+                                            <option value="pick-up" {{ old('body_type', $car->body_type ?? '') == 'pick-up' ? 'selected' : '' }}>Pick-up</option>
+                                            <option value="minivan" {{ old('body_type', $car->body_type ?? '') == 'minivan' ? 'selected' : '' }}>Minivan</option>
+                                        </select>
 
-                   @error('body_type')
+                                       @error('body_type')
         <p class="body-error text-red-500 text-sm mt-1"> نوع بادی را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
 
-                    {{-- وضعیت ټکر --}}
-                    <div>
-                    <label class="block font-medium">وضعیت ټکر</label>
-                   <select x-model="form.car_condition" class="w-full border rounded p-2 select2 text-right @error('car_condition') border-red-500 @enderror" name="car_condition">
-                        <option value="">وضعیت موتر</option>
-                        <option value="تصادفی" {{ old('car_condition', $car->car_condition ?? '') == 'تصادفی' ? 'selected' : '' }}>تصادفی</option>
-                        <option value="سالم" {{ old('car_condition', $car->car_condition ?? '') == 'سالم' ? 'selected' : '' }}>سالم</option>
-                        <option value="تصادفی اما تعمیر شده" {{ old('car_condition', $car->car_condition ?? '') == 'تصادفی اما تعمیر شده' ? 'selected' : '' }}>تصادفی اما تعمیر شده</option>
-                    </select>
+                                        {{-- وضعیت ټکر --}}
+                                        <div>
+                                        <label class="block font-medium">وضعیت ټکر</label>
+                                       <select x-model="form.car_condition" class="w-full border rounded p-2 select2 text-right @error('car_condition') border-red-500 @enderror" name="car_condition">
+                                            <option value="">وضعیت موتر</option>
+                                            <option value="تصادفی" {{ old('car_condition', $car->car_condition ?? '') == 'تصادفی' ? 'selected' : '' }}>تصادفی</option>
+                                            <option value="سالم" {{ old('car_condition', $car->car_condition ?? '') == 'سالم' ? 'selected' : '' }}>سالم</option>
+                                            <option value="تصادفی اما تعمیر شده" {{ old('car_condition', $car->car_condition ?? '') == 'تصادفی اما تعمیر شده' ? 'selected' : '' }}>تصادفی اما تعمیر شده</option>
+                                        </select>
 
-                    @error('caar_condition')
+                                        @error('caar_condition')
         <p class="car_condition-error text-red-500 text-sm mt-1"> وضعیت موتر را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
-                    <div>
-                    <label class="block font-medium">VIN Number</label>
-                    <input type="text" x-model="form.vin_number" class="w-full border rounded p-2 @error('VIN_number') border-red-500 @enderror" placeholder="Title of the car" name="VIN_number" />
-                    @error('VIN_number')
+                                        <div>
+                                        <label class="block font-medium">VIN Number</label>
+                                        <input type="text" x-model="form.vin_number" class="w-full border rounded p-2 @error('VIN_number') border-red-500 @enderror" placeholder="Title of the car" name="VIN_number" />
+                                        @error('VIN_number')
         <p class="vin_number-error text-red-500 text-sm mt-1"> نمبر شاسی را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
-                    <div>
-                    <label class="block font-medium">Location (Live)</label>
-                    <input type="text" x-model="form.location" class="w-full border rounded p-2 @error('location') border-red-500  @enderror"  placeholder="Click to get current location" readonly
-                            @click="getLocation" name="location" />
-                    @error('location')
+                                        <div>
+                                        <label class="block font-medium">Location (Live)</label>
+                                        <input type="text" x-model="form.location" class="w-full border rounded p-2 @error('location') border-red-500  @enderror"  placeholder="Click to get current location" readonly
+                                                @click="getLocation" name="location" />
+                                        @error('location')
         <p class="location-error text-red-500 text-sm mt-1"> موقیعت تان زا انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
-                    <div class="flex justify-end">
-                    <button type="button" @click="nextStep" class="bg-blue-600 text-white px-4 py-2 rounded mt-4">Next →</button>
-                    </div>
-                </div>
+                                        <div class="flex justify-end">
+                                        <button type="button" @click="nextStep" class="bg-blue-600 text-white px-4 py-2 rounded mt-4">Next →</button>
+                                        </div>
+                                    </div>
 
-                <!-- Step 2 -->
-                <div x-show="step === 2" class="space-y-4">
-                    <div>
-                    <label class="block font-medium">Model</label>
-                   <select x-model="form.model" class="w-full border rounded p-2 select2 @error('model') border-red-500 @enderror" name="model">
-                        <option value="">Select Model</option>
-                        <option value="corrola" {{ old('model', $car->model ?? '') == 'corrola' ? 'selected' : '' }}>Corolla</option>
-                        <option value="focus" {{ old('model', $car->model ?? '') == 'focus' ? 'selected' : '' }}>Focus</option>
-                        <option value="xs" {{ old('model', $car->model ?? '') == 'xs' ? 'selected' : '' }}>X5</option>
-                        <option value="civic" {{ old('model', $car->model ?? '') == 'civic' ? 'selected' : '' }}>Civic</option>
-                        <option value="c-class" {{ old('model', $car->model ?? '') == 'c-class' ? 'selected' : '' }}>C-Class</option>
-                    </select>
+                                    <!-- Step 2 -->
+                                    <div x-show="step === 2" class="space-y-4">
+                                        <div>
+                                        <label class="block font-medium">Model</label>
+                                       <select x-model="form.model" class="w-full border rounded p-2 select2 @error('model') border-red-500 @enderror" name="model">
+                                            <option value="">Select Model</option>
+                                            <option value="corrola" {{ old('model', $car->model ?? '') == 'corrola' ? 'selected' : '' }}>Corolla</option>
+                                            <option value="focus" {{ old('model', $car->model ?? '') == 'focus' ? 'selected' : '' }}>Focus</option>
+                                            <option value="xs" {{ old('model', $car->model ?? '') == 'xs' ? 'selected' : '' }}>X5</option>
+                                            <option value="civic" {{ old('model', $car->model ?? '') == 'civic' ? 'selected' : '' }}>Civic</option>
+                                            <option value="c-class" {{ old('model', $car->model ?? '') == 'c-class' ? 'selected' : '' }}>C-Class</option>
+                                        </select>
 
-                    @error('model')
+                                        @error('model')
         <p class="model-error text-red-500 text-sm mt-1">  مودل موتر را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
-                    {{-- رنګ باډی موتر --}}
-                   <div>
-                        <label class="block font-medium">Car Body Color</label>
-                        <select x-model="form.car_color" class="w-full border rounded p-2 select2 text-right @error('car_color') border-red-500 @enderror" name="car_color">
-                            <option value="">رنگ بدنه خودرو را انتخاب کنید</option>
-                            <option value="black" {{ old('car_color', $car->car_color ?? '') == 'black' ? 'selected' : '' }}>سیاه</option>
-                            <option value="white" {{ old('car_color', $car->car_color ?? '') == 'white' ? 'selected' : '' }}>سفید</option>
-                            <option value="gray" {{ old('car_color', $car->car_color ?? '') == 'gray' ? 'selected' : '' }}>خاکستری</option>
-                            <option value="silver" {{ old('car_color', $car->car_color ?? '') == 'silver' ? 'selected' : '' }}>نقره‌ای</option>
-                            <option value="navy" {{ old('car_color', $car->car_color ?? '') == 'navy' ? 'selected' : '' }}>سرمه‌ای</option>
-                            <option value="blue" {{ old('car_color', $car->car_color ?? '') == 'blue' ? 'selected' : '' }}>آبی</option>
-                            <option value="gold" {{ old('car_color', $car->car_color ?? '') == 'gold' ? 'selected' : '' }}>طلایی</option>
-                            <option value="yellow" {{ old('car_color', $car->car_color ?? '') == 'yellow' ? 'selected' : '' }}>زرد</option>
-                            <option value="red" {{ old('car_color', $car->car_color ?? '') == 'red' ? 'selected' : '' }}>قرمز</option>
-                            <option value="green" {{ old('car_color', $car->car_color ?? '') == 'green' ? 'selected' : '' }}>سبز</option>
-                            <option value="brown" {{ old('car_color', $car->car_color ?? '') == 'brown' ? 'selected' : '' }}>قهوه‌ای</option>
-                            <option value="chestnut" {{ old('car_color', $car->car_color ?? '') == 'chestnut' ? 'selected' : '' }}>قهوه‌ای سوخته</option>
-                            <option value="orange" {{ old('car_color', $car->car_color ?? '') == 'orange' ? 'selected' : '' }}>نارنجی</option>
-                            <option value="purple" {{ old('car_color', $car->car_color ?? '') == 'purple' ? 'selected' : '' }}>بنفش</option>
-                            <option value="coral" {{ old('car_color', $car->car_color ?? '') == 'coral' ? 'selected' : '' }}>مرجانی</option>
-                            <option value="ruby" {{ old('car_color', $car->car_color ?? '') == 'ruby' ? 'selected' : '' }}>یاقوتی</option>
-                            <option value="sky_blue" {{ old('car_color', $car->car_color ?? '') == 'sky_blue' ? 'selected' : '' }}>آبی آسمانی</option>
-                            <option value="olive" {{ old('car_color', $car->car_color ?? '') == 'olive' ? 'selected' : '' }}>زیتونی</option>
-                            <option value="turquoise" {{ old('car_color', $car->car_color ?? '') == 'turquoise' ? 'selected' : '' }}>فیروزه‌ای</option>
-                            <option value="ice" {{ old('car_color', $car->car_color ?? '') == 'ice' ? 'selected' : '' }}>یخی</option>
-                        </select>
+                                        {{-- رنګ باډی موتر --}}
+                                       <div>
+                                            <label class="block font-medium">Car Body Color</label>
+                                            <select x-model="form.car_color" class="w-full border rounded p-2 select2 text-right @error('car_color') border-red-500 @enderror" name="car_color">
+                                                <option value="">رنگ بدنه خودرو را انتخاب کنید</option>
+                                                <option value="black" {{ old('car_color', $car->car_color ?? '') == 'black' ? 'selected' : '' }}>سیاه</option>
+                                                <option value="white" {{ old('car_color', $car->car_color ?? '') == 'white' ? 'selected' : '' }}>سفید</option>
+                                                <option value="gray" {{ old('car_color', $car->car_color ?? '') == 'gray' ? 'selected' : '' }}>خاکستری</option>
+                                                <option value="silver" {{ old('car_color', $car->car_color ?? '') == 'silver' ? 'selected' : '' }}>نقره‌ای</option>
+                                                <option value="navy" {{ old('car_color', $car->car_color ?? '') == 'navy' ? 'selected' : '' }}>سرمه‌ای</option>
+                                                <option value="blue" {{ old('car_color', $car->car_color ?? '') == 'blue' ? 'selected' : '' }}>آبی</option>
+                                                <option value="gold" {{ old('car_color', $car->car_color ?? '') == 'gold' ? 'selected' : '' }}>طلایی</option>
+                                                <option value="yellow" {{ old('car_color', $car->car_color ?? '') == 'yellow' ? 'selected' : '' }}>زرد</option>
+                                                <option value="red" {{ old('car_color', $car->car_color ?? '') == 'red' ? 'selected' : '' }}>قرمز</option>
+                                                <option value="green" {{ old('car_color', $car->car_color ?? '') == 'green' ? 'selected' : '' }}>سبز</option>
+                                                <option value="brown" {{ old('car_color', $car->car_color ?? '') == 'brown' ? 'selected' : '' }}>قهوه‌ای</option>
+                                                <option value="chestnut" {{ old('car_color', $car->car_color ?? '') == 'chestnut' ? 'selected' : '' }}>قهوه‌ای سوخته</option>
+                                                <option value="orange" {{ old('car_color', $car->car_color ?? '') == 'orange' ? 'selected' : '' }}>نارنجی</option>
+                                                <option value="purple" {{ old('car_color', $car->car_color ?? '') == 'purple' ? 'selected' : '' }}>بنفش</option>
+                                                <option value="coral" {{ old('car_color', $car->car_color ?? '') == 'coral' ? 'selected' : '' }}>مرجانی</option>
+                                                <option value="ruby" {{ old('car_color', $car->car_color ?? '') == 'ruby' ? 'selected' : '' }}>یاقوتی</option>
+                                                <option value="sky_blue" {{ old('car_color', $car->car_color ?? '') == 'sky_blue' ? 'selected' : '' }}>آبی آسمانی</option>
+                                                <option value="olive" {{ old('car_color', $car->car_color ?? '') == 'olive' ? 'selected' : '' }}>زیتونی</option>
+                                                <option value="turquoise" {{ old('car_color', $car->car_color ?? '') == 'turquoise' ? 'selected' : '' }}>فیروزه‌ای</option>
+                                                <option value="ice" {{ old('car_color', $car->car_color ?? '') == 'ice' ? 'selected' : '' }}>یخی</option>
+                                            </select>
 
-                        @error('car_color')
+                                            @error('car_color')
         <p class="car_color-error text-red-500 text-sm mt-1"> رنګ باډی موتر را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
 
-                    {{-- رنک داخلي موتر --}}
+                                        {{-- رنک داخلي موتر --}}
 
-                    <div>
-                        <label class="block font-medium">رنګ داخلي موتر</label>
-                        <select x-model="form.car_inside_color" class="w-full border rounded p-2 select2 text-right @error('car_inside_color') border-red-500 @enderror" name="car_inside_color">
-                            <option value="">رنګ بادی موتر را انتخاب کنید</option>
-                            <option value="سیاه">سیاه</option>
-                            <option value="سفید">سفید</option>
-                            <option value="خاکستری">خاکستری</option>
-                            <option value="نقره‌ای">نقره‌ای</option>
-                            <option value="سرمه‌ای">سرمه‌ای</option>
-                            <option value="آبی">آبی</option>
-                            <option value="زر">زر</option>
-                            <option value="زرد">زرد</option>
-                            <option value="قرمز">قرمز</option>
-                            <option value="سبز">سبز</option>
-                            <option value="قهوه‌ای">قهوه‌ای</option>
-                            <option value="خرمایی">خرمایی</option>
-                            <option value="نارنجی">نارنجی</option>
-                            <option value="بنفش">بنفش</option>
-                            <option value="مرجانی">مرجانی</option>
-                            <option value="یاقوتی">یاقوتی</option>
-                            <option value="آبی آسمانی">آبی آسمانی</option>
-                            <option value="زیتونی">زیتونی</option>
-                            <option value="فیروزه‌ای">فیروزه‌ای</option>
-                            <option value="یخی">یخی</option>
-                        </select>
-                        @error('car_inside_color')
+                                        <div>
+                                            <label class="block font-medium">رنګ داخلي موتر</label>
+                                            <select x-model="form.car_inside_color" class="w-full border rounded p-2 select2 text-right @error('car_inside_color') border-red-500 @enderror" name="car_inside_color">
+                                                <option value="">رنګ بادی موتر را انتخاب کنید</option>
+                                                <option value="سیاه">سیاه</option>
+                                                <option value="سفید">سفید</option>
+                                                <option value="خاکستری">خاکستری</option>
+                                                <option value="نقره‌ای">نقره‌ای</option>
+                                                <option value="سرمه‌ای">سرمه‌ای</option>
+                                                <option value="آبی">آبی</option>
+                                                <option value="زر">زر</option>
+                                                <option value="زرد">زرد</option>
+                                                <option value="قرمز">قرمز</option>
+                                                <option value="سبز">سبز</option>
+                                                <option value="قهوه‌ای">قهوه‌ای</option>
+                                                <option value="خرمایی">خرمایی</option>
+                                                <option value="نارنجی">نارنجی</option>
+                                                <option value="بنفش">بنفش</option>
+                                                <option value="مرجانی">مرجانی</option>
+                                                <option value="یاقوتی">یاقوتی</option>
+                                                <option value="آبی آسمانی">آبی آسمانی</option>
+                                                <option value="زیتونی">زیتونی</option>
+                                                <option value="فیروزه‌ای">فیروزه‌ای</option>
+                                                <option value="یخی">یخی</option>
+                                            </select>
+                                            @error('car_inside_color')
         <p class="car_inside_solor-error text-red-500 text-sm mt-1"> رنګ داخلي موتر را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
 
-                    {{-- اسناد موتر  --}}
+                                        {{-- اسناد موتر  --}}
 
-                    <div>
-                        <label class="block font-medium">اسناد موتر</label>
-                        <select x-model="form.car_documents"
-                            name="car_documents"
-                            class="w-full border rounded p-2 select2 text-right @error('car_documents') border-red-500 @enderror">
-                        <option value="">نوع سند موتر را انتخاب کنید</option>
-                        <option value="سند گمرک">سند گمرک</option>
-                        <option value="سند ثبت موتر">سند ثبت موتر</option>
-                        <option value="سند مالکیت">سند مالکیت</option>
-                        <option value="سند ترانسپورت">سند ترانسپورت</option>
-                        <option value="سند بیمه">سند بیمه</option>
-                        <option value="سند فابریکه">سند فابریکه</option>
-                        <option value="سند نمبر پلیت">سند نمبر پلیت</option>
-                        <option value="سند انتقال ملکیت">سند انتقال ملکیت</option>
-                        <option value="سند پاسپورت موتر">سند پاسپورت موتر</option>
-                        <option value="سند تخنیکی معاینه">سند تخنیکی معاینه</option>
-                        <option value="سند تصدیق ترانزیت">سند تصدیق ترانزیت</option>
-                        <option value="سند اجازه تردد">سند اجازه تردد</option>
-                        <option value="سند تصدیق گمرک قبلی">سند تصدیق گمرک قبلی</option>
-                        <option value="سند تایید انجین">سند تایید انجین</option>
-                        <option value="سند تایید شاسی">سند تایید شاسی</option>
-                        <option value="سند ترافیکی">سند ترافیکی</option>
-                        <option value="سند موقت">سند موقت</option>
-                        <option value="سند نمبر انجن">سند نمبر انجن</option>
-                        <option value="سند نمبر شاسی">سند نمبر شاسی</option>
-                        <option value="سند نمبرگذاری">سند نمبرگذاری</option>
-                    </select>
+                                        <div>
+                                            <label class="block font-medium">اسناد موتر</label>
+                                            <select x-model="form.car_documents"
+                                                name="car_documents"
+                                                class="w-full border rounded p-2 select2 text-right @error('car_documents') border-red-500 @enderror">
+                                            <option value="">نوع سند موتر را انتخاب کنید</option>
+                                            <option value="سند گمرک">سند گمرک</option>
+                                            <option value="سند ثبت موتر">سند ثبت موتر</option>
+                                            <option value="سند مالکیت">سند مالکیت</option>
+                                            <option value="سند ترانسپورت">سند ترانسپورت</option>
+                                            <option value="سند بیمه">سند بیمه</option>
+                                            <option value="سند فابریکه">سند فابریکه</option>
+                                            <option value="سند نمبر پلیت">سند نمبر پلیت</option>
+                                            <option value="سند انتقال ملکیت">سند انتقال ملکیت</option>
+                                            <option value="سند پاسپورت موتر">سند پاسپورت موتر</option>
+                                            <option value="سند تخنیکی معاینه">سند تخنیکی معاینه</option>
+                                            <option value="سند تصدیق ترانزیت">سند تصدیق ترانزیت</option>
+                                            <option value="سند اجازه تردد">سند اجازه تردد</option>
+                                            <option value="سند تصدیق گمرک قبلی">سند تصدیق گمرک قبلی</option>
+                                            <option value="سند تایید انجین">سند تایید انجین</option>
+                                            <option value="سند تایید شاسی">سند تایید شاسی</option>
+                                            <option value="سند ترافیکی">سند ترافیکی</option>
+                                            <option value="سند موقت">سند موقت</option>
+                                            <option value="سند نمبر انجن">سند نمبر انجن</option>
+                                            <option value="سند نمبر شاسی">سند نمبر شاسی</option>
+                                            <option value="سند نمبرگذاری">سند نمبرگذاری</option>
+                                        </select>
 
-                        @error('car_documents')
+                                            @error('car_documents')
         <p class="car_documents-error text-red-500 text-sm mt-1"> سند موتر را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
 
 
-                    <div>
-                    <label class="block font-medium">Transmission Type</label>
-                    <select x-model="form.transmission_type" class="w-full border rounded p-2 select2 @error('transmission_type') border-red-500 @enderror" name="transmission_type">
-                        <option value="">Select Transmission</option>
-                        <option value="automatic">Automatic</option>
-                        <option value="manual">Manual</option>
-                    </select>
-                    @error('transmission_type')
+                                        <div>
+                                        <label class="block font-medium">Transmission Type</label>
+                                        <select x-model="form.transmission_type" class="w-full border rounded p-2 select2 @error('transmission_type') border-red-500 @enderror" name="transmission_type">
+                                            <option value="">Select Transmission</option>
+                                            <option value="automatic">Automatic</option>
+                                            <option value="manual">Manual</option>
+                                        </select>
+                                        @error('transmission_type')
         <p class="transmission_type-error text-red-500 text-sm mt-1"> نوع ترانسپورت را انتخاب کنید</p>
     @enderror
-                    </div>
+                                        </div>
 
-                    <div class="flex gap-4">
-                        <!-- Regular Price -->
-                        <div class="flex-1">
-                            <label class="block font-medium">Regular Price</label>
-                            <input type="number" x-model="form.regular_price" class="w-full border rounded p-2 @error('regular_price') border-red-500  @enderror" name="regular_price"
-                                   @input="watchProgress()"
-                                   x-bind:class="{ 'border-red-500': form.regular_price <= 0 && step === 2 }"
-                                   x-bind:placeholder="form.currency_type ? `Regular price (${form.currency_type})` : 'Regular price'"
-                                   @error('regular_price') border-red-500 @enderror" placeholder="Regular price"
-                                min="0" />
+                                        <div class="flex gap-4">
+                                            <!-- Regular Price -->
+                                            <div class="flex-1">
+                                                <label class="block font-medium">Regular Price</label>
+                                                <input type="number" x-model="form.regular_price" class="w-full border rounded p-2 @error('regular_price') border-red-500  @enderror" name="regular_price"
+                                                       @input="watchProgress()"
+                                                       x-bind:class="{ 'border-red-500': form.regular_price <= 0 && step === 2 }"
+                                                       x-bind:placeholder="form.currency_type ? `Regular price (${form.currency_type})` :
+                                                           'Regular price'"
+                                                       @error('regular_price') border-red-500 @enderror"
+                                placeholder="Regular price" min="0" />
                             @error('regular_price')
                                 <p class="regular_price-error text-red-500 text-sm mt-1"> Regular price is required</p>
                             @enderror
@@ -349,6 +349,8 @@
                             <p class="sale_price-error text-red-500 text-sm mt-1"> Sale price is required</p>
                         @enderror
                     </div>
+
+
 
 
                     <div class="flex justify-between mt-4">
@@ -392,7 +394,8 @@
 
                 <div>
                     <label class="block font-medium">Upload Videos (max 2)</label>
-                    <input type="file" id="videoInput" @change="handleVideos($event)" accept="video/*" multiple
+                    <input type="file" id="videoInput" @change="handleVideos($event)"
+                        accept="video/mp4,video/avi,video/mpeg,video/webm,video/quicktime,video/3gpp" multiple
                         class="w-full border rounded p- @error('videos') border-red-500  @enderror" name="videos[]"
                         x-model="form.videos" />
                     @error('videos')
@@ -536,6 +539,7 @@
                     currency_type: '{{ old('currency_type') }}',
                     regular_price: '{{ old('regular_price') }}',
                     sale_price: '{{ old('sale_price') }}',
+
                 },
 
 
@@ -676,7 +680,6 @@
                         reader.readAsDataURL(file);
                     });
 
-                    event.target.value = null;
                     this.watchProgress(); // Track video update
                 },
 
