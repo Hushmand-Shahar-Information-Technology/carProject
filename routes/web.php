@@ -23,7 +23,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile'); 
+    Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
 });
 
 Route::prefix('car')->group(function () {
@@ -34,7 +34,9 @@ Route::prefix('car')->group(function () {
     Route::post('store', [CarController::class, 'store'])->name('car.store');
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
-    Route::get('directory', [CarController::class,'CarDirectory'])->name('car.directory');
+    Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
+
+    Route::get('compare', [CarController::class, 'compare'])->name('car.compare');
 });
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
