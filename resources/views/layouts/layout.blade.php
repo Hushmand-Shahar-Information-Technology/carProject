@@ -134,6 +134,19 @@
                                     <li>
                                         <a href="{{ route('user.profile') }}">profile</a>
                                     </li>
+                                    <li class="relative">
+                                        <a href="{{ route('car.index') }}" class="flex flex-col items-center">
+                                            <!-- Badge / Count -->
+                                            <span id="car-count"
+                                                class="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                                0
+                                            </span>
+
+                                            <!-- Comparing Icon -->
+                                            <i class="fas fa-balance-scale fa-lg"></i> <!-- represents comparison -->
+                                        </a>
+                                    </li>
+
                                     <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
@@ -146,7 +159,7 @@
                                                         @php
                                                             $years = range(1990, now()->year);
                                                         @endphp
-                                                        <x-search-option name="Make[]" label="Make"
+                                                        {{-- <x-search-option name="Make[]" label="Make"
                                                             :options="$distinctValues['make']" />
                                                         <x-search-option name="Model[]" label="Models"
                                                             :options="$distinctValues['models']" />
@@ -155,7 +168,7 @@
                                                         <x-search-option name="Body[]" label="Body Styles"
                                                             :options="$distinctValues['body_type']" />
                                                         <x-search-option name="Color[]" label="Color"
-                                                            :options="$distinctValues['colors']" />
+                                                            :options="$distinctValues['colors']" /> --}}
                                                         {{-- <x-search-option name="Condition[]" label="Vehicle Status" :options="$distinctValues['car_condition']" /> --}}
                                                         <div class="col-xl-2 col-md-4 col-sm-6">
                                                             <div class="text-center">
