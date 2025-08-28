@@ -206,6 +206,216 @@
             margin-top: 8px;
             color: #444;
         }
+
+        /* ===== Grid view (first style) enhancements - no HTML changes ===== */
+        .grid-item .car-item {
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .grid-item .car-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 24, 40, 0.10);
+        }
+
+        .grid-item .car-image {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            overflow: hidden;
+        }
+
+        .grid-item .car-image img {
+            transition: transform .3s ease;
+        }
+
+        .grid-item .car-item:hover .car-image img {
+            transform: scale(1.03);
+        }
+
+        .grid-item .car-content {
+            position: relative;
+            padding-bottom: 38px;
+        }
+
+        .grid-item .price {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid-item .price .old-price {
+            color: #9aa3ad;
+            text-decoration: line-through;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .grid-item .price .new-price {
+            background: linear-gradient(90deg, #e43a3c 0%, #db2d2e 100%);
+            color: #fff;
+            font-weight: 800;
+            border-radius: 10px;
+            padding: 5px 12px;
+            letter-spacing: .2px;
+        }
+
+        /* Pills for small specs within grid cards */
+        .grid-item .car-list ul {
+            margin-top: 6px;
+        }
+
+        .grid-item .car-list ul li {
+            display: inline-block;
+            background: #f6f7f9;
+            border: 1px solid #eef0f3;
+            color: #4b5563;
+            border-radius: 999px;
+            padding: 4px 10px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .grid-item .car-list ul li i {
+            color: #9aa3ad;
+        }
+
+        /* ================= Modernize GRID view (first style) ================= */
+        .grid-item .car-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(17, 24, 39, 0.06);
+        }
+
+        .grid-item .car-item:hover {
+            box-shadow: 0 10px 24px rgba(17, 24, 39, 0.10);
+            transform: translateY(-1px);
+        }
+
+        .grid-item .car-image {
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+        }
+
+        .grid-item .car-image img {
+            transition: transform .35s ease;
+        }
+
+        .grid-item .car-item:hover .car-image img {
+            transform: scale(1.035);
+        }
+
+        /* Move price to top-right and make a neat pill */
+        .grid-item .car-content {
+            position: relative;
+            padding: 12px 14px 16px 14px;
+        }
+
+        .grid-item .price {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid-item .price .old-price {
+            font-size: 12px;
+            color: #9ca3af;
+            text-decoration: line-through;
+            font-weight: 600;
+        }
+
+        .grid-item .price .new-price {
+            background: linear-gradient(90deg, #ef4444 0%, #db2d2e 100%);
+            color: #ffffff;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: .2px;
+            box-shadow: 0 6px 16px rgba(219, 45, 46, 0.22);
+        }
+
+        /* Cleaner chips */
+        .grid-item .car-list ul {
+            margin-top: 8px;
+        }
+
+        .grid-item .car-list ul li {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            border-radius: 999px;
+            padding: 4px 10px;
+            margin: 0 6px 6px 0;
+            font-size: 12px;
+        }
+
+        .grid-item .car-list ul li i {
+            color: #9ca3af;
+        }
+
+        /* ================= Final corrective overrides for GRID view ================= */
+        /* Softer elevation */
+        .grid-item .car-item {
+            box-shadow: 0 1px 6px rgba(17, 24, 39, 0.08) !important;
+        }
+
+        .grid-item .car-item:hover {
+            box-shadow: 0 8px 18px rgba(17, 24, 39, 0.12) !important;
+        }
+
+        /* Put price pill under content at bottom-left */
+        .grid-item .car-content {
+            position: relative !important;
+            padding: 12px 14px 12px 14px !important;
+        }
+
+        .grid-item .price {
+            position: static !important;
+            margin-top: 8px !important;
+            gap: 8px !important;
+        }
+
+        .grid-item .price .new-price {
+            border-radius: 999px !important;
+            padding: 6px 12px !important;
+        }
+
+        .grid-item .price .old-price {
+            font-size: 12px !important;
+            color: #9aa3af !important;
+            text-decoration: line-through !important;
+        }
+
+        /* Subtle gray chips */
+        .grid-item .car-list ul {
+            margin-top: 8px !important;
+        }
+
+        .grid-item .car-list ul li {
+            background: #f3f4f6 !important;
+            border: 1px solid #eceff3 !important;
+            color: #4b5563 !important;
+            border-radius: 999px !important;
+            padding: 2px 6px !important;
+            margin: 0 3px 3px 0 !important;
+            font-size: 12px !important;
+        }
+
+        .grid-item .car-list ul li i {
+            color: #9aa3ad !important;
+        }
     </style>
     <!--=================================banner -->
 
@@ -243,8 +453,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -349,8 +559,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                            ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
@@ -647,7 +857,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
