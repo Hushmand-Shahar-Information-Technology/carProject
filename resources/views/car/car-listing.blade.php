@@ -243,8 +243,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -294,13 +294,6 @@
                     <div class="sorting-options-main">
                         <div class="row justify-content-between">
                             <div class="col-xl-3 col-md-12">
-                                {{-- <div class="price-slide">
-                                    <div class="price">
-                                        <label for="amount">Price Range</label>
-                                        <input type="text" id="amount" class="amount" value="$50 - $300" />
-                                        <div id="slider-range"></div>
-                                    </div>
-                                </div> --}}
                                 <div class="price-slide filter-widget" style="padding: 10px;">
                                     <label>Price Range</label>
                                     <div id="price-range-slider"></div>
@@ -356,8 +349,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                            ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
@@ -375,12 +368,12 @@
             const priceMax = document.getElementById('price-max');
 
             noUiSlider.create(priceSlider, {
-                start: [300, 4000000],
+                start: [300, 50000],
                 connect: true,
                 step: 1,
                 range: {
                     'min': 300,
-                    'max': 4000000
+                    'max': 50000
                 }
             });
 
@@ -403,15 +396,13 @@
                     }
                 });
 
-                // Push all years in range to 'Year[]'
-                const years = [];
-                for (let y = minYear; y <= maxYear; y++) {
-                    years.push(y);
-                }
-                years.forEach(y => formData.append('Year[]', y));
+                // ✅ send price_min and price_max
+                formData.append('price_min', minPrice);
+                formData.append('price_max', maxPrice);
 
                 fetchFilteredCars(new URLSearchParams(formData).toString());
             });
+
 
         });
 
@@ -656,7 +647,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
