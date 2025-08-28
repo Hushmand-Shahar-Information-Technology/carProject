@@ -4,10 +4,12 @@
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\routeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\OfferController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'home.index')->name('home.index');
-
+Route::post('/home/filter-cars', [routeController::class, 'filter']);
+Route::get('/default-cars', [routeController::class, 'default']);
 Route::view('/otp', 'auth.otp');
 
 // Route::prefix('home')->group(function () {
@@ -37,7 +39,12 @@ Route::prefix('car')->group(function () {
     Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
 
     Route::get('compare', [CarController::class, 'compare'])->name('car.compare');
+    Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
+    Route::post('carts', [CarController::class, 'cart'])->name('carts.show');
+    Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
 });
+
+
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
 

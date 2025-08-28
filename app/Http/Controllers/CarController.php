@@ -42,6 +42,12 @@ class CarController extends Controller
                         ->orWhere('transmission_type', 'like', "%$keyword%");
                 });
             })
+            ->when($request->input('year_min') && $request->input('year_max'), function ($q) use ($request) {
+                $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
+            })
+            ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
+                $q->whereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
+            })
             ->when($request->input('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);
             })
@@ -149,7 +155,8 @@ class CarController extends Controller
     {
         $car = Car::findOrFail($id);
         // dd($car->location);
-        return view('car.show', compact('car'));
+        $makes = Car::where('make', $car->make)->limit(10)->get();
+        return view('car.show', compact('car', 'makes'));
     }
 
     public function search(Request $request)
@@ -188,5 +195,12 @@ class CarController extends Controller
         }
 
         return view('car.directory', compact('logos'));
+    }
+
+    public function cart(Request $request)
+    {
+        $make = $request->input('make'); // or $request->make
+        $cars = Car::where('make', $make)->limit(10)->get();
+        return response()->json(['cars' => $cars]);
     }
 }

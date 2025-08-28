@@ -18,7 +18,14 @@ class ProfileController extends Controller
     public function show()
     {
         $id = auth()->user()->id;
-        $profile = User::findOrFail($id); 
+       
+        $profile = User::withCount('cars')
+            ->with([
+                'cars' => function ($query) {
+                    $query->with('offers'); // Load offers for all cars
+                }
+            ])
+        ->findOrFail($id);
         return view('profile.profile', compact('profile'));
     }
 
