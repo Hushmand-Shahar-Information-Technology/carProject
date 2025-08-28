@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="HTML5 Template" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Car Dealer - The Best Car Dealer Automotive Responsive HTML5 Template" />
     <meta name="author" content="potenzaglobalsolutions.com" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -36,7 +37,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Magnific Popup JS -->
     <script src="https://cdn.jsdelivr.net/npm/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/> --}}
 
@@ -70,7 +72,7 @@
     <!--=================================
  header -->
 
-    <header id="header" class="defualt"> 
+    <header id="header" class="defualt">
         <div class="topbar">
             <div class="container">
                 <div class="row">
@@ -119,7 +121,7 @@
                                     </li>
                                 </ul>
                                 <ul class="menu-links">
-                                    <li class="active"><a href="{{route("home.index")}}">Home </a></li>
+                                    <li class="active"><a href="{{ route('home.index') }}">Home </a></li>
                                     <li><a href="{{ route('car.index') }}">Car listing </a></li>
                                     <li><a href="javascript:void(0)"> Contact </a></li>
                                     <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
@@ -127,8 +129,11 @@
                                         Chat Now
                                     </a>
 
-                                    <li><a href="{{route('car.directory')}}">Car directory</a></li>
-                                    <li><a href="{{route('car.create')}}">Car Register</a></li>
+                                    <li><a href="{{ route('car.directory') }}">Car directory</a></li>
+                                    <li><a href="{{ route('car.create') }}">Car Register</a></li>
+                                    <li>
+                                        <a href="{{ route('user.profile') }}">profile</a>
+                                    </li>
                                     <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
@@ -136,29 +141,32 @@
                                                 <i class="fa-solid fa-search"></i>
                                             </a>
                                             <div class="search-box not-click">
-                                              <form id="searchForm" action="{{ route('car.index') }}" method="GET">
-                                                <div class="row">
-                                                    @php
-                                                        $years = range(1990, now()->year);
-                                                    @endphp
-                                                    <x-search-option name="Make[]" label="Make" :options="$distinctValues['make']" />
-                                                    <x-search-option name="Model[]" label="Models" :options="$distinctValues['models']" />
-                                                    <x-search-option name="Year[]" label="Years" :options="$years" />
-                                                    <x-search-option name="Body[]" label="Body Styles" :options="$distinctValues['body_type']" />
-                                                    <x-search-option name="Color[]" label="Color" :options="$distinctValues['colors']" />
-                                                    {{-- <x-search-option name="Condition[]" label="Vehicle Status" :options="$distinctValues['car_condition']" /> --}}
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="text-center">
-                                                            <button class="button red" type="submit">Search</button>
+                                                <form id="searchForm" action="{{ route('car.index') }}" method="GET">
+                                                    <div class="row">
+                                                        @php
+                                                            $years = range(1990, now()->year);
+                                                        @endphp
+                                                        <x-search-option name="Make[]" label="Make"
+                                                            :options="$distinctValues['make']" />
+                                                        <x-search-option name="Model[]" label="Models"
+                                                            :options="$distinctValues['models']" />
+                                                        <x-search-option name="Year[]" label="Years"
+                                                            :options="$years" />
+                                                        <x-search-option name="Body[]" label="Body Styles"
+                                                            :options="$distinctValues['body_type']" />
+                                                        <x-search-option name="Color[]" label="Color"
+                                                            :options="$distinctValues['colors']" />
+                                                        {{-- <x-search-option name="Condition[]" label="Vehicle Status" :options="$distinctValues['car_condition']" /> --}}
+                                                        <div class="col-xl-2 col-md-4 col-sm-6">
+                                                            <div class="text-center">
+                                                                <button class="button red"
+                                                                    type="submit">Search</button>
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                              </form>    
+                                                </form>
                                             </div>
                                         </div>
-                                    </li>
-                                    <li>
-                                        <a href="{{route('user.profile')}}">profile</a>
                                     </li>
                                 </ul>
                             </div>
@@ -204,7 +212,8 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6">
                     <div class="about-content">
-                        <img class="img-fluid" id="logo-footer" src="{{ asset('images/logo-light.png') }}" alt="">
+                        <img class="img-fluid" id="logo-footer" src="{{ asset('images/logo-light.png') }}"
+                            alt="">
                         <p>We provide everything you need to build an amazing dealership website developed especially
                             for car sellers dealers or auto motor retailers.</p>
                     </div>
@@ -241,10 +250,11 @@
                             @php
                                 $cars = App\Models\Car::all()->take(3);
                             @endphp
-                            @foreach($cars as $car)
+                            @foreach ($cars as $car)
                                 <div class="recent-post">
                                     <div class="recent-post-image">
-                                        <img class="img-fluid" src="{{  '/' . $car->images[0] }}" alt="{{ $car->title }}">
+                                        <img class="img-fluid" src="{{ '/' . $car->images[0] }}"
+                                            alt="{{ $car->title }}">
                                     </div>
                                     <div class=" recent-post-info">
                                         <a href="#">{{ $car->title }} </a>
@@ -351,7 +361,7 @@
     </script>
     <script type="text/javascript" src="{{ asset('revolution/js/extensions/revolution.extension.video.min.js') }}">
     </script>
-<!-- Custom JS -->
+    <!-- Custom JS -->
     <script type="text/javascript" src="{{ asset('js/custom.js') }}"></script>
 
     <!-- Slick JS (Add this!) -->
@@ -359,12 +369,12 @@
 
 
     <script type="text/javascript">
-        (function ($) {
+        (function($) {
             "use strict";
 
             var tpj = jQuery;
             var revapi2;
-            tpj(document).ready(function () {
+            tpj(document).ready(function() {
                 if (tpj("#rev_slider_2_1").revolution == undefined) {
                     revslider_showDoubleJqueryError("#rev_slider_2_1");
                 } else {

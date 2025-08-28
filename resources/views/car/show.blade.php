@@ -2,6 +2,13 @@
 @section('title', 'Car list')
 @section('content')
 
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
     {{-- @include('car.slick') --}}
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
@@ -13,7 +20,11 @@
             aspect-ratio: 16 / 11;
             object-fit: cover;
         }
-    </style>                 
+        /* Force SweetAlert2 to always appear on top of modals */
+        .swal2-container {
+            z-index: 200000 !important;
+        }
+    </style>            
 
     <section class="inner-intro bg-6 bg-overlay-black-70">
         <div class="container">
@@ -174,37 +185,8 @@
                                                             class="form-control">
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label class="form-label">Financing Required*</label>
-                                                        <div class="selected-box">
-                                                            <select class="selectpicker" id="mao_financing"
-                                                                name="mao_financing">
-                                                                <option value="Yes">Yes </option>
-                                                                <option value="No">No</option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3">
                                                         <label class="form-label">additional Comments/Conditions*</label>
                                                         <textarea class="form-control input-message" rows="4" id="mao_comments" name="mao_comments"></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label pe-3">Preferred Contact*</label>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault001">
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault001">
-                                                                Email
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault002" checked>
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault002">
-                                                                Phone
-                                                            </label>
-                                                        </div>
                                                     </div>
                                                     <div class="mb-3">
                                                         <div id="recaptcha3"></div>
@@ -301,151 +283,45 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="owl-carousel" data-nav-arrow="true" data-nav-dots="true" data-items="3"
-                                    data-md-items="3" data-sm-items="2" data-space="15">
-                                    <div class="item">
-                                        <div class="car-item gray-bg text-center">
-                                            <div class="car-image">
-                                                <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
-                                                    alt="">
-                                                <div class="car-overlay-banner">
-                                                    <ul>
-                                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                                    data-md-items="3" data-sm-items="2" data-space="15" id="feature-cars">
+                                    @foreach ($makes as $car_i)
+                                        <div class="item">
+                                            <div class="car-item gray-bg text-center">
+                                                <div class="car-image">
+                                                    <img class="img-fluid" src="/storage/{{$car_i->images[0]}}"
+                                                        alt="">
+                                                    <div class="car-overlay-banner">
+                                                        <ul>
+                                                            <li><a href="{{route('car.show', $car_i->id)}}"><i class="fa fa-link"></i></a></li>
+                                                            <li><a href="{{route('car.show', $car_i->id)}}"><i class="fa fa-dashboard"></i></a></li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                                <div class="car-list">
+                                                    <ul class="list-inline">
+                                                        <li><i class="fa fa-registered"></i>{{$car_i->year}}</li>
+                                                        <li><i class="fa fa-cog"></i>{{$car_i->ransmission_type}}/li>
+                                                        <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
                                                     </ul>
                                                 </div>
-                                            </div>
-                                            <div class="car-list">
-                                                <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i> 2016</li>
-                                                    <li><i class="fa fa-cog"></i> Manual </li>
-                                                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                                </ul>
-                                            </div>
-                                            <div class="car-content">
-                                                <div class="star">
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star-o orange-color"></i>
-                                                </div>
-                                                <a href="#">Acura Rsx</a>
-                                                <div class="separator"></div>
-                                                <div class="price">
-                                                    <span class="old-price">$35,568</span>
-                                                    <span class="new-price">$32,698 </span>
+                                                <div class="car-content">
+                                                    <div class="star">
+                                                        <i class="fa fa-star orange-color"></i>
+                                                        <i class="fa fa-star orange-color"></i>
+                                                        <i class="fa fa-star orange-color"></i>
+                                                        <i class="fa fa-star orange-color"></i>
+                                                        <i class="fa fa-star-o orange-color"></i>
+                                                    </div>
+                                                    <a href="{{route('car.show', $car_i->id)}}">{{$car_i->model}}</a>
+                                                    <div class="separator"></div>
+                                                    <div class="price">
+                                                        <span class="old-price">${{$car_i->regular_price}}</span>
+                                                        <span class="new-price">${{$car->sale_price}}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="car-item gray-bg text-center">
-                                            <div class="car-image">
-                                                <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}"
-                                                    alt="">
-                                                <div class="car-overlay-banner">
-                                                    <ul>
-                                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="car-list">
-                                                <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i> 2016</li>
-                                                    <li><i class="fa fa-cog"></i> Manual </li>
-                                                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                                </ul>
-                                            </div>
-                                            <div class="car-content">
-                                                <div class="star">
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star-o orange-color"></i>
-                                                </div>
-                                                <a href="#">Lexus GS 450h</a>
-                                                <div class="separator"></div>
-                                                <div class="price">
-                                                    <span class="old-price">$35,568</span>
-                                                    <span class="new-price">$32,698 </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="car-item gray-bg text-center">
-                                            <div class="car-image">
-                                                <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}"
-                                                    alt="">
-                                                <div class="car-overlay-banner">
-                                                    <ul>
-                                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="car-list">
-                                                <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i> 2016</li>
-                                                    <li><i class="fa fa-cog"></i> Manual </li>
-                                                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                                </ul>
-                                            </div>
-                                            <div class="car-content">
-                                                <div class="star">
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star-o orange-color"></i>
-                                                </div>
-                                                <a href="#">GTA 5 Lowriders DLC</a>
-                                                <div class="separator"></div>
-                                                <div class="price">
-                                                    <span class="old-price">$35,568</span>
-                                                    <span class="new-price">$32,698 </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item">
-                                        <div class="car-item gray-bg text-center">
-                                            <div class="car-image">
-                                                <img class="img-fluid" src="{{ asset('images/car/04.jpg') }}"
-                                                    alt="">
-                                                <div class="car-overlay-banner">
-                                                    <ul>
-                                                        <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                        <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="car-list">
-                                                <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i> 2016</li>
-                                                    <li><i class="fa fa-cog"></i> Manual </li>
-                                                    <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                                </ul>
-                                            </div>
-                                            <div class="car-content">
-                                                <div class="star">
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star orange-color"></i>
-                                                    <i class="fa fa-star-o orange-color"></i>
-                                                </div>
-                                                <a href="#"> Toyota avalon hybrid </a>
-                                                <div class="separator"></div>
-                                                <div class="price">
-                                                    <span class="old-price">$35,568</span>
-                                                    <span class="new-price">$32,698 </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
                         </div>
@@ -532,10 +408,11 @@
     </section>
 
 
-    <!--=================================
-                    car-details  -->
-
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        const make = @json($car->make);
+        const car_id = @json($car->id);
+        // console.log(car_id); 
         $(document).ready(function() {
             $('.slider-for').slick({
                 slidesToShow: 1,
@@ -563,73 +440,80 @@
                 fixedContentPos: false
             });
         });
-        // Define the dynamic route (replace '__ID__' later in JS)
-        const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
-        const API_URL = "{{ route('cars.feature') }}"; // Laravel API route
-        const container = $('#feature-cars');
 
-        // function fetchFilteredCars(query = '') {
-        //     axios.get(API_URL + '?' + query)
-        //         .then(response => {
-        //             const cars = response.data;
-        //             container.trigger('destroy.owl.carousel'); // Remove previous Owl
-        //             container.html('').removeClass('owl-loaded'); // Clear container
+        $(document).ready(function () {
+            $('#make_an_offer_submit').on('click', function (e) {
+                e.preventDefault();
+                $('.btn-loader').show();
+                console.log(car_id); 
+                var formData = {
+                    mao_name: $('#mao_name').val(),
+                    mao_email: $('#mao_email').val(),
+                    mao_phone: $('#mao_phone').val(),
+                    mao_price: $('#mao_price').val(),
+                    mao_comments: $('#mao_comments').val(),
+                    mao_car_id: car_id
+                };
 
-        //             $.each(cars, function(index, car) {
-        //                 const images = JSON.parse(car.images || '[]');
-        //                 const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
-        //                 const url = car_show.replace('__ID__', car.id);
+                $.ajax({
+                    type: 'POST',
+                    url: '/car/offer', // Replace with your actual route
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        $('.btn-loader').hide();
+                        $('#mao_form')[0].reset();
 
-        //                 let html = `
-    //                     <div class="item">
-    //                         <div class="car-item gray-bg text-center">
-    //                             <div class="car-image">
-    //                                 <img class="img-fluid" src="${imageSrc}" alt="">
-    //                                 <div class="car-overlay-banner">
-    //                                     <ul>
-    //                                         <li><a href="${url}"><i class="fa fa-link"></i></a></li>
-    //                                         <li><a href="${url}"><i class="fa fa-dashboard"></i></a></li>
-    //                                     </ul>
-    //                                 </div>
-    //                             </div>
-    //                             <div class="car-list">
-    //                                 <ul class="list-inline">
-    //                                     <li><i class="fa fa-registered"></i> ${car.year}</li>
-    //                                     <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-    //                                     <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-    //                                 </ul>
-    //                             </div>
-    //                             <div class="car-content">
-    //                                 <div class="star">
-    //                                     <i class="fa fa-star orange-color"></i>
-    //                                     <i class="fa fa-star orange-color"></i>
-    //                                     <i class="fa fa-star orange-color"></i>
-    //                                     <i class="fa fa-star orange-color"></i>
-    //                                     <i class="fa fa-star-o orange-color"></i>
-    //                                 </div>
-    //                                 <a href="#">${car.name || 'Unknown Car'}</a>
-    //                                 <div class="separator"></div>
-    //                                 <div class="price">
-    //                                     <span class="old-price">$${car.regular_price}</span>
-    //                                     <span class="new-price">$${car.sale_price}</span>
-    //                                 </div>
-    //                             </div>
-    //                         </div>
-    //                     </div>
-    //                 `;
+                        // Hide the modal
+                        $('#exampleModal3').modal('hide');
 
-        //                 container.append(html);
-        //             });
-        //         })
-        //         .catch(error => {
-        //             console.error('Error fetching cars:', error);
-        //             container.html('<p>Failed to load cars.</p>');
-        //         });
-        // }
+                        // Show alert after modal is fully hidden
+                        $('#exampleModal3').on('hidden.bs.modal', function () {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: response.message,
+                                heightAuto: false,  // prevents body scrollbar shift
+                                willClose: () => {
+                                    // Remove modal-related classes and reset overflow to re-enable scrolling
+                                    $('body').removeClass('modal-open').css('overflow', '');
+                                    $('.modal-backdrop').remove();
+                                }
+                            });
 
-        // $(document).ready(function () {
-        //     fetchFilteredCars();
-        // });
+                            $('#exampleModal3').off('hidden.bs.modal');
+                        });
+                    },
+                    error: function (xhr) {
+                        $('.btn-loader').hide();
+
+                        let swalOptions = {
+                            icon: 'error',
+                            heightAuto: false,
+                            willClose: () => {
+                                $('body').removeClass('modal-open').css('overflow', '');
+                                $('.modal-backdrop').remove();
+                            }
+                        };
+
+                        if (xhr.status === 422) {
+                            let errors = xhr.responseJSON.errors;
+                            let errorMessages = Object.values(errors).map(msgArray => msgArray[0]).join('<br>');
+                            swalOptions.title = 'Validation Error';
+                            swalOptions.html = errorMessages;
+                        } else {
+                            swalOptions.title = 'Server Error';
+                            swalOptions.text = xhr.responseJSON?.message || 'An unexpected error occurred.';
+                        }
+
+                        Swal.fire(swalOptions);
+                    }
+                });
+            });
+        });
     </script>
 
 
