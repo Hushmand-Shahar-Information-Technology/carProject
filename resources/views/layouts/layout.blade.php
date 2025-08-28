@@ -135,6 +135,19 @@
                                         <a href="{{ route('user.profile') }}">profile</a>
                                     </li>
                                     <li>
+                                        <a href="{{ route('car.compare') }}" style="position: relative;">
+                                            <i class="fa fa-exchange-alt fa-lg"></i>
+                                            <span id="compare-count"
+                                                style="position: absolute; top: -8px; right: -8px;
+                     background: red; color: white;
+                     font-size: 12px; padding: 2px 6px; border-radius: 50%;">
+                                                0
+                                            </span>
+                                        </a>
+                                    </li>
+
+
+                                    <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
                                                 href="javascript:void(0);">
@@ -429,6 +442,16 @@
                 }
             });
         })(jQuery);
+
+        // this function will update all the count dynamically
+        function updateNavbarCompareCount() {
+            const countEl = document.getElementById('compare-count');
+            const compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
+            countEl.innerText = compareList.length;
+        }
+
+        // Update count on page load
+        updateNavbarCompareCount();
     </script>
 </body>
 
