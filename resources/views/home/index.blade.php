@@ -6,7 +6,7 @@
 <style>
     /* Modal Overlay (full screen, centered) */
     .modal-overlay {
-    display: none; 
+    display: none; /* default hidden to avoid flash */
     position: fixed;
     top: 0;
     left: 0;
@@ -15,10 +15,12 @@
     background: rgba(0, 0, 0, 0.5);
     backdrop-filter: blur(5px);
     z-index: 1050;
-    display: flex;
     justify-content: center;
     align-items: center;
     }
+
+    /* Visible state for modal */
+    .modal-overlay.is-open { display: flex; }
 
     /* Modal Content */
     .modal-content {
@@ -609,12 +611,12 @@
     const totalSteps = $(".tab-pane").length;
 
     function showModal() {
-      $modal.show();
+      $modal.addClass('is-open');
       $mainContent.addClass('blurred');
     }
 
     function hideModal() {
-      $modal.hide();
+      $modal.removeClass('is-open');
       $mainContent.removeClass('blurred');
     }
 
@@ -743,7 +745,7 @@
 
     // Load filters from localStorage or default
     if (savedAnswers && Object.keys(savedAnswers).length > 0) {
-      hideModal(); // Hide modal if previously answered
+      hideModal(); // ensure hidden if previously answered
       filtersAlreadyApplied = true;
 
       $.ajax({
@@ -763,7 +765,7 @@
         }
       });
     } else {
-      showModal(); // Show modal if no answers
+      showModal(); // show only if no stored answers
       $.ajax({
         url: '/default-cars',
         method: 'GET',
