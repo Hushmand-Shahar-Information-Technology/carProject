@@ -13,17 +13,18 @@ class CarController extends Controller
 {
 
 
-    /**
-     * Display the car index.
-     */
+
     public function index()
     {
         return view('car.car-listing');
     }
 
-    /**
-     * Filter the cars.
-     */
+    public function compare()
+    {
+        return view('car.compare');
+    }
+
+
     public function filter(Request $request)
     {
         $cars = Car::query()
@@ -77,9 +78,6 @@ class CarController extends Controller
     }
 
 
-    /**
-     * Show the form for creating a new car.
-     */
     public function create()
     {
         return view('car.register');
