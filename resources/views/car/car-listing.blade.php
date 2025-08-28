@@ -87,11 +87,11 @@
         }
 
         /* .search-result-item img {
-                    width: 60px;
-                    height: 40px;
-                    object-fit: cover;
-                    border-radius: 3px;
-                } */
+                                                                                    width: 60px;
+                                                                                    height: 40px;
+                                                                                    object-fit: cover;
+                                                                                    border-radius: 3px;
+                                                                                } */
 
         .search-result-info {
             flex-grow: 1;
@@ -113,17 +113,104 @@
             background: #f8f9fa;
             font-weight: 500;
         }
-        .link-style{
-            display: block ; 
-            border-radius: none !important; 
+
+        .filter-widget {
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        #year-range-slider {
+            margin: 10px 5px;
+        }
+
+        .link-style {
+            display: block;
+            border-radius: none !important;
             border: none !important;
         }
-        .link-style:hover{
-            background-color: none !; 
+
+        .link-style:hover {
+            background-color: none !;
+        }
+
+        .filter-widget {
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        .link-style {
+            display: block;
+            border-radius: none !important;
+            border: none !important;
+        }
+
+        .link-style:hover {
+            background-color: none !;
+        }
+
+        /* Year Range Filter Styling */
+        .filter-widget h6 {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #333;
+        }
+
+        #year-range-slider {
+            margin: 15px 10px;
+            height: 8px;
+        }
+
+        .noUi-target {
+            background: #e9ecef;
+            border-radius: 6px;
+            border: none;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .noUi-connect {
+            background: #db2d2e;
+            border-radius: 6px;
+        }
+
+        /* NoUiSlider custom handles */
+        .noUi-handle {
+            width: 10px;
+            /* smaller handle */
+            height: 10px;
+            /* smaller handle */
+            border-radius: 50%;
+            /* circle shape */
+            background: #fff;
+            border: 2px solid #db2d2e;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+
+        .noUi-handle:hover {
+            background: #db2d2e;
+            border-color: #db2d2e;
+        }
+
+        /* Hide default pseudo-elements */
+        .noUi-handle:before,
+        .noUi-handle:after {
+            display: none;
+        }
+
+        /* Min & Max year labels */
+        .year-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 8px;
+            color: #444;
         }
     </style>
-    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         banner -->
+    <!--=================================banner -->
+
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -158,8 +245,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                        <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -174,14 +261,27 @@
                                     <li><i class="fa fa-shopping-cart"> </i> Compare Vehicles <span
                                             class="float-end">(10)</span></li>
                                 </ul> --}}
-                            </div> 
+                            </div>
                             <div class="clearfix">
                                 <ul class="list-group">
                                     {{-- filter --}}
                                     @php
                                         $years = range(1990, now()->year);
                                     @endphp
-                                    <x-car-filter name="Year" label="All Years" :options="$years" />
+                                    <div class="filter-widget" style="padding: 10px;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <h6>Year Range</h6>
+                                            <button type="button" id="reset-year" class="btn btn-sm btn-light mt-2">All
+                                                Years</button>
+                                        </div>
+                                        <div id="year-range-slider"></div>
+                                        <div class="year-values">
+                                            <span id="year-min"></span>
+                                            <span id="year-max"></span>
+                                        </div>
+                                    </div>
+
+
                                     <x-car-filter name="Make" label="All Company" :options="$distinctValues['make']" />
                                     <x-car-filter name="Transmission" label="All Transmission" :options="$distinctValues['transmissions']" />
                                     <x-car-filter name="Body" label="All Body Styles" :options="$distinctValues['body_type']" />
@@ -241,23 +341,74 @@
                             </div>
                         </div>
                     </div>
-                        <div id="car-results"  class="isotope column-5">
-                            <!-- Car items will be injected here by JS -->
-                        </div>
+                    <div id="car-results" class="isotope column-5">
+                        <!-- Car items will be injected here by JS -->
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!--===============
-                Scripts
-            ===============-->
-            
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+                                                                                                                                                                                                                                                                                                    Scripts
+                                                                                                                                                                                                                                                                                                ===============-->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
         $("#sort-select").on('change', function() {
             applyFilters();
         });
+        document.getElementById('reset-year').addEventListener('click', () => {
+            yearSlider.noUiSlider.set([1990, new Date().getFullYear()]); // reset slider
+            fetchFilteredCars(); // reload all cars
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const yearSlider = document.getElementById('year-range-slider');
+            const yearMin = document.getElementById('year-min');
+            const yearMax = document.getElementById('year-max');
+
+            noUiSlider.create(yearSlider, {
+                start: [1990, new Date().getFullYear()],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 1990,
+                    'max': new Date().getFullYear()
+                }
+            });
+
+            yearSlider.noUiSlider.on('update', function(values) {
+                yearMin.innerHTML = Math.round(values[0]);
+                yearMax.innerHTML = Math.round(values[1]);
+            });
+
+            yearSlider.noUiSlider.on('change', function(values) {
+                const minYear = Math.round(values[0]);
+                const maxYear = Math.round(values[1]);
+
+                const formData = new FormData();
+
+                // Add other selected filters
+                document.querySelectorAll('.filter-option:checked').forEach(input => {
+                    if (input.value !== '*') {
+                        const name = input.name.replace('[]', '');
+                        formData.append(name + '[]', input.value);
+                    }
+                });
+
+                // Push all years in range to 'Year[]'
+                const years = [];
+                for (let y = minYear; y <= maxYear; y++) {
+                    years.push(y);
+                }
+                years.forEach(y => formData.append('Year[]', y));
+
+                fetchFilteredCars(new URLSearchParams(formData).toString());
+            });
+
+        });
+
         $("#general-search").on('input', function() {
             const keyword = $(this).val().trim();
             const resultsContainer = $('#search-results');
@@ -316,9 +467,9 @@
                 $('#search-results').hide();
             }
         });
-        
+
         // Search button on the navbar
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
 
@@ -342,7 +493,7 @@
         });
 
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
-        const car_show = "{{route('car.show', ['id' => '__ID__'])}}";
+        const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
 
@@ -398,12 +549,13 @@
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
                         const carDiv = $(`<a href="${url}" style="color: #a0a0a0">`);
-                        const title =`<h4>${car.title}</h4>`;
+                        const title = `<h4>${car.title}</h4>`;
                         const details_button = `    
                         <div>
                             <a class="button red float-end" href="${url}">Details</a>
                         </div>`;
-                        const description = `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
+                        const description =
+                            `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
                         const details = `
                                 <div class="row" style="margin-bottom: 6px;">
                             <div class="col-lg-2 col-sm-4">
@@ -452,7 +604,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -555,7 +707,7 @@
 
 
         // code fo getting the body type filters from the URL and making an API call
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const searchInput = document.getElementById('car-search');
             const container = document.getElementById('car-results');
@@ -571,7 +723,7 @@
             }
 
             // Listen for input changes on search bar
-            searchInput.addEventListener('input', function () {
+            searchInput.addEventListener('input', function() {
                 const keyword = searchInput.value.trim();
 
                 if (keyword === '') {
@@ -589,7 +741,7 @@
 
 
         // search for make car company code
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const searchInput = document.getElementById('car-search');
             const container = document.getElementById('car-results');
@@ -605,7 +757,7 @@
             }
 
             // Listen for input changes on search bar
-            searchInput.addEventListener('input', function () {
+            searchInput.addEventListener('input', function() {
                 const keyword = searchInput.value.trim();
 
                 if (keyword === '') {
@@ -620,9 +772,6 @@
                 }
             });
         });
-
-
-
     </script>
 
 @endsection
