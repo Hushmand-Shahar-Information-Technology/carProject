@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="keywords" content="HTML5 Template" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="description" content="Car Dealer - The Best Car Dealer Automotive Responsive HTML5 Template" />
     <meta name="author" content="potenzaglobalsolutions.com" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -36,7 +37,8 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Magnific Popup JS -->
     <script src="https://cdn.jsdelivr.net/npm/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/> --}}
 
@@ -130,6 +132,9 @@
                                     <li><a href="{{ route('car.directory') }}">Car directory</a></li>
                                     <li><a href="{{ route('car.create') }}">Car Register</a></li>
                                     <li>
+                                        <a href="{{ route('user.profile') }}">profile</a>
+                                    </li>
+                                    <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
                                                 href="javascript:void(0);">
@@ -141,11 +146,16 @@
                                                         @php
                                                             $years = range(1990, now()->year);
                                                         @endphp
-                                                        {{-- <x-search-option name="Make[]" label="Make" :options="$distinctValues['make']" />
-                                                    <x-search-option name="Model[]" label="Models" :options="$distinctValues['models']" />
-                                                    <x-search-option name="Year[]" label="Years" :options="$years" />
-                                                    <x-search-option name="Body[]" label="Body Styles" :options="$distinctValues['body_type']" />
-                                                    <x-search-option name="Color[]" label="Color" :options="$distinctValues['colors']" /> --}}
+                                                        <x-search-option name="Make[]" label="Make"
+                                                            :options="$distinctValues['make']" />
+                                                        <x-search-option name="Model[]" label="Models"
+                                                            :options="$distinctValues['models']" />
+                                                        <x-search-option name="Year[]" label="Years"
+                                                            :options="$years" />
+                                                        <x-search-option name="Body[]" label="Body Styles"
+                                                            :options="$distinctValues['body_type']" />
+                                                        <x-search-option name="Color[]" label="Color"
+                                                            :options="$distinctValues['colors']" />
                                                         {{-- <x-search-option name="Condition[]" label="Vehicle Status" :options="$distinctValues['car_condition']" /> --}}
                                                         <div class="col-xl-2 col-md-4 col-sm-6">
                                                             <div class="text-center">
@@ -157,9 +167,6 @@
                                                 </form>
                                             </div>
                                         </div>
-                                    </li>
-                                    <li>
-                                        <a href="{{ route('user.profile') }}">profile</a>
                                     </li>
                                 </ul>
                             </div>

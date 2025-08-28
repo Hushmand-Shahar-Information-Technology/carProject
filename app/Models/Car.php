@@ -53,9 +53,13 @@ class Car extends Model
         // 'car_color' => CarColor::class,
     ];
 
-    protected function user()
+    public function user()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class);
     }
 
+    public function offers()
+    {
+        return $this->hasMany(Offer::class);
+    }
 }
