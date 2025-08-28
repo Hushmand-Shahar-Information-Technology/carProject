@@ -86,13 +86,6 @@
             cursor: pointer;
         }
 
-        /* .search-result-item img {
-                                                                                    width: 60px;
-                                                                                    height: 40px;
-                                                                                    object-fit: cover;
-                                                                                    border-radius: 3px;
-                                                                                } */
-
         .search-result-info {
             flex-grow: 1;
         }
@@ -157,6 +150,11 @@
         }
 
         #year-range-slider {
+            margin: 15px 10px;
+            height: 8px;
+        }
+
+        #price-range-slider {
             margin: 15px 10px;
             height: 8px;
         }
@@ -245,8 +243,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -296,11 +294,19 @@
                     <div class="sorting-options-main">
                         <div class="row justify-content-between">
                             <div class="col-xl-3 col-md-12">
-                                <div class="price-slide">
+                                {{-- <div class="price-slide">
                                     <div class="price">
-                                        {{-- <label for="amount">Price Range</label> --}}
+                                        <label for="amount">Price Range</label>
                                         <input type="text" id="amount" class="amount" value="$50 - $300" />
                                         <div id="slider-range"></div>
+                                    </div>
+                                </div> --}}
+                                <div class="price-slide filter-widget" style="padding: 10px;">
+                                    <label>Price Range</label>
+                                    <div id="price-range-slider"></div>
+                                    <div class="year-values">
+                                        <span id="price-min"></span>
+                                        <span id="price-max"></span>
                                     </div>
                                 </div>
                             </div>
@@ -350,17 +356,63 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                    Scripts
-                                                                                                                                                                                                                                                                                                ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
         $("#sort-select").on('change', function() {
             applyFilters();
         });
+
         document.getElementById('reset-year').addEventListener('click', () => {
             yearSlider.noUiSlider.set([1990, new Date().getFullYear()]); // reset slider
             fetchFilteredCars(); // reload all cars
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const priceSlider = document.getElementById('price-range-slider');
+            const priceMin = document.getElementById('price-min');
+            const priceMax = document.getElementById('price-max');
+
+            noUiSlider.create(priceSlider, {
+                start: [300, 4000000],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 300,
+                    'max': 4000000
+                }
+            });
+
+            priceSlider.noUiSlider.on('update', function(values) {
+                priceMin.innerHTML = Math.round(values[0]);
+                priceMax.innerHTML = Math.round(values[1]);
+            });
+
+            priceSlider.noUiSlider.on('change', function(values) {
+                const minPrice = Math.round(values[0]);
+                const maxPrice = Math.round(values[1]);
+
+                const formData = new FormData();
+
+                // Add other selected filters
+                document.querySelectorAll('.filter-option:checked').forEach(input => {
+                    if (input.value !== '*') {
+                        const name = input.name.replace('[]', '');
+                        formData.append(name + '[]', input.value);
+                    }
+                });
+
+                // Push all years in range to 'Year[]'
+                const years = [];
+                for (let y = minYear; y <= maxYear; y++) {
+                    years.push(y);
+                }
+                years.forEach(y => formData.append('Year[]', y));
+
+                fetchFilteredCars(new URLSearchParams(formData).toString());
+            });
+
         });
 
         document.addEventListener("DOMContentLoaded", function() {
@@ -604,7 +656,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}

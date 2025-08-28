@@ -40,6 +40,9 @@ class CarController extends Controller
             ->when($request->input('year_min') && $request->input('year_max'), function ($q) use ($request) {
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
+            ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
+                $q->whereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
+            })
             ->when($request->input('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);
             })
