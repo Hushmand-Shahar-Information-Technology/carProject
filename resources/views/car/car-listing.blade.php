@@ -416,6 +416,29 @@
         .grid-item .car-list ul li i {
             color: #9aa3ad !important;
         }
+
+        /* Make cards look clickable */
+        .car-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .car-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Ensure compare button doesn't inherit cursor */
+        .add-to-compare {
+            cursor: pointer !important;
+            z-index: 10;
+            position: relative;
+        }
+
+        .add-to-compare:hover {
+            transform: scale(1.1);
+            transition: transform 0.2s ease;
+        }
     </style>
     <!--=================================banner -->
 
@@ -453,8 +476,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -548,6 +571,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xl-2 col-xxl-2 col-md-12">
+                                <div class="d-flex align-items-center gap-2">
+                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="debugCompare()">
+                                        Debug Compare
+                                    </button>
+                                    <span class="badge bg-secondary" id="debug-count">0</span>
+                                    <button type="button" class="btn btn-outline-success btn-sm" onclick="testAddCar()">
+                                        Test Add Car
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -562,8 +596,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -806,7 +840,7 @@
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
-                        const carDiv = $(`<a href="${url}" style="color: #a0a0a0">`);
+                        const carDiv = $(`<div style="color: #a0a0a0">`);
                         const title = `<h4>${car.title}</h4>`;
                         const details_button = `
                         <div>
@@ -851,8 +885,8 @@
                                         <ul>
                                             <li><a href="${url}"><i class="fa fa-link"></i></a></li>
                                             <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
-                                              <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer;">
-    <i class="bi bi-shuffle" style="font-size: 1.2rem;"></i>
+                                              <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer; z-index: 100; position: relative;">
+    <i class="fa fa-exchange-alt" style="font-size: 1rem;"></i>
 </li>
 
                                         </ul>
@@ -866,7 +900,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -893,6 +927,16 @@
                 `;
 
                         carDiv.html(html);
+
+                        // Add click handler to make the card clickable (excluding compare button)
+                        carDiv.on('click', function(e) {
+                            // Don't redirect if clicking on compare button or its children
+                            if (e.target.closest('.add-to-compare')) {
+                                return;
+                            }
+                            window.location.href = url;
+                        });
+
                         $('#car-results').append(carDiv);
                     });
 
@@ -1041,66 +1085,156 @@
 
         // storing the count value in local storage
         function getCompareCars() {
-            return JSON.parse(localStorage.getItem('compareCars') || '[]');
+            const stored = localStorage.getItem('compareCars');
+            if (!stored) return [];
+
+            try {
+                const data = JSON.parse(stored);
+                // Check if data has expired (5 minutes)
+                if (data.timestamp && (Date.now() - data.timestamp) > 5 * 60 * 1000) {
+                    localStorage.removeItem('compareCars');
+                    return [];
+                }
+                return data.cars || [];
+            } catch (e) {
+                return [];
+            }
         }
 
         function setCompareCars(cars) {
-            localStorage.setItem('compareCars', JSON.stringify(cars));
+            const data = {
+                cars: cars,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('compareCars', JSON.stringify(data));
         }
 
         // Update compare icon count in navbar
         function updateCompareIcon() {
             const count = getCompareCars().length;
-            const icon = document.querySelector('#compare-icon-count'); // change to your navbar element
+            const icon = document.querySelector('#compare-count');
             if (icon) {
                 icon.textContent = count;
             }
         }
 
+        // Use event delegation for compare buttons
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('add-to-compare')) {
-                const carId = e.target.dataset.carId;
+            console.log('Click event target:', e.target);
+            console.log('Click event target classes:', e.target.className);
+
+            const compareBtn = e.target.closest('.add-to-compare');
+            console.log('Found compare button:', compareBtn);
+
+            if (compareBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const carId = compareBtn.dataset.carId;
+                console.log('Adding car to compare:', carId);
                 let compareCars = getCompareCars();
 
                 if (compareCars.includes(carId)) {
-                    Swal.fire({
-                        icon: 'info',
-                        title: 'Already Added',
-                        text: 'This car is already in the compare list.',
-                        timer: 2000,
-                        showConfirmButton: false
-                    });
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Already Added',
+                            text: 'This car is already in the compare list.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert('This car is already in the compare list.');
+                    }
                     return;
                 }
 
                 if (compareCars.length >= 3) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Limit Reached',
-                        text: 'Maximum 3 cars allowed to compare.',
-                        timer: 2500,
-                        showConfirmButton: false
-                    });
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Limit Reached',
+                            text: 'Maximum 3 cars allowed to compare.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert('Maximum 3 cars allowed to compare.');
+                    }
                     return;
                 }
 
                 compareCars.push(carId);
                 setCompareCars(compareCars);
+                console.log('Updated compare cars:', compareCars);
 
                 updateCompareIcon();
 
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Added!',
-                    text: 'Car added to compare list.',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added!',
+                        text: 'Car added to compare list.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    alert('Car added to compare list!');
+                }
             }
         });
 
         // Initialize count on page load
-        document.addEventListener('DOMContentLoaded', updateCompareIcon);
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, updating compare icon');
+            updateCompareIcon();
+            console.log('Current compare cars:', getCompareCars());
+
+            // Debug: Check localStorage
+            console.log('Raw localStorage compareCars:', localStorage.getItem('compareCars'));
+        });
+
+        // Debug function
+        function debugCompare() {
+            const cars = getCompareCars();
+            const raw = localStorage.getItem('compareCars');
+            console.log('Debug - Current compare cars:', cars);
+            console.log('Debug - Raw localStorage:', raw);
+            console.log('Debug - Navbar count element:', document.getElementById('compare-count'));
+
+            document.getElementById('debug-count').textContent = cars.length;
+        }
+
+        // Test function to add a car manually
+        function testAddCar() {
+            const testCarId = '999';
+            let compareCars = getCompareCars();
+
+            if (compareCars.includes(testCarId)) {
+                alert('Test car already added');
+                return;
+            }
+
+            compareCars.push(testCarId);
+            setCompareCars(compareCars);
+            updateCompareIcon();
+
+            console.log('Test car added:', compareCars);
+            document.getElementById('debug-count').textContent = compareCars.length;
+
+            // Test if SweetAlert2 is working
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Test Car Added!',
+                    text: 'Test car added to compare list.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                alert('Test car added! SweetAlert2 not loaded.');
+            }
+        }
     </script>
 
 @endsection
