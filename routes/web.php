@@ -37,9 +37,7 @@ Route::prefix('car')->group(function () {
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
     Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
-
     Route::get('compare', [CarController::class, 'compare'])->name('car.compare');
-    Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
     Route::post('carts', [CarController::class, 'cart'])->name('carts.show');
     Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
 });
@@ -47,5 +45,8 @@ Route::prefix('car')->group(function () {
 
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
+
+// API route for car comparison
+Route::get('/api/cars/details', [CarController::class, 'getCarDetails'])->name('api.cars.details');
 
 require __DIR__ . '/auth.php';
