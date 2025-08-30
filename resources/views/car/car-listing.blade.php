@@ -476,8 +476,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -571,17 +571,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-2 col-xxl-2 col-md-12">
-                                <div class="d-flex align-items-center gap-2">
-                                    <button type="button" class="btn btn-outline-info btn-sm" onclick="debugCompare()">
-                                        Debug Compare
-                                    </button>
-                                    <span class="badge bg-secondary" id="debug-count">0</span>
-                                    <button type="button" class="btn btn-outline-success btn-sm" onclick="testAddCar()">
-                                        Test Add Car
-                                    </button>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
 
@@ -596,8 +586,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -834,7 +824,7 @@
                         // if images are json
                         if (typeof car.images === 'object') {
                             images = car.images;
-                            console.log(images);
+
                         } else {
                             images = car.images ? [car.images] : [];
                         }
@@ -900,7 +890,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -1120,18 +1110,17 @@
 
         // Use event delegation for compare buttons
         document.addEventListener('click', function(e) {
-            console.log('Click event target:', e.target);
-            console.log('Click event target classes:', e.target.className);
+
 
             const compareBtn = e.target.closest('.add-to-compare');
-            console.log('Found compare button:', compareBtn);
+
 
             if (compareBtn) {
                 e.preventDefault();
                 e.stopPropagation();
 
                 const carId = compareBtn.dataset.carId;
-                console.log('Adding car to compare:', carId);
+
                 let compareCars = getCompareCars();
 
                 if (compareCars.includes(carId)) {
@@ -1166,7 +1155,7 @@
 
                 compareCars.push(carId);
                 setCompareCars(compareCars);
-                console.log('Updated compare cars:', compareCars);
+
 
                 updateCompareIcon();
 
@@ -1186,55 +1175,8 @@
 
         // Initialize count on page load
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, updating compare icon');
             updateCompareIcon();
-            console.log('Current compare cars:', getCompareCars());
-
-            // Debug: Check localStorage
-            console.log('Raw localStorage compareCars:', localStorage.getItem('compareCars'));
         });
-
-        // Debug function
-        function debugCompare() {
-            const cars = getCompareCars();
-            const raw = localStorage.getItem('compareCars');
-            console.log('Debug - Current compare cars:', cars);
-            console.log('Debug - Raw localStorage:', raw);
-            console.log('Debug - Navbar count element:', document.getElementById('compare-count'));
-
-            document.getElementById('debug-count').textContent = cars.length;
-        }
-
-        // Test function to add a car manually
-        function testAddCar() {
-            const testCarId = '999';
-            let compareCars = getCompareCars();
-
-            if (compareCars.includes(testCarId)) {
-                alert('Test car already added');
-                return;
-            }
-
-            compareCars.push(testCarId);
-            setCompareCars(compareCars);
-            updateCompareIcon();
-
-            console.log('Test car added:', compareCars);
-            document.getElementById('debug-count').textContent = compareCars.length;
-
-            // Test if SweetAlert2 is working
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Test Car Added!',
-                    text: 'Test car added to compare list.',
-                    timer: 2000,
-                    showConfirmButton: false
-                });
-            } else {
-                alert('Test car added! SweetAlert2 not loaded.');
-            }
-        }
     </script>
 
 @endsection
