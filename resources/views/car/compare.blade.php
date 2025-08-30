@@ -105,6 +105,27 @@
             border-radius: 6px;
             font-weight: bold;
         }
+
+        .car-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .car-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 5px;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
     </style>
 
     <section class="inner-intro bg-1 bg-overlay-black-70">
@@ -129,8 +150,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        let compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
+        let compareList = [];
         const slotsContainer = document.getElementById('compare-slots');
         const tableContainer = document.getElementById('compare-table');
 
@@ -139,9 +161,38 @@
             if (countElement) countElement.innerText = compareList.length;
         }
 
+        function getCompareCars() {
+            const stored = localStorage.getItem('compareCars');
+            if (!stored) return [];
+
+            try {
+                const data = JSON.parse(stored);
+                // Check if data has expired (5 minutes)
+                if (data.timestamp && (Date.now() - data.timestamp) > 5 * 60 * 1000) {
+                    localStorage.removeItem('compareCars');
+                    return [];
+                }
+                return data.cars || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
         function removeCar(id) {
             compareList = compareList.filter(c => c.id != id);
-            localStorage.setItem('compareList', JSON.stringify(compareList));
+
+            // Update localStorage
+            const stored = localStorage.getItem('compareCars');
+            if (stored) {
+                try {
+                    const data = JSON.parse(stored);
+                    data.cars = compareList;
+                    localStorage.setItem('compareCars', JSON.stringify(data));
+                } catch (e) {
+                    console.error('Error updating localStorage:', e);
+                }
+            }
+
             renderComparePage();
             updateNavbarCompareCount();
 
@@ -152,6 +203,16 @@
                 timer: 1200,
                 showConfirmButton: false
             });
+        }
+
+        async function fetchCarDetails(carIds) {
+            try {
+                const response = await axios.get(`/api/cars/details?ids=${carIds.join(',')}`);
+                return response.data;
+            } catch (error) {
+                console.error('Error fetching car details:', error);
+                return [];
+            }
         }
 
         function renderComparePage() {
@@ -165,10 +226,14 @@
 
                 if (compareList[i]) {
                     const car = compareList[i];
+                    const imageSrc = car.images && car.images.length > 0 ?
+                        `/storage/${car.images[0]}` : '/images/no-image.png';
+
                     slot.innerHTML = `
-                    <img src="/storage/${car.images?.[0] || 'images/no-image.png'}" alt="${car.title}">
-                    <button class="remove-btn">&times;</button>
-                `;
+                        <img src="${imageSrc}" alt="${car.title}" class="car-image">
+                        <button class="remove-btn">&times;</button>
+                        <div class="car-title">${car.title}</div>
+                    `;
                     slot.querySelector('.remove-btn').addEventListener('click', () => removeCar(car.id));
                 } else {
                     slot.innerHTML = '<span>+ Add Car</span>';
@@ -183,15 +248,23 @@
                 return;
             }
 
-            // Render table
+            // Render comparison table
             const headers = ['Feature', ...compareList.map(c => c.title)];
             const rows = [
-                ['Price', ...compareList.map(c => '$' + c.sale_price)],
+                ['Price', ...compareList.map(c => '$' + (c.sale_price || 'N/A'))],
+                ['Regular Price', ...compareList.map(c => '$' + (c.regular_price || 'N/A'))],
                 ['Year', ...compareList.map(c => c.year || 'N/A')],
+                ['Make', ...compareList.map(c => c.make || 'N/A')],
+                ['Model', ...compareList.map(c => c.model || 'N/A')],
+                ['Body Type', ...compareList.map(c => c.body_type || 'N/A')],
+                ['Transmission', ...compareList.map(c => c.transmission_type || 'N/A')],
+                ['Color', ...compareList.map(c => c.car_color || 'N/A')],
+                ['Inside Color', ...compareList.map(c => c.car_inside_color || 'N/A')],
+                ['Condition', ...compareList.map(c => c.car_condition || 'N/A')],
+                ['VIN Number', ...compareList.map(c => c.VIN_number || 'N/A')],
                 ['Mileage', ...compareList.map(c => c.mileage || 'N/A')],
                 ['Engine', ...compareList.map(c => c.engine || 'N/A')],
-                ['Fuel Type', ...compareList.map(c => c.fuel || 'N/A')],
-                ['Condition', ...compareList.map(c => c.car_condition || 'N/A')]
+                ['Fuel Type', ...compareList.map(c => c.fuel_type || 'N/A')]
             ];
 
             let table = '<table><thead><tr>';
@@ -206,35 +279,69 @@
 
             // Evaluation Row based on Price
             if (compareList.length > 1) {
-                const prices = compareList.map(c => c.sale_price);
-                const sorted = [...prices].sort((a, b) => a - b);
-                let evalRow = '<tr><th>Evaluation</th>';
-                compareList.forEach(c => {
-                    if (c.sale_price === sorted[0]) evalRow += `<td><span class="badge-best">Best</span></td>`;
-                    else if (c.sale_price === sorted[sorted.length - 1]) evalRow +=
-                        `<td><span class="badge-normal">Normal</span></td>`;
-                    else evalRow += `<td><span class="badge-better">Better</span></td>`;
-                });
-                evalRow += '</tr>';
-                table += evalRow;
+                const prices = compareList.map(c => c.sale_price).filter(p => p && !isNaN(p));
+                if (prices.length > 1) {
+                    const sorted = [...prices].sort((a, b) => a - b);
+                    let evalRow = '<tr><th>Price Evaluation</th>';
+                    compareList.forEach(c => {
+                        if (c.sale_price === sorted[0]) {
+                            evalRow += `<td><span class="badge-best">Best Value</span></td>`;
+                        } else if (c.sale_price === sorted[sorted.length - 1]) {
+                            evalRow += `<td><span class="badge-normal">Highest Price</span></td>`;
+                        } else {
+                            evalRow += `<td><span class="badge-better">Good Value</span></td>`;
+                        }
+                    });
+                    evalRow += '</tr>';
+                    table += evalRow;
+                }
             }
 
             table += '</tbody></table>';
             tableContainer.innerHTML = table;
         }
 
-        // Redirect if no cars
-        if (compareList.length === 0) {
-            Swal.fire('No Cars', 'Please add cars to compare', 'info').then(() => {
-                window.location.href = "{{ route('car.index') }}";
-            });
+        async function initializeComparePage() {
+            const carIds = getCompareCars();
+            console.log('Car IDs from localStorage:', carIds);
+
+            if (carIds.length === 0) {
+                // Don't redirect automatically, just show empty state
+                slotsContainer.innerHTML = `
+                    <div class="text-center w-100">
+                        <h4 class="text-muted">No cars added to compare</h4>
+                        <p class="text-muted">Add cars from the car listing page to start comparing</p>
+                        <a href="{{ route('car.index') }}" class="btn btn-primary">Go to Car Listing</a>
+                    </div>
+                `;
+                tableContainer.innerHTML = '';
+                return;
+            }
+
+            // Show loading
+            tableContainer.innerHTML = '<div class="loading">Loading car details...</div>';
+
+            // Fetch car details from database
+            console.log('Fetching car details for IDs:', carIds);
+            const cars = await fetchCarDetails(carIds);
+            console.log('Fetched cars:', cars);
+            compareList = cars;
+
+            if (cars.length === 0) {
+                Swal.fire('Error', 'Failed to load car details', 'error').then(() => {
+                    window.location.href = "{{ route('car.index') }}";
+                });
+                return;
+            }
+
+            renderComparePage();
+            updateNavbarCompareCount();
         }
 
-        // Clear compare when leaving page
-        window.addEventListener('beforeunload', () => localStorage.removeItem('compareList'));
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', initializeComparePage);
 
-        // Initial render
-        renderComparePage();
+        // Update navbar count when page loads
         updateNavbarCompareCount();
     </script>
 
