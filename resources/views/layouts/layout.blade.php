@@ -135,12 +135,12 @@
                                         <a href="{{ route('user.profile') }}">profile</a>
                                     </li>
                                     <li>
-                                        <a href="{{ route('car.compare') }}" style="position: relative;">
+                                        <a href="{{ route('car.compare') }}"
+                                            class="position-relative text-decoration-none">
                                             <i class="fa fa-exchange-alt fa-lg"></i>
                                             <span id="compare-count"
-                                                style="position: absolute; top: -8px; right: -8px;
-                     background: red; color: white;
-                     font-size: 12px; padding: 2px 6px; border-radius: 50%;">
+                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                                style="font-size: 0.75rem; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
                                                 0
                                             </span>
                                         </a>
@@ -446,12 +446,33 @@
         // this function will update all the count dynamically
         function updateNavbarCompareCount() {
             const countEl = document.getElementById('compare-count');
-            const compareList = JSON.parse(localStorage.getItem('compareList') || '[]');
-            countEl.innerText = compareList.length;
+            if (!countEl) return;
+
+            const stored = localStorage.getItem('compareCars');
+            if (!stored) {
+                countEl.innerText = '0';
+                return;
+            }
+
+            try {
+                const data = JSON.parse(stored);
+                // Check if data has expired (5 minutes)
+                if (data.timestamp && (Date.now() - data.timestamp) > 5 * 60 * 1000) {
+                    localStorage.removeItem('compareCars');
+                    countEl.innerText = '0';
+                    return;
+                }
+                countEl.innerText = (data.cars || []).length;
+            } catch (e) {
+                countEl.innerText = '0';
+            }
         }
 
         // Update count on page load
-        updateNavbarCompareCount();
+        document.addEventListener('DOMContentLoaded', updateNavbarCompareCount);
+
+        // Update count every minute to check for expiration
+        setInterval(updateNavbarCompareCount, 60000);
     </script>
 </body>
 
