@@ -111,13 +111,25 @@
             height: 100%;
             object-fit: cover;
             border-radius: 10px;
+            position: relative;
+            z-index: 1;
         }
 
         .car-title {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: bold;
-            margin-top: 5px;
+            margin-top: 10px;
             text-align: center;
+            color: #333;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 8px;
+            border-radius: 5px;
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 2;
         }
 
         .loading {
@@ -303,7 +315,6 @@
 
         async function initializeComparePage() {
             const carIds = getCompareCars();
-            console.log('Car IDs from localStorage:', carIds);
 
             if (carIds.length === 0) {
                 // Don't redirect automatically, just show empty state
@@ -322,9 +333,7 @@
             tableContainer.innerHTML = '<div class="loading">Loading car details...</div>';
 
             // Fetch car details from database
-            console.log('Fetching car details for IDs:', carIds);
             const cars = await fetchCarDetails(carIds);
-            console.log('Fetched cars:', cars);
             compareList = cars;
 
             if (cars.length === 0) {
