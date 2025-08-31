@@ -476,8 +476,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -586,8 +586,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -752,19 +752,21 @@
 
         // Search button on the navbar
         document.addEventListener('DOMContentLoaded', function() {
+            // Get query string from current page
             const urlParams = new URLSearchParams(window.location.search);
-            const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
 
+            // Pre-check the filters in the sidebar if needed
+            const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
             filters.forEach(filter => {
                 const values = urlParams.getAll(`${filter}[]`);
                 values.forEach(val => {
                     $(`input[name="${filter}[]"][value="${val}"]`).prop('checked', true);
                 });
             });
-
-            // Optionally trigger filtering after setting checkboxes
+            // 🔥 This is the missing part:
             fetchFilteredCars(urlParams.toString());
         });
+
 
 
         // Hide results when pressing ESC
@@ -890,7 +892,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
