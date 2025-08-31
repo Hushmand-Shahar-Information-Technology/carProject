@@ -21,6 +21,27 @@ class CarController extends Controller
         return view('car.car-listing');
     }
 
+    public function compare()
+    {
+        return view('car.compare');
+    }
+
+    /**
+     * Get car details by IDs for comparison
+     */
+    public function getCarDetails(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (!$ids) {
+            return response()->json([]);
+        }
+
+        $carIds = explode(',', $ids);
+        $cars = Car::whereIn('id', $carIds)->get();
+
+        return response()->json($cars);
+    }
+
     /**
      * Filter the cars.
      */
@@ -95,6 +116,8 @@ class CarController extends Controller
 
         try {
             Log::info('Car store method started');
+            Log::info('Validated data:', $data);
+            Log::info('Files received:', $request->allFiles());
 
             // Handle image uploads
             $images = [];
@@ -103,6 +126,7 @@ class CarController extends Controller
                     $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
                 }
             }
+            Log::info('Processed images:', $images);
 
             // Handle video uploads
             $videos = [];
@@ -111,8 +135,10 @@ class CarController extends Controller
                     $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
                 }
             }
+            Log::info('Processed videos:', $videos);
 
-            Car::create([
+            $carData = [
+                'user_id' => 1, // Default user ID for testing (you can change this later)
                 'title' => $data['title'],
                 'year' => $data['year'],
                 'make' => $data['make'],
@@ -131,14 +157,19 @@ class CarController extends Controller
                 'request_price_status' => $request->boolean('request_price_status'),
                 'request_price' => $data['request_price'] ?? null,
                 'images' => $images, // saved as actual array (use JSON column in DB)
-                'video' => $videos,  // same for videos
-            ]);
+                'videos' => $videos,  // fixed: changed from 'video' to 'videos'
+            ];
+
+            Log::info('Car data to be created:', $carData);
+
+            $car = Car::create($carData);
+            Log::info('Car created successfully with ID:', $car->id);
 
             return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Throwable $th) {
             Log::error('Error storing car: ' . $th->getMessage());
-            // return back()->withErrors('Something went wrong while saving the car.');
-            dd($th->getMessage());
+            Log::error('Stack trace: ' . $th->getTraceAsString());
+            return back()->withErrors(['error' => 'Something went wrong while saving the car: ' . $th->getMessage()]);
         }
     }
 

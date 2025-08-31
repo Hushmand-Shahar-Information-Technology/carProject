@@ -135,6 +135,19 @@
                                         <a href="{{ route('user.profile') }}">profile</a>
                                     </li>
                                     <li>
+                                        <a href="{{ route('car.compare') }}"
+                                            class="position-relative text-decoration-none">
+                                            <i class="fa fa-exchange-alt fa-lg"></i>
+                                            <span id="compare-count"
+                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                                style="font-size: 0.75rem; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
+                                                0
+                                            </span>
+                                        </a>
+                                    </li>
+
+
+                                    <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
                                                 href="javascript:void(0);">
@@ -429,6 +442,37 @@
                 }
             });
         })(jQuery);
+
+        // this function will update all the count dynamically
+        function updateNavbarCompareCount() {
+            const countEl = document.getElementById('compare-count');
+            if (!countEl) return;
+
+            const stored = localStorage.getItem('compareCars');
+            if (!stored) {
+                countEl.innerText = '0';
+                return;
+            }
+
+            try {
+                const data = JSON.parse(stored);
+                // Check if data has expired (5 minutes)
+                if (data.timestamp && (Date.now() - data.timestamp) > 5 * 60 * 1000) {
+                    localStorage.removeItem('compareCars');
+                    countEl.innerText = '0';
+                    return;
+                }
+                countEl.innerText = (data.cars || []).length;
+            } catch (e) {
+                countEl.innerText = '0';
+            }
+        }
+
+        // Update count on page load
+        document.addEventListener('DOMContentLoaded', updateNavbarCompareCount);
+
+        // Update count every minute to check for expiration
+        setInterval(updateNavbarCompareCount, 60000);
     </script>
 </body>
 

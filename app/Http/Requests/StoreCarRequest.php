@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+
 use App\Enums\CarColor;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -20,17 +21,18 @@ class StoreCarRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array{
+    public function rules(): array
+    {
         return [
             'title' => 'required|string|max:255',
             'year' => 'required|integer|min:1990|max:' . now()->year,
             'make' => 'required|string',
             'body_type' => 'required|string',
             'car_condition' => 'required|string',
-            'VIN_number' => 'required',
+            'VIN_number' => 'required|string',
             'location' => 'required|string',
             'model' => 'required|string',
-            'car_color' => ['required', Rule::in(CarColor::values())],
+            'car_color' => 'required|string',
             'car_inside_color' => 'required|string',
             'car_documents' => 'nullable|string',
             'transmission_type' => 'required|string',
@@ -38,11 +40,9 @@ class StoreCarRequest extends FormRequest
             'regular_price' => 'required|numeric|min:0',
             'sale_price' => 'required|numeric|min:0|lte:regular_price',
             'images' => 'required|array|min:1|max:11',
-            'images.*' => 'file|image|max:20120',
+            'images.*' => 'required|file|image|mimes:jpeg,png,jpg,gif,webp|max:20480',
             'videos' => 'nullable|array|max:2',
-            'videos.*' => 'file|mimetypes:video/mp4,video/avi,video/mpeg|max:10240',
+            'videos.*' => 'nullable|file|mimes:mp4,avi,mpeg,mov,wmv|max:102400',
         ];
     }
-
-
 }
