@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bargain;
-use App\Services\BargainService;
+use App\services\BargainService;
 use App\Http\Requests\BargainRequest;
 use Illuminate\Http\Request;
 
