@@ -203,29 +203,31 @@
             </div>
         </div>
 
-        @if (session('success'))
-            <script>
-                Swal.fire('Success', "{{ session('success') }}", 'success');
-            </script>
-        @endif
-    @endsection
+
+    </div>
+@endsection
+@if (session('success'))
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const profilePreview = document.getElementById('profilePreview');
-            const profileInput = document.getElementById('profileImageInput');
-
-            // Click on image opens file selector
-            profilePreview.addEventListener('click', () => profileInput.click());
-
-            // Update preview when new file selected
-            profileInput.addEventListener('change', function() {
-                if (this.files && this.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        profilePreview.src = e.target.result;
-                    };
-                    reader.readAsDataURL(this.files[0]);
-                }
-            });
-        });
+        Swal.fire('Success', "{{ session('success') }}", 'success');
     </script>
+@endif
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const profilePreview = document.getElementById('profilePreview');
+        const profileInput = document.getElementById('profileImageInput');
+
+        // Click on image opens file selector
+        profilePreview.addEventListener('click', () => profileInput.click());
+
+        // Update preview when new file selected
+        profileInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profilePreview.src = e.target.result;
+                };
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
+    });
+</script>

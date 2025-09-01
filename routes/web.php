@@ -40,6 +40,7 @@ Route::prefix('bargains')->group(function () {
     Route::put('/update/{id}', [BargainController::class, 'update'])->name('bargains.update');
     Route::delete('/delete/{id}', [BargainController::class, 'destroy'])->name('bargains.destroy');
     Route::post('/toggle-status/{id}', [BargainController::class, 'toggleStatus'])->name('bargains.toggle-status');
+    Route::get('/show/{id}', [BargainController::class, 'show'])->name('bargains.show');
 });
 
 
