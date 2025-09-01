@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row text-center intro-title">
                 <div class="col-md-6 text-md-start d-inline-block">
-                    <h1 class="text-white">Compare Cars</h1>
+                    <h1 class="text-white">Bargains</h1>
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
