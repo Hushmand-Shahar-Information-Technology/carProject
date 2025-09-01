@@ -6,6 +6,7 @@ use App\Http\Controllers\routeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OfferController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BargainController;
 
 Route::view('/', 'home.index')->name('home.index');
 Route::post('/home/filter-cars', [routeController::class, 'filter']);
@@ -28,6 +29,20 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
 });
 
+
+
+Route::prefix('bargains')->group(function () {
+    Route::get('/', [BargainController::class, 'index'])->name('bargains.index');
+    Route::get('/data', [BargainController::class, 'getData'])->name('bargains.data');
+    Route::get('/create', [BargainController::class, 'create'])->name('bargains.create');
+    Route::post('/store', [BargainController::class, 'store'])->name('bargains.store');
+    Route::get('/edit/{id}', [BargainController::class, 'edit'])->name('bargains.edit');
+    Route::put('/update/{id}', [BargainController::class, 'update'])->name('bargains.update');
+    Route::delete('/delete/{id}', [BargainController::class, 'destroy'])->name('bargains.destroy');
+    Route::post('/toggle-status/{id}', [BargainController::class, 'toggleStatus'])->name('bargains.toggle-status');
+});
+
+
 Route::prefix('car')->group(function () {
     Route::get('index', [CarController::class, 'index'])->name('car.index');
     Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
@@ -41,6 +56,7 @@ Route::prefix('car')->group(function () {
     Route::post('carts', [CarController::class, 'cart'])->name('carts.show');
     Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
 });
+
 
 
 

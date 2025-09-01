@@ -29,7 +29,7 @@ class StoreCarRequest extends FormRequest
             'make' => 'required|string',
             'body_type' => 'required|string',
             'car_condition' => 'required|string',
-            'VIN_number' => 'required|string',
+            'VIN_number' => 'nullable|string',
             'location' => 'required|string',
             'model' => 'required|string',
             'car_color' => 'required|string',
