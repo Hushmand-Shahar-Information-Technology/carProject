@@ -4,94 +4,7 @@
 
    
     <style>
-        .profile-container {
-            max-width: 935px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        
-        .profile-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 30px;
-            gap: 30px;
-        }
-        
-        .profile-pic {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #333;
-        }
-        
-        .profile-info h1 {
-            font-size: 28px;
-            font-weight: 300;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .profile-buttons {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .btn-custom {
-            background-color: blue;
-            border: none;
-            color: #fff;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-        
-        .btn-custom:hover {
-            background-color: #4a4a4a;
-            color: #fff;
-        }
-        
-        .stats {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 20px;
-        }
-        
-        .stat {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-weight: 600;
-            font-size: 16px;
-        }
-        
-        .stat-label {
-            color: #a8a8a8;
-            font-size: 16px;
-        }
-        
-        .bio {
-            max-width: 300px;
-        }
-        
-        .bio h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .bio p {
-            font-size: 14px;
-            color: #a8a8a8;
-            margin-bottom: 5px;
-            line-height: 1.4;
-        }
-        
+       
         .new-post {
             display: flex;
             flex-direction: column;
@@ -100,8 +13,8 @@
         }
         
         .new-post-circle {
-            width: 77px;
-            height: 77px;
+            width: 60px;
+            height: 60px;
             border: 2px dashed #363636;
             border-radius: 50%;
             display: flex;
@@ -166,8 +79,8 @@
         }
         
         .post-item img {
-            width: 100%;
-            height: 100%;
+            width: 70%;
+            height: 70%;
             object-fit: cover;
         }
         
@@ -186,23 +99,18 @@
         }
         
         @media (max-width: 768px) {
-            /* .profile-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            } */
-            
-            .profile-pic {
-                width: 120px;
-                height: 120px;
+            .profile-img {
+                width: 40%;
             }
-            
             .stats {
                 justify-content: center;
             }
         }
 
-
+        .hover-state:hover{
+            color: blue;
+            text-decoration: underline; 
+        }
         
     </style>
      <!--================================ -->
@@ -221,32 +129,107 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section>`
 
 
 <div class="container">
    
-        <div class="profile-header mt-5">
-            <img src="{{asset('images/02.png')}}" alt="Profile Picture" class="profile-pic">
-            
-            <div class="profile-info">
-                <h1>
-                    {{$profile->name}}
-                    <a href="{{route('profile.edit')}}">
-                        <button class="btn btn-custom">Edit profile</button>
-                    </a>
-                    <i class="fas fa-cog" style="color: #a8a8a8; cursor: pointer;"></i>
-                </h1>
-                
-                <div class="stats">
-                    <div class="stat">
-                        <div class="stat-number">23</div>
-                        <div class="stat-label">posts</div>
+<div class="my-5">
+    <div class="card shadow-sm" style="margin: 0 auto;">
+        <div class="row g-0">
+            <div class="col-md-4 p-3 text-center">
+                <img src="{{asset('images/02.png')}}" class="rounded-circle img-thumbnail profile-img" alt="Profile Picture">
+                <div class="mt-2">
+                    <!-- <span class="badge bg-success">Online</span> -->
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h5 class="card-title d-flex justify-content-between align-items-center">
+                        {{$profile->name}}
+                        <div>
+                            <a href="{{route('profile.edit')}}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-edit"></i> Edit
+                            </a>
+                            <button class="btn btn-sm btn-outline-primary" onclick="toggleOffers()"><i class="fas fa-inbox"></i> see offers</a>
+                        </div>
+                    </h5>
+                    <p class="card-text text-muted">
+                        <i class="fas fa-briefcase"></i> {{ $profile->email }}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                                <i class="fas fa-map-marker-alt"></i> San Francisco, CA
+                            </small>
+                    </p>
+                    <div class="border-top pt-2">
+                        <div class="row text-center">
+                            <div class="col">
+                                <h6>Post</h6>
+                                <strong>{{ $profile->cars_count }}</strong>
+                            </div>
+                            <div class="col border-start">
+                                <h6 style="cursor: pointer;" class="hover-state">Offers</h6>
+                                <strong>{{ $profile->cars->sum(fn($car) => $car->offers->count()) }}</strong>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div> 
-        
+        </div>
+        <div class="card-footer bg-white">
+            <div class="d-flex justify-content-around">
+                <!-- <button class="btn btn-link text-decoration-none"> -->
+                        <!-- <i class="fas fa-user-plus"></i> Follow -->
+                    <!-- </button> -->
+                <button class="btn btn-link text-decoration-none">
+                        <i class="fas fa-envelope"></i> Message
+                    </button>
+                <button class="btn btn-link text-decoration-none">
+                        <i class="fas fa-share"></i> Share
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <div class="border-top pt-2 " id="offer-section" style="display: none;">
+    <h1 class="text-center mt-4">offers</h1>
+                        <div class="row">
+                            <div class="col">
+                                @foreach ($profile->cars->filter(fn($car) => $car->offers->isNotEmpty()) as $car)
+                                    <h5 class="text-primary"> {{ $car->title }} ({{ $car->offers->count() }} Offers)</h5>
+                                    <div class="pt-2 pb-5">
+                                        <div class="table-responsive">
+                                            <table class="table table-row-dashed table-row-gray-300 gy-7">
+                                                <thead>
+                                                    <tr class="fw-bold fs-6 text-gray-800">
+                                                        <th>Name</th>
+                                                        <th>Phone</th>
+                                                        {{-- <th>Email</th> --}}
+                                                        <th>Price</th>
+                                                        <th>Remark</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach ($car->offers as $offer)
+                                                        <tr>
+                                                            <td>{{ $offer->name }}</td>
+                                                            <td>{{ $offer->phone }}</td>
+                                                            {{-- <td>{{ $offer->email }}</td> --}}
+                                                            <td>{{ $offer->price }}</td>
+                                                            <td>{{ $offer->remark }}</td>
+                                                        </tr>
+                                                    @endforeach
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
         <!-- New Post Section -->
         <a href="{{route('car.create')}}">
             <div class="new-post">
@@ -302,6 +285,10 @@
         </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function toggleOffers() {
+            const section = document.getElementById('offer-section');
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+        }
         // Add click functionality to tabs
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {

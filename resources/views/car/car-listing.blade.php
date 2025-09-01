@@ -86,13 +86,6 @@
             cursor: pointer;
         }
 
-        /* .search-result-item img {
-                    width: 60px;
-                    height: 40px;
-                    object-fit: cover;
-                    border-radius: 3px;
-                } */
-
         .search-result-info {
             flex-grow: 1;
         }
@@ -113,17 +106,319 @@
             background: #f8f9fa;
             font-weight: 500;
         }
-        .link-style{
-            display: block ; 
-            border-radius: none !important; 
+
+        .filter-widget {
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        #year-range-slider {
+            margin: 10px 5px;
+        }
+
+        .link-style {
+            display: block;
+            border-radius: none !important;
             border: none !important;
         }
-        .link-style:hover{
-            background-color: none !; 
+
+        .link-style:hover {
+            background-color: none !;
+        }
+
+        .filter-widget {
+            margin-bottom: 20px;
+            padding: 10px 0;
+        }
+
+        .link-style {
+            display: block;
+            border-radius: none !important;
+            border: none !important;
+        }
+
+        .link-style:hover {
+            background-color: none !;
+        }
+
+        /* Year Range Filter Styling */
+        .filter-widget h6 {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 15px;
+            color: #333;
+        }
+
+        #year-range-slider {
+            margin: 15px 10px;
+            height: 8px;
+        }
+
+        #price-range-slider {
+            margin: 15px 10px;
+            height: 8px;
+        }
+
+        .noUi-target {
+            background: #e9ecef;
+            border-radius: 6px;
+            border: none;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .noUi-connect {
+            background: #db2d2e;
+            border-radius: 6px;
+        }
+
+        /* NoUiSlider custom handles */
+        .noUi-handle {
+            width: 10px;
+            /* smaller handle */
+            height: 10px;
+            /* smaller handle */
+            border-radius: 50%;
+            /* circle shape */
+            background: #fff;
+            border: 2px solid #db2d2e;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+
+        .noUi-handle:hover {
+            background: #db2d2e;
+            border-color: #db2d2e;
+        }
+
+        /* Hide default pseudo-elements */
+        .noUi-handle:before,
+        .noUi-handle:after {
+            display: none;
+        }
+
+        /* Min & Max year labels */
+        .year-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 8px;
+            color: #444;
+        }
+
+        /* ===== Grid view (first style) enhancements - no HTML changes ===== */
+        .grid-item .car-item {
+            border-radius: 12px;
+            background: #fff;
+            box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
+            transition: transform .2s ease, box-shadow .2s ease;
+        }
+
+        .grid-item .car-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 24, 40, 0.10);
+        }
+
+        .grid-item .car-image {
+            border-top-left-radius: 12px;
+            border-top-right-radius: 12px;
+            overflow: hidden;
+        }
+
+        .grid-item .car-image img {
+            transition: transform .3s ease;
+        }
+
+        .grid-item .car-item:hover .car-image img {
+            transform: scale(1.03);
+        }
+
+        .grid-item .car-content {
+            position: relative;
+            padding-bottom: 38px;
+        }
+
+        .grid-item .price {
+            position: absolute;
+            right: 10px;
+            bottom: 10px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid-item .price .old-price {
+            color: #9aa3ad;
+            text-decoration: line-through;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .grid-item .price .new-price {
+            background: linear-gradient(90deg, #e43a3c 0%, #db2d2e 100%);
+            color: #fff;
+            font-weight: 800;
+            border-radius: 10px;
+            padding: 5px 12px;
+            letter-spacing: .2px;
+        }
+
+        /* Pills for small specs within grid cards */
+        .grid-item .car-list ul {
+            margin-top: 6px;
+        }
+
+        .grid-item .car-list ul li {
+            display: inline-block;
+            background: #f6f7f9;
+            border: 1px solid #eef0f3;
+            color: #4b5563;
+            border-radius: 999px;
+            padding: 4px 10px;
+            margin-right: 6px;
+            margin-bottom: 6px;
+            font-size: 12px;
+        }
+
+        .grid-item .car-list ul li i {
+            color: #9aa3ad;
+        }
+
+        /* ================= Modernize GRID view (first style) ================= */
+        .grid-item .car-item {
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(17, 24, 39, 0.06);
+        }
+
+        .grid-item .car-item:hover {
+            box-shadow: 0 10px 24px rgba(17, 24, 39, 0.10);
+            transform: translateY(-1px);
+        }
+
+        .grid-item .car-image {
+            border-top-left-radius: 14px;
+            border-top-right-radius: 14px;
+        }
+
+        .grid-item .car-image img {
+            transition: transform .35s ease;
+        }
+
+        .grid-item .car-item:hover .car-image img {
+            transform: scale(1.035);
+        }
+
+        /* Move price to top-right and make a neat pill */
+        .grid-item .car-content {
+            position: relative;
+            padding: 12px 14px 16px 14px;
+        }
+
+        .grid-item .price {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .grid-item .price .old-price {
+            font-size: 12px;
+            color: #9ca3af;
+            text-decoration: line-through;
+            font-weight: 600;
+        }
+
+        .grid-item .price .new-price {
+            background: linear-gradient(90deg, #ef4444 0%, #db2d2e 100%);
+            color: #ffffff;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-weight: 800;
+            font-size: 13px;
+            letter-spacing: .2px;
+            box-shadow: 0 6px 16px rgba(219, 45, 46, 0.22);
+        }
+
+        /* Cleaner chips */
+        .grid-item .car-list ul {
+            margin-top: 8px;
+        }
+
+        .grid-item .car-list ul li {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            border-radius: 999px;
+            padding: 4px 10px;
+            margin: 0 6px 6px 0;
+            font-size: 12px;
+        }
+
+        .grid-item .car-list ul li i {
+            color: #9ca3af;
+        }
+
+        /* ================= Final corrective overrides for GRID view ================= */
+        /* Softer elevation */
+        .grid-item .car-item {
+            box-shadow: 0 1px 6px rgba(17, 24, 39, 0.08) !important;
+        }
+
+        .grid-item .car-item:hover {
+            box-shadow: 0 8px 18px rgba(17, 24, 39, 0.12) !important;
+        }
+
+        /* Put price pill under content at bottom-left */
+        .grid-item .car-content {
+            position: relative !important;
+            padding: 12px 14px 12px 14px !important;
+        }
+
+        .grid-item .price {
+            position: static !important;
+            margin-top: 8px !important;
+            gap: 8px !important;
+        }
+
+        .grid-item .price .new-price {
+            border-radius: 999px !important;
+            padding: 6px 12px !important;
+        }
+
+        .grid-item .price .old-price {
+            font-size: 12px !important;
+            color: #9aa3af !important;
+            text-decoration: line-through !important;
+        }
+
+        /* Subtle gray chips */
+        .grid-item .car-list ul {
+            margin-top: 8px !important;
+        }
+
+        .grid-item .car-list ul li {
+            background: #f3f4f6 !important;
+            border: 1px solid #eceff3 !important;
+            color: #4b5563 !important;
+            border-radius: 999px !important;
+            padding: 2px 6px !important;
+            margin: 0 3px 3px 0 !important;
+            font-size: 12px !important;
+        }
+
+        .grid-item .car-list ul li i {
+            color: #9aa3ad !important;
         }
     </style>
-    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         banner -->
+    <!--=================================banner -->
+
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
         <div class="slider-content-middle">
@@ -158,8 +453,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                        <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -174,14 +469,27 @@
                                     <li><i class="fa fa-shopping-cart"> </i> Compare Vehicles <span
                                             class="float-end">(10)</span></li>
                                 </ul> --}}
-                            </div> 
+                            </div>
                             <div class="clearfix">
                                 <ul class="list-group">
                                     {{-- filter --}}
                                     @php
                                         $years = range(1990, now()->year);
                                     @endphp
-                                    <x-car-filter name="Year" label="All Years" :options="$years" />
+                                    <div class="filter-widget" style="padding: 10px;">
+                                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                                            <h6>Year Range</h6>
+                                            <button type="button" id="reset-year" class="btn btn-sm btn-light mt-2">All
+                                                Years</button>
+                                        </div>
+                                        <div id="year-range-slider"></div>
+                                        <div class="year-values">
+                                            <span id="year-min"></span>
+                                            <span id="year-max"></span>
+                                        </div>
+                                    </div>
+
+
                                     <x-car-filter name="Make" label="All Company" :options="$distinctValues['make']" />
                                     <x-car-filter name="Transmission" label="All Transmission" :options="$distinctValues['transmissions']" />
                                     <x-car-filter name="Body" label="All Body Styles" :options="$distinctValues['body_type']" />
@@ -196,11 +504,12 @@
                     <div class="sorting-options-main">
                         <div class="row justify-content-between">
                             <div class="col-xl-3 col-md-12">
-                                <div class="price-slide">
-                                    <div class="price">
-                                        {{-- <label for="amount">Price Range</label> --}}
-                                        <input type="text" id="amount" class="amount" value="$50 - $300" />
-                                        <div id="slider-range"></div>
+                                <div class="price-slide filter-widget" style="padding: 10px;">
+                                    <label>Price Range</label>
+                                    <div id="price-range-slider"></div>
+                                    <div class="year-values">
+                                        <span id="price-min"></span>
+                                        <span id="price-max"></span>
                                     </div>
                                 </div>
                             </div>
@@ -241,23 +550,118 @@
                             </div>
                         </div>
                     </div>
-                        <div id="car-results"  class="isotope column-5">
-                            <!-- Car items will be injected here by JS -->
-                        </div>
+                    <div id="car-results" class="isotope column-5">
+                        <!-- Car items will be injected here by JS -->
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
     <!--===============
-                Scripts
-            ===============-->
-            
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="module">
         $("#sort-select").on('change', function() {
             applyFilters();
         });
+
+        document.getElementById('reset-year').addEventListener('click', () => {
+            yearSlider.noUiSlider.set([1990, new Date().getFullYear()]); // reset slider
+            fetchFilteredCars(); // reload all cars
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const priceSlider = document.getElementById('price-range-slider');
+            const priceMin = document.getElementById('price-min');
+            const priceMax = document.getElementById('price-max');
+
+            noUiSlider.create(priceSlider, {
+                start: [300, 50000],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 300,
+                    'max': 50000
+                }
+            });
+
+            priceSlider.noUiSlider.on('update', function(values) {
+                priceMin.innerHTML = Math.round(values[0]);
+                priceMax.innerHTML = Math.round(values[1]);
+            });
+
+            priceSlider.noUiSlider.on('change', function(values) {
+                const minPrice = Math.round(values[0]);
+                const maxPrice = Math.round(values[1]);
+
+                const formData = new FormData();
+
+                // Add other selected filters
+                document.querySelectorAll('.filter-option:checked').forEach(input => {
+                    if (input.value !== '*') {
+                        const name = input.name.replace('[]', '');
+                        formData.append(name + '[]', input.value);
+                    }
+                });
+
+                // ✅ send price_min and price_max
+                formData.append('price_min', minPrice);
+                formData.append('price_max', maxPrice);
+
+                fetchFilteredCars(new URLSearchParams(formData).toString());
+            });
+
+
+        });
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const yearSlider = document.getElementById('year-range-slider');
+            const yearMin = document.getElementById('year-min');
+            const yearMax = document.getElementById('year-max');
+
+            noUiSlider.create(yearSlider, {
+                start: [1990, new Date().getFullYear()],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 1990,
+                    'max': new Date().getFullYear()
+                }
+            });
+
+            yearSlider.noUiSlider.on('update', function(values) {
+                yearMin.innerHTML = Math.round(values[0]);
+                yearMax.innerHTML = Math.round(values[1]);
+            });
+
+            yearSlider.noUiSlider.on('change', function(values) {
+                const minYear = Math.round(values[0]);
+                const maxYear = Math.round(values[1]);
+
+                const formData = new FormData();
+
+                // Add other selected filters
+                document.querySelectorAll('.filter-option:checked').forEach(input => {
+                    if (input.value !== '*') {
+                        const name = input.name.replace('[]', '');
+                        formData.append(name + '[]', input.value);
+                    }
+                });
+
+                // Push all years in range to 'Year[]'
+                const years = [];
+                for (let y = minYear; y <= maxYear; y++) {
+                    years.push(y);
+                }
+                years.forEach(y => formData.append('Year[]', y));
+
+                fetchFilteredCars(new URLSearchParams(formData).toString());
+            });
+
+        });
+
         $("#general-search").on('input', function() {
             const keyword = $(this).val().trim();
             const resultsContainer = $('#search-results');
@@ -316,9 +720,9 @@
                 $('#search-results').hide();
             }
         });
-        
+
         // Search button on the navbar
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
 
@@ -342,7 +746,7 @@
         });
 
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
-        const car_show = "{{route('car.show', ['id' => '__ID__'])}}";
+        const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
 
@@ -398,12 +802,13 @@
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
                         const carDiv = $(`<a href="${url}" style="color: #a0a0a0">`);
-                        const title =`<h4>${car.title}</h4>`;
+                        const title = `<h4>${car.title}</h4>`;
                         const details_button = `    
                         <div>
                             <a class="button red float-end" href="${url}">Details</a>
                         </div>`;
-                        const description = `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
+                        const description =
+                            `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
                         const details = `
                                 <div class="row" style="margin-bottom: 6px;">
                             <div class="col-lg-2 col-sm-4">
@@ -452,7 +857,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -555,7 +960,7 @@
 
 
         // code fo getting the body type filters from the URL and making an API call
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const searchInput = document.getElementById('car-search');
             const container = document.getElementById('car-results');
@@ -571,7 +976,7 @@
             }
 
             // Listen for input changes on search bar
-            searchInput.addEventListener('input', function () {
+            searchInput.addEventListener('input', function() {
                 const keyword = searchInput.value.trim();
 
                 if (keyword === '') {
@@ -589,7 +994,7 @@
 
 
         // search for make car company code
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const searchInput = document.getElementById('car-search');
             const container = document.getElementById('car-results');
@@ -605,7 +1010,7 @@
             }
 
             // Listen for input changes on search bar
-            searchInput.addEventListener('input', function () {
+            searchInput.addEventListener('input', function() {
                 const keyword = searchInput.value.trim();
 
                 if (keyword === '') {
@@ -620,9 +1025,6 @@
                 }
             });
         });
-
-
-
     </script>
 
 @endsection
