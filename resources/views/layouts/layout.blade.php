@@ -72,7 +72,7 @@
     <!--=================================
  header -->
 
-    <header id="header" class="defualt">
+    <header id="header" class="defualt mb-5">
         <div class="topbar">
             <div class="container">
                 <div class="row">
@@ -124,10 +124,11 @@
                                     <li class="active"><a href="{{ route('home.index') }}">Home </a></li>
                                     <li><a href="{{ route('car.index') }}">Car listing </a></li>
                                     <li><a href="javascript:void(0)"> Contact </a></li>
-                                    <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
+                                    <li><a href="{{ route('bargains.create') }}"> Bargain Register </a></li>
+                                    {{-- <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
                                         class="btn btn-primary">
                                         Chat Now
-                                    </a>
+                                    </a> --}}
 
                                     <li><a href="{{ route('car.directory') }}">Car directory</a></li>
                                     <li><a href="{{ route('car.create') }}">Car Register</a></li>
