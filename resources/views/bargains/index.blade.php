@@ -9,14 +9,14 @@
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
-                        <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i>
-                        </li>
+                        <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i></li>
                         <li><span>Bargain List</span></li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
+
     {{-- Alert messages --}}
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-alert">
@@ -42,6 +42,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
+
     <div class="container-fluid py-3">
         <div class="mb-3">
             <input type="text" id="search" class="form-control" placeholder="Search...">
@@ -112,53 +113,58 @@
             </tr>`;
                 });
                 $('#bargains-table tbody').html(html);
+                attachEvents();
+            });
+        }
 
-                // Button actions
-                $('.edit-btn').click(function() {
-                    window.location.href = $(this).data('url');
+        function attachEvents() {
+            $('.edit-btn').off().on('click', function() {
+                window.location.href = $(this).data('url');
+            });
+
+            $('.delete-btn').off().on('click', function() {
+                const url = $(this).data('url');
+                Swal.fire({
+                    title: 'Are you sure?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            type: 'DELETE',
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
+                            success: function(res) {
+                                Swal.fire('Deleted!', res.message, 'success');
+                                loadData($('#search').val());
+                            }
+                        });
+                    }
                 });
+            });
 
-                $('.delete-btn').click(function() {
-                    const url = $(this).data('url');
-                    Swal.fire({
-                        title: 'Are you sure?',
-                        icon: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#3085d6',
-                        confirmButtonText: 'Yes, delete it!'
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            $.ajax({
-                                url: url,
-                                type: 'DELETE',
-                                data: {
-                                    _token: '{{ csrf_token() }}'
-                                },
-                                success: function(res) {
-                                    Swal.fire('Deleted!', res.message, 'success');
-                                    loadData($('#search').val());
-                                }
-                            });
-                        }
+            // Refresh page after status toggle
+            $('.toggle-btn').off().on('click', function() {
+                const url = $(this).data('url');
+                $.post(url, {
+                    _token: '{{ csrf_token() }}'
+                }, function(res) {
+                    Swal.fire('Success', res.message, 'success').then(() => {
+                        location.reload(); // <-- Refresh the page
                     });
-                });
-
-                $('.toggle-btn').click(function() {
-                    const url = $(this).data('url');
-                    $.post(url, {
-                        _token: '{{ csrf_token() }}'
-                    }, function(res) {
-                        Swal.fire('Success', res.message, 'success');
-                        loadData($('#search').val());
-                    });
+                }).fail(function() {
+                    Swal.fire('Error', 'Failed to toggle status!', 'error');
                 });
             });
         }
 
         $(document).ready(function() {
             loadData();
-
             $('#search').on('keyup', function() {
                 loadData($(this).val());
             });
