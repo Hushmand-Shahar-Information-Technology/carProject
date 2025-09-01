@@ -38,7 +38,7 @@ class BargainController extends Controller
         $data = $bargains->get()->map(function ($b, $index) {
             return [
                 'count' => $index + 1,
-                'tenant_name' => $b->name,
+                'tenant_name' => '<a href="' . route('bargains.show', $b->id) . '" style="cursor:pointer; text-decoration: none; color:black;">' . $b->name . '</a>',
                 'tenant_father_name' => $b->username,
                 'contract_company_name' => $b->website ?? '-',
                 'contract_purpose' => $b->status,
@@ -98,5 +98,10 @@ class BargainController extends Controller
         $bargain = Bargain::findOrFail($id);
         $this->service->toggleStatus($bargain);
         return response()->json(['message' => 'Status toggled successfully']);
+    }
+    public function show($id)
+    {
+        $bargain = Bargain::findOrFail($id);
+        return view('bargains.show', compact('bargain'));
     }
 }
