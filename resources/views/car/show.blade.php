@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                         inner-intro -->
+                                             inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -97,12 +97,12 @@
     </section>
 
     <!--=================================
-                         inner-intro -->
+                                             inner-intro -->
 
 
 
     <!--=================================
-                        car-details -->
+                                            car-details -->
 
     <section class="car-details page-section-ptb">
         <div class="container">
@@ -432,58 +432,6 @@
                                 </li>
                                 <li> <span>Body Type</span> <strong class="text-end">{{ $car->body_type }}</strong></li>
                             </ul>
-                        </div>
-                        <div class="details-social details-weight">
-                            <h5>Share now</h5>
-                            <ul>
-                                <li><a href="#"> <i class="fa fa-facebook"></i> facebook</a></li>
-                                <li><a href="#"> <i class="fa fa-twitter"></i> twitter</a></li>
-                                <li><a href="#"> <i class="fa fa-pinterest-p"></i> pinterest</a></li>
-                                <li><a href="#"> <i class="fa fa-dribbble"></i> dribbble</a></li>
-                                <li><a href="#"><i class="fa fa-linkedin"></i> google plus </a></li>
-                                <li><a href="#"> <i class="fa fa-behance"></i> behance</a></li>
-                            </ul>
-                        </div>
-                        <div class="details-form contact-2 details-weight">
-                            <form class="gray-form" action="https://themes.potenzaglobalsolutions.com/html/cardealer/post"
-                                id="send_enquiry_form">
-                                <h5>SEND ENQUIRY</h5>
-                                <div id="send_enquiry_notice" class="form-notice" style="display:none;"></div>
-                                <input type="hidden" name="action" value="send_enquiry" />
-                                <div class="mb-3">
-                                    <label class="form-label">Name*</label>
-                                    <input type="text" class="form-control" placeholder="Name"
-                                        name="send_enquiry_name" id="send_enquiry_name">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email address*</label>
-                                    <input type="text" class="form-control" placeholder="Email"
-                                        name="send_enquiry_email" id="send_enquiry_email">
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Message* </label>
-                                    <textarea class="form-control" rows="4" placeholder="Message" name="send_enquiry_message"
-                                        id="send_enquiry_message"></textarea>
-                                </div>
-                                <div class="mb-3">
-                                    <div id="recaptcha6"></div>
-                                </div>
-                                <div>
-                                    <a class="button red" id="send_enquiry_submit" href="javascript:void(0)">Submit <i
-                                            class="fa fa-spinner fa-spin fa-fw btn-loader" style="display: none;"></i></a>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="details-phone details-weight">
-                            <div class="feature-box-3 grey-border">
-                                <div class="icon">
-                                    <i class="fa fa-headphones"></i>
-                                </div>
-                                <div class="content">
-                                    <h4>1-888-345-888 </h4>
-                                    <p>Call our seller to get the best price </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
