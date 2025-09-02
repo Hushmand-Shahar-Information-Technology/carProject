@@ -439,6 +439,11 @@
             transform: scale(1.1);
             transition: transform 0.2s ease;
         }
+
+        .list-inline {
+            display: flex !important;
+            justify-content: space-around !important;
+        }
     </style>
     <!--=================================banner -->
 
@@ -476,8 +481,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -586,8 +591,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -892,7 +897,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -904,10 +909,10 @@
                                     <span class="new-price">$${car.sale_price}</span>
                                 </div>
                                 <div class="car-list">
-                                    <ul class="list-inline" style="font-size: 12px;">
-                                        <li><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                                    <ul class="list-inline">
+                                        <li style="font-size: 10px;><i class="fa fa-registered"></i> ${car.year}</li>
+                                        <li style="font-size: 10px;><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                        <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.currency_type}</li>
                                     </ul>
                                <div class="compare-btn">
 </div>
