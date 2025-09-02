@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                                 inner-intro -->
+                                     inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -97,12 +97,12 @@
     </section>
 
     <!--=================================
-                                 inner-intro -->
+                                     inner-intro -->
 
 
 
     <!--=================================
-                                car-details -->
+                                    car-details -->
 
     <section class="car-details page-section-ptb">
         <div class="container">
@@ -115,6 +115,10 @@
                     <div class="car-price text-md-end">
                         <strong>{{ $car->sale_price }}</strong>
                         <span>Plus Taxes & Licensing</span>
+                        <div class="mt-2">
+                            <button id="btn-promote-car"
+                                class="btn btn-sm btn-outline-primary">{{ $hasActivePromotion ? 'Unpromote' : 'Promote' }}</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -493,6 +497,67 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('#btn-promote-car');
+            if (!btn) return;
+            e.preventDefault();
+            if ({{ $hasActivePromotion ? 'true' : 'false' }}) {
+                Swal.fire({
+                    title: 'Unpromote this car?',
+                    icon: 'warning',
+                    showCancelButton: true
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    axios.post('{{ route('promotions.unpromote') }}', {
+                            type: 'car',
+                            id: {{ $car->id }}
+                        })
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Unpromoted',
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            btn.textContent = 'Promote';
+                        })
+                        .catch(() => Swal.fire('Error', 'Failed to unpromote', 'error'));
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Promote this car',
+                input: 'number',
+                inputLabel: 'How many days?',
+                inputAttributes: {
+                    min: 1,
+                    max: 365
+                },
+                inputValue: 7,
+                showCancelButton: true,
+                confirmButtonText: 'Promote'
+            }).then(result => {
+                if (!result.isConfirmed) return;
+                const days = parseInt(result.value, 10);
+                if (!days || days < 1) return;
+                axios.post('{{ route('promotions.promote') }}', {
+                        type: 'car',
+                        id: {{ $car->id }},
+                        days
+                    })
+                    .then(res => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Promoted',
+                            text: `Ends: ${res.data.ends_at}`,
+                            timer: 1600,
+                            showConfirmButton: false
+                        });
+                        btn.textContent = 'Unpromote';
+                    })
+                    .catch(() => Swal.fire('Error', 'Failed to promote', 'error'));
+            });
+        });
         const make = @json($car->make);
         const car_id = @json($car->id);
         // console.log(car_id);
