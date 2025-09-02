@@ -1,0 +1,68 @@
+<?php
+
+return [
+    'actions' => [
+        'view' => 'View',
+        'edit' => 'Edit',
+        'delete' => 'Delete',
+        'create' => 'Create',
+        'save' => 'Save',
+        'cancel' => 'Cancel',
+        'back' => 'Back',
+        'search' => 'Search',
+        'filter' => 'Filter',
+        'export' => 'Export',
+        'import' => 'Import',
+        'select_all' => 'Select All',
+        'deselect_all' => 'Deselect All',
+    ],
+    
+    'navigation' => [
+        'dashboard' => 'Dashboard',
+        'admin' => 'Admin Panel',
+        'logout' => 'Logout',
+        'profile' => 'Profile',
+        'settings' => 'Settings',
+        'language' => 'Language',
+    ],
+
+    'labels' => [
+        'created_at' => 'Created At',
+        'updated_at' => 'Updated At',
+        'deleted_at' => 'Deleted At',
+        'yes' => 'Yes',
+        'no' => 'No',
+        'active' => 'Active',
+        'inactive' => 'Inactive',
+        'enabled' => 'Enabled',
+        'disabled' => 'Disabled',
+        'required' => 'Required',
+        'optional' => 'Optional',
+        'language' => 'Language',
+        'language_settings' => 'Language Settings',
+        'language_settings_description' => 'Choose your preferred language for the admin panel interface.',
+        'language_info' => 'Language Information',
+        'language_info_description' => 'The language change will take effect immediately and will be remembered for your next visit.',
+    ],
+    
+    'messages' => [
+        'saved' => 'Saved successfully!',
+        'deleted' => 'Deleted successfully!',
+        'created' => 'Created successfully!',
+        'updated' => 'Updated successfully!',
+        'error' => 'An error occurred!',
+        'confirm_delete' => 'Are you sure you want to delete this item?',
+        'no_records' => 'No records found',
+        'loading' => 'Loading...',
+        'language_changed' => 'Language changed successfully!',
+    ],
+    
+    'navigation' => [
+        'dashboard' => 'Dashboard',
+        'admin' => 'Admin Panel',
+        'logout' => 'Logout',
+        'profile' => 'Profile',
+        'settings' => 'Settings',
+        'language' => 'Language',
+    ],
+];
