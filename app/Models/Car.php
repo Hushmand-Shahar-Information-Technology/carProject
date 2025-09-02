@@ -17,7 +17,7 @@ class Car extends Model
 
     protected $guarded = [];
 
-     protected $fillable = [
+    protected $fillable = [
         'title',
         'year',
         'user_id',
@@ -34,20 +34,28 @@ class Car extends Model
         'currency_type',
         'regular_price',
         'sale_price',
+        'description',
         'request_price_status',
         'request_price',
         'images',
         'videos',
+        'is_for_sale',
+        'is_for_rent',
+        'rent_price_per_day',
+        'rent_price_per_month',
     ];
 
     protected $casts = [
-        'location' => 'array',
         'images' => 'array',
         'videos' => 'array',
         'request_price_status' => 'boolean',
+        'is_for_sale' => 'boolean',
+        'is_for_rent' => 'boolean',
         'regular_price' => 'decimal:2',
         'sale_price' => 'decimal:2',
         'request_price' => 'decimal:2',
+        'rent_price_per_day' => 'decimal:2',
+        'rent_price_per_month' => 'decimal:2',
         // Remove enum casts:
         // 'transmission_type' => TransmissionType::class,
         // 'car_color' => CarColor::class,
