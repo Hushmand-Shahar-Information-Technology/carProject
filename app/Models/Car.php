@@ -21,6 +21,7 @@ class Car extends Model
         'title',
         'year',
         'user_id',
+        'bargain_id',
         'make',
         'body_type',
         'car_condition',
@@ -41,6 +42,7 @@ class Car extends Model
         'videos',
         'is_for_sale',
         'is_for_rent',
+        'is_promoted',
         'rent_price_per_day',
         'rent_price_per_month',
     ];
@@ -51,6 +53,7 @@ class Car extends Model
         'request_price_status' => 'boolean',
         'is_for_sale' => 'boolean',
         'is_for_rent' => 'boolean',
+        'is_promoted' => 'boolean',
         'regular_price' => 'decimal:2',
         'sale_price' => 'decimal:2',
         'request_price' => 'decimal:2',
@@ -64,6 +67,11 @@ class Car extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function bargain()
+    {
+        return $this->belongsTo(Bargain::class);
     }
 
     public function offers()
