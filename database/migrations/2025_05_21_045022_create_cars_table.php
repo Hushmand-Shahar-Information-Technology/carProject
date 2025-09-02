@@ -34,6 +34,8 @@ return new class extends Migration
             // Sale/Rent options
             $table->boolean('is_for_sale')->default(true);
             $table->boolean('is_for_rent')->default(false);
+            // Promotion status
+            $table->boolean('is_promoted')->default(false);
             $table->decimal('rent_price_per_day', 10, 2)->nullable();
             $table->decimal('rent_price_per_month', 10, 2)->nullable();
             $table->boolean('request_price_status')->default(false);
