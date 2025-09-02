@@ -110,6 +110,9 @@ class CarController extends Controller
     }
 
 
+    /**
+     * @param StoreCarRequest $request
+     */
     public function store(StoreCarRequest $request)
     {
         $data = $request->validated();
@@ -117,23 +120,23 @@ class CarController extends Controller
         try {
             Log::info('Car store method started');
             Log::info('Validated data:', $data);
-            Log::info('Files received:', $request->allFiles());
+            // Files are handled below
 
             // Handle image uploads
             $images = [];
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
-                }
+            /** @var array<int, \Illuminate\Http\UploadedFile> $imageFiles */
+            $imageFiles = (array) (request()->file('images') ?? []);
+            foreach ($imageFiles as $image) {
+                $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
             }
             Log::info('Processed images:', $images);
 
             // Handle video uploads
             $videos = [];
-            if ($request->hasFile('videos')) {
-                foreach ($request->file('videos') as $video) {
-                    $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
-                }
+            /** @var array<int, \Illuminate\Http\UploadedFile> $videoFiles */
+            $videoFiles = (array) (request()->file('videos') ?? []);
+            foreach ($videoFiles as $video) {
+                $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
             }
             Log::info('Processed videos:', $videos);
 
@@ -143,7 +146,7 @@ class CarController extends Controller
                 'year' => $data['year'],
                 'make' => $data['make'],
                 'VIN_number' => $data['VIN_number'] ?? null,
-                'location' => isset($data['location']) ? json_encode($data['location']) : null,
+                'location' => $data['location'] ?? null,
                 'model' => $data['model'],
                 'car_color' => $data['car_color'],
                 'transmission_type' => $data['transmission_type'] ?? null,
@@ -154,7 +157,12 @@ class CarController extends Controller
                 'car_inside_color' => $data['car_inside_color'] ?? null,
                 'currency_type' => $data['currency_type'] ?? null,
                 'sale_price' => $data['sale_price'] ?? null,
-                'request_price_status' => $request->boolean('request_price_status'),
+                'description' => $data['description'] ?? null,
+                'is_for_sale' => (bool) ($data['is_for_sale'] ?? false),
+                'is_for_rent' => (bool) ($data['is_for_rent'] ?? false),
+                'rent_price_per_day' => $data['rent_price_per_day'] ?? null,
+                'rent_price_per_month' => $data['rent_price_per_month'] ?? null,
+                'request_price_status' => (bool) ($data['request_price_status'] ?? false),
                 'request_price' => $data['request_price'] ?? null,
                 'images' => $images, // saved as actual array (use JSON column in DB)
                 'videos' => $videos,  // fixed: changed from 'video' to 'videos'
@@ -163,7 +171,7 @@ class CarController extends Controller
             Log::info('Car data to be created:', $carData);
 
             $car = Car::create($carData);
-            Log::info('Car created successfully with ID:', $car->id);
+            Log::info('Car created successfully with ID: ' . $car->id);
 
             return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Throwable $th) {
