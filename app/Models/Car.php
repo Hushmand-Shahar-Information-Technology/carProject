@@ -74,6 +74,11 @@ class Car extends Model
         return $this->belongsTo(Bargain::class);
     }
 
+    public function promotions()
+    {
+        return $this->morphMany(\App\Models\Promotion::class, 'promotable');
+    }
+
     public function offers()
     {
         return $this->hasMany(Offer::class);
