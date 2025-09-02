@@ -119,11 +119,15 @@ class CarSeeder extends Seeder
             [],
         ];
 
+        // Fetch existing bargains if any
+        $bargainIds = \App\Models\Bargain::pluck('id')->toArray();
+
         // Generate 10 cars
         for ($i = 0; $i < 10; $i++) {
             Car::create([
                 'title' => $titles[array_rand($titles)],
                 'user_id' => $userId[array_rand($userId)],
+                'bargain_id' => $bargainIds ? $bargainIds[array_rand($bargainIds)] : null,
                 'year' => $years[array_rand($years)],
                 'make' => $makes[array_rand($makes)],
                 'body_type' => $bodyTypes[array_rand($bodyTypes)],
@@ -142,6 +146,7 @@ class CarSeeder extends Seeder
                 'description' => 'Seeded demo car for testing.',
                 'is_for_sale' => (bool)rand(0, 1),
                 'is_for_rent' => (bool)rand(0, 1),
+                'is_promoted' => (bool)rand(0, 1),
                 'rent_price_per_day' => rand(0, 1) ? rand(50, 200) : null,
                 'rent_price_per_month' => rand(0, 1) ? rand(1000, 5000) : null,
                 'request_price_status' => (bool)rand(0, 1),
