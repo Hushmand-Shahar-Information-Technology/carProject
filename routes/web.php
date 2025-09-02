@@ -56,6 +56,7 @@ Route::prefix('car')->group(function () {
     Route::get('compare', [CarController::class, 'compare'])->name('car.compare');
     Route::post('carts', [CarController::class, 'cart'])->name('carts.show');
     Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
+    Route::post('toggle-promoted/{id}', [CarController::class, 'togglePromoted'])->name('car.toggle-promoted');
 });
 
 
