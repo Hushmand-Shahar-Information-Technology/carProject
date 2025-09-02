@@ -2,16 +2,18 @@
 @section('title', isset($bargain->id) ? 'Edit Bargain' : 'Create Bargain')
 
 @section('content')
-    <section class="inner-intro bg-1 bg-overlay-black-70">
+    <section class="inner-intro bg-dark bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
                 <div class="col-md-6 text-md-start d-inline-block">
-                    <h1 class="text-white">Compare Cars</h1>
+                    <h1 class="text-white">{{ isset($bargain->id) ? 'Update Bargain' : 'Create Bargain' }}</h1>
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
-                        <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i></li>
-                        <li><span>{{ isset($bargain->id) ? 'Edit Bargain' : 'Create Bargain' }}</span></li>
+                        <li><a href="#" class="text-white"><i class="fa fa-home"></i> Home</a> <i
+                                class="fa fa-angle-double-right text-white"></i></li>
+                        <li><span class="text-white">{{ isset($bargain->id) ? 'Edit Bargain' : 'Create Bargain' }}</span>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -42,24 +44,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    {{-- @if ($errors->has('edit_error'))
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="fa fa-times-circle"></i> {{ $errors->first('edit_error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif --}}
-
 
     <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-md-10 col-lg-8">
-                <div class="card shadow-lg border-0">
-                    <div class="card-header bg-primary text-white">
-                        <h1 class="h5 mb-0">
+                <div class="card shadow-lg border-dark">
+                    <div class="card-header bg-dark text-white">
+                        <h1 class="h5 mb-0 text-white">
                             {{ isset($bargain->id) ? 'Edit Bargain' : 'Create Bargain' }}
                         </h1>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body p-4 bg-light">
                         <form method="POST"
                             action="{{ isset($bargain->id) ? route('bargains.update', $bargain->id) : route('bargains.store') }}"
                             enctype="multipart/form-data">
@@ -69,14 +64,14 @@
                             @endif
                             <div class="row g-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-bold">Profile Image</label>
+                                    <label class="form-label fw-bold text-dark">Profile Image</label>
 
                                     <!-- Image preview container -->
                                     <div class="position-relative mb-2" style="width:150px; height:150px; cursor:pointer;">
                                         <img id="profilePreview"
                                             src="{{ isset($bargain->profile_image) && file_exists(public_path('storage/' . $bargain->profile_image)) ? asset('storage/' . $bargain->profile_image) : 'https://via.placeholder.com/150' }}"
                                             alt="Profile Image"
-                                            class="rounded-circle w-100 h-100 object-fit-cover border border-secondary"
+                                            class="rounded-circle w-100 h-100 object-fit-cover border border-dark"
                                             style="object-fit: cover;">
                                     </div>
 
@@ -86,124 +81,107 @@
                                         accept="image/*">
 
                                     @error('profile_image')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                                 <div class="col-md-6">
-                                    <label>Name</label>
+                                    <label class="text-dark">Name</label>
                                     <input type="text" name="name"
                                         class="form-control @error('name') is-invalid @enderror"
                                         value="{{ old('name', $bargain->name ?? '') }}">
                                     @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
-                                    <label>Username</label>
+                                    <label class="text-dark">Username</label>
                                     <input type="text" name="username"
                                         class="form-control @error('username') is-invalid @enderror"
                                         value="{{ old('username', $bargain->username ?? '') }}">
                                     @error('username')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>Email</label>
+                                    <label class="text-dark">Email</label>
                                     <input type="email" name="email"
                                         class="form-control @error('email') is-invalid @enderror"
                                         value="{{ old('email', $bargain->email ?? '') }}">
                                     @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>Website</label>
+                                    <label class="text-dark">Website</label>
                                     <input type="text" name="website"
                                         class="form-control @error('website') is-invalid @enderror"
                                         value="{{ old('website', $bargain->website ?? '') }}">
                                     @error('website')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>Phone</label>
+                                    <label class="text-dark">Phone</label>
                                     <input type="text" name="phone"
                                         class="form-control @error('phone') is-invalid @enderror"
                                         value="{{ old('phone', $bargain->phone ?? '') }}">
                                     @error('phone')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>Whatsapp</label>
+                                    <label class="text-dark">Whatsapp</label>
                                     <input type="text" name="whatsapp"
                                         class="form-control @error('whatsapp') is-invalid @enderror"
                                         value="{{ old('whatsapp', $bargain->whatsapp ?? '') }}">
                                     @error('whatsapp')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>Contract Start Date</label>
+                                    <label class="text-dark">Contract Start Date</label>
                                     <input type="date" name="contract_start_date"
                                         class="form-control @error('contract_start_date') is-invalid @enderror"
                                         value="{{ old('contract_start_date', optional($bargain->contract_start_date)->format('Y-m-d')) }}">
                                     @error('contract_start_date')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label>Contract End Date</label>
+                                    <label class="text-dark">Contract End Date</label>
                                     <input type="date" name="contract_end_date"
                                         class="form-control @error('contract_end_date') is-invalid @enderror"
                                         value="{{ old('contract_end_date', optional($bargain->contract_end_date)->format('Y-m-d')) }}">
                                     @error('contract_end_date')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
 
                                 <div class="col-md-12">
-                                    <label>Address</label>
+                                    <label class="text-dark">Address</label>
                                     <textarea name="address" rows="3" class="form-control @error('address') is-invalid @enderror">{{ old('address', $bargain->address ?? '') }}</textarea>
                                     @error('address')
-                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
-
-                                {{-- <div class="col-md-6">
-                                    <label>Status</label>
-                                    <select name="status" class="form-control @error('status') is-invalid @enderror">
-                                        <option value="one-time"
-                                            {{ old('status', $bargain->status) == 'one-time' ? 'selected' : '' }}>One-Time
-                                        </option>
-                                        <option value="more-time"
-                                            {{ old('status', $bargain->status) == 'more-time' ? 'selected' : '' }}>
-                                            More-Time</option>
-                                    </select>
-                                    @error('status')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div> --}}
 
                             </div>
 
                             <div class="mt-4 text-end">
-                                <button type="submit" class="btn btn-primary px-4">
+                                <button type="submit" class="btn btn-danger px-4">
                                     {{ isset($bargain->id) ? 'Update' : 'Submit' }}
                                 </button>
-                                <a href="{{ route('bargains.index') }}" class="btn btn-secondary">Cancel</a>
+                                <a href="{{ route('bargains.index') }}" class="btn btn-dark text-white">Cancel</a>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-
     </div>
 @endsection
 @if (session('success'))

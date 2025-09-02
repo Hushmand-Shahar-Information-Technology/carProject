@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row text-center intro-title">
                 <div class="col-md-6 text-md-start d-inline-block">
-                    <h1 class="text-white">Compare Cars</h1>
+                    <h1 class="text-white">Bargian Details</h1>
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
@@ -30,10 +30,10 @@
                         </div>
 
                         <img src="{{ $bargain->profile_image ? asset('storage/' . $bargain->profile_image) : 'https://via.placeholder.com/150' }}"
-                            class="rounded-circle border border-5 border-white shadow mb-3" alt="Profile Image"
-                            width="150" height="150">
+                            class="rounded-circle border border-5 border-white shadow object-fit-cover d-block mx-auto"
+                            alt="Profile Image" style="width: 150px; height: 150px; object-fit: cover;">
 
-                        <h1 class="fw-bold mb-1">{{ $bargain->name }}</h1>
+                        <h2 class="fw-bold my-2 text-white">{{ $bargain->name }}</h2>
                         <p class="fs-5 mb-2 text-white-50">@ {{ $bargain->username }}</p>
 
                         <span class="badge bg-white text-dark fs-6 p-2 rounded-pill">
@@ -48,9 +48,9 @@
                             <div class="col-md-6">
                                 <div class="card h-100 border-0 shadow-sm rounded-3">
                                     <div class="card-header bg-white border-0 pt-4">
-                                        <h3 class="card-title text-danger fw-bold">
+                                        <h4 class="card-title text-danger fw-bold">
                                             <i class="fas fa-user-circle me-2"></i> Personal Information
-                                        </h3>
+                                        </h4>
                                     </div>
                                     <div class="card-body bg-white">
                                         <div class="d-flex mb-3">
@@ -90,9 +90,9 @@
                             <div class="col-md-6">
                                 <div class="card mb-4 border-0 shadow-sm rounded-3">
                                     <div class="card-header bg-white border-0 pt-4">
-                                        <h3 class="card-title text-danger fw-bold">
+                                        <h4 class="card-title text-danger fw-bold">
                                             <i class="fas fa-globe me-2"></i> Online Presence
-                                        </h3>
+                                        </h4>
                                     </div>
                                     <div class="card-body bg-white">
                                         <div class="d-flex">
@@ -110,9 +110,9 @@
 
                                 <div class="card border-0 shadow-sm rounded-3">
                                     <div class="card-header bg-white border-0 pt-4">
-                                        <h3 class="card-title text-danger fw-bold">
+                                        <h4 class="card-title text-danger fw-bold">
                                             <i class="fas fa-map-marker-alt me-2"></i> Address
-                                        </h3>
+                                        </h4>
                                     </div>
                                     <div class="card-body bg-white">
                                         <div class="d-flex">
