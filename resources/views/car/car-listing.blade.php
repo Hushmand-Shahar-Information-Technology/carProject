@@ -444,6 +444,12 @@
             display: flex !important;
             justify-content: space-around !important;
         }
+
+        @media (max-width: 790px) {
+            .div-search {
+                margin: 24px 0 32px 0;
+            }
+        }
     </style>
     <!--=================================banner -->
 
@@ -481,8 +487,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -566,7 +572,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-xxl-2 col-md-12">
+                            <div class="col-xl-3 col-xxl-2 col-md-12 div-search">
                                 <div class="price-search">
                                     {{-- <span>Search cars</span> --}}
                                     <div class="search">
@@ -575,6 +581,9 @@
                                             placeholder="Search Cars....">
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="pagination-link" style="display: flex; justify-content: end;">
                             </div>
 
                         </div>
@@ -591,8 +600,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -785,6 +794,68 @@
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
+        let lastQuery = '';
+
+        function setQueryParam(query, key, value) {
+            const params = new URLSearchParams(query || '');
+            params.set(key, value);
+            return params.toString();
+        }
+
+        function renderPagination(meta) {
+            // Select the existing pagination container
+            let pagContainer = document.querySelector('.pagination-link');
+            if (!pagContainer) return;
+
+            if (!meta) {
+                pagContainer.innerHTML = '';
+                return;
+            }
+
+            const current = meta.current_page || 1;
+            const last = meta.last_page || 1;
+            const maxButtons = 5;
+            let start = Math.max(1, current - Math.floor(maxButtons / 2));
+            let end = Math.min(last, start + maxButtons - 1);
+            start = Math.max(1, Math.min(start, end - maxButtons + 1));
+
+            const parts = [];
+            const makeBtn = (label, page, disabled = false, active = false) => {
+                const cls = ['btn', 'btn-sm', 'mx-1', 'mb-2', 'px-3', 'py-1'];
+                if (active) cls.push('btn-danger');
+                else cls.push('btn-light');
+                const disabledAttr = disabled ? 'disabled' : '';
+                return `<button type="button" class="${cls.join(' ')} pagination" data-page="${page}" ${disabledAttr}>${label}</button>`;
+            };
+
+            // Prev button
+            parts.push(makeBtn('Prev', current - 1, current === 1));
+
+            // Page buttons
+            for (let p = start; p <= end; p++) {
+                parts.push(makeBtn(p, p, false, p === current));
+            }
+
+            // Next button
+            parts.push(makeBtn('Next', current + 1, current === last));
+
+            // Render
+            pagContainer.innerHTML = parts.join('');
+
+            // Attach click events
+            pagContainer.querySelectorAll('button[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const page = parseInt(e.currentTarget.getAttribute('data-page'));
+                    if (isNaN(page)) return;
+                    const q = setQueryParam(lastQuery, 'page', page);
+                    fetchFilteredCars(q);
+                    pagContainer.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+                });
+            });
+        }
 
         function setView(view) {
             currentView = view;
@@ -794,28 +865,45 @@
         }
 
         function fetchFilteredCars(query = '') {
-            axios.get(API_URL + '?' + query)
+            lastQuery = query || '';
+            const url = query ? (API_URL + '?' + query) : API_URL;
+            axios.get(url)
                 .then(response => {
-                    const cars = response.data;
+                    const payload = response.data;
+                    const cars = Array.isArray(payload) ? payload : (payload.data || []);
+                    let meta = null;
+                    if (!Array.isArray(payload)) {
+                        if (payload.meta && payload.meta.current_page) {
+                            meta = payload.meta;
+                        } else if (typeof payload.current_page !== 'undefined') {
+                            meta = {
+                                current_page: payload.current_page,
+                                last_page: payload.last_page,
+                                per_page: payload.per_page,
+                                total: payload.total
+                            };
+                        }
+                    }
                     container.innerHTML = '';
                     const error_img = `/images/car/23.png`;
 
                     if (!cars.length) {
                         container.innerHTML = `
-                                        <section class="error-page page-section-ptb">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="error-content text-center">
-                                                            <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
-                                                            <h3 class="text-red">Ooopps:( </h3>
-                                                            <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
-                                                            <p>Can't find what you looking for? Take a moment and do a search again!</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>`;
+                                         <section class="error-page page-section-ptb">
+                                             <div class="container">
+                                                 <div class="row">
+                                                     <div class="col-md-12">
+                                                         <div class="error-content text-center">
+                                                             <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
+                                                             <h3 class="text-red">Ooopps:( </h3>
+                                                             <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
+                                                             <p>Can't find what you looking for? Take a moment and do a search again!</p>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </section>`;
+                        renderPagination(meta);
                         return;
                     }
 
@@ -840,32 +928,32 @@
                         const carDiv = $(`<div style="color: #a0a0a0">`);
                         const title = `<h4>${car.title}</h4>`;
                         const details_button = `
-                        <div>
-                            <a class="button red float-end" href="${url}">Details</a>
-                        </div>`;
+                         <div>
+                             <a class="button red float-end" href="${url}">Details</a>
+                         </div>`;
                         const description =
                             `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
                         const details = `
-                                <div class="row" style="margin-bottom: 6px;">
-                            <div class="col-lg-2 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> ${car.make}</li>
-                                    <li><i class="fa fa-check"></i> ${car.model}</li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> ${car.car_condition}</li>
-                                    <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> ${car.currency_type} </li>
-                                     <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
-                                </ul>
-                            </div>
-                        </div>`
+                                 <div class="row" style="margin-bottom: 6px;">
+                             <div class="col-lg-2 col-sm-4">
+                                 <ul class="list-style-1">
+                                     <li><i class="fa fa-check"></i> ${car.make}</li>
+                                     <li><i class="fa fa-check"></i> ${car.model}</li>
+                                 </ul>
+                             </div>
+                             <div class="col-lg-4 col-sm-4">
+                                 <ul class="list-style-1">
+                                     <li><i class="fa fa-check"></i> ${car.car_condition}</li>
+                                     <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
+                                 </ul>
+                             </div>
+                             <div class="col-lg-4 col-sm-4">
+                                 <ul class="list-style-1">
+                                     <li><i class="fa fa-check"></i> ${car.currency_type} </li>
+                                      <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
+                                 </ul>
+                             </div>
+                         </div>`
 
                         // Set dynamic class based on view
                         carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1');
@@ -897,7 +985,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -937,10 +1025,12 @@
                         $('#car-results').append(carDiv);
                     });
 
+                    renderPagination(meta);
                 })
                 .catch(error => {
                     console.error('Error fetching cars:', error);
                     container.innerHTML = '<p>Failed to load cars.</p>';
+                    renderPagination(null);
                 });
         }
 
