@@ -189,10 +189,14 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::findOrFail($id);
-        // dd($car->location);
+        $car = Car::with('promotions')->findOrFail($id);
+        $hasActivePromotion = $car->promotions()
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })
+            ->exists();
         $makes = Car::where('make', $car->make)->limit(10)->get();
-        return view('car.show', compact('car', 'makes'));
+        return view('car.show', compact('car', 'makes', 'hasActivePromotion'));
     }
 
     public function search(Request $request)
@@ -206,7 +210,11 @@ class CarController extends Controller
      */
     public function feature()
     {
-        $cars = Car::where('is_promoted', true)->orderBy('id', 'desc')->take(15)->get();
+        $cars = Car::whereHas('promotions', function ($q) {
+            $q->where(function ($q2) {
+                $q2->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            });
+        })->latest()->take(15)->get();
         return response()->json($cars);
     }
 
