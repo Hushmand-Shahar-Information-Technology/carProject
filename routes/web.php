@@ -5,6 +5,7 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\routeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\PromotionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BargainController;
 
@@ -57,6 +58,13 @@ Route::prefix('car')->group(function () {
     Route::post('carts', [CarController::class, 'cart'])->name('carts.show');
     Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
     Route::post('toggle-promoted/{id}', [CarController::class, 'togglePromoted'])->name('car.toggle-promoted');
+});
+
+Route::prefix('promotions')->group(function () {
+    Route::get('/', [PromotionController::class, 'index'])->name('promotions.index');
+    Route::get('/list', [PromotionController::class, 'list'])->name('promotions.list');
+    Route::post('/promote', [PromotionController::class, 'promote'])->name('promotions.promote');
+    Route::post('/unpromote', [PromotionController::class, 'unpromote'])->name('promotions.unpromote');
 });
 
 
