@@ -39,6 +39,10 @@
                         <span class="badge bg-white text-dark fs-6 p-2 rounded-pill">
                             <i class="fas fa-circle me-1 small text-danger"></i> {{ ucfirst($bargain->status) }}
                         </span>
+                        <div class="mt-2">
+                            <button id="btn-promote-bargain"
+                                class="btn btn-sm btn-outline-primary">{{ $hasActivePromotion ? 'Unpromote' : 'Promote' }}</button>
+                        </div>
                     </div>
 
                     <!-- Profile Body -->
@@ -146,3 +150,70 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('#btn-promote-bargain');
+            if (!btn) return;
+            e.preventDefault();
+            if ({{ $hasActivePromotion ? 'true' : 'false' }}) {
+                Swal.fire({
+                    title: 'Unpromote this bargain?',
+                    icon: 'warning',
+                    showCancelButton: true
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    axios.post('{{ route('promotions.unpromote') }}', {
+                            type: 'bargain',
+                            id: {{ $bargain->id }}
+                        })
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Unpromoted',
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            btn.textContent = 'Promote';
+                        })
+                        .catch(() => Swal.fire('Error', 'Failed to unpromote', 'error'));
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Promote this bargain',
+                input: 'number',
+                inputLabel: 'How many days?',
+                inputAttributes: {
+                    min: 1,
+                    max: 365
+                },
+                inputValue: 7,
+                showCancelButton: true,
+                confirmButtonText: 'Promote'
+            }).then(result => {
+                if (!result.isConfirmed) return;
+                const days = parseInt(result.value, 10);
+                if (!days || days < 1) return;
+                axios.post('{{ route('promotions.promote') }}', {
+                        type: 'bargain',
+                        id: {{ $bargain->id }},
+                        days
+                    })
+                    .then(res => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Promoted',
+                            text: `Ends: ${res.data.ends_at}`,
+                            timer: 1600,
+                            showConfirmButton: false
+                        });
+                        btn.textContent = 'Unpromote';
+                    })
+                    .catch(() => Swal.fire('Error', 'Failed to promote', 'error'));
+            });
+        });
+    </script>
+@endpush
