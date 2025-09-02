@@ -95,7 +95,8 @@ class CarController extends Controller
             }, function ($q) {
                 $q->latest();
             })
-            ->get();
+            ->paginate(15)
+            ->withQueryString();
 
         return response()->json($cars);
     }
