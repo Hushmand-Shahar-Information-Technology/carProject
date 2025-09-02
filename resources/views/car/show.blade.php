@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                         inner-intro -->
+                                 inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -97,12 +97,12 @@
     </section>
 
     <!--=================================
-                         inner-intro -->
+                                 inner-intro -->
 
 
 
     <!--=================================
-                        car-details -->
+                                car-details -->
 
     <section class="car-details page-section-ptb">
         <div class="container">
