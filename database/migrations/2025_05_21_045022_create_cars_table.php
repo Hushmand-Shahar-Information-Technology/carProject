@@ -5,6 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 use App\Enums\TransmissionType;
 use App\Models\User;
+use App\Models\Bargain;
 
 return new class extends Migration
 {
@@ -13,6 +14,7 @@ return new class extends Migration
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
+            $table->unsignedBigInteger('bargain_id')->nullable()->index();
             $table->string('title')->nullable();
             $table->string('year')->nullable();
             $table->string('make')->nullable();
