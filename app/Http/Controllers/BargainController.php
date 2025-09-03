@@ -102,11 +102,14 @@ class BargainController extends Controller
     public function show($id)
     {
         $bargain = Bargain::with('promotions')->findOrFail($id);
-        $hasActivePromotion = $bargain->promotions()
+        $activePromotion = $bargain->promotions()
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
             })
-            ->exists();
-        return view('bargains.show', compact('bargain', 'hasActivePromotion'));
+            ->latest('ends_at')
+            ->first();
+        $hasActivePromotion = (bool) $activePromotion;
+        $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
+        return view('bargains.show', compact('bargain', 'hasActivePromotion', 'activePromotionEndsAt'));
     }
 }
