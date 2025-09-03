@@ -21,8 +21,8 @@ class DatabaseSeeder extends Seeder
             'password' => 'dev',
         ]);
         $this->call([
+            ShieldSeeder::class,
             CarSeeder::class,
         ]);
-
     }
 }

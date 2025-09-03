@@ -8,23 +8,74 @@
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    <!-- Fancybox for video playback -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+
 
     {{-- @include('car.slick') --}}
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                     inner-intro -->
+                                                         inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
             aspect-ratio: 16 / 11;
             object-fit: cover;
         }
+
         /* Force SweetAlert2 to always appear on top of modals */
         .swal2-container {
             z-index: 200000 !important;
         }
-    </style>            
+
+        .video-thumbnail {
+            position: relative;
+            display: block;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .video-thumbnail:hover {
+            transform: scale(1.05);
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .watch-video-btn {
+            margin-top: 15px;
+        }
+
+        .watch-video-btn a {
+            background: #db2d2e;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s ease;
+        }
+
+        .watch-video-btn a:hover {
+            background: #b91c1c;
+            color: white;
+        }
+    </style>
 
     <section class="inner-intro bg-6 bg-overlay-black-70">
         <div class="container">
@@ -34,9 +85,10 @@
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
-                        <li><a href="{{route('home.index')}}"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i>
+                        <li><a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home</a> <i
+                                class="fa fa-angle-double-right"></i>
                         </li>
-                        <li><a href="{{route('car.index')}}">car-list</a> <i class="fa fa-angle-double-right"></i></li>
+                        <li><a href="{{ route('car.index') }}">car-list</a> <i class="fa fa-angle-double-right"></i></li>
                         <li><span> details </span> </li>
                     </ul>
                 </div>
@@ -45,12 +97,12 @@
     </section>
 
     <!--=================================
-                     inner-intro -->
+                                                         inner-intro -->
 
 
 
     <!--=================================
-                    car-details -->
+                                                        car-details -->
 
     <section class="car-details page-section-ptb">
         <div class="container">
@@ -63,6 +115,16 @@
                     <div class="car-price text-md-end">
                         <strong>{{ $car->sale_price }}</strong>
                         <span>Plus Taxes & Licensing</span>
+                        <div class="mt-2">
+                            <button id="btn-promote-car"
+                                class="btn btn-sm btn-outline-primary">{{ $hasActivePromotion ? 'Promoted' : 'Promote' }}</button>
+                            @if ($hasActivePromotion && $activePromotionEndsAt)
+                                <div class="small text-muted mt-1">
+                                    <span id="promotion-ends-at"
+                                        data-ends-at="{{ $activePromotionEndsAt->toIso8601String() }}"></span>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -211,9 +273,10 @@
                 <div class="col-md-8">
                     <div class="slider-slick">
                         <div class="cars-image-gallery" style="">
-                            <div class="slider slider-for detail-big-car-gallery" >
+                            <div class="slider slider-for detail-big-car-gallery">
                                 @foreach ($car->images as $image)
-                                    <img class="img-fluid" style="" src="/storage/{{$image}}" alt="">
+                                    <img class="img-fluid" style="" src="/storage/{{ $image }}"
+                                        alt="">
                                 @endforeach
                                 {{-- <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
@@ -223,16 +286,44 @@
                                 <img class="img-fluid" src="{{ asset('images/car/07.jpg') }}" alt="">
                                 <img class="img-fluid" src="{{ asset('images/car/08.jpg') }}" alt=""> --}}
                             </div>
-                            <div class="watch-video-btn">
-                                <div class="video-info">
-                                    <a class="popup-youtube" href="https://www.youtube.com/watch?v=Xd0Ok-MkqoE"><i
-                                            class="fa fa-play"></i> Vehicle video</a>
+                            @if ($car->videos && count($car->videos) > 0)
+                                <div class="watch-video-btn">
+                                    <div class="video-info">
+                                        <a class="popup-youtube" href="/storage/{{ $car->videos[0] }}"
+                                            data-fancybox="video">
+                                            <i class="fa fa-play"></i> Watch Video
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+
+                                <!-- Video Gallery -->
+                                @if (count($car->videos) > 1)
+                                    <div class="video-gallery mt-3">
+                                        <h6>All Videos</h6>
+                                        <div class="row">
+                                            @foreach ($car->videos as $index => $video)
+                                                <div class="col-md-4 mb-2">
+                                                    <a href="/storage/{{ $video }}" data-fancybox="video-gallery"
+                                                        class="video-thumbnail">
+                                                        <video class="img-fluid rounded"
+                                                            style="width: 100%; height: 120px; object-fit: cover;">
+                                                            <source src="/storage/{{ $video }}" type="video/mp4">
+                                                        </video>
+                                                        <div class="play-overlay">
+                                                            <i class="fa fa-play-circle fa-2x text-white"></i>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+                            @endif
                         </div>
                         <div class="slider slider-nav">
                             @foreach ($car->images as $image)
-                                    <img class="img-fluid fixed-img" style="" src="/storage/{{$image}}" alt="">
+                                <img class="img-fluid fixed-img" style="" src="/storage/{{ $image }}"
+                                    alt="">
                             @endforeach
                             {{-- <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/02.jpg') }}" alt="">
@@ -288,19 +379,21 @@
                                         <div class="item">
                                             <div class="car-item gray-bg text-center">
                                                 <div class="car-image">
-                                                    <img class="img-fluid" src="/storage/{{$car_i->images[0]}}"
+                                                    <img class="img-fluid" src="/storage/{{ $car_i->images[0] }}"
                                                         alt="">
                                                     <div class="car-overlay-banner">
                                                         <ul>
-                                                            <li><a href="{{route('car.show', $car_i->id)}}"><i class="fa fa-link"></i></a></li>
-                                                            <li><a href="{{route('car.show', $car_i->id)}}"><i class="fa fa-dashboard"></i></a></li>
+                                                            <li><a href="{{ route('car.show', $car_i->id) }}"><i
+                                                                        class="fa fa-link"></i></a></li>
+                                                            <li><a href="{{ route('car.show', $car_i->id) }}"><i
+                                                                        class="fa fa-dashboard"></i></a></li>
                                                         </ul>
                                                     </div>
                                                 </div>
                                                 <div class="car-list">
                                                     <ul class="list-inline">
-                                                        <li><i class="fa fa-registered"></i>{{$car_i->year}}</li>
-                                                        <li><i class="fa fa-cog"></i>{{$car_i->ransmission_type}}/li>
+                                                        <li><i class="fa fa-registered"></i>{{ $car_i->year }}</li>
+                                                        <li><i class="fa fa-cog"></i>{{ $car_i->ransmission_type }}/li>
                                                         <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
                                                     </ul>
                                                 </div>
@@ -312,11 +405,11 @@
                                                         <i class="fa fa-star orange-color"></i>
                                                         <i class="fa fa-star-o orange-color"></i>
                                                     </div>
-                                                    <a href="{{route('car.show', $car_i->id)}}">{{$car_i->model}}</a>
+                                                    <a href="{{ route('car.show', $car_i->id) }}">{{ $car_i->model }}</a>
                                                     <div class="separator"></div>
                                                     <div class="price">
-                                                        <span class="old-price">${{$car_i->regular_price}}</span>
-                                                        <span class="new-price">${{$car->sale_price}}</span>
+                                                        <span class="old-price">${{ $car_i->regular_price }}</span>
+                                                        <span class="new-price">${{ $car->sale_price }}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -408,11 +501,150 @@
     </section>
 
 
- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('#btn-promote-car');
+            if (!btn) return;
+            e.preventDefault();
+            if (btn.textContent.trim().toLowerCase() === 'promoted' ||
+                {{ $hasActivePromotion ? 'true' : 'false' }}) {
+                Swal.fire({
+                    title: 'Unpromote this car?',
+                    icon: 'warning',
+                    showCancelButton: true
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    axios.post('{{ route('promotions.unpromote') }}', {
+                            type: 'car',
+                            id: {{ $car->id }}
+                        })
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Unpromoted',
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            btn.textContent = 'Promote';
+                            clearPromotionCountdown('promotion-ends-at');
+                            const label = document.getElementById('promotion-ends-at');
+                            if (label) {
+                                label.removeAttribute('data-ends-at');
+                                label.textContent = '';
+                            }
+                        })
+                        .catch(() => Swal.fire('Error', 'Failed to unpromote', 'error'));
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Promote this car',
+                input: 'number',
+                inputLabel: 'How many days?',
+                inputAttributes: {
+                    min: 1,
+                    max: 365
+                },
+                inputValue: 7,
+                showCancelButton: true,
+                confirmButtonText: 'Promote'
+            }).then(result => {
+                if (!result.isConfirmed) return;
+                const days = parseInt(result.value, 10);
+                if (!days || days < 1) return;
+                axios.post('{{ route('promotions.promote') }}', {
+                        type: 'car',
+                        id: {{ $car->id }},
+                        days
+                    })
+                    .then(res => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Promoted',
+                            text: `Ends: ${res.data.ends_at}`,
+                            timer: 1600,
+                            showConfirmButton: false
+                        });
+                        btn.textContent = 'Promoted';
+                        // Insert/refresh countdown label
+                        let label = document.getElementById('promotion-ends-at');
+                        if (!label) {
+                            label = document.createElement('span');
+                            label.id = 'promotion-ends-at';
+                            btn.parentElement.insertAdjacentHTML('beforeend',
+                                '<div class="small text-muted mt-1"><span id="promotion-ends-at"></span></div>'
+                            );
+                            label = document.getElementById('promotion-ends-at');
+                        }
+                        if (res.data.ends_at) {
+                            label.setAttribute('data-ends-at', new Date(res.data.ends_at)
+                                .toISOString());
+                            startPromotionCountdown('promotion-ends-at');
+                        }
+                    })
+                    .catch(() => Swal.fire('Error', 'Failed to promote', 'error'));
+            });
+        });
+
+        function clearPromotionCountdown(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const handle = el.getAttribute('data-countdown');
+            if (handle) {
+                clearInterval(Number(handle));
+                el.removeAttribute('data-countdown');
+            }
+        }
+
+        function startPromotionCountdown(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            clearPromotionCountdown(elementId);
+            const endsAt = new Date(el.getAttribute('data-ends-at'));
+            if (isNaN(endsAt)) return;
+            const handle = setInterval(() => {
+                const now = new Date();
+                let diff = Math.max(0, endsAt - now);
+                if (diff <= 0) {
+                    el.textContent = 'Expired';
+                    clearPromotionCountdown(elementId);
+                    return;
+                }
+                const second = 1000;
+                const minute = 60 * second;
+                const hour = 60 * minute;
+                const day = 24 * hour;
+                const month = 30 * day;
+                const year = 365 * day;
+                const years = Math.floor(diff / year);
+                diff %= year;
+                const months = Math.floor(diff / month);
+                diff %= month;
+                const days = Math.floor(diff / day);
+                diff %= day;
+                const hours = Math.floor(diff / hour);
+                diff %= hour;
+                const minutes = Math.floor(diff / minute);
+                diff %= minute;
+                const seconds = Math.floor(diff / second);
+                const segments = [];
+                segments.push(`<span class=\"badge bg-dark text-white me-1\">${years}Y</span>`);
+                segments.push(`<span class=\"badge bg-dark text-white me-1\">${months}M</span>`);
+                segments.push(`<span class=\"badge bg-dark text-white me-1\">${days}D</span>`);
+                segments.push(`<span class=\"badge bg-danger text-white me-1\">${hours}hr</span>`);
+                segments.push(`<span class=\"badge bg-danger text-white me-1\">${minutes}min</span>`);
+                segments.push(`<span class=\"badge bg-danger text-white\">${seconds}sec</span>`);
+                el.innerHTML = segments.join(' ');
+            }, 1000);
+            el.setAttribute('data-countdown', String(handle));
+        }
+        @if ($hasActivePromotion && $activePromotionEndsAt)
+            startPromotionCountdown('promotion-ends-at');
+        @endif
         const make = @json($car->make);
         const car_id = @json($car->id);
-        // console.log(car_id); 
+        // console.log(car_id);
         $(document).ready(function() {
             $('.slider-for').slick({
                 slidesToShow: 1,
@@ -431,7 +663,7 @@
                 focusOnSelect: true
             });
         });
-         $(document).ready(function() {
+        $(document).ready(function() {
             $('.popup-youtube').magnificPopup({
                 type: 'iframe',
                 mainClass: 'mfp-fade',
@@ -441,11 +673,11 @@
             });
         });
 
-        $(document).ready(function () {
-            $('#make_an_offer_submit').on('click', function (e) {
+        $(document).ready(function() {
+            $('#make_an_offer_submit').on('click', function(e) {
                 e.preventDefault();
                 $('.btn-loader').show();
-                console.log(car_id); 
+                console.log(car_id);
                 var formData = {
                     mao_name: $('#mao_name').val(),
                     mao_email: $('#mao_email').val(),
@@ -463,7 +695,7 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function (response) {
+                    success: function(response) {
                         $('.btn-loader').hide();
                         $('#mao_form')[0].reset();
 
@@ -471,15 +703,16 @@
                         $('#exampleModal3').modal('hide');
 
                         // Show alert after modal is fully hidden
-                        $('#exampleModal3').on('hidden.bs.modal', function () {
+                        $('#exampleModal3').on('hidden.bs.modal', function() {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Success',
                                 text: response.message,
-                                heightAuto: false,  // prevents body scrollbar shift
+                                heightAuto: false, // prevents body scrollbar shift
                                 willClose: () => {
                                     // Remove modal-related classes and reset overflow to re-enable scrolling
-                                    $('body').removeClass('modal-open').css('overflow', '');
+                                    $('body').removeClass('modal-open').css(
+                                        'overflow', '');
                                     $('.modal-backdrop').remove();
                                 }
                             });
@@ -487,7 +720,7 @@
                             $('#exampleModal3').off('hidden.bs.modal');
                         });
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         $('.btn-loader').hide();
 
                         let swalOptions = {
@@ -501,18 +734,37 @@
 
                         if (xhr.status === 422) {
                             let errors = xhr.responseJSON.errors;
-                            let errorMessages = Object.values(errors).map(msgArray => msgArray[0]).join('<br>');
+                            let errorMessages = Object.values(errors).map(msgArray => msgArray[
+                                0]).join('<br>');
                             swalOptions.title = 'Validation Error';
                             swalOptions.html = errorMessages;
                         } else {
                             swalOptions.title = 'Server Error';
-                            swalOptions.text = xhr.responseJSON?.message || 'An unexpected error occurred.';
+                            swalOptions.text = xhr.responseJSON?.message ||
+                                'An unexpected error occurred.';
                         }
 
                         Swal.fire(swalOptions);
                     }
                 });
             });
+        });
+
+        // Initialize Fancybox for video playback
+        Fancybox.bind("[data-fancybox='video']", {
+            type: "video",
+            options: {
+                ratio: 16 / 9,
+                autoplay: false
+            }
+        });
+
+        Fancybox.bind("[data-fancybox='video-gallery']", {
+            type: "video",
+            options: {
+                ratio: 16 / 9,
+                autoplay: false
+            }
         });
     </script>
 

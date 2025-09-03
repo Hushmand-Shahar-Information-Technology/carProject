@@ -17,10 +17,11 @@ class Car extends Model
 
     protected $guarded = [];
 
-     protected $fillable = [
+    protected $fillable = [
         'title',
         'year',
         'user_id',
+        'bargain_id',
         'make',
         'body_type',
         'car_condition',
@@ -34,20 +35,30 @@ class Car extends Model
         'currency_type',
         'regular_price',
         'sale_price',
+        'description',
         'request_price_status',
         'request_price',
         'images',
         'videos',
+        'is_for_sale',
+        'is_for_rent',
+        'is_promoted',
+        'rent_price_per_day',
+        'rent_price_per_month',
     ];
 
     protected $casts = [
-        'location' => 'array',
         'images' => 'array',
         'videos' => 'array',
         'request_price_status' => 'boolean',
+        'is_for_sale' => 'boolean',
+        'is_for_rent' => 'boolean',
+        'is_promoted' => 'boolean',
         'regular_price' => 'decimal:2',
         'sale_price' => 'decimal:2',
         'request_price' => 'decimal:2',
+        'rent_price_per_day' => 'decimal:2',
+        'rent_price_per_month' => 'decimal:2',
         // Remove enum casts:
         // 'transmission_type' => TransmissionType::class,
         // 'car_color' => CarColor::class,
@@ -56,6 +67,16 @@ class Car extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function bargain()
+    {
+        return $this->belongsTo(Bargain::class);
+    }
+
+    public function promotions()
+    {
+        return $this->morphMany(\App\Models\Promotion::class, 'promotable');
     }
 
     public function offers()

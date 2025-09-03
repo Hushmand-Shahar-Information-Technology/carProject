@@ -5,7 +5,9 @@ use App\Http\Controllers\CarController;
 use App\Http\Controllers\routeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OfferController;
+use App\Http\Controllers\PromotionController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BargainController;
 
 Route::view('/', 'home.index')->name('home.index');
 Route::post('/home/filter-cars', [routeController::class, 'filter']);
@@ -28,6 +30,21 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
 });
 
+
+
+Route::prefix('bargains')->group(function () {
+    Route::get('/', [BargainController::class, 'index'])->name('bargains.index');
+    Route::get('/data', [BargainController::class, 'getData'])->name('bargains.data');
+    Route::get('/create', [BargainController::class, 'create'])->name('bargains.create');
+    Route::post('/store', [BargainController::class, 'store'])->name('bargains.store');
+    Route::get('/edit/{id}', [BargainController::class, 'edit'])->name('bargains.edit');
+    Route::put('/update/{id}', [BargainController::class, 'update'])->name('bargains.update');
+    Route::delete('/delete/{id}', [BargainController::class, 'destroy'])->name('bargains.destroy');
+    Route::post('/toggle-status/{id}', [BargainController::class, 'toggleStatus'])->name('bargains.toggle-status');
+    Route::get('/show/{id}', [BargainController::class, 'show'])->name('bargains.show');
+});
+
+
 Route::prefix('car')->group(function () {
     Route::get('index', [CarController::class, 'index'])->name('car.index');
     Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
@@ -37,15 +54,25 @@ Route::prefix('car')->group(function () {
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
     Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
-
     Route::get('compare', [CarController::class, 'compare'])->name('car.compare');
-    Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
     Route::post('carts', [CarController::class, 'cart'])->name('carts.show');
     Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
+    Route::post('toggle-promoted/{id}', [CarController::class, 'togglePromoted'])->name('car.toggle-promoted');
+});
+
+Route::prefix('promotions')->group(function () {
+    Route::get('/', [PromotionController::class, 'index'])->name('promotions.index');
+    Route::get('/list', [PromotionController::class, 'list'])->name('promotions.list');
+    Route::post('/promote', [PromotionController::class, 'promote'])->name('promotions.promote');
+    Route::post('/unpromote', [PromotionController::class, 'unpromote'])->name('promotions.unpromote');
 });
 
 
 
+
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
+
+// API route for car comparison
+Route::get('/api/cars/details', [CarController::class, 'getCarDetails'])->name('api.cars.details');
 
 require __DIR__ . '/auth.php';

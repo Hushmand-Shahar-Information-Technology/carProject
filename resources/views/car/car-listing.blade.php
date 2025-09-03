@@ -416,6 +416,29 @@
         .grid-item .car-list ul li i {
             color: #9aa3ad !important;
         }
+
+        /* Make cards look clickable */
+        .car-item {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .car-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Ensure compare button doesn't inherit cursor */
+        .add-to-compare {
+            cursor: pointer !important;
+            z-index: 10;
+            position: relative;
+        }
+
+        .add-to-compare:hover {
+            transform: scale(1.1);
+            transition: transform 0.2s ease;
+        }
     </style>
     <!--=================================banner -->
 
@@ -453,8 +476,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -548,9 +571,13 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
+
+
                     <div id="car-results" class="isotope column-5">
+
                         <!-- Car items will be injected here by JS -->
                     </div>
                 </div>
@@ -559,10 +586,12 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="module">
         $("#sort-select").on('change', function() {
             applyFilters();
@@ -795,15 +824,15 @@
                         // if images are json
                         if (typeof car.images === 'object') {
                             images = car.images;
-                            console.log(images);
+
                         } else {
                             images = car.images ? [car.images] : [];
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
-                        const carDiv = $(`<a href="${url}" style="color: #a0a0a0">`);
+                        const carDiv = $(`<div style="color: #a0a0a0">`);
                         const title = `<h4>${car.title}</h4>`;
-                        const details_button = `    
+                        const details_button = `
                         <div>
                             <a class="button red float-end" href="${url}">Details</a>
                         </div>`;
@@ -836,9 +865,9 @@
                         // Build HTML dynamically
                         let html = `
                     ${currentView === 'list' ? '<div class="row p-2">' : ''}
-                        
+
                         <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
-                           
+
                             <div class="car-item gray-bg text-center">
                                 <div class="car-image">
                                     <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
@@ -846,24 +875,28 @@
                                         <ul>
                                             <li><a href="${url}"><i class="fa fa-link"></i></a></li>
                                             <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
+                                              <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer; z-index: 100; position: relative;">
+    <i class="fa fa-exchange-alt" style="font-size: 1rem;"></i>
+</li>
+
                                         </ul>
                                     </div>
                                 </div>
                             </div>
-                            
+
                         </div>
 
                         <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
                                 ${currentView == 'list' ? description  : ""}
                                 ${currentView == 'list' ? details : ""}
-                                <div class="price">
+                                <div class="price d-flex align-items-center gap-2">
                                      ${currentView === 'list' ? details_button : ''}
                                     <span class="old-price">$${car.regular_price}</span>
                                     <span class="new-price">$${car.sale_price}</span>
@@ -874,6 +907,9 @@
                                         <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
                                         <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
                                     </ul>
+                               <div class="compare-btn">
+</div>
+
                                 </div>
                             </div>
                         </div>
@@ -881,6 +917,16 @@
                 `;
 
                         carDiv.html(html);
+
+                        // Add click handler to make the card clickable (excluding compare button)
+                        carDiv.on('click', function(e) {
+                            // Don't redirect if clicking on compare button or its children
+                            if (e.target.closest('.add-to-compare')) {
+                                return;
+                            }
+                            window.location.href = url;
+                        });
+
                         $('#car-results').append(carDiv);
                     });
 
@@ -1024,6 +1070,112 @@
                     fetchFilteredCars(query.toString());
                 }
             });
+        });
+
+
+        // storing the count value in local storage
+        function getCompareCars() {
+            const stored = localStorage.getItem('compareCars');
+            if (!stored) return [];
+
+            try {
+                const data = JSON.parse(stored);
+                // Check if data has expired (5 minutes)
+                if (data.timestamp && (Date.now() - data.timestamp) > 5 * 60 * 1000) {
+                    localStorage.removeItem('compareCars');
+                    return [];
+                }
+                return data.cars || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function setCompareCars(cars) {
+            const data = {
+                cars: cars,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('compareCars', JSON.stringify(data));
+        }
+
+        // Update compare icon count in navbar
+        function updateCompareIcon() {
+            const count = getCompareCars().length;
+            const icon = document.querySelector('#compare-count');
+            if (icon) {
+                icon.textContent = count;
+            }
+        }
+
+        // Use event delegation for compare buttons
+        document.addEventListener('click', function(e) {
+
+
+            const compareBtn = e.target.closest('.add-to-compare');
+
+
+            if (compareBtn) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const carId = compareBtn.dataset.carId;
+
+                let compareCars = getCompareCars();
+
+                if (compareCars.includes(carId)) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Already Added',
+                            text: 'This car is already in the compare list.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert('This car is already in the compare list.');
+                    }
+                    return;
+                }
+
+                if (compareCars.length >= 3) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Limit Reached',
+                            text: 'Maximum 3 cars allowed to compare.',
+                            timer: 2500,
+                            showConfirmButton: false
+                        });
+                    } else {
+                        alert('Maximum 3 cars allowed to compare.');
+                    }
+                    return;
+                }
+
+                compareCars.push(carId);
+                setCompareCars(compareCars);
+
+
+                updateCompareIcon();
+
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Added!',
+                        text: 'Car added to compare list.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                } else {
+                    alert('Car added to compare list!');
+                }
+            }
+        });
+
+        // Initialize count on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            updateCompareIcon();
         });
     </script>
 

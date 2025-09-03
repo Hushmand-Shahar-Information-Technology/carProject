@@ -27,6 +27,22 @@ class CarController extends Controller
     }
 
     /**
+     * Get car details by IDs for comparison
+     */
+    public function getCarDetails(Request $request)
+    {
+        $ids = $request->input('ids');
+        if (!$ids) {
+            return response()->json([]);
+        }
+
+        $carIds = explode(',', $ids);
+        $cars = Car::whereIn('id', $carIds)->get();
+
+        return response()->json($cars);
+    }
+
+    /**
      * Filter the cars.
      */
     public function filter(Request $request)
@@ -94,35 +110,44 @@ class CarController extends Controller
     }
 
 
+    /**
+     * @param StoreCarRequest $request
+     */
     public function store(StoreCarRequest $request)
     {
         $data = $request->validated();
 
         try {
             Log::info('Car store method started');
+            Log::info('Validated data:', $data);
+            // Files are handled below
 
             // Handle image uploads
             $images = [];
-            if ($request->hasFile('images')) {
-                foreach ($request->file('images') as $image) {
-                    $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
-                }
+            /** @var array<int, \Illuminate\Http\UploadedFile> $imageFiles */
+            $imageFiles = (array) (request()->file('images') ?? []);
+            foreach ($imageFiles as $image) {
+                $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
             }
+            Log::info('Processed images:', $images);
 
             // Handle video uploads
             $videos = [];
-            if ($request->hasFile('videos')) {
-                foreach ($request->file('videos') as $video) {
-                    $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
-                }
+            /** @var array<int, \Illuminate\Http\UploadedFile> $videoFiles */
+            $videoFiles = (array) (request()->file('videos') ?? []);
+            foreach ($videoFiles as $video) {
+                $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
             }
+            Log::info('Processed videos:', $videos);
 
-            Car::create([
+            $carData = [
+                'user_id' => 1, // Default user ID for testing (you can change this later)
+                'bargain_id' => $data['bargain_id'] ?? null,
                 'title' => $data['title'],
                 'year' => $data['year'],
                 'make' => $data['make'],
                 'VIN_number' => $data['VIN_number'] ?? null,
-                'location' => isset($data['location']) ? json_encode($data['location']) : null,
+                'location' => $data['location'] ?? null,
                 'model' => $data['model'],
                 'car_color' => $data['car_color'],
                 'transmission_type' => $data['transmission_type'] ?? null,
@@ -133,17 +158,28 @@ class CarController extends Controller
                 'car_inside_color' => $data['car_inside_color'] ?? null,
                 'currency_type' => $data['currency_type'] ?? null,
                 'sale_price' => $data['sale_price'] ?? null,
-                'request_price_status' => $request->boolean('request_price_status'),
+                'description' => $data['description'] ?? null,
+                'is_for_sale' => (bool) ($data['is_for_sale'] ?? false),
+                'is_for_rent' => (bool) ($data['is_for_rent'] ?? false),
+                'is_promoted' => (bool) ($data['is_promoted'] ?? false),
+                'rent_price_per_day' => $data['rent_price_per_day'] ?? null,
+                'rent_price_per_month' => $data['rent_price_per_month'] ?? null,
+                'request_price_status' => (bool) ($data['request_price_status'] ?? false),
                 'request_price' => $data['request_price'] ?? null,
                 'images' => $images, // saved as actual array (use JSON column in DB)
-                'video' => $videos,  // same for videos
-            ]);
+                'videos' => $videos,  // fixed: changed from 'video' to 'videos'
+            ];
+
+            Log::info('Car data to be created:', $carData);
+
+            $car = Car::create($carData);
+            Log::info('Car created successfully with ID: ' . $car->id);
 
             return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Throwable $th) {
             Log::error('Error storing car: ' . $th->getMessage());
-            // return back()->withErrors('Something went wrong while saving the car.');
-            dd($th->getMessage());
+            Log::error('Stack trace: ' . $th->getTraceAsString());
+            return back()->withErrors(['error' => 'Something went wrong while saving the car: ' . $th->getMessage()]);
         }
     }
 
@@ -153,10 +189,17 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::findOrFail($id);
-        // dd($car->location);
+        $car = Car::with('promotions')->findOrFail($id);
+        $activePromotion = $car->promotions()
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })
+            ->latest('ends_at')
+            ->first();
+        $hasActivePromotion = (bool) $activePromotion;
+        $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
         $makes = Car::where('make', $car->make)->limit(10)->get();
-        return view('car.show', compact('car', 'makes'));
+        return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt'));
     }
 
     public function search(Request $request)
@@ -170,8 +213,20 @@ class CarController extends Controller
      */
     public function feature()
     {
-        $cars = Car::orderBy('id', 'desc')->take(15)->get();
+        $cars = Car::whereHas('promotions', function ($q) {
+            $q->where(function ($q2) {
+                $q2->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            });
+        })->latest()->take(15)->get();
         return response()->json($cars);
+    }
+
+    public function togglePromoted($id)
+    {
+        $car = Car::findOrFail($id);
+        $car->is_promoted = ! $car->is_promoted;
+        $car->save();
+        return response()->json(['status' => 'ok', 'is_promoted' => $car->is_promoted]);
     }
 
 
