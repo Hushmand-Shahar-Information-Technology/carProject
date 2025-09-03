@@ -66,6 +66,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     {{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Axios CSRF setup
+        (function() {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            if (window.axios && token) {
+                window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+            }
+        })();
+    </script>
 
 
 </head>
@@ -190,29 +200,31 @@
                                             <div class="search-box not-click">
                                                 <form id="searchForm" action="{{ route('car.index') }}"
                                                     method="GET">
-                                                    <div class="row">
-                                                        @php
-                                                            $years = range(1990, now()->year);
-                                                        @endphp
-                                                        <x-search-option name="Make[]" label="Make"
-                                                            :options="$distinctValues['make']" />
-                                                        <x-search-option name="Model[]" label="Models"
-                                                            :options="$distinctValues['models']" />
-                                                        <x-search-option name="Year[]" label="Years"
-                                                            :options="$years" />
-                                                        <x-search-option name="Body[]" label="Body Styles"
-                                                            :options="$distinctValues['body_type']" />
-                                                        <x-search-option name="Color[]" label="Color"
-                                                            :options="$distinctValues['colors']" />
+                                                    <form id="searchForm" action="{{ route('car.index') }}"
+                                                        method="GET">
+                                                        <div class="row">
+                                                            @php
+                                                                $years = range(1990, now()->year);
+                                                            @endphp
+                                                            <x-search-option name="Make[]" label="Make"
+                                                                :options="$distinctValues['make']" />
+                                                            <x-search-option name="Model[]" label="Models"
+                                                                :options="$distinctValues['models']" />
+                                                            <x-search-option name="Year[]" label="Years"
+                                                                :options="$years" />
+                                                            <x-search-option name="Body[]" label="Body Styles"
+                                                                :options="$distinctValues['body_type']" />
+                                                            <x-search-option name="Color[]" label="Color"
+                                                                :options="$distinctValues['colors']" />
 
-                                                        <div class="col-xl-2 col-md-4 col-sm-6">
-                                                            <div class="text-center">
-                                                                <button class="button red"
-                                                                    type="submit">Search</button>
+                                                            <div class="col-xl-2 col-md-4 col-sm-6">
+                                                                <div class="text-center">
+                                                                    <button class="button red"
+                                                                        type="submit">Search</button>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                </form>
+                                                    </form>
                                             </div>
                                         </div>
                                     </li>
@@ -232,6 +244,7 @@
  header -->
 
     @yield('content')
+    @stack('scripts')
 
 
     <!--=================================

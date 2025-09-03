@@ -31,4 +31,9 @@ class Bargain extends Model
         'contract_start_date' => 'date:Y-m-d',
         'contract_end_date' => 'date:Y-m-d',
     ];
+
+    public function promotions()
+    {
+        return $this->morphMany(\App\Models\Promotion::class, 'promotable');
+    }
 }

@@ -39,6 +39,16 @@
                         <span class="badge bg-white text-dark fs-6 p-2 rounded-pill">
                             <i class="fas fa-circle me-1 small text-danger"></i> {{ ucfirst($bargain->status) }}
                         </span>
+                        <div class="mt-2">
+                            <button id="btn-promote-bargain"
+                                class="btn btn-sm btn-outline-primary">{{ $hasActivePromotion ? 'Promoted' : 'Promote' }}</button>
+                            @if ($hasActivePromotion && $activePromotionEndsAt)
+                                <div class="small text-muted mt-1">
+                                    <span id="bargain-promotion-ends-at"
+                                        data-ends-at="{{ $activePromotionEndsAt->toIso8601String() }}"></span>
+                                </div>
+                            @endif
+                        </div>
                     </div>
 
                     <!-- Profile Body -->
@@ -146,3 +156,146 @@
         </div>
     </div>
 @endsection
+@push('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('click', function(e) {
+            const btn = e.target.closest('#btn-promote-bargain');
+            if (!btn) return;
+            e.preventDefault();
+            if (btn.textContent.trim().toLowerCase() === 'promoted' ||
+                {{ $hasActivePromotion ? 'true' : 'false' }}) {
+                Swal.fire({
+                    title: 'Unpromote this bargain?',
+                    icon: 'warning',
+                    showCancelButton: true
+                }).then(r => {
+                    if (!r.isConfirmed) return;
+                    axios.post('{{ route('promotions.unpromote') }}', {
+                            type: 'bargain',
+                            id: {{ $bargain->id }}
+                        })
+                        .then(() => {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Unpromoted',
+                                timer: 1200,
+                                showConfirmButton: false
+                            });
+                            btn.textContent = 'Promote';
+                            clearPromotionCountdown('bargain-promotion-ends-at');
+                            const label = document.getElementById('bargain-promotion-ends-at');
+                            if (label) {
+                                label.removeAttribute('data-ends-at');
+                                label.textContent = '';
+                            }
+                        })
+                        .catch(() => Swal.fire('Error', 'Failed to unpromote', 'error'));
+                });
+                return;
+            }
+            Swal.fire({
+                title: 'Promote this bargain',
+                input: 'number',
+                inputLabel: 'How many days?',
+                inputAttributes: {
+                    min: 1,
+                    max: 365
+                },
+                inputValue: 7,
+                showCancelButton: true,
+                confirmButtonText: 'Promote'
+            }).then(result => {
+                if (!result.isConfirmed) return;
+                const days = parseInt(result.value, 10);
+                if (!days || days < 1) return;
+                axios.post('{{ route('promotions.promote') }}', {
+                        type: 'bargain',
+                        id: {{ $bargain->id }},
+                        days
+                    })
+                    .then(res => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Promoted',
+                            text: `Ends: ${res.data.ends_at}`,
+                            timer: 1600,
+                            showConfirmButton: false
+                        });
+                        btn.textContent = 'Promoted';
+                        // Insert/refresh countdown label
+                        let label = document.getElementById('bargain-promotion-ends-at');
+                        if (!label) {
+                            btn.parentElement.insertAdjacentHTML('beforeend',
+                                '<div class="small text-muted mt-1"><span id="bargain-promotion-ends-at"></span></div>'
+                            );
+                            label = document.getElementById('bargain-promotion-ends-at');
+                        }
+                        if (res.data.ends_at) {
+                            label.setAttribute('data-ends-at', new Date(res.data.ends_at)
+                                .toISOString());
+                            startPromotionCountdown('bargain-promotion-ends-at');
+                        }
+                    })
+                    .catch(() => Swal.fire('Error', 'Failed to promote', 'error'));
+            });
+        });
+
+        function clearPromotionCountdown(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            const handle = el.getAttribute('data-countdown');
+            if (handle) {
+                clearInterval(Number(handle));
+                el.removeAttribute('data-countdown');
+            }
+        }
+
+        function startPromotionCountdown(elementId) {
+            const el = document.getElementById(elementId);
+            if (!el) return;
+            clearPromotionCountdown(elementId);
+            const endsAt = new Date(el.getAttribute('data-ends-at'));
+            if (isNaN(endsAt)) return;
+            const handle = setInterval(() => {
+                const now = new Date();
+                let diff = Math.max(0, endsAt - now);
+                if (diff <= 0) {
+                    el.textContent = 'Expired';
+                    clearPromotionCountdown(elementId);
+                    return;
+                }
+                const second = 1000;
+                const minute = 60 * second;
+                const hour = 60 * minute;
+                const day = 24 * hour;
+                const month = 30 * day;
+                const year = 365 * day;
+                const years = Math.floor(diff / year);
+                diff %= year;
+                const months = Math.floor(diff / month);
+                diff %= month;
+                const days = Math.floor(diff / day);
+                diff %= day;
+                const hours = Math.floor(diff / hour);
+                diff %= hour;
+                const minutes = Math.floor(diff / minute);
+                diff %= minute;
+                const seconds = Math.floor(diff / second);
+                const segments = [];
+                segments.push(`<span class=\"badge bg-dark text-white me-1\">${years}Y</span>`);
+                segments.push(`<span class=\"badge bg-dark text-white me-1\">${months}M</span>`);
+                segments.push(`<span class=\"badge bg-dark text-white me-1\">${days}D</span>`);
+                segments.push(`<span class=\"badge bg-danger text-white me-1\">${hours}hr</span>`);
+                segments.push(`<span class=\"badge bg-danger text-white me-1\">${minutes}min</span>`);
+                segments.push(`<span class=\"badge bg-danger text-white\">${seconds}sec</span>`);
+                el.innerHTML = segments.join(' ');
+            }, 1000);
+            el.setAttribute('data-countdown', String(handle));
+        }
+        @if ($hasActivePromotion && $activePromotionEndsAt)
+            startPromotionCountdown('bargain-promotion-ends-at');
+        @endif
+    </script>
+@endpush

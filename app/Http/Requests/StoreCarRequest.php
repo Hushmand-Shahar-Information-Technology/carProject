@@ -25,12 +25,13 @@ class StoreCarRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:255',
+            'bargain_id' => 'nullable|exists:bargains,id',
             'year' => 'required|integer|min:1990|max:' . now()->year,
             'make' => 'required|string',
             'body_type' => 'required|string',
             'car_condition' => 'required|string',
-            'VIN_number' => 'required|string',
-            'location' => 'required|string',
+            'VIN_number' => 'nullable|string',
+            'location' => 'nullable|string',
             'model' => 'required|string',
             'car_color' => 'required|string',
             'car_inside_color' => 'required|string',
@@ -43,6 +44,7 @@ class StoreCarRequest extends FormRequest
             'sale_price' => 'nullable|numeric|min:0|lte:regular_price',
             // Renting fields (required only if is_for_rent is true)
             'is_for_rent' => 'sometimes|boolean',
+            'is_promoted' => 'sometimes|boolean',
             'rent_price_per_day' => 'nullable|numeric|min:0',
             'rent_price_per_month' => 'nullable|numeric|min:0',
             // Description

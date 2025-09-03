@@ -143,6 +143,7 @@ class CarController extends Controller
 
             $carData = [
                 'user_id' => 1, // Default user ID for testing (you can change this later)
+                'bargain_id' => $data['bargain_id'] ?? null,
                 'title' => $data['title'],
                 'year' => $data['year'],
                 'make' => $data['make'],
@@ -161,6 +162,7 @@ class CarController extends Controller
                 'description' => $data['description'] ?? null,
                 'is_for_sale' => (bool) ($data['is_for_sale'] ?? false),
                 'is_for_rent' => (bool) ($data['is_for_rent'] ?? false),
+                'is_promoted' => (bool) ($data['is_promoted'] ?? false),
                 'rent_price_per_day' => $data['rent_price_per_day'] ?? null,
                 'rent_price_per_month' => $data['rent_price_per_month'] ?? null,
                 'request_price_status' => (bool) ($data['request_price_status'] ?? false),
@@ -188,10 +190,17 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::findOrFail($id);
-        // dd($car->location);
+        $car = Car::with('promotions')->findOrFail($id);
+        $activePromotion = $car->promotions()
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })
+            ->latest('ends_at')
+            ->first();
+        $hasActivePromotion = (bool) $activePromotion;
+        $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
         $makes = Car::where('make', $car->make)->limit(10)->get();
-        return view('car.show', compact('car', 'makes'));
+        return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt'));
     }
 
     public function search(Request $request)
@@ -205,8 +214,20 @@ class CarController extends Controller
      */
     public function feature()
     {
-        $cars = Car::orderBy('id', 'desc')->take(15)->get();
+        $cars = Car::whereHas('promotions', function ($q) {
+            $q->where(function ($q2) {
+                $q2->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            });
+        })->latest()->take(15)->get();
         return response()->json($cars);
+    }
+
+    public function togglePromoted($id)
+    {
+        $car = Car::findOrFail($id);
+        $car->is_promoted = ! $car->is_promoted;
+        $car->save();
+        return response()->json(['status' => 'ok', 'is_promoted' => $car->is_promoted]);
     }
 
 
