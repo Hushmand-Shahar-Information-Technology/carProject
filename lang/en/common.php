@@ -43,6 +43,9 @@ return [
         'language_settings_description' => 'Choose your preferred language for the admin panel interface.',
         'language_info' => 'Language Information',
         'language_info_description' => 'The language change will take effect immediately and will be remembered for your next visit.',
+        'type' => 'Type',
+        'activity' => 'Activity',
+        'time' => 'Time',
     ],
     
     'messages' => [
@@ -55,14 +58,5 @@ return [
         'no_records' => 'No records found',
         'loading' => 'Loading...',
         'language_changed' => 'Language changed successfully!',
-    ],
-    
-    'navigation' => [
-        'dashboard' => 'Dashboard',
-        'admin' => 'Admin Panel',
-        'logout' => 'Logout',
-        'profile' => 'Profile',
-        'settings' => 'Settings',
-        'language' => 'Language',
     ],
 ];

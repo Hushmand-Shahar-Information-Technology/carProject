@@ -43,6 +43,9 @@ return [
         'language_settings_description' => 'زبان مورد نظر خود را برای رابط پنل مدیریت انتخاب کنید.',
         'language_info' => 'اطلاعات زبان',
         'language_info_description' => 'تغییر زبان بلافاصله اعمال می‌شود و برای بازدید بعدی شما ذخیره خواهد شد.',
+        'type' => 'نوع',
+        'activity' => 'فعالیت',
+        'time' => 'زمان',
     ],
     
     'messages' => [
@@ -55,14 +58,5 @@ return [
         'no_records' => 'هیچ رکوردی یافت نشد',
         'loading' => 'در حال بارگذاری...',
         'language_changed' => 'زبان با موفقیت تغییر یافت!',
-    ],
-    
-    'navigation' => [
-        'dashboard' => 'داشبورد',
-        'admin' => 'پنل مدیریت',
-        'logout' => 'خروج',
-        'profile' => 'پروفایل',
-        'settings' => 'تنظیمات',
-        'language' => 'زبان',
     ],
 ];

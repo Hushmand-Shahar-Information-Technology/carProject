@@ -190,7 +190,7 @@
                <div>
                     <label class="block font-medium">Car Body Color</label>
                     <select x-model="form.car_color" class="w-full border rounded p-2 select2 text-right @error('car_color') border-red-500 @enderror" name="car_color">
-                        <option value="">رنگ بدنه خودرو را انتخاب کنید</option>
+                        <option value="">رنگ بدنه موتر را انتخاب کنید</option>
                         <option value="black" {{ old('car_color', $car->car_color ?? '') == 'black' ? 'selected' : '' }}>سیاه</option>
                         <option value="white" {{ old('car_color', $car->car_color ?? '') == 'white' ? 'selected' : '' }}>سفید</option>
                         <option value="gray" {{ old('car_color', $car->car_color ?? '') == 'gray' ? 'selected' : '' }}>خاکستری</option>

@@ -43,6 +43,9 @@ return [
         'language_settings_description' => 'د اډمین پاڼې د انټرفیس لپاره خپله غوره ژبه وټاکئ.',
         'language_info' => 'د ژبې معلومات',
         'language_info_description' => 'د ژبې بدلون سمدلاسه اغیزه لري او ستاسو د راتلونکي لیدنې لپاره به یاد وساتل شي.',
+        'type' => 'ډول',
+        'activity' => 'فعالیت',
+        'time' => 'وخت',
     ],
     
     'messages' => [
@@ -55,14 +58,5 @@ return [
         'no_records' => 'هیڅ سند ونه موندل شو',
         'loading' => 'بارول کیږي...',
         'language_changed' => 'ژبه په بریالیتوب سره بدله شوه!',
-    ],
-    
-    'navigation' => [
-        'dashboard' => 'کنټرول پاڼه',
-        'admin' => 'د اډمین پاڼه',
-        'logout' => 'وتل',
-        'profile' => 'پروفایل',
-        'settings' => 'تنظیمات',
-        'language' => 'ژبه',
     ],
 ];
