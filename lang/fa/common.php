@@ -1,0 +1,62 @@
+<?php
+
+return [
+    'actions' => [
+        'view' => 'مشاهده',
+        'edit' => 'ویرایش',
+        'delete' => 'حذف',
+        'create' => 'ایجاد',
+        'save' => 'ذخیره',
+        'cancel' => 'لغو',
+        'back' => 'برگشت',
+        'search' => 'جستجو',
+        'filter' => 'فیلتر',
+        'export' => 'صادرات',
+        'import' => 'وارد کردن',
+        'select_all' => 'انتخاب همه',
+        'deselect_all' => 'لغو انتخاب همه',
+    ],
+    
+    'navigation' => [
+        'dashboard' => 'داشبورد',
+        'admin' => 'پنل مدیریت',
+        'logout' => 'خروج',
+        'profile' => 'پروفایل',
+        'settings' => 'تنظیمات',
+        'language' => 'زبان',
+    ],
+
+    'labels' => [
+        'created_at' => 'تاریخ ایجاد',
+        'updated_at' => 'تاریخ به‌روزرسانی',
+        'deleted_at' => 'تاریخ حذف',
+        'yes' => 'بلی',
+        'no' => 'خیر',
+        'active' => 'فعال',
+        'inactive' => 'غیر فعال',
+        'enabled' => 'فعال',
+        'disabled' => 'غیر فعال',
+        'required' => 'الزامی',
+        'optional' => 'اختیاری',
+        'language' => 'زبان',
+        'language_settings' => 'تنظیمات زبان',
+        'language_settings_description' => 'زبان مورد نظر خود را برای رابط پنل مدیریت انتخاب کنید.',
+        'language_info' => 'اطلاعات زبان',
+        'language_info_description' => 'تغییر زبان بلافاصله اعمال می‌شود و برای بازدید بعدی شما ذخیره خواهد شد.',
+        'type' => 'نوع',
+        'activity' => 'فعالیت',
+        'time' => 'زمان',
+    ],
+    
+    'messages' => [
+        'saved' => 'با موفقیت ذخیره شد!',
+        'deleted' => 'با موفقیت حذف شد!',
+        'created' => 'با موفقیت ایجاد شد!',
+        'updated' => 'با موفقیت به‌روزرسانی شد!',
+        'error' => 'خطایی رخ داد!',
+        'confirm_delete' => 'آیا از حذف این مورد اطمینان دارید؟',
+        'no_records' => 'هیچ رکوردی یافت نشد',
+        'loading' => 'در حال بارگذاری...',
+        'language_changed' => 'زبان با موفقیت تغییر یافت!',
+    ],
+];
