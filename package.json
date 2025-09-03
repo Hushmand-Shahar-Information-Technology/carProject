@@ -5,8 +5,12 @@
     "version": "1.0.0",
     "scripts": {
         "build:memory": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
+        "build:high-memory": "cross-env NODE_OPTIONS=--max-old-space-size=8192 vite build",
         "dev": "vite",
-        "build": "vite build"
+        "dev:memory": "cross-env NODE_OPTIONS=--max-old-space-size=2048 vite",
+        "build": "vite build",
+        "optimize": "npm run build:memory && npm run post-build",
+        "post-build": "echo Build completed with memory optimization"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",
