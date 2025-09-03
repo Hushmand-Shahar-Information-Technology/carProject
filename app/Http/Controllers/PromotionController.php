@@ -16,21 +16,45 @@ class PromotionController extends Controller
 
     public function list(Request $request)
     {
-        $type = $request->query('type', 'car');
-        if ($type === 'bargain') {
-            $promoted = Promotion::with('promotable')
-                ->where('promotable_type', Bargain::class)
-                ->where(function ($q) {
-                    $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
-                })
-                ->latest()->get();
-        } else {
-            $promoted = Promotion::with('promotable')
-                ->where('promotable_type', Car::class)
-                ->where(function ($q) {
-                    $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
-                })
-                ->latest()->get();
+        $typeRaw = $request->query('type', 'car');
+        $type = in_array($typeRaw, ['bargain', 'bargains'], true) ? 'bargain' : 'car';
+        $q = trim((string) $request->query('q', ''));
+        $promoted = Promotion::with('promotable')
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })
+            ->when($type === 'bargain', function ($q) {
+                $q->where(function ($qq) {
+                    $qq->whereHasMorph('promotable', [Bargain::class])
+                       ->orWhereIn('promotable_type', [
+                           'bargain', Bargain::class, 'App\\Bargain', 'App\\Models\\Bargain'
+                       ]);
+                });
+            }, function ($q) {
+                $q->where(function ($qq) {
+                    $qq->whereHasMorph('promotable', [Car::class])
+                       ->orWhereIn('promotable_type', [
+                           'car', Car::class, 'App\\Car', 'App\\Models\\Car'
+                       ]);
+                });
+            })
+            ->latest()
+            ->get()
+            ->filter(function ($promo) {
+                return !is_null($promo->promotable);
+            })
+            ->values();
+        if ($q !== '') {
+            $needle = mb_strtolower($q);
+            $promoted = $promoted->filter(function ($promo) use ($type, $needle) {
+                if (! $promo->promotable) return false;
+                if ($type === 'bargain') {
+                    $name = mb_strtolower(($promo->promotable->name ?? '') . ' ' . ($promo->promotable->username ?? ''));
+                    return str_contains($name, $needle);
+                }
+                $title = mb_strtolower(($promo->promotable->title ?? '') . ' ' . ($promo->promotable->model ?? ''));
+                return str_contains($title, $needle);
+            })->values();
         }
 
         return response()->json($promoted);
@@ -55,7 +79,11 @@ class PromotionController extends Controller
             'created_by' => auth()->id(),
         ]);
 
-        return response()->json(['status' => 'ok', 'ends_at' => $endsAt->toDateTimeString()]);
+        return response()->json([
+            'status' => 'ok',
+            'ends_at' => $endsAt->toDateTimeString(),
+            'ends_at_iso' => $endsAt->toIso8601String(),
+        ]);
     }
 
     public function unpromote(Request $request)
