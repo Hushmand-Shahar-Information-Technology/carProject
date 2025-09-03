@@ -64,6 +64,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     {{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        // Axios CSRF setup
+        (function() {
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            if (window.axios && token) {
+                window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+                window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+            }
+        })();
+    </script>
 
 
 </head>
@@ -122,19 +132,29 @@
                                 </ul>
                                 <ul class="menu-links">
                                     <li class="active"><a href="{{ route('home.index') }}">Home </a></li>
-                                    <li><a href="{{ route('car.index') }}">Car listing </a></li>
+                                    <li class="dropdown"><a href="javascript:void(0)"> Car <i
+                                                class="fa fa-angle-down"></i></a>
+                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
+                                            <li><a href="{{ route('car.create') }}">Car Register</a></li>
+                                            <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
+                                            <li><a href="{{ route('car.index') }}">Car Listing</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown"><a href="javascript:void(0)"> Bargains <i
+                                                class="fa fa-angle-down"></i></a>
+                                        <ul class="drop-down-multilevel">
+                                            <li><a href="{{ route('bargains.create') }}">Bargain Register</a></li>
+                                            <li><a href="{{ route('bargains.index') }}">Bargains List</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{{ route('promotions.index') }}">Promoted</a></li>
                                     <li><a href="javascript:void(0)"> Contact </a></li>
-                                    <li><a href="{{ route('bargains.create') }}"> Bargain Register </a></li>
                                     {{-- <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
                                         class="btn btn-primary">
                                         Chat Now
                                     </a> --}}
 
-                                    <li><a href="{{ route('car.directory') }}">Car directory</a></li>
-                                    <li><a href="{{ route('car.create') }}">Car Register</a></li>
-                                    <li>
-                                        <a href="{{ route('user.profile') }}">profile</a>
-                                    </li>
+                                    <li><a href="{{ route('user.profile') }}">profile</a></li>
                                     <li>
                                         <a href="{{ route('car.compare') }}"
                                             class="position-relative text-decoration-none">
@@ -155,7 +175,8 @@
                                                 <i class="fa-solid fa-search"></i>
                                             </a>
                                             <div class="search-box not-click">
-                                                <form id="searchForm" action="{{ route('car.index') }}" method="GET">
+                                                <form id="searchForm" action="{{ route('car.index') }}"
+                                                    method="GET">
                                                     <div class="row">
                                                         @php
                                                             $years = range(1990, now()->year);
@@ -197,6 +218,7 @@
  header -->
 
     @yield('content')
+    @stack('scripts')
 
 
     <!--=================================
