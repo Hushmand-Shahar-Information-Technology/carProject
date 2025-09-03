@@ -487,8 +487,8 @@
     </div>
 
     <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    car-listing-sidebar -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <!--=================================
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                car-listing-sidebar -->
 
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
@@ -600,8 +600,8 @@
     </section>
 
     <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ===============-->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        Scripts
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ===============-->
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
@@ -803,7 +803,6 @@
         }
 
         function renderPagination(meta) {
-            // Select the existing pagination container
             let pagContainer = document.querySelector('.pagination-link');
             if (!pagContainer) return;
 
@@ -814,13 +813,13 @@
 
             const current = meta.current_page || 1;
             const last = meta.last_page || 1;
-            const maxButtons = 5;
-            let start = Math.max(1, current - Math.floor(maxButtons / 2));
-            let end = Math.min(last, start + maxButtons - 1);
-            start = Math.max(1, Math.min(start, end - maxButtons + 1));
-
+            const maxButtons = 5; // how many page numbers to display around current
             const parts = [];
-            const makeBtn = (label, page, disabled = false, active = false) => {
+
+            const makeBtn = (label, page, disabled = false, active = false, isEllipsis = false) => {
+                if (isEllipsis) {
+                    return `<span class="mx-1">...</span>`;
+                }
                 const cls = ['btn', 'btn-sm', 'mx-1', 'mb-2', 'px-3', 'py-1'];
                 if (active) cls.push('btn-danger');
                 else cls.push('btn-light');
@@ -831,9 +830,30 @@
             // Prev button
             parts.push(makeBtn('Prev', current - 1, current === 1));
 
-            // Page buttons
+            // Always show the first page
+            parts.push(makeBtn(1, 1, false, current === 1));
+
+            // Show second page only if current is close
+            if (current > 3) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Pages around current
+            let start = Math.max(2, current - 2);
+            let end = Math.min(last - 1, current + 2);
+
             for (let p = start; p <= end; p++) {
                 parts.push(makeBtn(p, p, false, p === current));
+            }
+
+            // Show ellipsis before last page
+            if (current < last - 2) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Always show last page if > 1
+            if (last > 1) {
+                parts.push(makeBtn(last, last, false, current === last));
             }
 
             // Next button
@@ -842,7 +862,7 @@
             // Render
             pagContainer.innerHTML = parts.join('');
 
-            // Attach click events
+            // Attach events
             pagContainer.querySelectorAll('button[data-page]').forEach(btn => {
                 btn.addEventListener('click', (e) => {
                     const page = parseInt(e.currentTarget.getAttribute('data-page'));
@@ -985,7 +1005,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
