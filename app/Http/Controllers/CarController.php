@@ -190,13 +190,16 @@ class CarController extends Controller
     public function show($id)
     {
         $car = Car::with('promotions')->findOrFail($id);
-        $hasActivePromotion = $car->promotions()
+        $activePromotion = $car->promotions()
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
             })
-            ->exists();
+            ->latest('ends_at')
+            ->first();
+        $hasActivePromotion = (bool) $activePromotion;
+        $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
         $makes = Car::where('make', $car->make)->limit(10)->get();
-        return view('car.show', compact('car', 'makes', 'hasActivePromotion'));
+        return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt'));
     }
 
     public function search(Request $request)
