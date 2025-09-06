@@ -1,13 +1,21 @@
 <?php
 
-
+use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CarController;
 use App\Http\Controllers\routeController;
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\PromotionController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BargainController;
+
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::view('/', 'home.index')->name('home.index');
 Route::post('/home/filter-cars', [routeController::class, 'filter']);
