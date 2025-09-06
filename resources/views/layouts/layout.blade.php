@@ -88,31 +88,71 @@
         <div class="topbar">
             <div class="container">
                 <div class="row">
+                    <!-- Left side -->
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-left text-lg-start text-center">
-                            <ul class="list-inline">
-                                <li> <i class="fa-solid fa-envelope"> </i> support@motarsal.com</li>
-
-
-
-                                <li> <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Fridy CLOSED</li>
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <i class="fa-solid fa-envelope"></i> support@motarsal.com
+                                </li>
+                                <li class="list-inline-item">
+                                    <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Friday CLOSED
+                                </li>
                             </ul>
                         </div>
                     </div>
+
+                    <!-- Right side -->
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-right text-lg-end text-center">
-                            <ul class="list-inline">
-                                <li> <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532 </li>
-                                <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
+                                </li>
+                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
+                                </li>
+                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
+                                </li>
+                                <li class="list-inline-item"><a href="#"><i
+                                            class="fa-brands fa-instagram"></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-youtube"></i></a>
+                                </li>
+
+                                <!-- Authentication -->
+                                @guest
+                                    <li class="list-inline-item">
+                                        <a href="{{ route('login') }}"><i class="fa fa-sign-in-alt"></i> Login</a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="{{ route('register') }}"><i class="fa fa-user-plus"></i> Register</a>
+                                    </li>
+                                @endguest
+
+                                @auth
+                                    <li class="list-inline-item dropdown">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="fa fa-user-circle"></i> {{ Auth::user()->name }}
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item">
+                                                        <i class="fa fa-sign-out-alt"></i> Logout
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endauth
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!--=================================
     mega menu -->
