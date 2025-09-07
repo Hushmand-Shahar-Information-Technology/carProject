@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 
-class Offer extends Model
+class Offer extends BaseModel
 {
    protected $fillable = [
     'name', 'phone', 'email', 'price', 'car_id', 'remark',

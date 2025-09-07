@@ -15,6 +15,7 @@ return [
         'import' => 'Import',
         'select_all' => 'Select All',
         'deselect_all' => 'Deselect All',
+        'activities' => 'Activities',
     ],
     
     'navigation' => [
@@ -24,6 +25,7 @@ return [
         'profile' => 'Profile',
         'settings' => 'Settings',
         'language' => 'Language',
+        'activity_log' => 'Activity Log',
     ],
 
     'labels' => [

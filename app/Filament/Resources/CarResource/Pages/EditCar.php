@@ -14,6 +14,10 @@ class EditCar extends EditRecord
     {
         return [
             Actions\ViewAction::make(),
+            Actions\Action::make('activities')
+                ->label(__('common.actions.activities'))
+                ->url(fn ($record) => CarResource::getUrl('activities', ['record' => $record]))
+                ->icon('heroicon-o-clipboard-document-list'),
             Actions\DeleteAction::make(),
         ];
     }

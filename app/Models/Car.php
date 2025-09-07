@@ -3,17 +3,16 @@
 namespace App\Models;
 
 use App\Enums\TransmissionType;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\BaseModel;
 use App\Enums\CarColor;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Car extends Model
+class Car extends BaseModel
 {
     /** @use HasFactory<\Database\Factories\CarFactory> */
     use HasFactory;
-
 
     protected $guarded = [];
 
