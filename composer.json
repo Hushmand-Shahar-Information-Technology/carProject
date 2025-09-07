@@ -15,7 +15,9 @@
         "laravel/telescope": "^5.8",
         "laravel/tinker": "^2.10.1",
         "munafio/chatify": "^1.6",
+        "pxlrbt/filament-activity-log": "^1.1",
         "rappasoft/laravel-authentication-log": "5.0",
+        "spatie/laravel-activitylog": "^4.10",
         "tapp/filament-authentication-log": "4.0.0",
         "vonage/client": "^4.1"
     },
