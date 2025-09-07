@@ -445,6 +445,13 @@
             justify-content: space-around !important;
         }
 
+        .list-inline2 li {
+            color: black;
+            background-color: #e7e7e7;
+            padding: 8px 32px !important;
+            font-size: 0.8rem !important;
+        }
+
         @media (max-width: 790px) {
             .div-search {
                 margin: 24px 0 32px 0;
@@ -939,7 +946,7 @@
                         const title = `<h4>${car.title}</h4>`;
                         const details_button = `
                          <div>
-                             <a class="button red float-end" href="${url}">Details</a>
+                             <a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${url}">Details</a>
                          </div>`;
                         const description =
                             `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
@@ -995,19 +1002,21 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
                                 ${currentView == 'list' ? description  : ""}
                                 ${currentView == 'list' ? details : ""}
-                                <div class="price d-flex align-items-center gap-2">
-                                     ${currentView === 'list' ? details_button : ''}
-                                    <span class="old-price">$${car.regular_price}</span>
-                                    <span class="new-price">$${car.sale_price}</span>
+                                <div class="price d-flex justify-content-between gap-2 ${currentView == 'list' ? 'my-3': ''}">
+                                    <div>
+                                        <span class="old-price">$${car.regular_price}</span>
+                                        <span class="new-price">$${car.sale_price}</span>
+                                    </div>    
+                                    ${currentView === 'list' ? details_button : ''}
                                 </div>
-                                <div class="car-list">
-                                    <ul class="list-inline">
+                                <div class="car-list" >
+                                    <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
                                         <li style="font-size: 10px;><i class="fa fa-registered"></i> ${car.year}</li>
                                         <li style="font-size: 10px;><i class="fa fa-cog"></i> ${car.transmission_type}</li>
                                         <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.currency_type}</li>
