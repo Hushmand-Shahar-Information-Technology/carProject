@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->timestamps();
 
-            $table->index(['promotable_type', 'promotable_id']);
+            // The morphs() method already creates an index on promotable_type and promotable_id
+            // So we don't need to create it again
         });
     }
 

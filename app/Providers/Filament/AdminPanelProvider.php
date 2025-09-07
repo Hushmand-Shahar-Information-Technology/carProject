@@ -21,7 +21,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-
+use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -61,6 +61,8 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])->plugins([
                     FilamentShieldPlugin::make(),
-                ]);
+                    \Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin::make(),
+                ])->viteTheme('resources/css/filament/admin/theme.css')->darkMode(false)
+                ->brandName('Top Motar');
     }
 }

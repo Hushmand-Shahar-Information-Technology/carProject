@@ -25,11 +25,14 @@ class AppServiceProvider extends ServiceProvider
     {
         // Ensure legacy morph types resolve correctly
         Relation::enforceMorphMap([
+            'user' => \App\Models\User::class,
             'car' => \App\Models\Car::class,
             'bargain' => \App\Models\Bargain::class,
             // Fallbacks for legacy namespaces
+            'App\\User' => \App\Models\User::class,
             'App\\Car' => \App\Models\Car::class,
             'App\\Bargain' => \App\Models\Bargain::class,
+            'App\\Models\\User' => \App\Models\User::class,
             'App\\Models\\Car' => \App\Models\Car::class,
             'App\\Models\\Bargain' => \App\Models\Bargain::class,
         ]);

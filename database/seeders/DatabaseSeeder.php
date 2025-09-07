@@ -15,12 +15,13 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        // User::factory()->create([
-        //     'name' => 'developer',
-        //     'email' => 'dev@dev.com',
-        //     'password' => 'dev',
-        // ]);
+        User::factory()->create([
+            'name' => 'developer',
+            'email' => 'dev@dev.com',
+            'password' => 'dev',
+            ]);
         $this->call([
+            DefaultUserSeeder::class,
             ShieldSeeder::class,
             CarSeeder::class,
         ]);
