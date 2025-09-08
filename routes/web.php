@@ -48,6 +48,8 @@ Route::prefix('bargains')->group(function () {
 Route::prefix('car')->group(function () {
     Route::get('index', [CarController::class, 'index'])->name('car.index');
     Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
+    Route::get('rent', [CarController::class, 'rentIndex'])->name('car.rent');
+    Route::get('filter-rent', [CarController::class, 'filterRent'])->name('cars.filter-rent');
     Route::get('register', [CarController::class, 'create'])->name('car.create');
     Route::get('show/{id}', [CarController::class, 'show'])->name('car.show');
     Route::post('store', [CarController::class, 'store'])->name('car.store');
