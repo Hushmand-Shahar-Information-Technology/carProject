@@ -59,12 +59,13 @@ class StoreCarRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $isForSale = filter_var($this->input('is_for_sale', false), FILTER_VALIDATE_BOOLEAN);
-            $isForRent = filter_var($this->input('is_for_rent', false), FILTER_VALIDATE_BOOLEAN);
+            $request = $validator->getData();
+            $isForSale = filter_var($request['is_for_sale'] ?? false, FILTER_VALIDATE_BOOLEAN);
+            $isForRent = filter_var($request['is_for_rent'] ?? false, FILTER_VALIDATE_BOOLEAN);
 
             if ($isForSale) {
-                $regularPrice = $this->input('regular_price');
-                $salePrice = $this->input('sale_price');
+                $regularPrice = $request['regular_price'] ?? null;
+                $salePrice = $request['sale_price'] ?? null;
 
                 if ($regularPrice === null || $regularPrice === '' || $regularPrice <= 0) {
                     $validator->errors()->add('regular_price', 'Regular price is required and must be greater than 0 when selling.');
@@ -82,8 +83,8 @@ class StoreCarRequest extends FormRequest
             }
 
             if ($isForRent) {
-                $day = $this->input('rent_price_per_day');
-                $month = $this->input('rent_price_per_month');
+                $day = $request['rent_price_per_day'] ?? null;
+                $month = $request['rent_price_per_month'] ?? null;
                 if (($day === null || $day === '') && ($month === null || $month === '')) {
                     $validator->errors()->add('rent_price', 'Provide rent per day or rent per month.');
                 }
