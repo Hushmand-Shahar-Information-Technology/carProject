@@ -176,15 +176,15 @@
                                     <li class="{{ request()->routeIs('home.index') ? 'active' : '' }}">
                                         <a href="{{ route('home.index') }}">Home</a>
                                     </li>
-
-                                    <li class="{{ request()->routeIs('car.index') ? 'active' : '' }}">
-                                        <a href="{{ route('car.index') }}">Car listing</a>
+                                    <li class="dropdown"><a href="javascript:void(0)"> Car <i
+                                                class="fa fa-angle-down"></i></a>
+                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
+                                            <li><a href="{{ route('car.create') }}">Car Register</a></li>
+                                            <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
+                                            <li><a href="{{ route('car.index') }}">Car Listing</a></li>
+                                            <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
+                                        </ul>
                                     </li>
-
-                                    <li class="{{ request()->is('contact') ? 'active' : '' }}">
-                                        <a href="javascript:void(0)">Contact</a>
-                                    </li>
-
                                     {{-- Dropdown for Bargains --}}
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="bargainsDropdown"
@@ -204,79 +204,60 @@
                                                     Bargain List
                                                 </a>
                                             </li>
-                                            <li class="active"><a href="{{ route('home.index') }}">Home </a></li>
-                                            <li class="dropdown"><a href="javascript:void(0)"> Car <i
-                                                        class="fa fa-angle-down"></i></a>
-                                                <ul class="drop-down-multilevel" style="min-width: 280px;">
-                                                    <li><a href="{{ route('car.create') }}">Car Register</a></li>
-                                                    <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
-                                                    <li><a href="{{ route('car.index') }}">Car Listing</a></li>
-                                                    <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
-                                                </ul>
-                                            </li>
-
-                                            <li class="{{ request()->routeIs('car.directory') ? 'active' : '' }}">
-                                                <a href="{{ route('car.directory') }}">Car directory</a>
-                                            </li>
-
-                                            <li class="{{ request()->routeIs('car.create') ? 'active' : '' }}">
-                                                <a href="{{ route('car.create') }}">Car Register</a>
-                                            </li>
-
-                                            <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
-                                                <a href="{{ route('user.profile') }}">Profile</a>
-                                            </li>
-
-                                            <li class="{{ request()->routeIs('car.compare') ? 'active' : '' }}">
-                                                <a href="{{ route('car.compare') }}"
-                                                    class="position-relative text-decoration-none">
-                                                    <i class="fa fa-exchange-alt fa-lg"></i>
-                                                    <span id="compare-count"
-                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                                        style="font-size: 0.75rem; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
-                                                        0
-                                                    </span>
-                                                </a>
-                                            </li>
-
-                                            <li>
-                                                <div class="search-top">
-                                                    <a class="search-btn not_click d-none d-lg-block"
-                                                        href="javascript:void(0);">
-                                                        <i class="fa-solid fa-search"></i>
-                                                    </a>
-                                                    <div class="search-box not-click">
-                                                        <form id="searchForm" action="{{ route('car.index') }}"
-                                                            method="GET">
-                                                            <form id="searchForm" action="{{ route('car.index') }}"
-                                                                method="GET">
-                                                                <div class="row">
-                                                                    @php
-                                                                        $years = range(1990, now()->year);
-                                                                    @endphp
-                                                                    <x-search-option name="Make[]" label="Make"
-                                                                        :options="$distinctValues['make']" />
-                                                                    <x-search-option name="Model[]" label="Models"
-                                                                        :options="$distinctValues['models']" />
-                                                                    <x-search-option name="Year[]" label="Years"
-                                                                        :options="$years" />
-                                                                    <x-search-option name="Body[]"
-                                                                        label="Body Styles" :options="$distinctValues['body_type']" />
-                                                                    <x-search-option name="Color[]" label="Color"
-                                                                        :options="$distinctValues['colors']" />
-
-                                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                                        <div class="text-center">
-                                                                            <button class="button red"
-                                                                                type="submit">Search</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </form>
-                                                    </div>
-                                                </div>
-                                            </li>
                                         </ul>
+                                    </li>
+                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
+                                        <a href="{{ route('user.profile') }}">Profile</a>
+                                    </li>
+
+                                    <li class="{{ request()->routeIs('car.compare') ? 'active' : '' }}">
+                                        <a href="{{ route('car.compare') }}"
+                                            class="position-relative text-decoration-none">
+                                            <i class="fa fa-exchange-alt fa-lg"></i>
+                                            <span id="compare-count"
+                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                                style="font-size: 0.75rem; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
+                                                0
+                                            </span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <div class="search-top">
+                                            <a class="search-btn not_click d-none d-lg-block"
+                                                href="javascript:void(0);">
+                                                <i class="fa-solid fa-search"></i>
+                                            </a>
+                                            <div class="search-box not-click">
+                                                <form id="searchForm" action="{{ route('car.index') }}"
+                                                    method="GET">
+                                                    <form id="searchForm" action="{{ route('car.index') }}"
+                                                        method="GET">
+                                                        <div class="row">
+                                                            @php
+                                                                $years = range(1990, now()->year);
+                                                            @endphp
+                                                            <x-search-option name="Make[]" label="Make"
+                                                                :options="$distinctValues['make']" />
+                                                            <x-search-option name="Model[]" label="Models"
+                                                                :options="$distinctValues['models']" />
+                                                            <x-search-option name="Year[]" label="Years"
+                                                                :options="$years" />
+                                                            <x-search-option name="Body[]" label="Body Styles"
+                                                                :options="$distinctValues['body_type']" />
+                                                            <x-search-option name="Color[]" label="Color"
+                                                                :options="$distinctValues['colors']" />
+
+                                                            <div class="col-xl-2 col-md-4 col-sm-6">
+                                                                <div class="text-center">
+                                                                    <button class="button red"
+                                                                        type="submit">Search</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                            </div>
+                                        </div>
+                                    </li>
 
                             </div>
                         </div>
