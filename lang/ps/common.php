@@ -48,6 +48,17 @@ return [
         'type' => 'ډول',
         'activity' => 'فعالیت',
         'time' => 'وخت',
+        'user' => 'کاروونکی',
+        'model' => 'موډل',
+        'event' => 'پیښه',
+        'description' => 'توضیح',
+        'date_time' => 'نیټه او وخت',
+        'has_record' => 'سند لري',
+        'event_type' => 'د پیښې ډول',
+        'model_type' => 'د موډل ډول',
+        'date_range' => 'د نیټې محدودیت',
+        'from' => 'له',
+        'to' => 'تر',
     ],
     
     'messages' => [
@@ -60,5 +71,8 @@ return [
         'no_records' => 'هیڅ سند ونه موندل شو',
         'loading' => 'بارول کیږي...',
         'language_changed' => 'ژبه په بریالیتوب سره بدله شوه!',
+        'view_all_activities' => 'د ټولو د سیسټم فعالیتونو او د کاروونکي اقدامات وګورئ',
+        'select_event_type' => 'د پیښې ډول وټاکئ',
+        'select_model_type' => 'د موډل ډول وټاکئ',
     ],
 ];

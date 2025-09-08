@@ -48,6 +48,17 @@ return [
         'type' => 'Type',
         'activity' => 'Activity',
         'time' => 'Time',
+        'user' => 'User',
+        'model' => 'Model',
+        'event' => 'Event',
+        'description' => 'Description',
+        'date_time' => 'Date & Time',
+        'has_record' => 'Has Record',
+        'event_type' => 'Event Type',
+        'model_type' => 'Model Type',
+        'date_range' => 'Date Range',
+        'from' => 'From',
+        'to' => 'To',
     ],
     
     'messages' => [
@@ -60,5 +71,8 @@ return [
         'no_records' => 'No records found',
         'loading' => 'Loading...',
         'language_changed' => 'Language changed successfully!',
+        'view_all_activities' => 'View all system activities and user actions',
+        'select_event_type' => 'Select an event type',
+        'select_model_type' => 'Select a model type',
     ],
 ];

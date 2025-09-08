@@ -48,6 +48,17 @@ return [
         'type' => 'نوع',
         'activity' => 'فعالیت',
         'time' => 'زمان',
+        'user' => 'کاربر',
+        'model' => 'مدل',
+        'event' => 'رویداد',
+        'description' => 'توضیحات',
+        'date_time' => 'تاریخ و زمان',
+        'has_record' => 'دارای رکورد',
+        'event_type' => 'نوع رویداد',
+        'model_type' => 'نوع مدل',
+        'date_range' => 'محدوده تاریخ',
+        'from' => 'از',
+        'to' => 'تا',
     ],
     
     'messages' => [
@@ -60,5 +71,8 @@ return [
         'no_records' => 'هیچ رکوردی یافت نشد',
         'loading' => 'در حال بارگذاری...',
         'language_changed' => 'زبان با موفقیت تغییر یافت!',
+        'view_all_activities' => 'مشاهده تمام فعالیت‌های سیستم و اقدامات کاربران',
+        'select_event_type' => 'نوع رویداد را انتخاب کنید',
+        'select_model_type' => 'نوع مدل را انتخاب کنید',
     ],
 ];
