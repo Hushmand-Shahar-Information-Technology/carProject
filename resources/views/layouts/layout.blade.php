@@ -183,6 +183,7 @@
                                             <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
                                             <li><a href="{{ route('car.index') }}">Car Listing</a></li>
                                             <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
+                                            <li><a href="{{ route('car.auction') }}">Car Auction</a></li>
                                         </ul>
                                     </li>
                                     {{-- Dropdown for Bargains --}}
