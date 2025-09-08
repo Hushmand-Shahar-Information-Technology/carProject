@@ -35,13 +35,13 @@ class StoreCarRequest extends FormRequest
             'model' => 'required|string',
             'car_color' => 'required|string',
             'car_inside_color' => 'required|string',
-            'car_documents' => 'nullable|string',
+            'car_documents' => 'required|string',
             'transmission_type' => 'required|string',
             'currency_type' => 'required|string',
             // Selling fields (required only if is_for_sale is true)
             'is_for_sale' => 'sometimes|boolean',
             'regular_price' => 'nullable|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0|lte:regular_price',
+            'sale_price' => 'nullable|numeric|min:0',
             // Renting fields (required only if is_for_rent is true)
             'is_for_rent' => 'sometimes|boolean',
             'is_promoted' => 'sometimes|boolean',
@@ -63,11 +63,21 @@ class StoreCarRequest extends FormRequest
             $isForRent = filter_var($this->input('is_for_rent', false), FILTER_VALIDATE_BOOLEAN);
 
             if ($isForSale) {
-                if ($this->input('regular_price') === null || $this->input('regular_price') === '') {
-                    $validator->errors()->add('regular_price', 'Regular price is required when selling.');
+                $regularPrice = $this->input('regular_price');
+                $salePrice = $this->input('sale_price');
+
+                if ($regularPrice === null || $regularPrice === '' || $regularPrice <= 0) {
+                    $validator->errors()->add('regular_price', 'Regular price is required and must be greater than 0 when selling.');
                 }
-                if ($this->input('sale_price') === null || $this->input('sale_price') === '') {
-                    $validator->errors()->add('sale_price', 'Sale price is required when selling.');
+                if ($salePrice === null || $salePrice === '' || $salePrice <= 0) {
+                    $validator->errors()->add('sale_price', 'Sale price is required and must be greater than 0 when selling.');
+                }
+
+                // Only validate price comparison if both prices are valid numbers
+                if (is_numeric($regularPrice) && is_numeric($salePrice)) {
+                    if ((float)$salePrice > (float)$regularPrice) {
+                        $validator->errors()->add('sale_price', 'Sale price must be less than or equal to regular price.');
+                    }
                 }
             }
 
@@ -84,6 +94,7 @@ class StoreCarRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'sale_price.lte' => 'Sale price must be less than or equal to regular price.',
             'images.required' => 'At least one image is required.',
             'images.array' => 'Images must be an array of files.',
             'images.*.image' => 'Each image must be a valid image file.',
