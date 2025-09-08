@@ -15,6 +15,7 @@ return [
         'import' => 'وارد کردن',
         'select_all' => 'انتخاب همه',
         'deselect_all' => 'لغو انتخاب همه',
+        'activities' => 'فعالیت‌ها',
     ],
     
     'navigation' => [
@@ -24,6 +25,7 @@ return [
         'profile' => 'پروفایل',
         'settings' => 'تنظیمات',
         'language' => 'زبان',
+        'activity_log' => 'لاگ فعالیت‌ها',
     ],
 
     'labels' => [

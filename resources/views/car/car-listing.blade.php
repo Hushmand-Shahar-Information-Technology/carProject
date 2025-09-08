@@ -439,6 +439,17 @@
             transform: scale(1.1);
             transition: transform 0.2s ease;
         }
+
+        .list-inline {
+            display: flex !important;
+            justify-content: space-around !important;
+        }
+
+        @media (max-width: 790px) {
+            .div-search {
+                margin: 24px 0 32px 0;
+            }
+        }
     </style>
     <!--=================================banner -->
 
@@ -474,11 +485,6 @@
         <!-- Filtered cars will be loaded here -->
         {{-- @include('components.feature-car') --}}
     </div>
-
-    <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <!--=================================
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        car-listing-sidebar -->
-
     <section class="car-listing-sidebar product-listing" data-sticky_parent>
         <div class="container-fluid p-0">
             <div class="row g-0 p-2">
@@ -561,7 +567,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xl-3 col-xxl-2 col-md-12">
+                            <div class="col-xl-3 col-xxl-2 col-md-12 div-search">
                                 <div class="price-search">
                                     {{-- <span>Search cars</span> --}}
                                     <div class="search">
@@ -570,6 +576,9 @@
                                             placeholder="Search Cars....">
                                     </div>
                                 </div>
+                            </div>
+
+                            <div class="pagination-link" style="display: flex; justify-content: end;">
                             </div>
 
                         </div>
@@ -584,11 +593,6 @@
             </div>
         </div>
     </section>
-
-    <!--===============
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                Scripts
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ===============-->
-
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -752,19 +756,21 @@
 
         // Search button on the navbar
         document.addEventListener('DOMContentLoaded', function() {
+            // Get query string from current page
             const urlParams = new URLSearchParams(window.location.search);
-            const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
 
+            // Pre-check the filters in the sidebar if needed
+            const filters = ['Body', 'Make', 'Model', 'Year', 'Transmission', 'Color', 'Condition'];
             filters.forEach(filter => {
                 const values = urlParams.getAll(`${filter}[]`);
                 values.forEach(val => {
                     $(`input[name="${filter}[]"][value="${val}"]`).prop('checked', true);
                 });
             });
-
-            // Optionally trigger filtering after setting checkboxes
+            // 🔥 This is the missing part:
             fetchFilteredCars(urlParams.toString());
         });
+
 
 
         // Hide results when pressing ESC
@@ -778,6 +784,88 @@
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
+        let lastQuery = '';
+
+        function setQueryParam(query, key, value) {
+            const params = new URLSearchParams(query || '');
+            params.set(key, value);
+            return params.toString();
+        }
+
+        function renderPagination(meta) {
+            let pagContainer = document.querySelector('.pagination-link');
+            if (!pagContainer) return;
+
+            if (!meta) {
+                pagContainer.innerHTML = '';
+                return;
+            }
+
+            const current = meta.current_page || 1;
+            const last = meta.last_page || 1;
+            const maxButtons = 5; // how many page numbers to display around current
+            const parts = [];
+
+            const makeBtn = (label, page, disabled = false, active = false, isEllipsis = false) => {
+                if (isEllipsis) {
+                    return `<span class="mx-1">...</span>`;
+                }
+                const cls = ['btn', 'btn-sm', 'mx-1', 'mb-2', 'px-3', 'py-1'];
+                if (active) cls.push('btn-danger');
+                else cls.push('btn-light');
+                const disabledAttr = disabled ? 'disabled' : '';
+                return `<button type="button" class="${cls.join(' ')} pagination" data-page="${page}" ${disabledAttr}>${label}</button>`;
+            };
+
+            // Prev button
+            parts.push(makeBtn('Prev', current - 1, current === 1));
+
+            // Always show the first page
+            parts.push(makeBtn(1, 1, false, current === 1));
+
+            // Show second page only if current is close
+            if (current > 3) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Pages around current
+            let start = Math.max(2, current - 2);
+            let end = Math.min(last - 1, current + 2);
+
+            for (let p = start; p <= end; p++) {
+                parts.push(makeBtn(p, p, false, p === current));
+            }
+
+            // Show ellipsis before last page
+            if (current < last - 2) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Always show last page if > 1
+            if (last > 1) {
+                parts.push(makeBtn(last, last, false, current === last));
+            }
+
+            // Next button
+            parts.push(makeBtn('Next', current + 1, current === last));
+
+            // Render
+            pagContainer.innerHTML = parts.join('');
+
+            // Attach events
+            pagContainer.querySelectorAll('button[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const page = parseInt(e.currentTarget.getAttribute('data-page'));
+                    if (isNaN(page)) return;
+                    const q = setQueryParam(lastQuery, 'page', page);
+                    fetchFilteredCars(q);
+                    pagContainer.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+                });
+            });
+        }
 
         function setView(view) {
             currentView = view;
@@ -787,28 +875,45 @@
         }
 
         function fetchFilteredCars(query = '') {
-            axios.get(API_URL + '?' + query)
+            lastQuery = query || '';
+            const url = query ? (API_URL + '?' + query) : API_URL;
+            axios.get(url)
                 .then(response => {
-                    const cars = response.data;
+                    const payload = response.data;
+                    const cars = Array.isArray(payload) ? payload : (payload.data || []);
+                    let meta = null;
+                    if (!Array.isArray(payload)) {
+                        if (payload.meta && payload.meta.current_page) {
+                            meta = payload.meta;
+                        } else if (typeof payload.current_page !== 'undefined') {
+                            meta = {
+                                current_page: payload.current_page,
+                                last_page: payload.last_page,
+                                per_page: payload.per_page,
+                                total: payload.total
+                            };
+                        }
+                    }
                     container.innerHTML = '';
                     const error_img = `/images/car/23.png`;
 
                     if (!cars.length) {
                         container.innerHTML = `
-                                        <section class="error-page page-section-ptb">
-                                            <div class="container">
-                                                <div class="row">
-                                                    <div class="col-md-12">
-                                                        <div class="error-content text-center">
-                                                            <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
-                                                            <h3 class="text-red">Ooopps:( </h3>
-                                                            <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
-                                                            <p>Can't find what you looking for? Take a moment and do a search again!</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </section>`;
+                                         <section class="error-page page-section-ptb">
+                                             <div class="container">
+                                                 <div class="row">
+                                                     <div class="col-md-12">
+                                                         <div class="error-content text-center">
+                                                             <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
+                                                             <h3 class="text-red">Ooopps:( </h3>
+                                                             <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
+                                                             <p>Can't find what you looking for? Take a moment and do a search again!</p>
+                                                         </div>
+                                                     </div>
+                                                 </div>
+                                             </div>
+                                         </section>`;
+                        renderPagination(meta);
                         return;
                     }
 
@@ -833,32 +938,32 @@
                         const carDiv = $(`<div style="color: #a0a0a0">`);
                         const title = `<h4>${car.title}</h4>`;
                         const details_button = `
-                        <div>
-                            <a class="button red float-end" href="${url}">Details</a>
-                        </div>`;
+                         <div>
+                             <a class="button red float-end" href="${url}">Details</a>
+                         </div>`;
                         const description =
                             `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
                         const details = `
-                                <div class="row" style="margin-bottom: 6px;">
-                            <div class="col-lg-2 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> ${car.make}</li>
-                                    <li><i class="fa fa-check"></i> ${car.model}</li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> ${car.car_condition}</li>
-                                    <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-sm-4">
-                                <ul class="list-style-1">
-                                    <li><i class="fa fa-check"></i> ${car.currency_type} </li>
-                                     <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
-                                </ul>
-                            </div>
-                        </div>`
+                                 <div class="row" style="margin-bottom: 6px;">
+                             <div class="col-lg-2 col-sm-4">
+                                 <ul class="list-style-1">
+                                     <li><i class="fa fa-check"></i> ${car.make}</li>
+                                     <li><i class="fa fa-check"></i> ${car.model}</li>
+                                 </ul>
+                             </div>
+                             <div class="col-lg-4 col-sm-4">
+                                 <ul class="list-style-1">
+                                     <li><i class="fa fa-check"></i> ${car.car_condition}</li>
+                                     <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
+                                 </ul>
+                             </div>
+                             <div class="col-lg-4 col-sm-4">
+                                 <ul class="list-style-1">
+                                     <li><i class="fa fa-check"></i> ${car.currency_type} </li>
+                                      <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
+                                 </ul>
+                             </div>
+                         </div>`
 
                         // Set dynamic class based on view
                         carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1');
@@ -890,7 +995,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -902,10 +1007,10 @@
                                     <span class="new-price">$${car.sale_price}</span>
                                 </div>
                                 <div class="car-list">
-                                    <ul class="list-inline" style="font-size: 12px;">
-                                        <li><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li><i class="fa fa-shopping-cart"></i> 6,000 mi</li>
+                                    <ul class="list-inline">
+                                        <li style="font-size: 10px;><i class="fa fa-registered"></i> ${car.year}</li>
+                                        <li style="font-size: 10px;><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                        <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.currency_type}</li>
                                     </ul>
                                <div class="compare-btn">
 </div>
@@ -930,10 +1035,12 @@
                         $('#car-results').append(carDiv);
                     });
 
+                    renderPagination(meta);
                 })
                 .catch(error => {
                     console.error('Error fetching cars:', error);
                     container.innerHTML = '<p>Failed to load cars.</p>';
+                    renderPagination(null);
                 });
         }
 

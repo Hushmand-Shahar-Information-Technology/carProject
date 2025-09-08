@@ -510,6 +510,10 @@ class CarResource extends Resource
                     ->label(__('common.actions.view')),
                 Tables\Actions\EditAction::make()
                     ->label(__('common.actions.edit')),
+                Tables\Actions\Action::make('activities')
+                    ->label(__('common.actions.activities'))
+                    ->url(fn ($record) => CarResource::getUrl('activities', ['record' => $record]))
+                    ->icon('heroicon-o-clipboard-document-list'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -533,6 +537,7 @@ class CarResource extends Resource
             'create' => Pages\CreateCar::route('/create'),
             'view' => Pages\ViewCar::route('/{record}'),
             'edit' => Pages\EditCar::route('/{record}/edit'),
+            'activities' => Pages\ListCarActivities::route('/{record}/activities'),
         ];
     }
 }

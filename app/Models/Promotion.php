@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 
-class Promotion extends Model
+class Promotion extends BaseModel
 {
     use HasFactory;
 

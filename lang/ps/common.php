@@ -15,6 +15,7 @@ return [
         'import' => 'وارداول',
         'select_all' => 'ټول وټاکئ',
         'deselect_all' => 'ټول لغوه کړئ',
+        'activities' => 'فعالیتونه',
     ],
     
     'navigation' => [
@@ -24,6 +25,7 @@ return [
         'profile' => 'پروفایل',
         'settings' => 'تنظیمات',
         'language' => 'ژبه',
+        'activity_log' => 'د فعالیت لاگ',
     ],
 
     'labels' => [

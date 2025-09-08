@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Dashboard as CustomDashboard;
 use App\Filament\Pages\LanguageSettings;
+use App\Filament\Pages\ActivityLog;
 use App\Http\Middleware\SetLocale;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
@@ -21,7 +22,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
-
+use Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin;
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
@@ -39,6 +40,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 CustomDashboard::class,
                 LanguageSettings::class,
+                ActivityLog::class,
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\\Filament\\Widgets')
             ->widgets([
@@ -61,6 +63,8 @@ class AdminPanelProvider extends PanelProvider
                 Authenticate::class,
             ])->plugins([
                     FilamentShieldPlugin::make(),
-                ]);
+                    \Tapp\FilamentAuthenticationLog\FilamentAuthenticationLogPlugin::make(),
+                ])->viteTheme('resources/css/filament/admin/theme.css')->darkMode(false)
+                ->brandName('Top Motar');
     }
 }

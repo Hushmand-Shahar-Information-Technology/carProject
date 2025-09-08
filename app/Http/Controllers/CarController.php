@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Log;
 class CarController extends Controller
 {
 
-
     /**
      * Display the car index.
      */
@@ -64,27 +63,28 @@ class CarController extends Controller
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
                 $q->whereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
             })
-            ->when($request->input('Year', []), function ($q, $years) {
+            ->when($request->query('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);
             })
-            ->when($request->input('Make', []), function ($q, $models) {
-                $q->whereIn('make', $models);
+            ->when($request->query('Make', []), function ($q, $makes) {
+                $q->whereIn('make', $makes);
             })
-            ->when($request->input('Model', []), function ($q, $models) {
+            ->when($request->query('Model', []), function ($q, $models) {
                 $q->whereIn('model', $models);
             })
-            ->when($request->input('Transmission', []), function ($q, $transmissions) {
+            ->when($request->query('Transmission', []), function ($q, $transmissions) {
                 $q->whereIn('transmission_type', $transmissions);
             })
-            ->when($request->input('Body', []), function ($q, $bodies) {
+            ->when($request->query('Body', []), function ($q, $bodies) {
                 $q->whereIn('body_type', $bodies);
             })
-            ->when($request->input('Color', []), function ($q, $colors) {
+            ->when($request->query('Color', []), function ($q, $colors) {
                 $q->whereIn('car_color', $colors);
             })
-            ->when($request->input('Condition', []), function ($q, $condition) {
-                $q->whereIn('car_condition', $condition);
+            ->when($request->query('Condition', []), function ($q, $conditions) {
+                $q->whereIn('car_condition', $conditions);
             })
+
             ->when($request->input('sort'), function ($q, $sort) {
                 match ($sort) {
                     'name' => $q->whereNotNull('model')->orderBy('model'),
@@ -95,7 +95,8 @@ class CarController extends Controller
             }, function ($q) {
                 $q->latest();
             })
-            ->get();
+            ->paginate(15)
+            ->withQueryString();
 
         return response()->json($cars);
     }

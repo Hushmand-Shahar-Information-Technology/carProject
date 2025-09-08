@@ -33,6 +33,8 @@
     <!-- owl-carousel -->
     <link rel="stylesheet" href="{{ asset('css/owl-carousel/owl.carousel.css') }}" />
     <!-- Magnific Popup CSS -->
+    <!-- Make sure you have Bootstrap JS included -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/magnific-popup/dist/magnific-popup.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <!-- Magnific Popup JS -->
@@ -86,31 +88,71 @@
         <div class="topbar">
             <div class="container">
                 <div class="row">
+                    <!-- Left side -->
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-left text-lg-start text-center">
-                            <ul class="list-inline">
-                                <li> <i class="fa-solid fa-envelope"> </i> support@motarsal.com</li>
-
-
-
-                                <li> <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Fridy CLOSED</li>
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <i class="fa-solid fa-envelope"></i> support@motarsal.com
+                                </li>
+                                <li class="list-inline-item">
+                                    <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Friday CLOSED
+                                </li>
                             </ul>
                         </div>
                     </div>
+
+                    <!-- Right side -->
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-right text-lg-end text-center">
-                            <ul class="list-inline">
-                                <li> <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532 </li>
-                                <li><a href="#"><i class="fa-brands fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-instagram"></i></a></li>
-                                <li><a href="#"><i class="fa-brands fa-youtube"></i></a></li>
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item">
+                                    <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
+                                </li>
+                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
+                                </li>
+                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
+                                </li>
+                                <li class="list-inline-item"><a href="#"><i
+                                            class="fa-brands fa-instagram"></i></a></li>
+                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-youtube"></i></a>
+                                </li>
+
+                                <!-- Authentication -->
+                                @guest
+                                    <li class="list-inline-item">
+                                        <a href="{{ route('login') }}"><i class="fa fa-sign-in-alt"></i> Login</a>
+                                    </li>
+                                    <li class="list-inline-item">
+                                        <a href="{{ route('register') }}"><i class="fa fa-user-plus"></i> Register</a>
+                                    </li>
+                                @endguest
+
+                                @auth
+                                    <li class="list-inline-item dropdown">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="fa fa-user-circle"></i> {{ Auth::user()->name }}
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <form method="POST" action="{{ route('logout') }}">
+                                                    @csrf
+                                                    <button type="submit" class="dropdown-item">
+                                                        <i class="fa fa-sign-out-alt"></i> Logout
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                @endauth
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
 
         <!--=================================
     mega menu -->
@@ -131,80 +173,111 @@
                                     </li>
                                 </ul>
                                 <ul class="menu-links">
-                                    <li class="active"><a href="{{ route('home.index') }}">Home </a></li>
-                                    <li class="dropdown"><a href="javascript:void(0)"> Car <i
-                                                class="fa fa-angle-down"></i></a>
-                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
-                                            <li><a href="{{ route('car.create') }}">Car Register</a></li>
-                                            <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
-                                            <li><a href="{{ route('car.index') }}">Car Listing</a></li>
-                                            <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
-                                        </ul>
+                                    <li class="{{ request()->routeIs('home.index') ? 'active' : '' }}">
+                                        <a href="{{ route('home.index') }}">Home</a>
                                     </li>
-                                    <li class="dropdown"><a href="javascript:void(0)"> Bargains <i
-                                                class="fa fa-angle-down"></i></a>
-                                        <ul class="drop-down-multilevel">
-                                            <li><a href="{{ route('bargains.create') }}">Bargain Register</a></li>
-                                            <li><a href="{{ route('bargains.index') }}">Bargains List</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="{{ route('promotions.index') }}">Promoted</a></li>
-                                    <li><a href="javascript:void(0)"> Contact </a></li>
-                                    {{-- <a href="{{ route('send.product.message', ['user_id' => 1, 'car_id' => 4]) }}"
-                                        class="btn btn-primary">
-                                        Chat Now
-                                    </a> --}}
 
-                                    <li><a href="{{ route('user.profile') }}">profile</a></li>
-                                    <li>
-                                        <a href="{{ route('car.compare') }}"
-                                            class="position-relative text-decoration-none">
-                                            <i class="fa fa-exchange-alt fa-lg"></i>
-                                            <span id="compare-count"
-                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                                                style="font-size: 0.75rem; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
-                                                0
-                                            </span>
+                                    <li class="{{ request()->routeIs('car.index') ? 'active' : '' }}">
+                                        <a href="{{ route('car.index') }}">Car listing</a>
+                                    </li>
+
+                                    <li class="{{ request()->is('contact') ? 'active' : '' }}">
+                                        <a href="javascript:void(0)">Contact</a>
+                                    </li>
+
+                                    {{-- Dropdown for Bargains --}}
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="bargainsDropdown"
+                                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Bargains
                                         </a>
-                                    </li>
+                                        <ul class="dropdown-menu" aria-labelledby="bargainsDropdown">
+                                            <li>
+                                                <a class="dropdown-item {{ request()->routeIs('bargains.create') ? 'active' : '' }}"
+                                                    href="{{ route('bargains.create') }}">
+                                                    Bargain Register
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item {{ request()->routeIs('bargains.index') ? 'active' : '' }}"
+                                                    href="{{ route('bargains.index') }}">
+                                                    Bargain List
+                                                </a>
+                                            </li>
+                                            <li class="active"><a href="{{ route('home.index') }}">Home </a></li>
+                                            <li class="dropdown"><a href="javascript:void(0)"> Car <i
+                                                        class="fa fa-angle-down"></i></a>
+                                                <ul class="drop-down-multilevel" style="min-width: 280px;">
+                                                    <li><a href="{{ route('car.create') }}">Car Register</a></li>
+                                                    <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
+                                                    <li><a href="{{ route('car.index') }}">Car Listing</a></li>
+                                                    <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
+                                                </ul>
+                                            </li>
 
+                                            <li class="{{ request()->routeIs('car.directory') ? 'active' : '' }}">
+                                                <a href="{{ route('car.directory') }}">Car directory</a>
+                                            </li>
 
-                                    <li>
-                                        <div class="search-top">
-                                            <a class="search-btn not_click d-none d-lg-block"
-                                                href="javascript:void(0);">
-                                                <i class="fa-solid fa-search"></i>
-                                            </a>
-                                            <div class="search-box not-click">
-                                                <form id="searchForm" action="{{ route('car.index') }}"
-                                                    method="GET">
-                                                    <div class="row">
-                                                        @php
-                                                            $years = range(1990, now()->year);
-                                                        @endphp
-                                                        <x-search-option name="Make[]" label="Make"
-                                                            :options="$distinctValues['make']" />
-                                                        <x-search-option name="Model[]" label="Models"
-                                                            :options="$distinctValues['models']" />
-                                                        <x-search-option name="Year[]" label="Years"
-                                                            :options="$years" />
-                                                        <x-search-option name="Body[]" label="Body Styles"
-                                                            :options="$distinctValues['body_type']" />
-                                                        <x-search-option name="Color[]" label="Color"
-                                                            :options="$distinctValues['colors']" />
-                                                        {{-- <x-search-option name="Condition[]" label="Vehicle Status" :options="$distinctValues['car_condition']" /> --}}
-                                                        <div class="col-xl-2 col-md-4 col-sm-6">
-                                                            <div class="text-center">
-                                                                <button class="button red"
-                                                                    type="submit">Search</button>
-                                                            </div>
-                                                        </div>
+                                            <li class="{{ request()->routeIs('car.create') ? 'active' : '' }}">
+                                                <a href="{{ route('car.create') }}">Car Register</a>
+                                            </li>
+
+                                            <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
+                                                <a href="{{ route('user.profile') }}">Profile</a>
+                                            </li>
+
+                                            <li class="{{ request()->routeIs('car.compare') ? 'active' : '' }}">
+                                                <a href="{{ route('car.compare') }}"
+                                                    class="position-relative text-decoration-none">
+                                                    <i class="fa fa-exchange-alt fa-lg"></i>
+                                                    <span id="compare-count"
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                                                        style="font-size: 0.75rem; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;">
+                                                        0
+                                                    </span>
+                                                </a>
+                                            </li>
+
+                                            <li>
+                                                <div class="search-top">
+                                                    <a class="search-btn not_click d-none d-lg-block"
+                                                        href="javascript:void(0);">
+                                                        <i class="fa-solid fa-search"></i>
+                                                    </a>
+                                                    <div class="search-box not-click">
+                                                        <form id="searchForm" action="{{ route('car.index') }}"
+                                                            method="GET">
+                                                            <form id="searchForm" action="{{ route('car.index') }}"
+                                                                method="GET">
+                                                                <div class="row">
+                                                                    @php
+                                                                        $years = range(1990, now()->year);
+                                                                    @endphp
+                                                                    <x-search-option name="Make[]" label="Make"
+                                                                        :options="$distinctValues['make']" />
+                                                                    <x-search-option name="Model[]" label="Models"
+                                                                        :options="$distinctValues['models']" />
+                                                                    <x-search-option name="Year[]" label="Years"
+                                                                        :options="$years" />
+                                                                    <x-search-option name="Body[]"
+                                                                        label="Body Styles" :options="$distinctValues['body_type']" />
+                                                                    <x-search-option name="Color[]" label="Color"
+                                                                        :options="$distinctValues['colors']" />
+
+                                                                    <div class="col-xl-2 col-md-4 col-sm-6">
+                                                                        <div class="text-center">
+                                                                            <button class="button red"
+                                                                                type="submit">Search</button>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </form>
                                                     </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                                </div>
+                                            </li>
+                                        </ul>
+
                             </div>
                         </div>
                     </div>

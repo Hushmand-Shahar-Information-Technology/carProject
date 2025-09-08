@@ -19,8 +19,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'developer',
             'email' => 'dev@dev.com',
             'password' => 'dev',
-        ]);
+            ]);
         $this->call([
+            DefaultUserSeeder::class,
             ShieldSeeder::class,
             CarSeeder::class,
         ]);
