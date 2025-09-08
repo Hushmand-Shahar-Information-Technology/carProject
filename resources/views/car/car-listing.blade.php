@@ -584,10 +584,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <div class="pagination-link" style="display: flex; justify-content: end;">
-                            </div>
-
                         </div>
                     </div>
 
@@ -596,6 +592,8 @@
 
                         <!-- Car items will be injected here by JS -->
                     </div>
+                </div>
+                <div class="pagination-link" style="display: flex; justify-content: center; margin: 2rem 0 3rem 0;">
                 </div>
             </div>
         </div>
@@ -1002,7 +1000,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
