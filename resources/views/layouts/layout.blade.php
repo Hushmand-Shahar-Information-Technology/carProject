@@ -138,6 +138,7 @@
                                             <li><a href="{{ route('car.create') }}">Car Register</a></li>
                                             <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
                                             <li><a href="{{ route('car.index') }}">Car Listing</a></li>
+                                            <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
                                         </ul>
                                     </li>
                                     <li class="dropdown"><a href="javascript:void(0)"> Bargains <i
