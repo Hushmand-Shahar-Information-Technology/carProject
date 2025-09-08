@@ -206,28 +206,31 @@ class CarController extends Controller
         try {
             Log::info('Car store method started');
             Log::info('Validated data:', $data);
-            // Files are handled below
 
             // Handle image uploads
             $images = [];
-            /** @var array<int, \Illuminate\Http\UploadedFile> $imageFiles */
-            $imageFiles = (array) (request()->file('images') ?? []);
-            foreach ($imageFiles as $image) {
-                $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
+            if ($request->hasFile('images')) {
+                /** @var array<int, \Illuminate\Http\UploadedFile> $imageFiles */
+                $imageFiles = (array) $request->file('images');
+                foreach ($imageFiles as $image) {
+                    $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
+                }
             }
             Log::info('Processed images:', $images);
 
             // Handle video uploads
             $videos = [];
-            /** @var array<int, \Illuminate\Http\UploadedFile> $videoFiles */
-            $videoFiles = (array) (request()->file('videos') ?? []);
-            foreach ($videoFiles as $video) {
-                $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
+            if ($request->hasFile('videos')) {
+                /** @var array<int, \Illuminate\Http\UploadedFile> $videoFiles */
+                $videoFiles = (array) $request->file('videos');
+                foreach ($videoFiles as $video) {
+                    $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
+                }
             }
             Log::info('Processed videos:', $videos);
 
             $carData = [
-                'user_id' => 1, // Default user ID for testing (you can change this later)
+                'user_id' => auth()->check() ? auth()->id() : 1, // Use authenticated user or default to 1
                 'bargain_id' => $data['bargain_id'] ?? null,
                 'title' => $data['title'],
                 'year' => $data['year'],
@@ -252,8 +255,8 @@ class CarController extends Controller
                 'rent_price_per_month' => $data['rent_price_per_month'] ?? null,
                 'request_price_status' => (bool) ($data['request_price_status'] ?? false),
                 'request_price' => $data['request_price'] ?? null,
-                'images' => $images, // saved as actual array (use JSON column in DB)
-                'videos' => $videos,  // fixed: changed from 'video' to 'videos'
+                'images' => $images,
+                'videos' => $videos,
             ];
 
             Log::info('Car data to be created:', $carData);
@@ -261,10 +264,26 @@ class CarController extends Controller
             $car = Car::create($carData);
             Log::info('Car created successfully with ID: ' . $car->id);
 
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Car created successfully.',
+                    'car' => $car
+                ]);
+            }
+
             return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Throwable $th) {
             Log::error('Error storing car: ' . $th->getMessage());
             Log::error('Stack trace: ' . $th->getTraceAsString());
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Something went wrong while saving the car: ' . $th->getMessage()
+                ], 500);
+            }
+
             return back()->withErrors(['error' => 'Something went wrong while saving the car: ' . $th->getMessage()]);
         }
     }
