@@ -7,7 +7,9 @@ use App\Http\Controllers\routeController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\BargainController;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
 
 Route::get('/', function () {
     return view('welcome');
@@ -38,6 +40,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
 });
 
+// Language switch route
+Route::get('/lang/{locale}', function ($locale, Request $request) {
+    if (in_array($locale, ['en', 'ps', 'fa'])) {
+        Session::put('locale', $locale);
+    }
+    return Redirect::back();
+})->name('lang.switch');
 
 
 Route::prefix('bargains')->group(function () {

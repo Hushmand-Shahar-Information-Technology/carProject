@@ -59,6 +59,13 @@ return [
         'date_range' => 'د نیټې محدودیت',
         'from' => 'له',
         'to' => 'تر',
+        // Activity log specific labels
+        'user_tooltip' => 'هغه کاروونکی چې عمل ترسره کړی',
+        'model_tooltip' => 'د موډل ډول چې اغیزه شوی',
+        'event_tooltip' => 'د عمل ډول چې ترسره شوی',
+        'date_time_tooltip' => 'کله چې عمل ترسره شو',
+        'has_record_tooltip' => 'که چیرې اغیزه شوی سند لا وجود ولري',
+        'view_details_tooltip' => 'د فعالیت تفصیلات وګورئ',
     ],
     
     'messages' => [
@@ -74,5 +81,50 @@ return [
         'view_all_activities' => 'د ټولو د سیسټم فعالیتونو او د کاروونکي اقدامات وګورئ',
         'select_event_type' => 'د پیښې ډول وټاکئ',
         'select_model_type' => 'د موډل ډول وټاکئ',
+        // Activity log specific messages
+        'activity_log_title' => 'د فعالیت لاگ',
+        'activity_log_description' => 'د ټولو د سیسټم فعالیتونو او د کاروونکي اقدامات وګورئ',
+        'start_date' => 'د پیل نیټه',
+        'end_date' => 'د پای نیټه',
+    ],
+    
+    // Activity log specific translations
+    'activity_log' => [
+        'title' => 'د فعالیت لاگ',
+        'description' => 'د ټولو د سیسټم فعالیتونو او د کاروونکي اقدامات وګورئ',
+        'events' => [
+            'created' => 'جوړ شوی',
+            'updated' => 'تازه شوی',
+            'deleted' => 'پاک شوی',
+            'restored' => 'بیا رغول شوی',
+        ],
+        'tooltips' => [
+            'user' => 'هغه کاروونکی چې عمل ترسره کړی',
+            'model' => 'د موډل ډول چې اغیزه شوی',
+            'event' => 'د عمل ډول چې ترسره شوی',
+            'date_time' => 'کله چې عمل ترسره شو',
+            'has_record' => 'که چیرې اغیزه شوی سند لا وجود ولري',
+            'view_details' => 'د فعالیت تفصیلات وګورئ',
+        ],
+        'filters' => [
+            'event_type' => 'د پیښې ډول',
+            'model_type' => 'د موډل ډول',
+            'date_range' => 'د نیټې محدودیت',
+            'from' => 'له',
+            'to' => 'تر',
+            'select_event_type' => 'د پیښې ډول وټاکئ',
+            'select_model_type' => 'د موډل ډول وټاکئ',
+        ],
+        'indicators' => [
+            'from' => 'له :date',
+            'to' => 'تر :date',
+        ],
+    ],
+    
+    // Language names
+    'languages' => [
+        'en' => 'English',
+        'ps' => 'پښتو',
+        'fa' => 'دری',
     ],
 ];

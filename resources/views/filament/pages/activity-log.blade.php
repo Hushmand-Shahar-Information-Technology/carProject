@@ -3,10 +3,10 @@
         <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div>
                 <h1 class="text-2xl font-bold tracking-tight text-gray-950 dark:text-white">
-                    {{ __('common.navigation.activity_log') }}
+                    {{ __('activity_log.title') }}
                 </h1>
                 <p class="text-gray-500 dark:text-gray-400">
-                    {{ __('common.messages.view_all_activities') }}
+                    {{ __('activity_log.description') }}
                 </p>
             </div>
         </div>

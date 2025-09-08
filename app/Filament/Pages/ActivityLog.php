@@ -28,12 +28,17 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
 
     public function getTitle(): string
     {
-        return __('common.navigation.activity_log');
+        return __('activity_log.title');
     }
 
     public static function getNavigationLabel(): string
     {
-        return __('common.navigation.activity_log');
+        return __('activity_log.navigation_label');
+    }
+    
+    public static function getNavigationGroup(): string
+    {
+        return __('common.navigation.admin');
     }
 
     public function table(Table $table): Table
@@ -43,22 +48,21 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('causer.name')
-                    ->label(__('common.labels.user'))
+                    ->label(__('activity_log.columns.user'))
                     ->description(fn ($record) => $record->causer?->email)
                     ->searchable()
                     ->sortable()
                     ->icon('heroicon-o-user')
-                    ->tooltip('User who performed the action'),
+                    ->tooltip(__('activity_log.tooltips.user')),
                 TextColumn::make('subject_type')
-                    ->label(__('common.labels.model'))
-                    
+                    ->label(__('activity_log.columns.model'))
                     ->formatStateUsing(fn (string $state): string => class_basename($state))
                     ->searchable()
                     ->sortable()
                     ->icon('heroicon-o-cube')
-                    ->tooltip('Model type that was affected'),
+                    ->tooltip(__('activity_log.tooltips.model')),
                 BadgeColumn::make('event')
-                    ->label(__('common.labels.event'))
+                    ->label(__('activity_log.columns.event'))
                     ->colors([
                         'success' => 'created',
                         'warning' => 'updated',
@@ -73,52 +77,52 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
                     ])
                     ->searchable()
                     ->sortable()
-                    ->tooltip('Type of action performed'),
+                    ->tooltip(__('activity_log.tooltips.event')),
                 TextColumn::make('description')
-                    ->label(__('common.labels.description'))
+                    ->label(__('activity_log.columns.description'))
                     ->searchable()
                     ->limit(50)
                     ->tooltip(fn ($record) => $record->description)
                     ->wrap(),
                 TextColumn::make('created_at')
-                    ->label(__('common.labels.date_time'))
+                    ->label(__('activity_log.columns.date_time'))
                     ->dateTime('M j, Y \\a\\t g:i A')
                     ->sortable()
                     ->icon('heroicon-o-clock')
-                    ->tooltip('When the action occurred'),
+                    ->tooltip(__('activity_log.tooltips.date_time')),
                 IconColumn::make('has_subject')
-                    ->label(__('common.labels.has_record'))
+                    ->label(__('activity_log.columns.has_record'))
                     ->boolean()
                     ->getStateUsing(fn ($record) => $record->subject !== null)
-                    ->tooltip('Whether the affected record still exists'),
+                    ->tooltip(__('activity_log.tooltips.has_record')),
             ])
             ->filters([
                 SelectFilter::make('event')
-                    ->label(__('common.labels.event_type'))
+                    ->label(__('activity_log.filters.event_type'))
                     ->options([
-                        'created' => 'Created',
-                        'updated' => 'Updated',
-                        'deleted' => 'Deleted',
-                        'restored' => 'Restored',
+                        'created' => __('activity_log.events.created'),
+                        'updated' => __('activity_log.events.updated'),
+                        'deleted' => __('activity_log.events.deleted'),
+                        'restored' => __('activity_log.events.restored'),
                     ])
-                    ->placeholder(__('common.messages.select_event_type'))
+                    ->placeholder(__('activity_log.filters.select_event_type'))
                     ->multiple()
-                    ->indicator(__('common.labels.event')),
+                    ->indicator(__('activity_log.columns.event')),
                 SelectFilter::make('subject_type')
-                    ->label(__('common.labels.model_type'))
+                    ->label(__('activity_log.filters.model_type'))
                     ->options($this->getModelTypes())
                     ->searchable()
-                    ->placeholder(__('common.messages.select_model_type'))
-                    ->indicator(__('common.labels.model')),
+                    ->placeholder(__('activity_log.filters.select_model_type'))
+                    ->indicator(__('activity_log.columns.model')),
                 Filter::make('created_at')
-                    ->label(__('common.labels.date_range'))
+                    ->label(__('activity_log.filters.date_range'))
                     ->form([
                         DatePicker::make('created_from')
-                            ->label(__('common.labels.from'))
-                            ->placeholder(__('Start date')),
+                            ->label(__('activity_log.filters.from'))
+                            ->placeholder(__('activity_log.messages.start_date')),
                         DatePicker::make('created_until')
-                            ->label(__('common.labels.to'))
-                            ->placeholder(__('End date')),
+                            ->label(__('activity_log.filters.to'))
+                            ->placeholder(__('activity_log.messages.end_date')),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -135,11 +139,11 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
                         $indicators = [];
                         
                         if ($data['created_from'] ?? null) {
-                            $indicators['from'] = 'From ' . \Carbon\Carbon::parse($data['created_from'])->format('M j, Y');
+                            $indicators['from'] = __('activity_log.indicators.from', ['date' => \Carbon\Carbon::parse($data['created_from'])->format('M j, Y')]);
                         }
                         
                         if ($data['created_until'] ?? null) {
-                            $indicators['to'] = 'To ' . \Carbon\Carbon::parse($data['created_until'])->format('M j, Y');
+                            $indicators['to'] = __('activity_log.indicators.to', ['date' => \Carbon\Carbon::parse($data['created_until'])->format('M j, Y')]);
                         }
                         
                         return $indicators;
@@ -147,14 +151,14 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
             ])
             ->actions([
                 Tables\Actions\ViewAction::make()
-                    ->label(__('common.actions.view'))
-                    ->tooltip('View activity details'),
+                    ->label(__('activity_log.actions.view'))
+                    ->tooltip(__('activity_log.tooltips.view_details')),
             ])
             ->bulkActions([
                 // No bulk actions for activity logs
             ])
-            ->emptyStateHeading(__('common.messages.no_records'))
-            ->emptyStateDescription(__('common.messages.view_all_activities'))
+            ->emptyStateHeading(__('activity_log.messages.no_records'))
+            ->emptyStateDescription(__('activity_log.messages.view_all_activities'))
             ->emptyStateIcon('heroicon-o-clipboard-document-list');
     }
 

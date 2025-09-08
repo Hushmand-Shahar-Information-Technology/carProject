@@ -107,6 +107,11 @@
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-right text-lg-end text-center">
                             <ul class="list-inline mb-0">
+                                <!-- Language Switcher -->
+                                <li class="list-inline-item">
+                                    <x-language-switcher />
+                                </li>
+                                
                                 <li class="list-inline-item">
                                     <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
                                 </li>
