@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                                                     inner-intro -->
+                                                                 inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -100,8 +100,21 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-9">
-                    <h3> {{ $car->title }} </h3>
-                    <p> {{ $car->description }} </p>
+                    <h3 class="text-danger mb-3 fw-bold">{{ $car->title }}</h3>
+                    <p class="text-dark mb-4 lh-base">{{ $car->description }}</p>
+                    @if (!empty($car->rent_price_per_day))
+                        <div class="d-flex flex-column flex-md-row gap-3 mb-3">
+                            <div class="bg-light rounded p-3 shadow-sm flex-fill">
+                                <p class="text-danger mb-1 fs-5 fw-semibold">Rent Price:</p>
+                                <p class="text-dark mb-0 fs-5"><strong>{{ $car->rent_price_per_day }} per day</strong></p>
+                            </div>
+                            <div class="bg-light rounded p-3 shadow-sm flex-fill">
+                                <p class="text-danger mb-1 fs-5 fw-semibold">Rent Price:</p>
+                                <p class="text-dark mb-0 fs-5"><strong>{{ $car->rent_price_per_month }} per month</strong>
+                                </p>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <div class="col-md-3">
                     <div class="car-price text-md-end">
