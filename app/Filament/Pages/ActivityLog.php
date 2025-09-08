@@ -47,15 +47,15 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
                     ->description(fn ($record) => $record->causer?->email)
                     ->searchable()
                     ->sortable()
-                    ->icon('heroicon-m-user')
+                    ->icon('heroicon-o-user')
                     ->tooltip('User who performed the action'),
                 TextColumn::make('subject_type')
-                    ->label(__('common.labels.model'))71
+                    ->label(__('common.labels.model'))
                     
                     ->formatStateUsing(fn (string $state): string => class_basename($state))
                     ->searchable()
                     ->sortable()
-                    ->icon('heroicon-m-cube')
+                    ->icon('heroicon-o-cube')
                     ->tooltip('Model type that was affected'),
                 BadgeColumn::make('event')
                     ->label(__('common.labels.event'))
@@ -66,10 +66,10 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
                         'info' => 'restored',
                     ])
                     ->icons([
-                        'heroicon-m-plus-circle' => 'created',
-                        'heroicon-m-pencil-square' => 'updated',
-                        'heroicon-m-trash' => 'deleted',
-                        'heroicon-m-arrow-path' => 'restored',
+                        'heroicon-o-plus-circle' => 'created',
+                        'heroicon-o-pencil-square' => 'updated',
+                        'heroicon-o-trash' => 'deleted',
+                        'heroicon-o-arrow-path' => 'restored',
                     ])
                     ->searchable()
                     ->sortable()
@@ -84,7 +84,7 @@ class ActivityLog extends Page implements Tables\Contracts\HasTable
                     ->label(__('common.labels.date_time'))
                     ->dateTime('M j, Y \\a\\t g:i A')
                     ->sortable()
-                    ->icon('heroicon-m-clock')
+                    ->icon('heroicon-o-clock')
                     ->tooltip('When the action occurred'),
                 IconColumn::make('has_subject')
                     ->label(__('common.labels.has_record'))
