@@ -29,7 +29,7 @@ class BargainRequest extends FormRequest
                 'max:255',
                 Rule::unique('bargains', 'username')->ignore($bargainId),
             ],
-            'profile_image' => ['nullable', 'image', 'max:2048'],
+            'profile_image' => ['nullable', 'image', 'max:20048'],
             'website' => ['nullable', 'url'],
             'email' => ['nullable', 'email'],
             'phone' => ['nullable', 'string'],
