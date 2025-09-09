@@ -26,7 +26,7 @@
     <link rel="stylesheet" href="{{ asset('css/mega-menu/mega_menu.css') }}" />
 
     <!-- font awesome -->
-    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
+    <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}" />
 
     <!-- owl-carousel -->
     <link rel="stylesheet" href="{{ asset('css/owl-carousel/owl.carousel.css') }}" />
@@ -55,10 +55,10 @@
 
     <!-- Custom font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-    
+
     <!-- Additional styles will be added here by pages -->
     @stack('styles')
-    
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         // Axios CSRF setup
@@ -102,7 +102,7 @@
                                 <li class="list-inline-item">
                                     <x-language-switcher />
                                 </li>
-                                
+
                                 <li class="list-inline-item">
                                     <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
                                 </li>
@@ -342,9 +342,11 @@
                                 <div class="recent-post">
                                     <div class="recent-post-image">
                                         @if (!empty($car->images) && is_array($car->images) && isset($car->images[0]))
-                                            <img class="img-fluid" src="{{ asset($car->images[0]) }}" alt="{{ $car->title }}">
+                                            <img class="img-fluid" src="{{ asset($car->images[0]) }}"
+                                                alt="{{ $car->title }}">
                                         @else
-                                            <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}" alt="Default car image">
+                                            <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
+                                                alt="Default car image">
                                         @endif
                                     </div>
                                     <div class=" recent-post-info">
