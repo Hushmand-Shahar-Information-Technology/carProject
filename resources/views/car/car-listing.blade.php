@@ -787,6 +787,7 @@
 
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
+        const bargain_show = "{{ route('bargains.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
         let lastQuery = '';
@@ -940,11 +941,15 @@
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
+                        const bargain_url = car.bargain ?
+                            bargain_show.replace('__ID__', car.bargain.id) :
+                            null;
                         const carDiv = $(`<div style="color: #a0a0a0">`);
                         const title = `<h4>${car.title}</h4>`;
                         const details_button = `
-                         <div>
-                             <a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${url}">Details</a>
+                         <div">
+                             <a class="button red float-end py-2 px-4 ml-2" style="font-size: 1rem;" href="${url}">Details</a>
+                             <a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${bargain_url}">Bargain</a>
                          </div>`;
                         const description =
                             `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
@@ -983,7 +988,7 @@
                                     <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
                                     <div class="car-overlay-banner">
                                         <ul>
-                                            <li><a href="${url}"><i class="fa fa-link"></i></a></li>
+                                            <li><a href="${bargain_url}"><i class="fa fa-link"></i></a></li>
                                             <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
                                               <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer; z-index: 100; position: relative;">
     <i class="fa fa-exchange-alt" style="font-size: 1rem;"></i>
@@ -1000,7 +1005,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
