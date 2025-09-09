@@ -249,7 +249,7 @@
                     <div class="col-lg-4 col-sm-6 mb-4">
                         <div class="car-item gray-bg text-center">
                             <div class="car-image">
-                                <img class="img-fluid" src="/storage/{{ $car->images[0] }}" alt="">
+                                <img class="img-fluid" src="{{ asset('storage/' . $car->images[0]) }}" alt="">
                                 <div class="car-overlay-banner">
                                     <ul>
                                         <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a></li>

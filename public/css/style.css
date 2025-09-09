@@ -77,8 +77,8 @@ NOTE: This is main stylesheet of template, This file contains the styling for th
   --cd-primary-color: #db2d2e;
   --cd-secondary-color: #363636;
   --cd-tertiary-color: #999999;
-  --title-font: 'Outfit', sans-serif;
-  --body-font: 'Outfit', sans-serif;
+  --title-font: 'BahijHelveticaNeue', sans-serif;
+  --body-font: 'BahijHelveticaNeue', sans-serif;
   --bg-dark-color: #091c3a;
   --section-bg-light: #fafafa;
   --section-bg-dark: #15181f;
@@ -94,13 +94,13 @@ NOTE: This is main stylesheet of template, This file contains the styling for th
     General
 *************************/
 @import url(https://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,600,600italic,700,700italic,800,800italic,300italic|Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i);
-body { font-family: 'Open Sans', sans-serif; font-weight: normal; font-style: normal; font-size: 14px; line-height: 24px; color: #999999; }
+body { font-family: 'BahijHelveticaNeue', sans-serif; font-weight: normal; font-style: normal; font-size: 14px; line-height: 24px; color: #999999; }
 a, .btn { -webkit-transition: all 0.5s ease-out 0s; -moz-transition: all 0.5s ease-out 0s; -ms-transition: all 0.5s ease-out 0s; -o-transition: all 0.5s ease-out 0s; transition: all 0.5s ease-out 0s; }
 a:focus { text-decoration: none !important; }
 a:focus, a:hover { color: #db2d2e; text-decoration: none !important; }
 a, button, input { outline: medium none !important; color: #db2d2e; text-decoration: none; }
 .uppercase { text-transform: uppercase; }
-h1, h2, h3, h4, h5, h6 { font-family: 'Roboto', sans-serif; font-weight: normal; color: #363636; margin-top: 0px; text-transform: uppercase; }
+h1, h2, h3, h4, h5, h6 { font-family: 'BahijHelveticaNeue', sans-serif; font-weight: normal; color: #363636; margin-top: 0px; text-transform: uppercase; }
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a { color: inherit; }
 h1 { font-size: 40px; font-style: normal; font-weight: 500; line-height: 40px; }
 h2 { font-size: 35px; font-style: normal; font-weight: 600; line-height: 35px; }

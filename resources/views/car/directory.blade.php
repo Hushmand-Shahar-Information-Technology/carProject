@@ -1,5 +1,5 @@
 @extends('layouts.layout')
-@section('title', 'Car Directory')
+@section('title', __('common.car_directory.title'))
 @section('content')
 
 
@@ -29,30 +29,30 @@
         <div class="row">
           <div class="col-md-12">
             <div class="slider-content text-center">
-              <h2 class="text-white">Find what are you looking for</h2>
-              <h4 class="text-white">Over <strong class="text-red">40000</strong>  latest Cars in <strong class="text-red">Cardealer</strong> </h4>
+              <h2 class="text-white">{{ __('common.car_directory.find_what_youre_looking_for') }}</h2>
+              <h4 class="text-white">{!! __('common.car_directory.latest_cars', ['count' => '40000', 'name' => '<strong class="text-red">Cardealer</strong>']) !!}</h4>
               <div class="search-tab">
                 <div id="search-tabs">
                   <div class="tabs-header">
-                    <h6>I want to Buy </h6>
+                    <h6>{{ __('common.car_directory.search_tabs.want_to_buy') }}</h6>
                     <ul class="nav nav-tabs text-start" id="myTab01" role="tablist">
                       <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="all-cars-tab" data-bs-toggle="tab" data-bs-target="#all-cars" type="button" role="tab" aria-controls="all-cars" aria-selected="true">All cars</button>
+                        <button class="nav-link active" id="all-cars-tab" data-bs-toggle="tab" data-bs-target="#all-cars" type="button" role="tab" aria-controls="all-cars" aria-selected="true">{{ __('common.car_directory.search_tabs.all_cars') }}</button>
                       </li>
                       <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="new-cars-tab" data-bs-toggle="tab" data-bs-target="#new-cars" type="button" role="tab" aria-controls="new-cars" aria-selected="false">New Cars</button>
+                        <button class="nav-link" id="new-cars-tab" data-bs-toggle="tab" data-bs-target="#new-cars" type="button" role="tab" aria-controls="new-cars" aria-selected="false">{{ __('common.car_directory.search_tabs.new_cars') }}</button>
                       </li>
                       <li class="nav-item" role="presentation">
-                        <button class="nav-link " id="used-cars-tab" data-bs-toggle="tab" data-bs-target="#used-cars" type="button" role="tab" aria-controls="used-cars" aria-selected="false">Used Cars</button>
+                        <button class="nav-link " id="used-cars-tab" data-bs-toggle="tab" data-bs-target="#used-cars" type="button" role="tab" aria-controls="used-cars" aria-selected="false">{{ __('common.car_directory.search_tabs.used_cars') }}</button>
                       </li>
 
                       <li class="nav-item" role="presentation">
-                        <button class="nav-link " id="certified-tab" data-bs-toggle="tab" data-bs-target="#certified" type="button" role="tab" aria-controls="certified" aria-selected="false">Certified</button>
+                        <button class="nav-link " id="certified-tab" data-bs-toggle="tab" data-bs-target="#certified" type="button" role="tab" aria-controls="certified" aria-selected="false">{{ __('common.car_directory.search_tabs.certified') }}</button>
                       </li>
                     </ul>
 
                     <div class="car-total float-end">
-                      <h5 class="text-white"><i class="fa fa-caret-right"></i>(50) <span class="text-red">CARS</span></h5>
+                      <h5 class="text-white"><i class="fa fa-caret-right"></i>{!! __('common.car_directory.search_tabs.cars_count', ['count' => '50']) !!}</h5>
                     </div>
                   </div>
 
@@ -62,7 +62,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Make </option>
+                              <option>{{ __('common.car_directory.search_form.make') }}</option>
                               <option>BMW</option>
                               <option>Honda </option>
                               <option>Hyundai </option>
@@ -74,7 +74,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Model</option>
+                              <option>{{ __('common.car_directory.search_form.model') }}</option>
                               <option>3-Series</option>
                               <option>Carrera</option>
                               <option>GT-R</option>
@@ -87,7 +87,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Price </option>
+                              <option>{{ __('common.car_directory.search_form.price') }}</option>
                               <option>$5,000</option>
                               <option>$10,000</option>
                               <option>$15,000</option>
@@ -100,12 +100,12 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                           <div class="form-group mb-3">
-                            <input id="name01" type="text" placeholder="Location*" class="form-control placeholder" name="name">
+                            <input id="name01" type="text" placeholder="{{ __('common.car_directory.search_form.location') }}" class="form-control placeholder" name="name">
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-12">
                           <div class="d-grid">
-                            <button class="button red" type="button">Search</button>
+                            <button class="button red" type="button">{{ __('common.car_directory.search_form.search') }}</button>
                           </div>
                         </div>
                       </div>
@@ -115,7 +115,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                            <option>Make </option>
+                            <option>{{ __('common.car_directory.search_form.make') }}</option>
                             <option>BMW</option>
                             <option>Honda </option>
                             <option>Hyundai </option>
@@ -127,7 +127,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Model</option>
+                              <option>{{ __('common.car_directory.search_form.model') }}</option>
                               <option>3-Series</option>
                               <option>Carrera</option>
                               <option>GT-R</option>
@@ -140,7 +140,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Price </option>
+                              <option>{{ __('common.car_directory.search_form.price') }}</option>
                               <option>$5,000</option>
                               <option>$10,000</option>
                               <option>$15,000</option>
@@ -153,12 +153,12 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                           <div class="form-group mb-3">
-                            <input id="name02" type="text" placeholder="Location*" class="form-control placeholder" name="name">
+                            <input id="name02" type="text" placeholder="{{ __('common.car_directory.search_form.location') }}" class="form-control placeholder" name="name">
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-12">
                           <div class="d-grid">
-                            <button class="button red" type="button">Search</button>
+                            <button class="button red" type="button">{{ __('common.car_directory.search_form.search') }}</button>
                           </div>
                         </div>
                       </div>
@@ -168,7 +168,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Make </option>
+                              <option>{{ __('common.car_directory.search_form.make') }}</option>
                               <option>BMW</option>
                               <option>Honda </option>
                               <option>Hyundai </option>
@@ -180,7 +180,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Model</option>
+                              <option>{{ __('common.car_directory.search_form.model') }}</option>
                               <option>3-Series</option>
                               <option>Carrera</option>
                               <option>GT-R</option>
@@ -193,7 +193,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Price </option>
+                              <option>{{ __('common.car_directory.search_form.price') }}</option>
                               <option>$5,000</option>
                               <option>$10,000</option>
                               <option>$15,000</option>
@@ -206,12 +206,12 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                           <div class="form-group mb-3">
-                            <input id="name03" type="text" placeholder="Location*" class="form-control placeholder" name="name">
+                            <input id="name03" type="text" placeholder="{{ __('common.car_directory.search_form.location') }}" class="form-control placeholder" name="name">
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-12">
                           <div class="d-grid">
-                            <button class="button red" type="button">Search</button>
+                            <button class="button red" type="button">{{ __('common.car_directory.search_form.search') }}</button>
                           </div>
                         </div>
                       </div>
@@ -221,7 +221,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Make </option>
+                              <option>{{ __('common.car_directory.search_form.make') }}</option>
                               <option>BMW</option>
                               <option>Honda </option>
                               <option>Hyundai </option>
@@ -233,7 +233,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Model</option>
+                              <option>{{ __('common.car_directory.search_form.model') }}</option>
                               <option>3-Series</option>
                               <option>Carrera</option>
                               <option>GT-R</option>
@@ -246,7 +246,7 @@
                         <div class="col-lg-2 col-md-6">
                           <div class="selected-box">
                             <select class="selectpicker">
-                              <option>Price </option>
+                              <option>{{ __('common.car_directory.search_form.year') }}</option>
                               <option>2010</option>
                               <option>2011</option>
                               <option>2012</option>
@@ -259,12 +259,12 @@
                         </div>
                         <div class="col-lg-4 col-md-6">
                           <div class="form-group mb-3">
-                            <input id="name04" type="text" placeholder="Location*" class="form-control placeholder" name="name">
+                            <input id="name04" type="text" placeholder="{{ __('common.car_directory.search_form.location') }}" class="form-control placeholder" name="name">
                           </div>
                         </div>
                         <div class="col-lg-2 col-md-12">
                           <div class="d-grid">
-                            <button class="button red" type="button">Search</button>
+                            <button class="button red" type="button">{{ __('common.car_directory.search_form.search') }}</button>
                           </div>
                         </div>
                       </div>
@@ -294,8 +294,8 @@
               <i class="flaticon-key"></i>
             </div>
             <div class="info">
-              <h5> <span class="text-red"> Sell </span> My Car</h5>
-              <p>Make more money when you sell your car yourself.</p>
+              <h5> <span class="text-red"> {{ __('common.car_directory.features.sell_my_car') }} </span> </h5>
+              <p>{{ __('common.car_directory.features.sell_my_car_desc') }}</p>
             </div>
           </div>
         </div>
@@ -305,8 +305,8 @@
               <i class="flaticon-inspection"></i>
             </div>
             <div class="info">
-              <h5> <span class="text-red"> Trade  </span> My Car</h5>
-              <p>Get an Instant Cash Offer and trade in or sell your...</p>
+              <h5> <span class="text-red"> {{ __('common.car_directory.features.trade_my_car') }}  </span> </h5>
+              <p>{{ __('common.car_directory.features.trade_my_car_desc') }}</p>
             </div>
           </div>
         </div>
@@ -316,8 +316,8 @@
               <i class="flaticon-medal"></i>
             </div>
             <div class="info">
-              <h5> <span class="text-red"> Value </span> My Car</h5>
-              <p>Find out what your car is worth to an individual buyer or dealer.</p>
+              <h5> <span class="text-red"> {{ __('common.car_directory.features.value_my_car') }} </span> </h5>
+              <p>{{ __('common.car_directory.features.value_my_car_desc') }}</p>
             </div>
           </div>
         </div>
@@ -327,13 +327,13 @@
           <div class="search-logo">
             <div id="search-logo-tabs">
               <div class="tabs-header">
-                <h6>I want Search</h6>
+                <h6>{{ __('common.car_directory.browse.want_search') }}</h6>
                 <ul class="nav nav-tabs" id="myTab02" role="tablist">
                   <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="browse-make-tab" data-bs-toggle="tab" data-bs-target="#browse-make" type="button" role="tab" aria-controls="browse-make" aria-selected="true">BROWSE MAKE</button>
+                    <button class="nav-link active" id="browse-make-tab" data-bs-toggle="tab" data-bs-target="#browse-make" type="button" role="tab" aria-controls="browse-make" aria-selected="true">{{ __('common.car_directory.browse.browse_make') }}</button>
                   </li>
                   <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="browse-type-tab" data-bs-toggle="tab" data-bs-target="#browse-type" type="button" role="tab" aria-controls="browse-type" aria-selected="false">BROWSE TYPE</button>
+                    <button class="nav-link" id="browse-type-tab" data-bs-toggle="tab" data-bs-target="#browse-type" type="button" role="tab" aria-controls="browse-type" aria-selected="false">{{ __('common.car_directory.browse.browse_type') }}</button>
                   </li>
                 </ul>
               </div>
@@ -361,63 +361,63 @@
                         <a href="{{ route('car.index', ['Body[]' => 'convertible']) }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/01.png')}}" alt="">
-                          <strong>convertible</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.convertible') }}</strong>
                         </div>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('car.index', ['Body[]' => 'coupe']) }}">
+                        <a href="{{ route('car.index', ['Body[]' => 'coupe') }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/02.png')}}" alt="">
-                          <strong>coupe</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.coupe') }}</strong>
                         </div>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('car.index', ['Body[]' => 'cuv']) }}">
+                        <a href="{{ route('car.index', ['Body[]' => 'cuv') }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/03.png')}}" alt="">
-                          <strong>cuv</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.cuv') }}</strong>
                         </div>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('car.index', ['Body[]' => 'micro']) }}">
+                        <a href="{{ route('car.index', ['Body[]' => 'micro') }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/04.png')}}" alt="">
-                          <strong>micro</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.micro') }}</strong>
                         </div>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('car.index', ['Body[]' => 'minivan']) }}">
+                        <a href="{{ route('car.index', ['Body[]' => 'minivan') }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/05.png')}}" alt="">
-                          <strong>minivan</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.minivan') }}</strong>
                         </div>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('car.index', ['Body[]' => 'pick-up']) }}">
+                        <a href="{{ route('car.index', ['Body[]' => 'pick-up') }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/06.png')}}" alt="">
-                          <strong>pick-up</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.pick-up') }}</strong>
                         </div>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('car.index', ['Body[]' => 'sedan']) }}">
+                        <a href="{{ route('car.index', ['Body[]' => 'sedan') }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/07.png')}}" alt="">
-                          <strong>sedan</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.sedan') }}</strong>
                         </div>
                         </a>
                     </div>
                     <div class="col-lg-3 col-md-4 col-sm-4 col-6">
-                        <a href="{{ route('car.index', ['Body[]' => 'supercar']) }}">
+                        <a href="{{ route('car.index', ['Body[]' => 'supercar') }}">
                           <div class="search-logo-box text-center">
                           <img class="img-fluid center-block" src="{{asset('images/clients/body-type/08.png')}}" alt="">
-                          <strong>supercar</strong>
+                          <strong>{{ __('common.car_directory.browse.body_types.supercar') }}</strong>
                         </div>
                         </a>
                     </div>
@@ -451,13 +451,13 @@
         <div class="col-lg-9 col-md-12">
           <div id="tabs">
             <div class="tabs-header">
-              <h6>which vehicle You need<span class="text-red">?</span></h6>
+              <h6>{{ __('common.car_directory.vehicle_needs') }}<span class="text-red">?</span></h6>
               <ul class="nav nav-tabs" id="myTab03" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link active" id="new-cars01-tab" data-bs-toggle="tab" data-bs-target="#new-cars01" type="button" role="tab" aria-controls="new-cars01" aria-selected="true">New Cars</button>
+                  <button class="nav-link active" id="new-cars01-tab" data-bs-toggle="tab" data-bs-target="#new-cars01" type="button" role="tab" aria-controls="new-cars01" aria-selected="true">{{ __('common.car_directory.new_cars') }}</button>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <button class="nav-link" id="used-cars01-tab" data-bs-toggle="tab" data-bs-target="#used-cars01" type="button" role="tab" aria-controls="used-cars01" aria-selected="false">USED CARS</button>
+                  <button class="nav-link" id="used-cars01-tab" data-bs-toggle="tab" data-bs-target="#used-cars01" type="button" role="tab" aria-controls="used-cars01" aria-selected="false">{{ __('common.car_directory.used_cars') }}</button>
                 </li>
               </ul>
             </div>
@@ -478,8 +478,8 @@
                        <div class="car-list">
                          <ul class="list-inline">
                            <li><i class="fa fa-registered"></i> 2021</li>
-                           <li><i class="fa fa-cog"></i> Manual </li>
-                           <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                           <li><i class="fa fa-cog"></i> {{ __('common.car_directory.car_details.transmission') }} </li>
+                           <li><i class="fa fa-dashboard"></i> {{ __('common.car_directory.car_details.mileage', ['mileage' => '6,000']) }}</li>
                          </ul>
                       </div>
                        <div class="car-content">
@@ -513,8 +513,8 @@
                        <div class="car-list">
                          <ul class="list-inline">
                            <li><i class="fa fa-registered"></i> 2021</li>
-                           <li><i class="fa fa-cog"></i> Manual </li>
-                           <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                           <li><i class="fa fa-cog"></i> {{ __('common.car_directory.car_details.transmission') }} </li>
+                           <li><i class="fa fa-dashboard"></i> {{ __('common.car_directory.car_details.mileage', ['mileage' => '6,000']) }}</li>
                          </ul>
                       </div>
                        <div class="car-content">
@@ -548,8 +548,8 @@
                        <div class="car-list">
                          <ul class="list-inline">
                            <li><i class="fa fa-registered"></i> 2021</li>
-                           <li><i class="fa fa-cog"></i> Manual </li>
-                           <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                           <li><i class="fa fa-cog"></i> {{ __('common.car_directory.car_details.transmission') }} </li>
+                           <li><i class="fa fa-dashboard"></i> {{ __('common.car_directory.car_details.mileage', ['mileage' => '6,000']) }}</li>
                          </ul>
                       </div>
                        <div class="car-content">
@@ -588,8 +588,8 @@
                        <div class="car-list">
                          <ul class="list-inline">
                            <li><i class="fa fa-registered"></i> 2021</li>
-                           <li><i class="fa fa-cog"></i> Manual </li>
-                           <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                           <li><i class="fa fa-cog"></i> {{ __('common.car_directory.car_details.transmission') }} </li>
+                           <li><i class="fa fa-dashboard"></i> {{ __('common.car_directory.car_details.mileage', ['mileage' => '6,000']) }}</li>
                          </ul>
                       </div>
                        <div class="car-content">
@@ -623,8 +623,8 @@
                        <div class="car-list">
                          <ul class="list-inline">
                            <li><i class="fa fa-registered"></i> 2021</li>
-                           <li><i class="fa fa-cog"></i> Manual </li>
-                           <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                           <li><i class="fa fa-cog"></i> {{ __('common.car_directory.car_details.transmission') }} </li>
+                           <li><i class="fa fa-dashboard"></i> {{ __('common.car_directory.car_details.mileage', ['mileage' => '6,000']) }}</li>
                          </ul>
                       </div>
                        <div class="car-content">
@@ -658,8 +658,8 @@
                        <div class="car-list">
                          <ul class="list-inline">
                            <li><i class="fa fa-registered"></i> 2021</li>
-                           <li><i class="fa fa-cog"></i> Manual </li>
-                           <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                           <li><i class="fa fa-cog"></i> {{ __('common.car_directory.car_details.transmission') }} </li>
+                           <li><i class="fa fa-dashboard"></i> {{ __('common.car_directory.car_details.mileage', ['mileage' => '6,000']) }}</li>
                          </ul>
                       </div>
                        <div class="car-content">
@@ -701,9 +701,9 @@
       <div class="col-md-6">
           <div class="dealer-box red-bg">
             <div class="box-content">
-              <h5 class="text-white">Ad your New car with Cardealer</h5>
-              <p class="text-white">Search Our Inventory With Thousands Of Cars And More Cars Are Adding On Daily Basis</p>
-              <a class="button white" href="#">Become a Dealer</a>
+              <h5 class="text-white">{!! __('common.car_directory.dealer_boxes.ad_new_car', ['name' => 'Cardealer']) !!}</h5>
+              <p class="text-white">{{ __('common.car_directory.dealer_boxes.ad_new_car_desc') }}</p>
+              <a class="button white" href="#">{{ __('common.car_directory.dealer_boxes.become_dealer') }}</a>
             </div>
             <div class="box-icon">
               <i class="flaticon-car-repair"></i>
@@ -713,9 +713,9 @@
        <div class="col-md-6">
           <div class="dealer-box dark-bg">
             <div class="box-content">
-              <h5 class="text-white">Sell your Car with Cardealer</h5>
-              <p class="text-white">Search Our Inventory With Thousands Of Cars And More Cars Are Adding On Daily Basis</p>
-              <a class="button white" href="#">Become a Dealer</a>
+              <h5 class="text-white">{!! __('common.car_directory.dealer_boxes.sell_your_car', ['name' => 'Cardealer']) !!}</h5>
+              <p class="text-white">{{ __('common.car_directory.dealer_boxes.sell_your_car_desc') }}</p>
+              <a class="button white" href="#">{{ __('common.car_directory.dealer_boxes.become_dealer') }}</a>
             </div>
             <div class="box-icon">
               <i class="flaticon-key"></i>
@@ -727,28 +727,28 @@
        <div class="col-lg-3 col-sm-6 text-center">
          <div class="counter-block">
             <i class="glyph-icon flaticon-beetle"></i>
-            <h6 class="text-black">Vehicles In Stock  </h6>
+            <h6 class="text-black">{{ __('common.car_directory.counter.vehicles_in_stock') }}</h6>
             <b class="timer" data-to="3968" data-speed="10000"></b>
         </div>
        </div>
        <div class="col-lg-3 col-sm-6 text-center">
         <div class="counter-block">
            <i class="glyph-icon flaticon-interface"></i>
-            <h6 class="text-black">Dealer Reviews</h6>
+            <h6 class="text-black">{{ __('common.car_directory.counter.dealer_reviews') }}</h6>
             <b class="timer" data-to="5568" data-speed="10000"></b>
          </div>
        </div>
        <div class="col-lg-3 col-sm-6 text-center">
         <div class="counter-block mb-sm-0 mb-4">
             <i class="glyph-icon flaticon-circle"></i>
-            <h6 class="text-black">Happy Customer</h6>
+            <h6 class="text-black">{{ __('common.car_directory.counter.happy_customer') }}</h6>
             <b class="timer" data-to="8908" data-speed="10000"></b>
          </div>
         </div>
         <div class="col-lg-3 col-sm-6 text-center">
           <div class="counter-block mb-0">
             <i class="glyph-icon flaticon-cup"></i>
-            <h6 class="text-black">Awards</h6>
+            <h6 class="text-black">{{ __('common.car_directory.counter.awards') }}</h6>
             <b class="timer" data-to="9968" data-speed="10000"></b>
          </div>
        </div>
@@ -768,12 +768,12 @@
      <div class="row">
       <div class="col-sm-6">
         <div class="text-start blog-button">
-           <h5>News & Reviews</h5>
+           <h5>{{ __('common.car_directory.news_reviews') }}</h5>
         </div>
       </div>
       <div class="col-sm-6 blog-button">
         <div class="text-end">
-           <a class="button white" href="#">View all</a>
+           <a class="button white" href="#">{{ __('common.car_directory.view_all') }}</a>
         </div>
       </div>
      </div>
@@ -809,9 +809,9 @@
                </div>
               </div>
               <div class="blog-description text-center">
-                 <a href="#">Does Your Life Lack Meaning</a>
+                 <a href="#">{{ __('common.car_directory.news.does_life_lack_meaning') }}</a>
                  <div class="separator"></div>
-                <p>You will begin to realize why this exercise Pattern is called the Dickens with reference to the ghost</p>
+                <p>{{ __('common.car_directory.news.news_description_1') }}</p>
               </div>
             </div>
           </div>
@@ -847,9 +847,9 @@
                </div>
               </div>
               <div class="blog-description text-center">
-                 <a href="#">The A Z Of Motivation</a>
+                 <a href="#">{{ __('common.car_directory.news.the_a_z_of_motivation') }}</a>
                  <div class="separator"></div>
-                <p>Exercise is called you will begin to Pattern realize why this the Dickens Pattern with reference to ghost</p>
+                <p>{{ __('common.car_directory.news.news_description_2') }}</p>
               </div>
             </div>
           </div>
@@ -885,9 +885,9 @@
                </div>
               </div>
               <div class="blog-description text-center">
-                 <a href="#">Motivation In Life</a>
+                 <a href="#">{{ __('common.car_directory.news.motivation_in_life') }}</a>
                  <div class="separator"></div>
-                <p>Dickens Pattern you will begin to realize why this Dickens exercise is the with reference to the ghost</p>
+                <p>{{ __('common.car_directory.news.news_description_3') }}</p>
               </div>
             </div>
           </div>
