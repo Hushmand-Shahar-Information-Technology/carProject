@@ -13,25 +13,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up SSH with debug
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, pdo, pdo_mysql
+          coverage: none
+
+      - name: Set up SSH
         run: |
-          echo "HOSTINGER_PORT is '${{ secrets.HOSTINGER_PORT }}'"
-          echo "HOSTINGER_HOST is '${{ secrets.HOSTINGER_HOST }}'"
-          echo "HOSTINGER_USER is '${{ secrets.HOSTINGER_USER }}'"
-          echo "HOSTINGER_SSH_KEY is '${{ secrets.HOSTINGER_SSH_KEY }}'"
           mkdir -p ~/.ssh
           echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p ${{ secrets.HOSTINGER_PORT || 22 }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+        env:
+          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
 
       - name: Deploy via SSH
         run: |
-          ssh -i ~/.ssh/id_rsa -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
+          ssh -i ~/.ssh/id_rsa -p ${{ secrets.HOSTINGER_PORT || 22 }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
             cd /home/u285585646/domains/topmotar.com/public_html/beta
-            git pull origin production --no-rebase
-            composer2 install --no-dev
+            git pull origin production
+            composer install --no-dev --optimize-autoloader
+            php artisan config:cache
+            php artisan route:cache
+            php artisan view:cache
             php artisan migrate --force
             php artisan shield:generate --all
             php artisan shield:super-admin --user=1
+            echo "Deployment completed successfully"
           ENDSSH
-
+        env:
+          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
+          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
+          HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
