@@ -787,6 +787,7 @@
 
         const API_URL = "{{ route('cars.filter-auction') }}"; // Laravel route
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
+        const bargain_show = "{{ route('bargains.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         let currentView = 'grid'; // Default view
         let lastQuery = '';
@@ -940,11 +941,15 @@
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
+                        const bargain_url = car.bargain ?
+                            bargain_show.replace('__ID__', car.bargain.id) :
+                            null;
                         const carDiv = $(`<div style="color: #a0a0a0">`);
                         const title = `<h4>${car.title}</h4>`;
                         const details_button = `
                          <div>
-                             <a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${url}">Details</a>
+                             <a class="button red float-end py-2 px-4 ml-2" style="font-size: 1rem;" href="${url}">Details</a>
+                             <a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${bargain_url}">Bargain</a>
                          </div>`;
                         const description =
                             `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
@@ -1000,7 +1005,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
