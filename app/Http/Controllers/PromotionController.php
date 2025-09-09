@@ -76,7 +76,7 @@ class PromotionController extends Controller
         if ($data['type'] === 'bargain' && !$record->canPromote()) {
             $reason = $record->registration_status === 'blocked' 
                 ? 'User is blocked and cannot promote their bargain'
-                : ($record->hasActiveRestriction() 
+                : ($record->hasActiveRestriction() && $record->restriction_ends_at
                     ? 'User is under restriction until ' . $record->restriction_ends_at->format('M d, Y') . ' and cannot promote'
                     : 'User cannot promote at this time');
                     
