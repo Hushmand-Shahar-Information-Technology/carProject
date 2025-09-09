@@ -103,6 +103,91 @@ class CarController extends Controller
 
 
     /**
+     * Display rent-only car index page (same UI as listing).
+     */
+    public function rentIndex()
+    {
+        return view('car.rent-listing');
+    }
+
+    /**
+     * Filter only cars available for rent with pagination (12 per page).
+     */
+    public function filterRent(Request $request)
+    {
+        $perPage = (int) ($request->integer('per_page') ?: 12);
+
+        $cars = Car::query()
+            ->where(function ($q) {
+                $q->where('is_for_rent', true)
+                    ->orWhereNotNull('rent_price_per_day')
+                    ->orWhereNotNull('rent_price_per_month');
+            })
+            ->when($request->input('keyword'), function ($q, $keyword) {
+                $q->where(function ($q2) use ($keyword) {
+                    $q2->where('model', 'like', "%$keyword%")
+                        ->orWhere('year', 'like', "%$keyword%")
+                        ->orWhere('car_color', 'like', "%$keyword%")
+                        ->orWhere('make', 'like', "%$keyword%")
+                        ->orWhere('car_condition', 'like', "%$keyword%")
+                        ->orWhere('transmission_type', 'like', "%$keyword%");
+                });
+            })
+            ->when($request->input('year_min') && $request->input('year_max'), function ($q) use ($request) {
+                $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
+            })
+            ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
+                // Use rent price if present; fall back to sale_price for range filtering compatibility
+                $q->where(function ($sub) use ($request) {
+                    $sub->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
+                        ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')])
+                        ->orWhereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
+                });
+            })
+            ->when($request->input('Year', []), function ($q, $years) {
+                $q->whereIn('year', $years);
+            })
+            ->when($request->input('Make', []), function ($q, $models) {
+                $q->whereIn('make', $models);
+            })
+            ->when($request->input('Model', []), function ($q, $models) {
+                $q->whereIn('model', $models);
+            })
+            ->when($request->input('Transmission', []), function ($q, $transmissions) {
+                $q->whereIn('transmission_type', $transmissions);
+            })
+            ->when($request->input('Body', []), function ($q, $bodies) {
+                $q->whereIn('body_type', $bodies);
+            })
+            ->when($request->input('Color', []), function ($q, $colors) {
+                $q->whereIn('car_color', $colors);
+            })
+            ->when($request->input('Condition', []), function ($q, $condition) {
+                $q->whereIn('car_condition', $condition);
+            })
+            ->when($request->input('sort'), function ($q, $sort) {
+                match ($sort) {
+                    'name' => $q->whereNotNull('model')->orderBy('model'),
+                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, sale_price) ASC'),
+                    'date' => $q->orderByDesc('created_at'),
+                    default => $q->latest(),
+                };
+            }, function ($q) {
+                $q->latest();
+            })
+            ->paginate($perPage);
+
+        return response()->json([
+            'data' => $cars->items(),
+            'current_page' => $cars->currentPage(),
+            'last_page' => $cars->lastPage(),
+            'per_page' => $cars->perPage(),
+            'total' => $cars->total(),
+        ]);
+    }
+
+
+    /**
      * Show the form for creating a new car.
      */
     public function create()
@@ -121,28 +206,31 @@ class CarController extends Controller
         try {
             Log::info('Car store method started');
             Log::info('Validated data:', $data);
-            // Files are handled below
 
             // Handle image uploads
             $images = [];
-            /** @var array<int, \Illuminate\Http\UploadedFile> $imageFiles */
-            $imageFiles = (array) (request()->file('images') ?? []);
-            foreach ($imageFiles as $image) {
-                $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
+            if ($request->hasFile('images')) {
+                /** @var array<int, \Illuminate\Http\UploadedFile> $imageFiles */
+                $imageFiles = (array) $request->file('images');
+                foreach ($imageFiles as $image) {
+                    $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
+                }
             }
             Log::info('Processed images:', $images);
 
             // Handle video uploads
             $videos = [];
-            /** @var array<int, \Illuminate\Http\UploadedFile> $videoFiles */
-            $videoFiles = (array) (request()->file('videos') ?? []);
-            foreach ($videoFiles as $video) {
-                $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
+            if ($request->hasFile('videos')) {
+                /** @var array<int, \Illuminate\Http\UploadedFile> $videoFiles */
+                $videoFiles = (array) $request->file('videos');
+                foreach ($videoFiles as $video) {
+                    $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
+                }
             }
             Log::info('Processed videos:', $videos);
 
             $carData = [
-                'user_id' => 1, // Default user ID for testing (you can change this later)
+                'user_id' => auth()->check() ? auth()->id() : 1, // Use authenticated user or default to 1
                 'bargain_id' => $data['bargain_id'] ?? null,
                 'title' => $data['title'],
                 'year' => $data['year'],
@@ -167,8 +255,8 @@ class CarController extends Controller
                 'rent_price_per_month' => $data['rent_price_per_month'] ?? null,
                 'request_price_status' => (bool) ($data['request_price_status'] ?? false),
                 'request_price' => $data['request_price'] ?? null,
-                'images' => $images, // saved as actual array (use JSON column in DB)
-                'videos' => $videos,  // fixed: changed from 'video' to 'videos'
+                'images' => $images,
+                'videos' => $videos,
             ];
 
             Log::info('Car data to be created:', $carData);
@@ -176,10 +264,26 @@ class CarController extends Controller
             $car = Car::create($carData);
             Log::info('Car created successfully with ID: ' . $car->id);
 
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Car created successfully.',
+                    'car' => $car
+                ]);
+            }
+
             return redirect()->route('car.index')->with('success', 'Car created successfully.');
         } catch (\Throwable $th) {
             Log::error('Error storing car: ' . $th->getMessage());
             Log::error('Stack trace: ' . $th->getTraceAsString());
+
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Something went wrong while saving the car: ' . $th->getMessage()
+                ], 500);
+            }
+
             return back()->withErrors(['error' => 'Something went wrong while saving the car: ' . $th->getMessage()]);
         }
     }

@@ -173,15 +173,15 @@
                                     <li class="{{ request()->routeIs('home.index') ? 'active' : '' }}">
                                         <a href="{{ route('home.index') }}">Home</a>
                                     </li>
-
-                                    <li class="{{ request()->routeIs('car.index') ? 'active' : '' }}">
-                                        <a href="{{ route('car.index') }}">Car listing</a>
+                                    <li class="dropdown"><a href="javascript:void(0)"> Car <i
+                                                class="fa fa-angle-down"></i></a>
+                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
+                                            <li><a href="{{ route('car.create') }}">Car Register</a></li>
+                                            <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
+                                            <li><a href="{{ route('car.index') }}">Car Listing</a></li>
+                                            <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
+                                        </ul>
                                     </li>
-
-                                    <li class="{{ request()->is('contact') ? 'active' : '' }}">
-                                        <a href="javascript:void(0)">Contact</a>
-                                    </li>
-
                                     {{-- Dropdown for Bargains --}}
                                     <li class="nav-item dropdown">
                                         <a class="nav-link dropdown-toggle" href="#" id="bargainsDropdown"
@@ -203,15 +203,6 @@
                                             </li>
                                         </ul>
                                     </li>
-
-                                    <li class="{{ request()->routeIs('car.directory') ? 'active' : '' }}">
-                                        <a href="{{ route('car.directory') }}">Car directory</a>
-                                    </li>
-
-                                    <li class="{{ request()->routeIs('car.create') ? 'active' : '' }}">
-                                        <a href="{{ route('car.create') }}">Car Register</a>
-                                    </li>
-
                                     <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
                                         <a href="{{ route('user.profile') }}">Profile</a>
                                     </li>
@@ -227,7 +218,6 @@
                                             </span>
                                         </a>
                                     </li>
-
                                     <li>
                                         <div class="search-top">
                                             <a class="search-btn not_click d-none d-lg-block"
@@ -265,7 +255,6 @@
                                             </div>
                                         </div>
                                     </li>
-                                </ul>
 
                             </div>
                         </div>
