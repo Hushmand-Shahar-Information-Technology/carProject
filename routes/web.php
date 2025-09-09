@@ -1,15 +1,16 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\CarController;
-use App\Http\Controllers\routeController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BargainController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\PromotionController;
-use App\Http\Controllers\BargainController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Redirect;
+use App\Http\Controllers\ChatController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -20,12 +21,12 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::view('/', 'home.index')->name('home.index');
-Route::post('/home/filter-cars', [routeController::class, 'filter']);
-Route::get('/default-cars', [routeController::class, 'default']);
+Route::post('/home/filter-cars', [HomeController::class, 'filter']);
+Route::get('/default-cars', [HomeController::class, 'default']);
 Route::view('/otp', 'auth.otp');
 
 // Route::prefix('home')->group(function () {
-//     Route::get('index', [routeController::class, 'home'])->name('home.index');
+//     Route::get('index', [HomeController::class, 'home'])->name('home.index');
 // });
 
 Route::view('/wizard', 'home.wizard');
@@ -47,6 +48,7 @@ Route::get('/lang/{locale}', function ($locale, Request $request) {
     }
     return Redirect::back();
 })->name('lang.switch');
+
 
 
 Route::prefix('bargains')->group(function () {
