@@ -1,0 +1,37 @@
+name: Deploy to Hostinger
+
+on:
+  push:
+    branches:
+      - production
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH with debug
+        run: |
+          echo "HOSTINGER_PORT is '${{ secrets.HOSTINGER_PORT }}'"
+          echo "HOSTINGER_HOST is '${{ secrets.HOSTINGER_HOST }}'"
+          echo "HOSTINGER_USER is '${{ secrets.HOSTINGER_USER }}'"
+          echo "HOSTINGER_SSH_KEY is '${{ secrets.HOSTINGER_SSH_KEY }}'"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
+        run: |
+          ssh -i ~/.ssh/id_rsa -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
+            cd /home/u285585646/domains/topmotar.com/public_html/beta
+            git pull origin production --no-rebase
+            composer2 install --no-dev
+            php artisan migrate --force
+            php artisan shield:generate --all
+            php artisan shield:super-admin --user=1
+          ENDSSH
+
