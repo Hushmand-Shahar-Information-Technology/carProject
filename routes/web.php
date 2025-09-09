@@ -61,6 +61,10 @@ Route::prefix('bargains')->group(function () {
     Route::delete('/delete/{id}', [BargainController::class, 'destroy'])->name('bargains.destroy');
     Route::post('/toggle-status/{id}', [BargainController::class, 'toggleStatus'])->name('bargains.toggle-status');
     Route::get('/show/{id}', [BargainController::class, 'show'])->name('bargains.show');
+    
+    // Status management routes
+    Route::post('/update-status/{id}', [BargainController::class, 'updateStatus'])->name('bargains.update-status');
+    Route::post('/send-warning/{id}', [BargainController::class, 'sendWarning'])->name('bargains.send-warning');
 });
 
 
