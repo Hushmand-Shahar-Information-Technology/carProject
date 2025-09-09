@@ -180,27 +180,19 @@
                                             <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
                                             <li><a href="{{ route('car.index') }}">Car Listing</a></li>
                                             <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
+                                            <li><a href="{{ route('car.auction') }}">Car Auction</a></li>
                                         </ul>
                                     </li>
                                     {{-- Dropdown for Bargains --}}
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle" href="#" id="bargainsDropdown"
-                                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Bargains
-                                        </a>
-                                        <ul class="dropdown-menu" aria-labelledby="bargainsDropdown">
-                                            <li>
-                                                <a class="dropdown-item {{ request()->routeIs('bargains.create') ? 'active' : '' }}"
-                                                    href="{{ route('bargains.create') }}">
-                                                    Bargain Register
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a class="dropdown-item {{ request()->routeIs('bargains.index') ? 'active' : '' }}"
-                                                    href="{{ route('bargains.index') }}">
-                                                    Bargain List
-                                                </a>
-                                            </li>
+                                    <li class="dropdown"><a href="javascript:void(0)"> Bargains <i
+                                                class="fa fa-angle-down"></i></a>
+                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
+                                            <li><a href="{{ route('bargains.create') }}"
+                                                    class="{{ request()->routeIs('bargains.create') ? 'active' : '' }}">
+                                                    Bargain Register</a></li>
+                                            <li><a href="{{ route('bargains.index') }}"
+                                                    class="{{ request()->routeIs('bargains.index') ? 'active' : '' }}">Bargain
+                                                    List</a></li>
                                         </ul>
                                     </li>
                                     <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">

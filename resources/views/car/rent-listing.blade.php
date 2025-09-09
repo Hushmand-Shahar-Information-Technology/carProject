@@ -144,6 +144,7 @@
     <script>
         const API_URL = "{{ route('cars.filter-rent') }}";
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
+        const bargain_show = "{{ route('bargains.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
         const paginationEl = document.getElementById('pagination');
         let currentView = 'grid';
@@ -240,6 +241,9 @@
                         let images = Array.isArray(car.images) ? car.images : (car.images ? [car.images] : []);
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
+                        const bargain_url = car.bargain ?
+                            bargain_show.replace('__ID__', car.bargain.id) :
+                            null;
                         const carDiv = document.createElement('div');
                         carDiv.className = currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1';
                         let html = `

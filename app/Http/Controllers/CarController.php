@@ -47,6 +47,7 @@ class CarController extends Controller
     public function filter(Request $request)
     {
         $cars = Car::query()
+            ->with('bargain')
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -186,6 +187,78 @@ class CarController extends Controller
         ]);
     }
 
+    /**
+     * Display rent-only car index page (same UI as listing).
+     */
+    public function auction()
+    {
+        return view('car.auction');
+    }
+
+    /**
+     * Filter only cars available for rent with pagination (12 per page).
+     */
+    public function filterAuction(Request $request)
+    {
+        $cars = Car::query()
+            ->whereNotNull('sale_price')
+            ->when($request->input('keyword'), function ($q, $keyword) {
+                $q->where(function ($q2) use ($keyword) {
+                    $q2->where('model', 'like', "%$keyword%")
+                        ->orWhere('year', 'like', "%$keyword%")
+                        ->orWhere('car_color', 'like', "%$keyword%")
+                        ->orWhere('make', 'like', "%$keyword%")
+                        ->orWhere('car_condition', 'like', "%$keyword%")
+                        ->orWhere('transmission_type', 'like', "%$keyword%");
+                });
+            })
+            ->when($request->input('year_min') && $request->input('year_max'), function ($q) use ($request) {
+                $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
+            })
+            ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
+                // Use rent price if present; fall back to sale_price for range filtering compatibility
+                $q->where(function ($sub) use ($request) {
+                    $sub->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
+                        ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')])
+                        ->orWhereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
+                });
+            })
+            ->when($request->input('Year', []), function ($q, $years) {
+                $q->whereIn('year', $years);
+            })
+            ->when($request->input('Make', []), function ($q, $models) {
+                $q->whereIn('make', $models);
+            })
+            ->when($request->input('Model', []), function ($q, $models) {
+                $q->whereIn('model', $models);
+            })
+            ->when($request->input('Transmission', []), function ($q, $transmissions) {
+                $q->whereIn('transmission_type', $transmissions);
+            })
+            ->when($request->input('Body', []), function ($q, $bodies) {
+                $q->whereIn('body_type', $bodies);
+            })
+            ->when($request->input('Color', []), function ($q, $colors) {
+                $q->whereIn('car_color', $colors);
+            })
+            ->when($request->input('Condition', []), function ($q, $condition) {
+                $q->whereIn('car_condition', $condition);
+            })
+            ->when($request->input('sort'), function ($q, $sort) {
+                match ($sort) {
+                    'name' => $q->whereNotNull('model')->orderBy('model'),
+                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, sale_price) ASC'),
+                    'date' => $q->orderByDesc('created_at'),
+                    default => $q->latest(),
+                };
+            }, function ($q) {
+                $q->latest();
+            })
+            ->paginate(15)
+            ->withQueryString();
+
+        return response()->json($cars);
+    }
 
     /**
      * Show the form for creating a new car.
