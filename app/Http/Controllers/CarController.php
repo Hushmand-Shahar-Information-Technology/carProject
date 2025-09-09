@@ -47,6 +47,7 @@ class CarController extends Controller
     public function filter(Request $request)
     {
         $cars = Car::query()
+            ->with('bargain')
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
