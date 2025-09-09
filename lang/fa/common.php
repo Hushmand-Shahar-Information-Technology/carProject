@@ -48,6 +48,24 @@ return [
         'type' => 'نوع',
         'activity' => 'فعالیت',
         'time' => 'زمان',
+        'user' => 'کاربر',
+        'model' => 'مدل',
+        'event' => 'رویداد',
+        'description' => 'توضیحات',
+        'date_time' => 'تاریخ و زمان',
+        'has_record' => 'دارای رکورد',
+        'event_type' => 'نوع رویداد',
+        'model_type' => 'نوع مدل',
+        'date_range' => 'محدوده تاریخ',
+        'from' => 'از',
+        'to' => 'تا',
+        // Activity log specific labels
+        'user_tooltip' => 'کاربری که عمل را انجام داده است',
+        'model_tooltip' => 'نوع مدلی که تحت تأثیر قرار گرفته است',
+        'event_tooltip' => 'نوع عمل انجام شده',
+        'date_time_tooltip' => 'زمانی که عمل رخ داده است',
+        'has_record_tooltip' => 'آیا رکورد تحت تأثیر هنوز وجود دارد',
+        'view_details_tooltip' => 'مشاهده جزئیات فعالیت',
     ],
     
     'messages' => [
@@ -60,5 +78,53 @@ return [
         'no_records' => 'هیچ رکوردی یافت نشد',
         'loading' => 'در حال بارگذاری...',
         'language_changed' => 'زبان با موفقیت تغییر یافت!',
+        'view_all_activities' => 'مشاهده تمام فعالیت‌های سیستم و اقدامات کاربران',
+        'select_event_type' => 'نوع رویداد را انتخاب کنید',
+        'select_model_type' => 'نوع مدل را انتخاب کنید',
+        // Activity log specific messages
+        'activity_log_title' => 'لاگ فعالیت‌ها',
+        'activity_log_description' => 'مشاهده تمام فعالیت‌های سیستم و اقدامات کاربران',
+        'start_date' => 'تاریخ شروع',
+        'end_date' => 'تاریخ پایان',
+    ],
+    
+    // Activity log specific translations
+    'activity_log' => [
+        'title' => 'لاگ فعالیت‌ها',
+        'description' => 'مشاهده تمام فعالیت‌های سیستم و اقدامات کاربران',
+        'events' => [
+            'created' => 'ایجاد شده',
+            'updated' => 'به‌روزرسانی شده',
+            'deleted' => 'حذف شده',
+            'restored' => 'بازیابی شده',
+        ],
+        'tooltips' => [
+            'user' => 'کاربری که عمل را انجام داده است',
+            'model' => 'نوع مدلی که تحت تأثیر قرار گرفته است',
+            'event' => 'نوع عمل انجام شده',
+            'date_time' => 'زمانی که عمل رخ داده است',
+            'has_record' => 'آیا رکورد تحت تأثیر هنوز وجود دارد',
+            'view_details' => 'مشاهده جزئیات فعالیت',
+        ],
+        'filters' => [
+            'event_type' => 'نوع رویداد',
+            'model_type' => 'نوع مدل',
+            'date_range' => 'محدوده تاریخ',
+            'from' => 'از',
+            'to' => 'تا',
+            'select_event_type' => 'نوع رویداد را انتخاب کنید',
+            'select_model_type' => 'نوع مدل را انتخاب کنید',
+        ],
+        'indicators' => [
+            'from' => 'از :date',
+            'to' => 'تا :date',
+        ],
+    ],
+    
+    // Language names
+    'languages' => [
+        'en' => 'English',
+        'ps' => 'پښتو',
+        'fa' => 'دری',
     ],
 ];

@@ -13,7 +13,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
     <title>@yield('title')</title>
 
-
     <!-- Favicon -->
     <link rel="stylesheet" href="{{ asset('images/favicon.ico') }}" />
 
@@ -27,11 +26,11 @@
     <link rel="stylesheet" href="{{ asset('css/mega-menu/mega_menu.css') }}" />
 
     <!-- font awesome -->
-    {{--
-    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" /> --}}
+    <link rel="stylesheet" href="{{asset('css/font-awesome.min.css')}}" />
 
     <!-- owl-carousel -->
     <link rel="stylesheet" href="{{ asset('css/owl-carousel/owl.carousel.css') }}" />
+
     <!-- Magnific Popup CSS -->
     <!-- Make sure you have Bootstrap JS included -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -41,30 +40,25 @@
     <script src="https://cdn.jsdelivr.net/npm/magnific-popup/dist/jquery.magnific-popup.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/15.7.1/nouislider.min.css" />
-    {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/> --}}
-
-    <!-- magnific-popup -->
-    {{--
-    <link rel="stylesheet" href="{{asset('css/magnific-popup/magnific-popup.css')}}" /> --}}
-
-    {{-- <link rel="stylesheet" type="text/css" href="css/slick/slick.css" /> --}}
-    {{-- <link rel="stylesheet" type="text/css" href="css/slick/slick-theme.css" /> --}}
 
     <!-- revolution -->
     <link rel="stylesheet" href="{{ asset('revolution/css/settings.css') }}" />
 
     <!-- Bootstrap Bundle JS (includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- main style -->
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" />
 
     <!-- responsive -->
     <link rel="stylesheet" href="{{ asset('css/responsive.css') }}" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-        rel="stylesheet">
+
+    <!-- Custom font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
-    {{-- @vite(['resources/js/app.js', 'resources/css/app.css']) --}}
+    
+    <!-- Vite -->
+    @vite(['resources/js/app.js', 'resources/css/app.css'])
+    
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         // Axios CSRF setup
@@ -76,8 +70,6 @@
             }
         })();
     </script>
-
-
 </head>
 
 <body>
@@ -106,6 +98,11 @@
                     <div class="col-lg-6 col-md-12">
                         <div class="topbar-right text-lg-end text-center">
                             <ul class="list-inline mb-0">
+                                <!-- Language Switcher -->
+                                <li class="list-inline-item">
+                                    <x-language-switcher />
+                                </li>
+                                
                                 <li class="list-inline-item">
                                     <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
                                 </li>
@@ -344,8 +341,11 @@
                             @foreach ($cars as $car)
                                 <div class="recent-post">
                                     <div class="recent-post-image">
-                                        <img class="img-fluid" src="{{ '/' . $car->images[0] }}"
-                                            alt="{{ $car->title }}">
+                                        @if (!empty($car->images) && is_array($car->images) && isset($car->images[0]))
+                                            <img class="img-fluid" src="{{ asset($car->images[0]) }}" alt="{{ $car->title }}">
+                                        @else
+                                            <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}" alt="Default car image">
+                                        @endif
                                     </div>
                                     <div class=" recent-post-info">
                                         <a href="#">{{ $car->title }} </a>
@@ -424,8 +424,7 @@
     <script type="text/javascript" src="{{ asset('js/owl-carousel/owl.carousel.min.js') }}"></script>
 
     <!-- select -->
-    {{--
-    <script type="text/javascript" src="{{ asset('js/select/jquery-select.js') }}"></script> --}}
+    <script type="text/javascript" src="{{ asset('js/select/jquery-select.js') }}"></script>
 
     <!-- magnific popup -->
     <script type="text/javascript" src="{{ asset('js/magnific-popup/jquery.magnific-popup.min.js') }}"></script>
