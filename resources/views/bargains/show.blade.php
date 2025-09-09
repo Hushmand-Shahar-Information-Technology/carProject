@@ -39,9 +39,76 @@
                         <span class="badge bg-white text-dark fs-6 p-2 rounded-pill">
                             <i class="fas fa-circle me-1 small text-danger"></i> {{ ucfirst($bargain->status) }}
                         </span>
+
+                        <!-- Registration Status Badge -->
                         <div class="mt-2">
-                            <button id="btn-promote-bargain"
-                                class="btn btn-sm btn-outline-primary">{{ $hasActivePromotion ? 'Promoted' : 'Promote' }}</button>
+                            @php
+                                $statusConfig = [
+                                    'pending' => [
+                                        'class' => 'bg-warning text-dark',
+                                        'text' => 'Pending Approval',
+                                        'icon' => 'clock',
+                                    ],
+                                    'approved' => [
+                                        'class' => 'bg-success text-white',
+                                        'text' => 'Approved',
+                                        'icon' => 'check-circle',
+                                    ],
+                                    'blocked' => [
+                                        'class' => 'bg-danger text-white',
+                                        'text' => 'Blocked',
+                                        'icon' => 'x-circle',
+                                    ],
+                                    'restricted' => [
+                                        'class' => 'bg-warning text-dark',
+                                        'text' => 'Restricted',
+                                        'icon' => 'exclamation-triangle',
+                                    ],
+                                ];
+                                $currentStatus = $statusConfig[$bargain->registration_status ?? 'pending'];
+                            @endphp
+                            <span class="badge {{ $currentStatus['class'] }} fs-6 p-2 rounded-pill">
+                                <i class="fas fa-{{ $currentStatus['icon'] }} me-1"></i> {{ $currentStatus['text'] }}
+                            </span>
+                            @if ($bargain->restriction_count > 0)
+                                <span class="badge bg-warning text-dark fs-6 p-2 rounded-pill ms-1">
+                                    <i class="fas fa-exclamation-triangle me-1"></i> {{ $bargain->restriction_count }}/3
+                                    Restrictions
+                                </span>
+                            @endif
+                        </div>
+
+                        <!-- Status Messages for User -->
+                        @if ($bargain->status_reason)
+                            <div
+                                class="mt-3 alert 
+                                @if ($bargain->registration_status === 'blocked') alert-danger
+                                @elseif($bargain->registration_status === 'restricted') alert-warning
+                                @else alert-info @endif">
+                                <strong><i class="fas fa-info-circle me-1"></i>Status Message:</strong>
+                                {{ $bargain->status_reason }}
+                                @if ($bargain->status_updated_at)
+                                    <br><small class="text-muted"><i class="fas fa-clock me-1"></i>Last updated:
+                                        {{ $bargain->status_updated_at->format('M d, Y H:i') }}</small>
+                                @endif
+                            </div>
+                        @endif
+                        <div class="mt-2">
+                            @if ($bargain->canPromote())
+                                <button id="btn-promote-bargain"
+                                    class="btn btn-sm btn-outline-primary">{{ $hasActivePromotion ? 'Promoted' : 'Promote' }}</button>
+                            @else
+                                <button class="btn btn-sm btn-outline-secondary" disabled
+                                    title="@if ($bargain->registration_status === 'blocked') User is blocked@elseif($bargain->hasActiveRestriction())User is under restriction until {{ $bargain->restriction_ends_at->format('M d, Y') }}@else Cannot promote at this time @endif">
+                                    <i class="fas fa-ban me-1"></i> Cannot Promote
+                                </button>
+                                @if ($bargain->hasActiveRestriction())
+                                    <div class="small text-danger mt-1">
+                                        <i class="fas fa-clock me-1"></i>Restriction active until
+                                        {{ $bargain->restriction_ends_at->format('M d, Y') }}
+                                    </div>
+                                @endif
+                            @endif
                             @if ($hasActivePromotion && $activePromotionEndsAt)
                                 <div class="small text-muted mt-1">
                                     <span id="bargain-promotion-ends-at"
@@ -139,6 +206,143 @@
                             </div>
                         </div>
 
+                        <!-- Admin Status Management Section -->
+                        @php
+                            // Temporarily allow anyone to see admin buttons for testing
+                            $canManageStatus = true; // For testing - change back to proper auth check later
+
+                            // Original admin check (commented out for testing):
+                            // $canManageStatus =
+                            //     auth()->check() &&
+                            //     (auth()->user()->email === 'admin@example.com' ||
+                            //         auth()->user()->email === 'admin@admin.com' ||
+                            //         auth()->user()->email === 'dev@dev.com' ||
+                            //         (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('admin')));
+
+                        @endphp
+
+                        @if ($canManageStatus)
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="card border-0 shadow-sm rounded-3">
+                                        <div class="card-header bg-danger text-white pt-4">
+                                            <h4 class="card-title text-white fw-bold mb-0">
+                                                <i class="fas fa-user-cog me-2"></i> Status Management (Admin Only)
+                                            </h4>
+                                        </div>
+                                        <div class="card-body bg-white">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <h6 class="text-muted mb-3">Current Status Information</h6>
+                                                    <div class="d-flex flex-column gap-2">
+                                                        <div><strong>Registration Status:</strong>
+                                                            <span class="badge {{ $currentStatus['class'] }} ms-1">
+                                                                {{ $currentStatus['text'] }}
+                                                            </span>
+                                                        </div>
+                                                        <div><strong>Restriction Count:</strong>
+                                                            {{ $bargain->restriction_count ?? 0 }}/3</div>
+                                                        @if ($bargain->restriction_ends_at && $bargain->registration_status === 'restricted')
+                                                            <div><strong>Restriction Ends:</strong>
+                                                                <span
+                                                                    class="badge bg-danger text-white">{{ $bargain->restriction_ends_at->format('M d, Y') }}</span>
+                                                                <br><small
+                                                                    class="text-danger fw-bold">{{ $bargain->getRestrictionTimeRemaining() }}</small>
+                                                            </div>
+                                                            <div><strong>Restriction Duration:</strong>
+                                                                <span
+                                                                    class="text-danger fw-bold">{{ $bargain->restriction_duration_days ?? 0 }}
+                                                                    days</span>
+                                                            </div>
+                                                        @endif
+                                                        @if ($bargain->status_reason)
+                                                            <div><strong>Status Reason:</strong>
+                                                                <span
+                                                                    class="text-muted">{{ $bargain->status_reason }}</span>
+                                                            </div>
+                                                        @endif
+                                                        @if ($bargain->status_updated_at)
+                                                            <div><strong>Last Updated:</strong>
+                                                                <span
+                                                                    class="text-muted">{{ $bargain->status_updated_at->format('M d, Y') }}</span>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h6 class="text-muted mb-3">Quick Status Actions</h6>
+                                                    <div class="d-flex flex-wrap gap-2 mb-3" id="status-actions">
+                                                        <!-- Pending Button -->
+                                                        <button class="btn btn-secondary btn-sm status-action-btn"
+                                                            data-status="pending" data-action="set-pending"
+                                                            title="Set status to Pending"
+                                                            {{ $bargain->registration_status === 'pending' ? 'disabled' : '' }}>
+                                                            <i class="bi bi-clock me-1"></i> Pending
+                                                        </button>
+
+                                                        <!-- Approve Button -->
+                                                        <button class="btn btn-success btn-sm status-action-btn"
+                                                            data-status="approved" data-action="approve"
+                                                            title="Approve this user registration"
+                                                            {{ $bargain->registration_status === 'approved' ? 'disabled' : '' }}>
+                                                            <i class="bi bi-check-circle me-1"></i> Approve
+                                                        </button>
+
+                                                        <!-- Restrict Button -->
+                                                        <button class="btn btn-warning btn-sm status-action-btn"
+                                                            data-status="restricted" data-action="restrict"
+                                                            title="Restrict user (Warning: 3 restrictions = auto-block)"
+                                                            {{ $bargain->registration_status === 'blocked' || ($bargain->restriction_count ?? 0) >= 3 ? 'disabled' : '' }}>
+                                                            <i class="bi bi-exclamation-triangle me-1"></i> Restrict
+                                                            @if (($bargain->restriction_count ?? 0) >= 3)
+                                                                (Max)
+                                                            @endif
+                                                        </button>
+
+                                                        <!-- Block Button -->
+                                                        <button class="btn btn-danger btn-sm status-action-btn"
+                                                            data-status="blocked" data-action="block"
+                                                            title="Block user completely (No access to account)"
+                                                            {{ $bargain->registration_status === 'blocked' ? 'disabled' : '' }}>
+                                                            <i class="bi bi-x-circle me-1"></i> Block
+                                                        </button>
+                                                    </div>
+
+                                                    <h6 class="text-muted mb-3">Additional Actions</h6>
+                                                    <div class="d-flex flex-wrap gap-2" id="additional-actions">
+                                                        <!-- Send Warning Button -->
+                                                        <button class="btn btn-info btn-sm status-action-btn"
+                                                            data-action="warning" title="Send warning message to user"
+                                                            {{ $bargain->registration_status === 'blocked' ? 'disabled' : '' }}>
+                                                            <i class="bi bi-bell me-1"></i> Send Warning
+                                                        </button>
+
+                                                        <!-- Reset Restrictions Button (only show if user has restrictions) -->
+                                                        @if ($bargain->restriction_count > 0)
+                                                            <button
+                                                                class="btn btn-outline-success btn-sm status-action-btn"
+                                                                data-action="reset-restrictions"
+                                                                title="Clear all restrictions and reset count to 0">
+                                                                <i class="bi bi-arrow-clockwise me-1"></i> Clear All
+                                                                Restrictions
+                                                            </button>
+                                                        @endif
+
+                                                        <!-- View Activity Log Button -->
+                                                        <button class="btn btn-outline-secondary btn-sm"
+                                                            onclick="showActivityLog()"
+                                                            title="View status change history">
+                                                            <i class="bi bi-journal-text me-1"></i> Activity Log
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+
                         <!-- Action Buttons -->
                         <div class="d-flex gap-2 mt-5 pt-3 flex-wrap">
                             <a href="{{ route('bargains.edit', $bargain->id) }}"
@@ -159,8 +363,27 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Bootstrap Tooltip -->
     <script>
+        // Initialize Bootstrap tooltips
+        document.addEventListener('DOMContentLoaded', function() {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+    <script>
+        // Status management buttons
         document.addEventListener('click', function(e) {
+            const statusBtn = e.target.closest('.status-action-btn');
+            if (statusBtn) {
+                e.preventDefault();
+                handleStatusAction(statusBtn);
+                return;
+            }
+
+            // ... existing promotion code ...
             const btn = e.target.closest('#btn-promote-bargain');
             if (!btn) return;
             e.preventDefault();
@@ -242,6 +465,200 @@
             });
         });
 
+        // Handle status action function
+        function handleStatusAction(btn) {
+            const status = btn.getAttribute('data-status');
+            const action = btn.getAttribute('data-action');
+
+            let confirmMessage = '';
+            let actionText = '';
+            let url = '';
+            let showDescriptionInput = false;
+            let descriptionLabel = '';
+
+            if (action === 'warning') {
+                confirmMessage = 'Send a warning to this user?';
+                actionText = 'Warning sent successfully!';
+                url = '{{ route('bargains.send-warning', $bargain->id) }}';
+                showDescriptionInput = true;
+                descriptionLabel = 'Warning Message (Optional):';
+            } else if (action === 'reset-restrictions') {
+                confirmMessage = 'Reset restriction count to 0? This will clear all previous restrictions.';
+                actionText = 'Restrictions reset successfully!';
+                url = '{{ route('bargains.update-status', $bargain->id) }}';
+            } else if (action === 'set-pending') {
+                confirmMessage = 'Set this user\'s status back to Pending?';
+                actionText = 'Status changed to Pending successfully!';
+                url = '{{ route('bargains.update-status', $bargain->id) }}';
+                showDescriptionInput = true;
+                descriptionLabel = 'Reason for setting to pending (Optional):';
+            } else {
+                switch (action) {
+                    case 'approve':
+                    case 'unblock':
+                    case 'remove-restriction':
+                        confirmMessage = 'Approve this user registration?';
+                        actionText = 'User approved successfully!';
+                        showDescriptionInput = true;
+                        descriptionLabel = 'Approval note (Optional):';
+                        break;
+                    case 'block':
+                        confirmMessage = 'Block this user? They will not be able to access their account.';
+                        actionText = 'User blocked successfully!';
+                        showDescriptionInput = true;
+                        descriptionLabel = 'Reason for blocking (Optional):';
+                        break;
+                    case 'restrict':
+                        const currentRestrictions = {{ $bargain->restriction_count ?? 0 }};
+                        if (currentRestrictions >= 3) {
+                            Swal.fire('Cannot Restrict', 'User already has maximum restrictions (3/3) and is blocked.',
+                                'error');
+                            return;
+                        }
+                        confirmMessage =
+                            `Add restriction to this user? (${currentRestrictions + 1}/3)\n\nWarning: User will be automatically blocked after 3 restrictions.`;
+                        actionText = 'User restricted successfully!';
+                        showDescriptionInput = true;
+                        descriptionLabel = 'Reason for restriction (Optional):';
+                        break;
+                }
+                url = '{{ route('bargains.update-status', $bargain->id) }}';
+            }
+
+            // Create SweetAlert with optional description input
+            const swalConfig = {
+                title: 'Confirm Action',
+                text: confirmMessage,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, proceed!'
+            };
+
+            if (showDescriptionInput) {
+                let additionalFields = '';
+
+                // Add duration field for restriction
+                if (action === 'restrict') {
+                    additionalFields = `
+                        <div class="mt-3">
+                            <label for="duration-input" class="form-label text-start d-block">Restriction Duration (Days):</label>
+                            <input type="number" id="duration-input" class="form-control" min="1" max="365" value="7" placeholder="Enter number of days">
+                            <small class="text-muted">Default: 7 days (1-365 days allowed)</small>
+                        </div>
+                    `;
+                }
+
+                swalConfig.html = `
+                    <p>${confirmMessage}</p>
+                    ${additionalFields}
+                    <div class="mt-3">
+                        <label for="description-input" class="form-label text-start d-block">${descriptionLabel}</label>
+                        <textarea id="description-input" class="form-control" rows="3" maxlength="500" placeholder="Enter your message here..."></textarea>
+                        <small class="text-muted">Maximum 500 characters</small>
+                    </div>
+                `;
+                delete swalConfig.text;
+            }
+
+            Swal.fire(swalConfig).then((result) => {
+                if (result.isConfirmed) {
+                    const postData = {
+                        _token: '{{ csrf_token() }}'
+                    };
+
+                    if (status) {
+                        postData.status = status;
+                    }
+
+                    // Get description if input exists
+                    if (showDescriptionInput) {
+                        const descriptionInput = document.getElementById('description-input');
+                        if (descriptionInput && descriptionInput.value.trim()) {
+                            if (action === 'warning') {
+                                postData.warning_message = descriptionInput.value.trim();
+                            } else {
+                                postData.description = descriptionInput.value.trim();
+                            }
+                        }
+
+                        // Get duration for restriction
+                        if (action === 'restrict') {
+                            const durationInput = document.getElementById('duration-input');
+                            if (durationInput && durationInput.value) {
+                                postData.restriction_days = parseInt(durationInput.value);
+                            }
+                        }
+                    }
+
+                    // Special handling for reset restrictions
+                    if (action === 'reset-restrictions') {
+                        postData.reset_restrictions = true;
+                    }
+
+                    axios.post(url, postData)
+                        .then(function(response) {
+                            Swal.fire('Success', actionText, 'success').then(() => {
+                                location.reload(); // Reload page to show updated status
+                            });
+                        })
+                        .catch(function(error) {
+                            let errorMessage = 'Failed to update user status!';
+                            if (error.response && error.response.data && error.response.data.message) {
+                                errorMessage = error.response.data.message;
+                            }
+                            Swal.fire('Error', errorMessage, 'error');
+                        });
+                }
+            });
+        }
+
+        // Show activity log function
+        function showActivityLog() {
+            Swal.fire({
+                title: 'Activity Log',
+                html: `
+                    <div class="text-start">
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                            <span><strong>Current Status:</strong></span>
+                            <span class="badge {{ $currentStatus['class'] }}">{{ $currentStatus['text'] }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-2">
+                            <span><strong>Restriction Count:</strong></span>
+                            <span class="badge bg-info">{{ $bargain->restriction_count ?? 0 }}/3</span>
+                        </div>
+                        @if ($bargain->restriction_ends_at && $bargain->registration_status === 'restricted')
+                        <div class="border-bottom pb-2 mb-2">
+                            <strong>Restriction Details:</strong><br>
+                            <span class="text-danger fw-bold">Duration: {{ $bargain->restriction_duration_days ?? 0 }} days</span><br>
+                            <span class="text-danger fw-bold">Ends: {{ $bargain->restriction_ends_at->format('M d, Y') }}</span><br>
+                            <span class="badge bg-danger text-white">{{ $bargain->getRestrictionTimeRemaining() }}</span>
+                        </div>
+                        @endif
+                        @if ($bargain->status_reason)
+                        <div class="border-bottom pb-2 mb-2">
+                            <strong>Status Reason:</strong><br>
+                            <span class="text-muted">{{ $bargain->status_reason }}</span>
+                        </div>
+                        @endif
+                        @if ($bargain->status_updated_at)
+                        <div class="border-bottom pb-2 mb-2">
+                            <strong>Last Updated:</strong><br>
+                            <span class="text-muted">{{ $bargain->status_updated_at->format('M d, Y') }}</span>
+                        </div>
+                        @endif
+                        <div class="mt-3">
+                            <small class="text-muted">Note: Detailed activity logs would require additional database tracking.</small>
+                        </div>
+                    </div>
+                `,
+                width: '500px',
+                showConfirmButton: true,
+                confirmButtonText: 'Close'
+            });
+        }
+
         function clearPromotionCountdown(elementId) {
             const el = document.getElementById(elementId);
             if (!el) return;
@@ -298,4 +715,112 @@
             startPromotionCountdown('bargain-promotion-ends-at');
         @endif
     </script>
+@endpush
+
+@push('styles')
+    <style>
+        /* Status Management Button Styling */
+        .status-action-btn {
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            font-weight: 500;
+            min-width: 100px;
+            position: relative;
+        }
+
+        .status-action-btn:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .status-action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .status-action-btn[data-status="pending"] {
+            background: linear-gradient(45deg, #6c757d, #8a8a8a);
+            border: none;
+            color: white;
+        }
+
+        .status-action-btn[data-status="approved"] {
+            background: linear-gradient(45deg, #28a745, #34ce57);
+            border: none;
+            color: white;
+        }
+
+        .status-action-btn[data-status="restricted"] {
+            background: linear-gradient(45deg, #dc3545, #e4606d);
+            border: none;
+            color: white;
+        }
+
+        .status-action-btn[data-status="blocked"] {
+            background: linear-gradient(45deg, #6c757d, #8a8a8a);
+            border: none;
+            color: white;
+        }
+
+        .status-action-btn[data-action="warning"] {
+            background: linear-gradient(45deg, #dc3545, #e4606d);
+            border: none;
+            color: white;
+        }
+
+        .status-action-btn[data-action="reset-restrictions"] {
+            background: white;
+            border: 2px solid #dc3545;
+            color: #dc3545;
+        }
+
+        .status-action-btn[data-action="reset-restrictions"]:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Activity Log Styling */
+        #additional-actions .btn-outline-secondary {
+            border: 2px solid #dc3545;
+            color: #dc3545;
+            transition: all 0.3s ease;
+        }
+
+        #additional-actions .btn-outline-secondary:hover {
+            background: #dc3545;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        /* Status Badge Enhancement */
+        .badge {
+            font-size: 0.875rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+        /* Card Header Enhancement */
+        .card-header.bg-danger {
+            background: linear-gradient(45deg, #dc3545, #b91c1c) !important;
+        }
+
+        /* Button Groups */
+        #status-actions,
+        #additional-actions {
+            gap: 8px !important;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .status-action-btn {
+                min-width: auto;
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            #status-actions,
+            #additional-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
 @endpush
