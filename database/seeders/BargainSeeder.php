@@ -1,8 +1,6 @@
 <?php
 
 namespace Database\Seeders;
-
-
 use Illuminate\Database\Seeder;
 use App\Models\Bargain;
 use Illuminate\Support\Str;
@@ -40,4 +38,3 @@ class BargainSeeder extends Seeder
         }
     }
 }
->>>>>>> 93bc2b831f617bf21809253cf815696a82c94f6d
