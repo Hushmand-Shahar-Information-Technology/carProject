@@ -38,3 +38,4 @@ class BargainSeeder extends Seeder
         }
     }
 }
+>>>>>>> 93bc2b831f617bf21809253cf815696a82c94f6d
