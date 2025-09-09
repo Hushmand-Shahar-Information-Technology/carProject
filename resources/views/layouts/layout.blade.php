@@ -56,8 +56,8 @@
     <!-- Custom font -->
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
     
-    <!-- Vite -->
-    @vite(['resources/js/app.js', 'resources/css/app.css'])
+    <!-- Additional styles will be added here by pages -->
+    @stack('styles')
     
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
