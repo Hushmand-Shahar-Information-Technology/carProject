@@ -99,10 +99,10 @@
                                     class="btn btn-sm btn-outline-primary">{{ $hasActivePromotion ? 'Promoted' : 'Promote' }}</button>
                             @else
                                 <button class="btn btn-sm btn-outline-secondary" disabled
-                                    title="@if ($bargain->registration_status === 'blocked') User is blocked@elseif($bargain->hasActiveRestriction())User is under restriction until {{ $bargain->restriction_ends_at->format('M d, Y') }}@else Cannot promote at this time @endif">
+                                    title="@if ($bargain->registration_status === 'blocked') User is blocked@elseif($bargain->hasActiveRestriction() && $bargain->restriction_ends_at)User is under restriction until {{ $bargain->restriction_ends_at->format('M d, Y') }}@else Cannot promote at this time @endif">
                                     <i class="fas fa-ban me-1"></i> Cannot Promote
                                 </button>
-                                @if ($bargain->hasActiveRestriction())
+                                @if ($bargain->hasActiveRestriction() && $bargain->restriction_ends_at)
                                     <div class="small text-danger mt-1">
                                         <i class="fas fa-clock me-1"></i>Restriction active until
                                         {{ $bargain->restriction_ends_at->format('M d, Y') }}
@@ -634,6 +634,12 @@
                             <span class="text-danger fw-bold">Duration: {{ $bargain->restriction_duration_days ?? 0 }} days</span><br>
                             <span class="text-danger fw-bold">Ends: {{ $bargain->restriction_ends_at->format('M d, Y') }}</span><br>
                             <span class="badge bg-danger text-white">{{ $bargain->getRestrictionTimeRemaining() }}</span>
+                        </div>
+                        @elseif ($bargain->registration_status === 'blocked' && $bargain->restriction_count >= 3)
+                        <div class="border-bottom pb-2 mb-2">
+                            <strong>Block Details:</strong><br>
+                            <span class="text-danger fw-bold">Blocked after {{ $bargain->restriction_count }} restrictions</span><br>
+                            <span class="badge bg-dark text-white">Permanently Blocked</span>
                         </div>
                         @endif
                         @if ($bargain->status_reason)
