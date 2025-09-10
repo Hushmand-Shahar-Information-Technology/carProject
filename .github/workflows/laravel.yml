@@ -20,22 +20,30 @@ jobs:
           extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, pdo, pdo_mysql
           coverage: none
 
-      - name: Set up SSH
+      - name: Install lftp
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -p ${{ secrets.HOSTINGER_PORT || 22 }} ${{ secrets.HOSTINGER_HOST }} >> ~/.ssh/known_hosts 2>/dev/null
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Deploy via lftp
+        run: |
+          echo "Deploying files to Hostinger via lftp"
+          lftp -c "
+          set ssl:verify-certificate no;
+          open -p ${{ secrets.HOSTINGER_PORT }} -u ${{ secrets.HOSTINGER_USER }},${{ secrets.HOSTINGER_PASSWORD }} ${{ secrets.HOSTINGER_HOST }};
+          mirror -R --verbose --only-newer --parallel=10 . /home/u285585646/domains/topmotar.com/public_html/beta;
+          bye;
+          "
         env:
           HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
-          HOSTINGER_SSH_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+          HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
+          HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
 
-      - name: Deploy via SSH
+      - name: Run Laravel post-deployment commands via SSH
         run: |
-          ssh -i ~/.ssh/id_rsa -p ${{ secrets.HOSTINGER_PORT || 22 }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
+          ssh -o StrictHostKeyChecking=no -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
             cd /home/u285585646/domains/topmotar.com/public_html/beta
-            git pull origin production
             composer install --no-dev --optimize-autoloader
             php artisan config:cache
             php artisan route:cache
@@ -49,3 +57,4 @@ jobs:
           HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
           HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
+          HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
