@@ -11,6 +11,8 @@ use App\Http\Controllers\BargainController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\AuctionController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -28,6 +30,8 @@ Route::view('/otp', 'auth.otp');
 // Route::prefix('home')->group(function () {
 //     Route::get('index', [HomeController::class, 'home'])->name('home.index');
 // });
+
+Route::post('/auctions', [AuctionController::class, 'store'])->name('auctions.store');
 
 Route::view('/wizard', 'home.wizard');
 Route::get('/dashboard', function () {
@@ -61,7 +65,7 @@ Route::prefix('bargains')->group(function () {
     Route::delete('/delete/{id}', [BargainController::class, 'destroy'])->name('bargains.destroy');
     Route::post('/toggle-status/{id}', [BargainController::class, 'toggleStatus'])->name('bargains.toggle-status');
     Route::get('/show/{id}', [BargainController::class, 'show'])->name('bargains.show');
-    
+
     // Status management routes
     Route::post('/update-status/{id}', [BargainController::class, 'updateStatus'])->name('bargains.update-status');
     Route::post('/send-warning/{id}', [BargainController::class, 'sendWarning'])->name('bargains.send-warning');
