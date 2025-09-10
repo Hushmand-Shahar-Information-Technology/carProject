@@ -80,7 +80,7 @@
         }
     </style>
     <!--=================================
-                                                                                                                             rev slider -->
+                                                                                                                                         rev slider -->
     <section class="slider">
         <div id="rev_slider_2_1_wrapper" class="rev_slider_wrapper fullwidthbanner-container" data-alias="car-dealer-03"
             style="margin:0px auto;background-color:transparent;padding:0px;margin-top:0px;margin-bottom:0px;">
@@ -246,7 +246,7 @@
     </section>
 
     <!--=================================
-                                                                                                                                rev slider -->
+                                                                                                                                            rev slider -->
     @include('components.feature-car')
 
     <!--================================= -->
@@ -264,7 +264,7 @@
 
 
     <!--=================================
-                                                                                         play-video -->
+                                                                                                     play-video -->
 
     {{-- <section class="play-video popup-gallery">
         <div class="play-video-bg bg-3 bg-overlay-black-70">
@@ -461,11 +461,11 @@
     </section> --}}
 
     <!--=================================
-                                                                                                                         play-video -->
+                                                                                                                                     play-video -->
 
 
     <!-- =================================
-                                                                                                                              welcome -->
+                                                                                                                                          welcome -->
 
     <section class="welcome-block objects-car page-section-ptb white-bg" style="padding-top: 0px ;">
         <div class="objects-left left"><img class="img-fluid objects-1" src="{{ asset('images/objects/01.jpg') }}"
@@ -546,20 +546,20 @@
     </section>
 
     <!--=================================
-                                                                                                                             welcome -->
+                                                                                                                                         welcome -->
 
 
     <!-- ==================================
-                                                                                                                             {{-- feature car -->
+                                                                                                                                         {{-- feature car -->
 @include('components.feature-car') --}}
 
-                                                                                                                            <!--=================================
-                                                                                                                             feature car -->
+                                                                                                                                        <!--=================================
+                                                                                                                                         feature car -->
 
 
 
     <!--=================================
-                                                                                                                             custom block -->
+                                                                                                                                         custom block -->
 
     <section class="bg-7">
         <div class="container-fluid p-0">
@@ -581,11 +581,11 @@
     </section>
 
     <!--=================================
-                                                                                                                             custom block -->
+                                                                                                                                         custom block -->
 
 
     <!--=================================
-                                                                                                                             latest news -->
+                                                                                                                                         latest news -->
 
     <section class="latest-blog objects-car white-bg page page-section-ptb">
         <div class="objects-left"><img class="img-fluid objects-1" src="{{ asset('images/objects/03.jpg') }}"
@@ -626,11 +626,11 @@
     </section>
 
     <!--=================================
-                                                                                                                             latest news -->
+                                                                                                                                         latest news -->
 
 
     <!--=================================
-                                                                                                                             play-video -->
+                                                                                                                                         play-video -->
 
     <section class="play-video popup-gallery">
         <div class="play-video-bg bg-3 bg-overlay-black-70">
@@ -656,11 +656,11 @@
     </section>
 
     <!--=================================
-                                                                                                                             play-video -->
+                                                                                                                                         play-video -->
 
 
     <!--=================================
-                                                                                                                             Counter -->
+                                                                                                                                         Counter -->
 
     <section class="counter counter-style-1 light page-section-ptb">
         <div class="container">
@@ -698,16 +698,16 @@
     </section>
 
     <!--=================================
-                                                                                                                             Counter -->
+                                                                                                                                         Counter -->
 
     <hr class="gray">
 
     <!--=================================
-                                                                                                                             testimonial -->
+                                                                                                                                         testimonial -->
 
     @include('components.testimonial')
     <!--=================================
-                                                                                                                             testimonial -->
+                                                                                                                                         testimonial -->
 
 
     <!-- Modal code goes here -->
@@ -875,7 +875,7 @@
             if (savedAnswers && Object.keys(savedAnswers).length > 0) {
                 hideModal(); // ensure hidden if previously answered
                 filtersAlreadyApplied = true;
-
+                // console.log(savedAnswers);
                 $.ajax({
                     url: '/home/filter-cars',
                     method: 'POST',
