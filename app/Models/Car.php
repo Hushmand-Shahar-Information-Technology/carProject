@@ -33,7 +33,7 @@ class Car extends BaseModel
         'transmission_type',
         'currency_type',
         'regular_price',
-        'sale_price',
+
         'description',
         'request_price_status',
         'request_price',
@@ -54,7 +54,7 @@ class Car extends BaseModel
         'is_for_rent' => 'boolean',
         'is_promoted' => 'boolean',
         'regular_price' => 'decimal:2',
-        'sale_price' => 'decimal:2',
+
         'request_price' => 'decimal:2',
         'rent_price_per_day' => 'decimal:2',
         'rent_price_per_month' => 'decimal:2',
