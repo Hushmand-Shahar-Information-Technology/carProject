@@ -315,10 +315,48 @@
 
                         <div>
                             <label class="block font-medium">Model</label>
-                            <input type="text" x-model="form.model"
-                                class="w-full border rounded p-2 @error('model') border-red-500 @enderror"
-                                placeholder="Car Model" name="model" @input="watchProgress()"
-                                @keyup="watchProgress()" />
+                            <select x-model="form.model"
+                                class="w-full border rounded p-2 select2 @error('model') border-red-500 @enderror"
+                                name="model">
+                                <option value="">Select Model</option>
+                                <option value="Camry" {{ old('model') == 'Camry' ? 'selected' : '' }}>Camry</option>
+                                <option value="Corolla" {{ old('model') == 'Corolla' ? 'selected' : '' }}>Corolla</option>
+                                <option value="Prius" {{ old('model') == 'Prius' ? 'selected' : '' }}>Prius</option>
+                                <option value="RAV4" {{ old('model') == 'RAV4' ? 'selected' : '' }}>RAV4</option>
+                                <option value="Highlander" {{ old('model') == 'Highlander' ? 'selected' : '' }}>Highlander
+                                </option>
+                                <option value="X3" {{ old('model') == 'X3' ? 'selected' : '' }}>X3</option>
+                                <option value="X5" {{ old('model') == 'X5' ? 'selected' : '' }}>X5</option>
+                                <option value="3 Series" {{ old('model') == '3 Series' ? 'selected' : '' }}>3 Series
+                                </option>
+                                <option value="5 Series" {{ old('model') == '5 Series' ? 'selected' : '' }}>5 Series
+                                </option>
+                                <option value="Civic" {{ old('model') == 'Civic' ? 'selected' : '' }}>Civic</option>
+                                <option value="Accord" {{ old('model') == 'Accord' ? 'selected' : '' }}>Accord</option>
+                                <option value="CR-V" {{ old('model') == 'CR-V' ? 'selected' : '' }}>CR-V</option>
+                                <option value="Pilot" {{ old('model') == 'Pilot' ? 'selected' : '' }}>Pilot</option>
+                                <option value="C-Class" {{ old('model') == 'C-Class' ? 'selected' : '' }}>C-Class</option>
+                                <option value="E-Class" {{ old('model') == 'E-Class' ? 'selected' : '' }}>E-Class</option>
+                                <option value="GLE" {{ old('model') == 'GLE' ? 'selected' : '' }}>GLE</option>
+                                <option value="Elantra" {{ old('model') == 'Elantra' ? 'selected' : '' }}>Elantra</option>
+                                <option value="Sonata" {{ old('model') == 'Sonata' ? 'selected' : '' }}>Sonata</option>
+                                <option value="Tucson" {{ old('model') == 'Tucson' ? 'selected' : '' }}>Tucson</option>
+                                <option value="Santa Fe" {{ old('model') == 'Santa Fe' ? 'selected' : '' }}>Santa Fe
+                                </option>
+                                <option value="Altima" {{ old('model') == 'Altima' ? 'selected' : '' }}>Altima</option>
+                                <option value="Sentra" {{ old('model') == 'Sentra' ? 'selected' : '' }}>Sentra</option>
+                                <option value="Rogue" {{ old('model') == 'Rogue' ? 'selected' : '' }}>Rogue</option>
+                                <option value="Murano" {{ old('model') == 'Murano' ? 'selected' : '' }}>Murano</option>
+                                <option value="Optima" {{ old('model') == 'Optima' ? 'selected' : '' }}>Optima</option>
+                                <option value="Sorento" {{ old('model') == 'Sorento' ? 'selected' : '' }}>Sorento</option>
+                                <option value="Sportage" {{ old('model') == 'Sportage' ? 'selected' : '' }}>Sportage
+                                </option>
+                                <option value="Focus" {{ old('model') == 'Focus' ? 'selected' : '' }}>Focus</option>
+                                <option value="Escape" {{ old('model') == 'Escape' ? 'selected' : '' }}>Escape</option>
+                                <option value="Explorer" {{ old('model') == 'Explorer' ? 'selected' : '' }}>Explorer
+                                </option>
+                                <option value="F-150" {{ old('model') == 'F-150' ? 'selected' : '' }}>F-150</option>
+                            </select>
                             @error('model')
                                 <p class="text-red-500 text-sm mt-1">Model is required</p>
                             @enderror
@@ -806,10 +844,13 @@
                         if (!this.form.VIN_number || !this.form.VIN_number.trim()) errors.push('VIN Number is required.');
                     } else if (this.step === 3 && this.form.is_for_sale) {
                         // Sale fields validation (only validate if sale is selected)
-                        if (!this.form.regular_price || this.form.regular_price <= 0) errors.push(
-                            'Regular price must be greater than zero.');
-                        if (!this.form.sale_price || this.form.sale_price <= 0) errors.push(
-                            'Sale price must be greater than zero.');
+                        // Regular price and sale price are now OPTIONAL
+                        if (this.form.regular_price && this.form.regular_price <= 0) {
+                            errors.push('Regular price must be greater than zero if provided.');
+                        }
+                        if (this.form.sale_price && this.form.sale_price <= 0) {
+                            errors.push('Sale price must be greater than zero if provided.');
+                        }
                         if (!this.form.currency_type) errors.push('Currency Type is required.');
 
                         // Following project specification: check for valid numeric values before comparison
@@ -840,14 +881,58 @@
                         Swal.fire('Error', 'Geolocation is not supported by your browser.', 'error');
                         return;
                     }
+
+                    // Show loading message
+                    Swal.fire({
+                        title: 'Getting Location...',
+                        text: 'Please wait while we get your current location.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
                     navigator.geolocation.getCurrentPosition(
                         (position) => {
+                            // Success callback
                             this.form.location =
                                 `${position.coords.latitude.toFixed(6)}, ${position.coords.longitude.toFixed(6)}`;
                             this.watchProgress();
+                            Swal.close();
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Location Retrieved!',
+                                text: 'Your current location has been added to the form.',
+                                timer: 2000,
+                                showConfirmButton: false
+                            });
                         },
-                        () => {
-                            Swal.fire('Error', 'Unable to retrieve your location.', 'error');
+                        (error) => {
+                            // Error callback
+                            Swal.close();
+                            let errorMessage = 'Unable to retrieve your location.';
+
+                            switch (error.code) {
+                                case error.PERMISSION_DENIED:
+                                    errorMessage =
+                                        'Location access denied by user. Please enable location access and try again.';
+                                    break;
+                                case error.POSITION_UNAVAILABLE:
+                                    errorMessage = 'Location information is unavailable. Please try again later.';
+                                    break;
+                                case error.TIMEOUT:
+                                    errorMessage = 'Location request timed out. Please try again.';
+                                    break;
+                                default:
+                                    errorMessage = 'An unknown error occurred while retrieving location.';
+                                    break;
+                            }
+
+                            Swal.fire('Error', errorMessage, 'error');
+                        }, {
+                            enableHighAccuracy: true,
+                            timeout: 10000,
+                            maximumAge: 0
                         }
                     );
                 },
