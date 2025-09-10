@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Auction;
 use Illuminate\Http\Request;
+use App\Http\Requests\AuctionRequest;
 
 class AuctionController extends Controller
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreAuctionRequest $request)
+    public function store(AuctionRequest $request)
     {
         $data = $request->validated();
 
