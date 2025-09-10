@@ -69,10 +69,7 @@ class CarResource extends Resource
                         ->numeric()
                         ->prefix('$')
                         ->required(),
-                    Forms\Components\TextInput::make('sale_price')
-                        ->label(__('car.fields.sale_price'))
-                        ->numeric()
-                        ->prefix('$'),
+
                     Forms\Components\TextInput::make('request_price')
                         ->label(__('car.fields.request_price'))
                         ->numeric()
@@ -122,11 +119,7 @@ class CarResource extends Resource
                     ->money('USD')
                     ->toggleable(isToggledHiddenByDefault: false)
                     ->sortable(),
-                Tables\Columns\TextColumn::make('sale_price')
-                    ->label(__('car.fields.sale_price'))
-                    ->money('USD')
-                    ->toggleable(isToggledHiddenByDefault: false)
-                    ->sortable(),
+
                 Tables\Columns\IconColumn::make('request_price_status')
                     ->label(__('car.fields.request_price_status'))
                     ->toggleable(isToggledHiddenByDefault: true)
@@ -424,11 +417,11 @@ class CarResource extends Resource
                             // Price range filter
                             ->when(
                                 $data['price_from'] ?? null,
-                                fn (Builder $query, $price): Builder => $query->where('sale_price', '>=', $price)
+                                fn (Builder $query, $price): Builder => $query->where('regular_price', '>=', $price)
                             )
                             ->when(
                                 $data['price_to'] ?? null,
-                                fn (Builder $query, $price): Builder => $query->where('sale_price', '<=', $price)
+                                fn (Builder $query, $price): Builder => $query->where('regular_price', '<=', $price)
                             )
                             // Date range filter
                             ->when(

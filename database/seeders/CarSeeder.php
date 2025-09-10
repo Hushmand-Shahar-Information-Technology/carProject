@@ -78,7 +78,7 @@ class CarSeeder extends Seeder
                 'transmission_type' => TransmissionType::cases()[array_rand(TransmissionType::cases())]->value,
                 'currency_type' => $currencyTypes[array_rand($currencyTypes)],
                 'regular_price' => rand(10000, 50000),
-                'sale_price' => rand(5000, 9000),
+
                 'description' => 'Seeded demo car for testing.',
                 'is_for_sale' => (bool)rand(0, 1),
                 'is_for_rent' => (bool)rand(0, 1),

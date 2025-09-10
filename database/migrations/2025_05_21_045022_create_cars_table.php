@@ -29,7 +29,7 @@ return new class extends Migration
             $table->enum('transmission_type', TransmissionType::values())->nullable();
             $table->string('currency_type')->nullable();
             $table->decimal('regular_price', 10, 2)->nullable();
-            $table->decimal('sale_price', 10, 2)->nullable();
+
             $table->text('description')->nullable();
             // Sale/Rent options
             $table->boolean('is_for_sale')->default(true);

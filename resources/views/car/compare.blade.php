@@ -263,7 +263,7 @@
             // Render comparison table
             const headers = ['Feature', ...compareList.map(c => c.title)];
             const rows = [
-                ['Price', ...compareList.map(c => '$' + (c.sale_price || 'N/A'))],
+                ['Price', ...compareList.map(c => '$' + (c.regular_price || 'N/A'))],
                 ['Regular Price', ...compareList.map(c => '$' + (c.regular_price || 'N/A'))],
                 ['Year', ...compareList.map(c => c.year || 'N/A')],
                 ['Make', ...compareList.map(c => c.make || 'N/A')],
@@ -291,14 +291,14 @@
 
             // Evaluation Row based on Price
             if (compareList.length > 1) {
-                const prices = compareList.map(c => c.sale_price).filter(p => p && !isNaN(p));
+                const prices = compareList.map(c => c.regular_price).filter(p => p && !isNaN(p));
                 if (prices.length > 1) {
                     const sorted = [...prices].sort((a, b) => a - b);
                     let evalRow = '<tr><th>Price Evaluation</th>';
                     compareList.forEach(c => {
-                        if (c.sale_price === sorted[0]) {
+                        if (c.regular_price === sorted[0]) {
                             evalRow += `<td><span class="badge-best">Best Value</span></td>`;
-                        } else if (c.sale_price === sorted[sorted.length - 1]) {
+                        } else if (c.regular_price === sorted[sorted.length - 1]) {
                             evalRow += `<td><span class="badge-normal">Highest Price</span></td>`;
                         } else {
                             evalRow += `<td><span class="badge-better">Good Value</span></td>`;

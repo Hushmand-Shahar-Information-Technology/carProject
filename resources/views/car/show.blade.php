@@ -118,7 +118,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="car-price text-md-end">
-                        <strong>{{ $car->sale_price }}</strong>
+                        <strong>{{ $car->regular_price }}</strong>
                         <span>Plus Taxes & Licensing</span>
                         <div class="mt-2">
                             <button id="btn-promote-car"
@@ -414,7 +414,7 @@
                                                     <div class="separator"></div>
                                                     <div class="price">
                                                         <span class="old-price">${{ $car_i->regular_price }}</span>
-                                                        <span class="new-price">${{ $car->sale_price }}</span>
+                                                        <span class="new-price">${{ $car->regular_price }}</span>
                                                     </div>
                                                 </div>
                                             </div>
