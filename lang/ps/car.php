@@ -13,7 +13,7 @@ return [
         'model' => 'ماډل',
         'vin_number' => 'د VIN شمیره',
         'regular_price' => 'معمول بیه',
-        'sale_price' => 'د پلورلو بیه',
+
         'request_price' => 'د غوښتنې بیه',
         'request_price_status' => 'د غوښتنې بیې حالت',
         'location' => 'موقعیت',

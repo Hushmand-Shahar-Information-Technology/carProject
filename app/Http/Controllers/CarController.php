@@ -62,7 +62,7 @@ class CarController extends Controller
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
-                $q->whereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
+                $q->whereBetween('regular_price', [$request->input('price_min'), $request->input('price_max')]);
             })
             ->when($request->query('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);
@@ -89,7 +89,7 @@ class CarController extends Controller
             ->when($request->input('sort'), function ($q, $sort) {
                 match ($sort) {
                     'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->whereNotNull('sale_price')->orderBy('sale_price'),
+                    'price' => $q->whereNotNull('regular_price')->orderBy('regular_price'),
                     'date' => $q->orderByDesc('created_at'),
                     default => $q->latest(),
                 };
@@ -138,11 +138,11 @@ class CarController extends Controller
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
-                // Use rent price if present; fall back to sale_price for range filtering compatibility
+                // Use rent price if present; fall back to regular_price for range filtering compatibility
                 $q->where(function ($sub) use ($request) {
                     $sub->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
                         ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
+                        ->orWhereBetween('regular_price', [$request->input('price_min'), $request->input('price_max')]);
                 });
             })
             ->when($request->input('Year', []), function ($q, $years) {
@@ -169,7 +169,7 @@ class CarController extends Controller
             ->when($request->input('sort'), function ($q, $sort) {
                 match ($sort) {
                     'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, sale_price) ASC'),
+                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, regular_price) ASC'),
                     'date' => $q->orderByDesc('created_at'),
                     default => $q->latest(),
                 };
@@ -201,7 +201,7 @@ class CarController extends Controller
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            ->whereNotNull('sale_price')
+            ->whereNotNull('regular_price')
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -216,11 +216,11 @@ class CarController extends Controller
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
-                // Use rent price if present; fall back to sale_price for range filtering compatibility
+                // Use rent price if present; fall back to regular_price for range filtering compatibility
                 $q->where(function ($sub) use ($request) {
                     $sub->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
                         ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('sale_price', [$request->input('price_min'), $request->input('price_max')]);
+                        ->orWhereBetween('regular_price', [$request->input('price_min'), $request->input('price_max')]);
                 });
             })
             ->when($request->input('Year', []), function ($q, $years) {
@@ -247,7 +247,7 @@ class CarController extends Controller
             ->when($request->input('sort'), function ($q, $sort) {
                 match ($sort) {
                     'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, sale_price) ASC'),
+                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, regular_price) ASC'),
                     'date' => $q->orderByDesc('created_at'),
                     default => $q->latest(),
                 };
@@ -319,7 +319,7 @@ class CarController extends Controller
                 'car_documents' => $data['car_documents'] ?? null,
                 'car_inside_color' => $data['car_inside_color'] ?? null,
                 'currency_type' => $data['currency_type'] ?? null,
-                'sale_price' => $data['sale_price'] ?? null,
+
                 'description' => $data['description'] ?? null,
                 'is_for_sale' => (bool) ($data['is_for_sale'] ?? false),
                 'is_for_rent' => (bool) ($data['is_for_rent'] ?? false),

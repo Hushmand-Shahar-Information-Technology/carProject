@@ -13,7 +13,7 @@ return [
         'model' => 'Model',
         'vin_number' => 'VIN Number',
         'regular_price' => 'Regular Price',
-        'sale_price' => 'Sale Price',
+
         'request_price' => 'Request Price',
         'request_price_status' => 'Request Price Status',
         'location' => 'Location',

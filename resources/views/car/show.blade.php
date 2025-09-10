@@ -415,7 +415,7 @@
                                                     <div class="separator"></div>
                                                     <div class="price">
                                                         <span class="old-price">${{ $car_i->regular_price }}</span>
-                                                        <span class="new-price">${{ $car->sale_price }}</span>
+                                                        <span class="new-price">${{ $car->regular_price }}</span>
                                                     </div>
                                                 </div>
                                             </div>
