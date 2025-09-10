@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                                                                 inner-intro -->
+                                                                                                                                                                                                                                                     inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -118,7 +118,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="car-price text-md-end">
-                        <strong>{{ $car->sale_price }}</strong>
+                        <strong>{{ $car->regular_price }}</strong>
                         <span>Plus Taxes & Licensing</span>
                         <div class="mt-2">
                             <button id="btn-promote-car"
@@ -138,81 +138,82 @@
                     <div class="details-nav">
                         <ul>
                             <li>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    <i class="fa fa-question-circle"></i>Request More Info
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#auctionModal">
+                                    <i class="fa fa-question-circle"></i> Request to Auction
                                 </a>
-                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title" id="exampleModalLabel">Request More Info</h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close">×</button>
+
+                                <div class="modal fade" id="auctionModal" tabindex="-1" aria-labelledby="auctionModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content rounded-3 shadow">
+                                            <div class="modal-header" style="background:#343a40;">
+                                                <h5 class="modal-title text-white" id="auctionModalLabel">Start an Auction
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div id="rmi_notice" class="form-notice" style="display:none;"></div>
-                                                <p class="sub-title">Please fill out the information below and one of our
-                                                    representatives will contact you regarding your more information
-                                                    request. </p>
-                                                <form class="gray-form reset_css" id="rmi_form"
-                                                    action="https://themes.potenzaglobalsolutions.com/html/cardealer/post">
-                                                    <input type="hidden" name="action" value="request_more_info" />
-                                                    <div class="alrt">
-                                                        <span class="alrt"></span>
-                                                    </div>
+                                                <p class="text-muted">Set your car’s starting price and auction duration.
+                                                </p>
+
+                                                <form id="auctionForm" method="POST"
+                                                    action="{{ route('auctions.store') }}"
+                                                    data-max-price="<?= $car->regular_price ?>">
+                                                    <!-- Starting price -->
                                                     <div class="mb-3">
-                                                        <label class="form-label">Name*</label>
-                                                        <input type="text" class="form-control" name="rmi_name"
-                                                            id="rmi_name" />
+                                                        <label class="form-label">Price ($)*</label>
+                                                        <input type="number" class="form-control" name="amount"
+                                                            id="amount" required>
                                                     </div>
+
+                                                    <!-- Auction duration -->
                                                     <div class="mb-3">
-                                                        <label class="form-label">Email address*</label>
-                                                        <input type="text" class="form-control" name="rmi_email"
-                                                            id="rmi_email" />
+                                                        <label class="form-label">Auction Duration*</label>
+
+                                                        <div class="form-check" style="display: flex; align-items: center;">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="auction_time" id="fixed_time" value="fixed">
+                                                            <label class="form-check-label mt-1" for="fixed_time">Set
+                                                                duration</label>
+                                                        </div>
+
+                                                        <!-- Hidden by default -->
+                                                        <input type="number" class="form-control mt-2" name="duration_days"
+                                                            id="duration_days" placeholder="Enter days (e.g. 4)"
+                                                            style="display:none;">
+
+                                                        <div class="form-check mt-2"
+                                                            style="display: flex; align-items: center;">
+                                                            <input class="form-check-input" type="radio"
+                                                                name="auction_time" id="open_time" value="open" checked>
+                                                            <label class="form-check-label mt-1" for="open_time">Run until
+                                                                canceled</label>
+                                                        </div>
                                                     </div>
+
+                                                    <!-- Message -->
                                                     <div class="mb-3">
-                                                        <label class="form-label">Phone*</label>
-                                                        <input type="text" class="form-control" id="rmi_phone"
-                                                            name="rmi_phone">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Message</label>
+                                                        <label class="form-label">Message (optional)</label>
                                                         <textarea class="form-control" name="rmi_message" id="rmi_message"></textarea>
                                                     </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label pe-3">Preferred Contact*</label>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault1">
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault1">
-                                                                Email
-                                                            </label>
-                                                        </div>
-                                                        <div class="form-check form-check-inline">
-                                                            <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault2" checked>
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault2">
-                                                                Phone
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <div id="recaptcha1"></div>
-                                                    </div>
-                                                    <div>
-                                                        <a class="button red" id="request_more_info_submit">Submit <i
-                                                                class="fa fa-spinner fa-spin fa-fw btn-loader"
-                                                                style="display: none;"></i></a>
-                                                    </div>
+
+                                                    <!-- Recaptcha -->
+                                                    <div class="mb-3" id="recaptcha1"></div>
+
+                                                    <!-- Submit -->
+                                                    <button type="submit" class="btn btn-danger w-100">
+                                                        Start Auction
+                                                        <i class="fa fa-spinner fa-spin fa-fw btn-loader"
+                                                            style="display: none;"></i>
+                                                    </button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </li>
+
                             <li>
                                 <a data-bs-toggle="modal" data-bs-target="#exampleModal3" data-whatever="@mdo"
                                     href="#" class="css_btn"><i class="fa fa-tag"></i>Make an Offer</a>
@@ -718,6 +719,54 @@
                 ratio: 16 / 9,
                 autoplay: false
             }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const fixedRadio = document.getElementById("fixed_time");
+            const openRadio = document.getElementById("open_time");
+            const durationInput = document.getElementById("duration_days");
+            const auctionForm = document.getElementById("auctionForm"); // <-- Add this
+            const maxPrice = parseFloat(auctionForm.dataset.maxPrice);
+
+            function toggleDuration() {
+                if (fixedRadio.checked) {
+                    durationInput.style.display = "block";
+                } else {
+                    durationInput.style.display = "none";
+                    durationInput.value = ""; // clear if hidden
+                }
+            }
+
+            // Event listeners for radio buttons
+            fixedRadio.addEventListener("change", toggleDuration);
+            openRadio.addEventListener("change", toggleDuration);
+            toggleDuration(); // initial check
+
+            // Validate form before submit
+            auctionForm.addEventListener("submit", function(e) {
+                const amount = parseFloat(document.getElementById("amount").value);
+
+                if (isNaN(amount) || amount <= 0) {
+                    e.preventDefault();
+                    alert("Please enter a valid starting price.");
+                    return;
+                }
+
+                if (amount >= maxPrice) {
+                    e.preventDefault();
+                    alert(`Starting price must be smaller than $${maxPrice}.`);
+                    return;
+                }
+
+                // Validate duration if "Set duration" is selected
+                if (fixedRadio.checked) {
+                    const duration = parseInt(durationInput.value);
+                    if (isNaN(duration) || duration <= 0) {
+                        e.preventDefault();
+                        alert("Please enter a valid auction duration in days.");
+                        return;
+                    }
+                }
+            });
         });
     </script>
 
