@@ -61,6 +61,10 @@ Route::prefix('bargains')->group(function () {
     Route::delete('/delete/{id}', [BargainController::class, 'destroy'])->name('bargains.destroy');
     Route::post('/toggle-status/{id}', [BargainController::class, 'toggleStatus'])->name('bargains.toggle-status');
     Route::get('/show/{id}', [BargainController::class, 'show'])->name('bargains.show');
+    
+    // Status management routes
+    Route::post('/update-status/{id}', [BargainController::class, 'updateStatus'])->name('bargains.update-status');
+    Route::post('/send-warning/{id}', [BargainController::class, 'sendWarning'])->name('bargains.send-warning');
 });
 
 
@@ -69,6 +73,8 @@ Route::prefix('car')->group(function () {
     Route::get('filter', [CarController::class, 'filter'])->name('cars.filter');
     Route::get('rent', [CarController::class, 'rentIndex'])->name('car.rent');
     Route::get('filter-rent', [CarController::class, 'filterRent'])->name('cars.filter-rent');
+    Route::get('auction', [CarController::class, 'auction'])->name('car.auction');
+    Route::get('filter-auction', [CarController::class, 'filterAuction'])->name('cars.filter-auction');
     Route::get('register', [CarController::class, 'create'])->name('car.create');
     Route::get('show/{id}', [CarController::class, 'show'])->name('car.show');
     Route::post('store', [CarController::class, 'store'])->name('car.store');

@@ -67,11 +67,26 @@ class PromotionController extends Controller
             'id' => 'required|integer',
             'days' => 'required|integer|min:1|max:365',
         ]);
-        $endsAt = now()->addDays($data['days']);
-
+        
         $model = $data['type'] === 'car' ? Car::class : Bargain::class;
         /** @var \Illuminate\Database\Eloquent\Model $record */
         $record = $model::findOrFail($data['id']);
+        
+        // Check if bargain user can promote (not restricted or blocked)
+        if ($data['type'] === 'bargain' && !$record->canPromote()) {
+            $reason = $record->registration_status === 'blocked' 
+                ? 'User is blocked and cannot promote their bargain'
+                : ($record->hasActiveRestriction() && $record->restriction_ends_at
+                    ? 'User is under restriction until ' . $record->restriction_ends_at->format('M d, Y') . ' and cannot promote'
+                    : 'User cannot promote at this time');
+                    
+            return response()->json([
+                'status' => 'error',
+                'message' => $reason
+            ], 403);
+        }
+        
+        $endsAt = now()->addDays($data['days']);
 
         $record->promotions()->create([
             'starts_at' => now(),

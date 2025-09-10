@@ -4,10 +4,9 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Car;
-use App\Enums\CarColor;
-use App\Enums\TransmissionType;
 use App\Models\User;
-use Storage;
+use App\Models\Bargain;
+use App\Enums\TransmissionType;
 
 class CarSeeder extends Seeder
 {
@@ -18,74 +17,54 @@ class CarSeeder extends Seeder
         $makes = ['Honda', 'Toyota', 'Ford', 'BMW', 'Audi'];
         $bodyTypes = ['Sedan', 'SUV', 'Coupe', 'Convertible', 'Hatchback'];
         $carConditions = ['New', 'Used', 'Certified Pre-Owned'];
-        $carColors = ['black', 'white', 'red', 'blue', 'gray'];  // simple strings now
+        $carColors = ['black', 'white', 'red', 'blue', 'gray'];
         $carInsideColors = ['Beige', 'Black', 'Gray'];
         $documents = ['Title', 'Registration', 'Insurance'];
         $models = ['Accord', 'Camry', 'Mustang', 'X5', 'A4'];
         $currencyTypes = ['USD', 'EUR', 'JPY'];
-        $transmissionTypes = ['automatic', 'manual', 'semi-automatic'];
-        
-        // Get user IDs, create a default user if none exist
-        $userId = User::pluck('id')->toArray();
-        if (empty($userId)) {
-            // If no users exist, create a default user first
+
+        // ✅ Ensure there is at least one user
+        $userIds = User::pluck('id')->toArray();
+        if (empty($userIds)) {
             $defaultUser = User::factory()->create([
                 'name' => 'Default User',
                 'email' => 'default@example.com',
                 'password' => bcrypt('password'),
             ]);
-            $userId = [$defaultUser->id];
+            $userIds = [$defaultUser->id];
         }
-        
+
+        // ✅ Ensure there are bargains (from BargainSeeder)
+        $bargainIds = Bargain::pluck('id')->toArray();
+        if (empty($bargainIds)) {
+            // If BargainSeeder wasn’t run, create one fallback
+            $defaultBargain = Bargain::create([
+                'name' => 'Default Bargain',
+                'username' => 'defaultbargain',
+                'registration_number' => strtoupper(uniqid('REG')),
+                'status' => 'one-time',
+            ]);
+            $bargainIds = [$defaultBargain->id];
+        }
+
         $imagesList = [
             ['images/car/01.jpg', 'images/car/02.jpg'],
             ['images/car/03.jpg', 'images/car/04.jpg'],
             ['images/car/05.jpg', 'images/car/06.jpg'],
         ];
 
-        // Upload images to storage
-        $uploadedImages = [];
-        foreach ($imagesList as $imageGroup) {
-            $groupImages = [];
-            foreach ($imageGroup as $imagePath) {
-                // Normalize paths for cross-platform compatibility
-                $sourcePath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, public_path($imagePath));
-                $destinationPath = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, storage_path('app/public/' . $imagePath));
-
-                // Create directory if it doesn't exist
-                $directory = dirname($destinationPath);
-                if (!file_exists($directory)) {
-                    mkdir($directory, 0755, true);
-                }
-
-                // Copy the file with error handling
-                if (!copy($sourcePath, $destinationPath)) {
-                    throw new \RuntimeException("Failed to copy file from {$sourcePath} to {$destinationPath}");
-                }
-
-                // Add to group with storage path
-                $groupImages[] = $imagePath;
-            }
-            $uploadedImages[] = $groupImages;
-        }
-
-        // Replace original imagesList with uploaded paths
-        $imagesList = $uploadedImages;
         $videosList = [
             ['videos/car/01.mp4'],
             ['videos/car/02.mp4'],
             [],
         ];
 
-        // Fetch existing bargains if any
-        $bargainIds = \App\Models\Bargain::pluck('id')->toArray();
-
-        // Generate 10 cars
+        // ✅ Generate 10 cars always linked to a bargain
         for ($i = 0; $i < 10; $i++) {
             Car::create([
                 'title' => $titles[array_rand($titles)],
-                'user_id' => $userId[array_rand($userId)],
-                'bargain_id' => !empty($bargainIds) ? $bargainIds[array_rand($bargainIds)] : null,
+                'user_id' => $userIds[array_rand($userIds)],
+                'bargain_id' => $bargainIds[array_rand($bargainIds)], // ✅ never null
                 'year' => $years[array_rand($years)],
                 'make' => $makes[array_rand($makes)],
                 'body_type' => $bodyTypes[array_rand($bodyTypes)],
@@ -94,7 +73,6 @@ class CarSeeder extends Seeder
                 'car_documents' => $documents[array_rand($documents)],
                 'car_inside_color' => $carInsideColors[array_rand($carInsideColors)],
                 'VIN_number' => strtoupper(bin2hex(random_bytes(8))),
-                // Store location as a simple string now (e.g., "lat, long" or a text address)
                 'location' => '34.532493, 69.121091',
                 'model' => $models[array_rand($models)],
                 'transmission_type' => TransmissionType::cases()[array_rand(TransmissionType::cases())]->value,
