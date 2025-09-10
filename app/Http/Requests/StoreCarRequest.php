@@ -119,7 +119,7 @@ class StoreCarRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'sale_price.lte' => 'Sale price must be less than or equal to regular price.',
+
             'images.required' => 'At least one image is required.',
             'images.array' => 'Images must be an array of files.',
             'images.min' => 'At least one image is required.',
