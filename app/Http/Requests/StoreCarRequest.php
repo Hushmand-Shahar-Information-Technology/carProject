@@ -94,15 +94,16 @@ class StoreCarRequest extends FormRequest
                     }
                 }
 
-                // Price validation for sale
+                // Price validation for sale - MADE OPTIONAL
                 $regularPrice = $request['regular_price'] ?? null;
                 $salePrice = $request['sale_price'] ?? null;
 
-                if ($regularPrice === null || $regularPrice === '' || $regularPrice <= 0) {
-                    $validator->errors()->add('regular_price', 'Regular price is required and must be greater than 0 when selling.');
+                // Only validate if prices are provided (making them optional)
+                if (!empty($regularPrice) && $regularPrice <= 0) {
+                    $validator->errors()->add('regular_price', 'Regular price must be greater than 0 if provided.');
                 }
-                if ($salePrice === null || $salePrice === '' || $salePrice <= 0) {
-                    $validator->errors()->add('sale_price', 'Sale price is required and must be greater than 0 when selling.');
+                if (!empty($salePrice) && $salePrice <= 0) {
+                    $validator->errors()->add('sale_price', 'Sale price must be greater than 0 if provided.');
                 }
 
                 // Following project specification: avoid direct comparison, implement custom logic
