@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project implements a comprehensive activity logging system using the Spatie Laravel Activity Log package. All models in the `app/Models` directory are now configured to automatically log activities when records are created, updated, or deleted.
+This project implements a comprehensive  d activity logging system using the Spatie Laravel Activity Log package. All models in the `app/Models` directory are now configured to automatically log activities when records are created, updated, or deleted.
 
 ## Implementation Details
 
