@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                                                                                                                                                                                                                                                     inner-intro -->
+                                                                                                                                                                                                                                                                     inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -156,9 +156,9 @@
                                                 <p class="text-muted">Set your car’s starting price and auction duration.
                                                 </p>
 
-                                                <form id="auctionForm" method="POST"
-                                                    action="{{ route('auctions.store') }}"
-                                                    data-max-price="<?= $car->regular_price ?>">
+                                                <form id="auctionForm" action="{{ route('auctions.store') }}"
+                                                    method="POST" data-max-price="<?= $car->regular_price ?>">
+                                                    @csrf
                                                     <!-- Starting price -->
                                                     <div class="mb-3">
                                                         <label class="form-label">Price ($)*</label>
