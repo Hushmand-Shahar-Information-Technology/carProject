@@ -50,7 +50,7 @@ class StoreCarRequest extends FormRequest
             
             // Price fields - conditional validation in withValidator
             'regular_price' => 'nullable|numeric|min:0',
-            'sale_price' => 'nullable|numeric|min:0',
+
             'rent_price_per_day' => 'nullable|numeric|min:0',
             'rent_price_per_month' => 'nullable|numeric|min:0',
             
@@ -94,23 +94,12 @@ class StoreCarRequest extends FormRequest
                     }
                 }
 
-                // Price validation for sale - MADE OPTIONAL
+                // Price validation for sale - regular price is optional
                 $regularPrice = $request['regular_price'] ?? null;
-                $salePrice = $request['sale_price'] ?? null;
 
                 // Only validate if prices are provided (making them optional)
                 if (!empty($regularPrice) && $regularPrice <= 0) {
                     $validator->errors()->add('regular_price', 'Regular price must be greater than 0 if provided.');
-                }
-                if (!empty($salePrice) && $salePrice <= 0) {
-                    $validator->errors()->add('sale_price', 'Sale price must be greater than 0 if provided.');
-                }
-
-                // Following project specification: avoid direct comparison, implement custom logic
-                if (is_numeric($regularPrice) && is_numeric($salePrice)) {
-                    if ((float)$salePrice > (float)$regularPrice) {
-                        $validator->errors()->add('sale_price', 'Sale price must be less than or equal to regular price.');
-                    }
                 }
             }
 
