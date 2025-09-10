@@ -13,7 +13,7 @@ return [
         'model' => 'مدل',
         'vin_number' => 'شماره VIN',
         'regular_price' => 'قیمت معمولی',
-        'sale_price' => 'قیمت فروش',
+
         'request_price' => 'قیمت درخواستی',
         'request_price_status' => 'وضعیت قیمت درخواستی',
         'location' => 'موقعیت',
