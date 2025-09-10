@@ -92,28 +92,46 @@
             }, 500);
         });
     })" x-cloak>
-        <div class="bg-white p-6 rounded shadow-md max-w-7xl mx-auto flex flex-col lg:flex-row gap-6"
+        <div class="bg-white p-6 rounded shadow-md max-w-7xl mx-auto flex flex-row gap-6"
             style="box-shadow: 0 0 2px black; margin: 1rem 0;">
             <!-- Form Section -->
-            <div class="flex-1 lg:w-2/3">
+            <div class="w-1/2">
                 <h1 class="text-2xl font-bold mb-6">🚗 Car Registration Form</h1>
 
-                <!-- Progress Bar -->
-                <div class="w-full bg-gray-300 h-4 rounded mb-6 relative">
+                <!-- Purpose Selection - Always Visible -->
+                <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 mb-6">
+                    <h3 class="text-lg font-semibold mb-4 text-blue-800">Select Car Purpose</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" name="is_for_sale" x-model="form.is_for_sale" value="1"
+                                class="h-4 w-4"
+                                @change="form.is_for_sale = $event.target.checked; step = 1; watchProgress(); $nextTick(() => { $dispatch('form-changed'); })" />
+                            <span class="font-medium">For Sale</span>
+                        </label>
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" name="is_for_rent" x-model="form.is_for_rent" value="1"
+                                class="h-4 w-4"
+                                @change="form.is_for_rent = $event.target.checked; step = 1; watchProgress(); $nextTick(() => { $dispatch('form-changed'); })" />
+                            <span class="font-medium">For Rent</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Progress Bar (Only show when purpose is selected) -->
+                <div x-show="form.is_for_sale || form.is_for_rent" class="w-full bg-gray-300 h-4 rounded mb-6 relative">
                     <div class="w-full bg-gray-200 rounded-full h-3 mb-2">
                         <div class="bg-green-600 h-3 rounded-full transition-all duration-300"
                             :style="`width: ${progress}%`">
                         </div>
                     </div>
                     <p class="text-sm text-center text-gray-700" x-text="`${progress}% completed`"></p>
-                    <!-- Debug info (remove in production) -->
-                    <!-- <p class="text-xs text-gray-500 text-center" x-text="`Debug: ${filledFieldsCount}/${totalFieldsCount} fields`"></p> -->
-
                 </div>
                 <form action="{{ route('car.store') }}" method="post" enctype="multipart/form-data"
                     @submit="syncSelect2Values()">
                     @csrf
                     <!-- Hidden inputs to ensure all values are submitted -->
+                    <input type="hidden" name="is_for_sale" :value="form.is_for_sale ? '1' : '0'">
+                    <input type="hidden" name="is_for_rent" :value="form.is_for_rent ? '1' : '0'">
                     <input type="hidden" name="year" :value="form.year">
                     <input type="hidden" name="make" :value="form.make">
                     <input type="hidden" name="body_type" :value="form.body_type">
@@ -124,18 +142,28 @@
                     <input type="hidden" name="car_documents" :value="form.car_documents">
                     <input type="hidden" name="transmission_type" :value="form.transmission_type">
                     <input type="hidden" name="currency_type" :value="form.currency_type">
-                    <!-- Step 1 -->
-                    <div x-show="step === 1" class="space-y-4">
+                    <input type="hidden" name="regular_price" :value="form.regular_price">
+                    <input type="hidden" name="sale_price" :value="form.sale_price">
+                    <input type="hidden" name="rent_price_per_day" :value="form.rent_price_per_day">
+                    <input type="hidden" name="rent_price_per_month" :value="form.rent_price_per_month">
+                    <input type="hidden" name="description" :value="form.description">
+                    <input type="hidden" name="VIN_number" :value="form.VIN_number">
+                    <input type="hidden" name="location" :value="form.location">
+                    <input type="hidden" name="title" :value="form.title">
+
+                    <!-- Step 1: Basic Information -->
+                    <div x-show="(form.is_for_sale || form.is_for_rent) && step === 1" class="space-y-4">
+                        <h2 class="text-lg font-semibold mb-4 text-blue-800">Step 1: Basic Information</h2>
+
                         <div>
-                            <label class="block font-medium ">Title</label>
+                            <label class="block font-medium">Title</label>
                             <input type="text" x-model="form.title"
                                 class="w-full border rounded p-2 title-input @error('title') border-red-500 @enderror"
                                 placeholder="Title of the car" name="title" value="{{ old('title') }}"
                                 @input="watchProgress()" @keyup="watchProgress()" />
                             @error('title')
-                                <p class="title-error text-red-500 text-sm mt-1"> عنوان برای پوست تان انتخاب کنید</p>
+                                <p class="title-error text-red-500 text-sm mt-1">عنوان برای پوست تان انتخاب کنید</p>
                             @enderror
-
                         </div>
 
                         <div>
@@ -148,13 +176,9 @@
                                     <option :value="y" x-text="y" :selected="y == form.year"></option>
                                 </template>
                             </select>
-
                             @error('year')
-                                <p class="year-error text-red-500 text-sm mt-1"> سال تولید موتر را انتخاب کنید</p>
+                                <p class="year-error text-red-500 text-sm mt-1">سال تولید موتر را انتخاب کنید</p>
                             @enderror
-
-
-
                         </div>
 
                         <div>
@@ -166,22 +190,76 @@
                                 <option value="toyota" {{ old('make') == 'toyota' ? 'selected' : '' }}>Toyota</option>
                                 <option value="bmw" {{ old('make') == 'bmw' ? 'selected' : '' }}>BMW</option>
                                 <option value="honda" {{ old('make') == 'honda' ? 'selected' : '' }}>Honda</option>
-                                <option value="marcedes" {{ old('make') == 'marcedes' ? 'selected' : '' }}>Mercedes</option>
+                                <option value="marcedes" {{ old('make') == 'marcedes' ? 'selected' : '' }}>Mercedes
+                                </option>
                                 <option value="Hyundai" {{ old('make') == 'Hyundai' ? 'selected' : '' }}>Hyundai</option>
                                 <option value="Nissan" {{ old('make') == 'Nissan' ? 'selected' : '' }}>Nissan</option>
                                 <option value="Kia" {{ old('make') == 'Kia' ? 'selected' : '' }}>Kia</option>
                                 <option value="ford" {{ old('make') == 'ford' ? 'selected' : '' }}>Ford</option>
                             </select>
-
                             @error('make')
-                                <p class="make-error text-red-500 text-sm mt-1"> کمپنی موتر را انتخاب کنید</p>
+                                <p class="make-error text-red-500 text-sm mt-1">کمپنی موتر را انتخاب کنید</p>
                             @enderror
-
                         </div>
+
+                        <div>
+                            <label class="block font-medium">Car Color</label>
+                            <select x-model="form.car_color"
+                                class="w-full border rounded p-2 select2 @error('car_color') border-red-500 @enderror"
+                                name="car_color">
+                                <option value="">Select Color</option>
+                                <option value="white" {{ old('car_color') == 'white' ? 'selected' : '' }}>White</option>
+                                <option value="black" {{ old('car_color') == 'black' ? 'selected' : '' }}>Black</option>
+                                <option value="silver" {{ old('car_color') == 'silver' ? 'selected' : '' }}>Silver
+                                </option>
+                                <option value="red" {{ old('car_color') == 'red' ? 'selected' : '' }}>Red</option>
+                                <option value="blue" {{ old('car_color') == 'blue' ? 'selected' : '' }}>Blue</option>
+                                <option value="green" {{ old('car_color') == 'green' ? 'selected' : '' }}>Green</option>
+                                <option value="yellow" {{ old('car_color') == 'yellow' ? 'selected' : '' }}>Yellow
+                                </option>
+                            </select>
+                            @error('car_color')
+                                <p class="car_color-error text-red-500 text-sm mt-1">Car color is required</p>
+                            @enderror
+                        </div>
+
+                        <!-- Rent Price Fields (Show for rent only or both) -->
+                        <div x-show="form.is_for_rent">
+                            <div class="mb-4">
+                                <label class="block font-medium">Daily Rent Price</label>
+                                <input type="number" x-model="form.rent_price_per_day"
+                                    class="w-full border rounded p-2 @error('rent_price_per_day') border-red-500 @enderror"
+                                    placeholder="Daily Rent Price" name="rent_price_per_day" @input="watchProgress()" />
+                                @error('rent_price_per_day')
+                                    <p class="text-red-500 text-sm mt-1">Daily rent price is required</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="block font-medium">Monthly Rent Price</label>
+                                <input type="number" x-model="form.rent_price_per_month"
+                                    class="w-full border rounded p-2 @error('rent_price_per_month') border-red-500 @enderror"
+                                    placeholder="Monthly Rent Price" name="rent_price_per_month"
+                                    @input="watchProgress()" />
+                                @error('rent_price_per_month')
+                                    <p class="text-red-500 text-sm mt-1">Monthly rent price is required</p>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="flex justify-end">
+                            <button type="button" @click="nextStep"
+                                class="bg-blue-600 text-white px-4 py-2 rounded mt-4">Next →</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Additional Details (Show for sale or both, hidden for rent-only) -->
+                    <div x-show="form.is_for_sale && step === 2" class="space-y-4">
+                        <h2 class="text-lg font-semibold mb-4 text-blue-800">Step 2: Additional Details</h2>
 
                         {{-- نوع بادی --}}
                         <div>
-                            <label class="block font-medium ">نوع یادی</label>
+                            <label class="block font-medium">نوع یادی</label>
                             <select x-model="form.body_type"
                                 class="w-full border rounded p-2 select2 @error('body_type') border-red-500 @enderror"
                                 name="body_type">
@@ -199,12 +277,10 @@
                                 <option value="minivan" {{ old('body_type') == 'minivan' ? 'selected' : '' }}>Minivan
                                 </option>
                             </select>
-
                             @error('body_type')
-                                <p class="body-error text-red-500 text-sm mt-1"> نوع بادی را انتخاب کنید</p>
+                                <p class="body-error text-red-500 text-sm mt-1">نوع بادی را انتخاب کنید</p>
                             @enderror
                         </div>
-
 
                         {{-- وضعیت ټکر --}}
                         <div>
@@ -218,12 +294,11 @@
                                 <option value="سالم" {{ old('car_condition') == 'سالم' ? 'selected' : '' }}>سالم
                                 </option>
                                 <option value="تصادفی اما تعمیر شده"
-                                    {{ old('car_condition') == 'تصادفی اما تعمیر شده' ? 'selected' : '' }}>
-                                    تصادفی اما تعمیر شده</option>
+                                    {{ old('car_condition') == 'تصادفی اما تعمیر شده' ? 'selected' : '' }}>تصادفی اما تعمیر
+                                    شده</option>
                             </select>
-
                             @error('car_condition')
-                                <p class="car_condition-error text-red-500 text-sm mt-1"> وضعیت موتر را انتخاب کنید</p>
+                                <p class="car_condition-error text-red-500 text-sm mt-1">وضعیت موتر را انتخاب کنید</p>
                             @enderror
                         </div>
 
@@ -234,217 +309,64 @@
                                 placeholder="VIN Number" name="VIN_number" @input="watchProgress()"
                                 @keyup="watchProgress()" />
                             @error('VIN_number')
-                                <p class="vin_number-error text-red-500 text-sm mt-1"> نمبر شاسی را انتخاب کنید</p>
+                                <p class="vin_number-error text-red-500 text-sm mt-1">نمبر شاسی را انتخاب کنید</p>
                             @enderror
                         </div>
 
-                        <div>
-                            <label class="block font-medium">Location (Live)</label>
-                            <input type="text" x-model="form.location"
-                                class="w-full border rounded p-2 @error('location') border-red-500  @enderror"
-                                placeholder="Click to get current location" readonly @click="getLocation" name="location"
-                                @input="watchProgress()" @change="watchProgress()" />
-                            @error('location')
-                                <p class="location-error text-red-500 text-sm mt-1"> موقیعت تان زا انتخاب کنید</p>
-                            @enderror
-                        </div>
-
-                        <div class="flex justify-end">
-                            <button type="button" @click="nextStep"
-                                class="bg-blue-600 text-white px-4 py-2 rounded mt-4">Next →</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div x-show="step === 2" class="space-y-4">
                         <div>
                             <label class="block font-medium">Model</label>
-                            <select x-model="form.model"
-                                class="w-full border rounded p-2 select2 @error('model') border-red-500 @enderror"
-                                name="model">
-                                <option value="">Select Model</option>
-                                <option value="corrola" {{ old('model') == 'corrola' ? 'selected' : '' }}>Corolla</option>
-                                <option value="focus" {{ old('model') == 'focus' ? 'selected' : '' }}>
-                                    Focus</option>
-                                <option value="xs" {{ old('model') == 'xs' ? 'selected' : '' }}>X5
-                                </option>
-                                <option value="civic" {{ old('model') == 'civic' ? 'selected' : '' }}>
-                                    Civic</option>
-                                <option value="c-class" {{ old('model') == 'c-class' ? 'selected' : '' }}>C-Class</option>
-                            </select>
-
+                            <input type="text" x-model="form.model"
+                                class="w-full border rounded p-2 @error('model') border-red-500 @enderror"
+                                placeholder="Car Model" name="model" @input="watchProgress()"
+                                @keyup="watchProgress()" />
                             @error('model')
-                                <p class="model-error text-red-500 text-sm mt-1"> مودل موتر را انتخاب کنید</p>
+                                <p class="text-red-500 text-sm mt-1">Model is required</p>
                             @enderror
                         </div>
 
-                        {{-- رنگ باډی موتر --}}
                         <div>
-                            <label class="block font-medium">Car Body Color</label>
-                            <select x-model="form.car_color"
-                                class="w-full border rounded p-2 select2 text-right @error('car_color') border-red-500 @enderror"
-                                name="car_color">
-                                <option value="">رنگ بدنه موتر را انتخاب کنید</option>
-                                <option value="black" {{ old('car_color') == 'black' ? 'selected' : '' }}>سیاه
-                                </option>
-                                <option value="white" {{ old('car_color') == 'white' ? 'selected' : '' }}>سفید
-                                </option>
-                                <option value="gray" {{ old('car_color') == 'gray' ? 'selected' : '' }}>خاکستری
-                                </option>
-                                <option value="silver" {{ old('car_color') == 'silver' ? 'selected' : '' }}>نقره‌ای
-                                </option>
-                                <option value="navy" {{ old('car_color') == 'navy' ? 'selected' : '' }}>سرمه‌ای
-                                </option>
-                                <option value="blue" {{ old('car_color') == 'blue' ? 'selected' : '' }}>آبی</option>
-                                <option value="gold" {{ old('car_color') == 'gold' ? 'selected' : '' }}>طلایی
-                                </option>
-                                <option value="yellow" {{ old('car_color') == 'yellow' ? 'selected' : '' }}>زرد
-                                </option>
-                                <option value="red" {{ old('car_color') == 'red' ? 'selected' : '' }}>قرمز</option>
-                                <option value="green" {{ old('car_color') == 'green' ? 'selected' : '' }}>سبز</option>
-                                <option value="brown" {{ old('car_color') == 'brown' ? 'selected' : '' }}>قهوه‌ای
-                                </option>
-                                <option value="chestnut" {{ old('car_color') == 'chestnut' ? 'selected' : '' }}>قهوه‌ای
-                                    سوخته</option>
-                                <option value="orange" {{ old('car_color') == 'orange' ? 'selected' : '' }}>نارنجی
-                                </option>
-                                <option value="purple" {{ old('car_color') == 'purple' ? 'selected' : '' }}>بنفش
-                                </option>
-                                <option value="coral" {{ old('car_color') == 'coral' ? 'selected' : '' }}>مرجانی
-                                </option>
-                                <option value="ruby" {{ old('car_color') == 'ruby' ? 'selected' : '' }}>یاقوتی
-                                </option>
-                                <option value="sky_blue" {{ old('car_color') == 'sky_blue' ? 'selected' : '' }}>آبی
-                                    آسمانی</option>
-                                <option value="olive" {{ old('car_color') == 'olive' ? 'selected' : '' }}>زیتونی
-                                </option>
-                                <option value="turquoise" {{ old('car_color') == 'turquoise' ? 'selected' : '' }}>
-                                    فیروزه‌ای</option>
-                                <option value="ice" {{ old('car_color') == 'ice' ? 'selected' : '' }}>یخی</option>
-                            </select>
-                            @error('car_color')
-                                <p class="car_color-error text-red-500 text-sm mt-1"> رنگ باډی موتر را انتخاب کنید</p>
-                            @enderror
-                        </div>
-
-
-                        {{-- رنک داخلي موتر --}}
-
-                        <div>
-                            <label class="block font-medium">رنگ داخلي موتر</label>
+                            <label class="block font-medium">Interior Color</label>
                             <select x-model="form.car_inside_color"
-                                class="w-full border rounded p-2 select2 text-right @error('car_inside_color') border-red-500 @enderror"
+                                class="w-full border rounded p-2 select2 @error('car_inside_color') border-red-500 @enderror"
                                 name="car_inside_color">
-                                <option value="">رنگ بادی موتر را انتخاب کنید</option>
-                                <option value="سیاه" {{ old('car_inside_color') == 'سیاه' ? 'selected' : '' }}>سیاه
+                                <option value="">Select Interior Color</option>
+                                <option value="black" {{ old('car_inside_color') == 'black' ? 'selected' : '' }}>Black
                                 </option>
-                                <option value="سفید" {{ old('car_inside_color') == 'سفید' ? 'selected' : '' }}>سفید
+                                <option value="gray" {{ old('car_inside_color') == 'gray' ? 'selected' : '' }}>Gray
                                 </option>
-                                <option value="خاکستری" {{ old('car_inside_color') == 'خاکستری' ? 'selected' : '' }}>
-                                    خاکستری</option>
-                                <option value="نقره‌ای" {{ old('car_inside_color') == 'نقره‌ای' ? 'selected' : '' }}>
-                                    نقره‌ای</option>
-                                <option value="سرمه‌ای" {{ old('car_inside_color') == 'سرمه‌ای' ? 'selected' : '' }}>
-                                    سرمه‌ای</option>
-                                <option value="آبی" {{ old('car_inside_color') == 'آبی' ? 'selected' : '' }}>آبی
+                                <option value="beige" {{ old('car_inside_color') == 'beige' ? 'selected' : '' }}>Beige
                                 </option>
-                                <option value="زر" {{ old('car_inside_color') == 'زر' ? 'selected' : '' }}>زر</option>
-                                <option value="زرد" {{ old('car_inside_color') == 'زرد' ? 'selected' : '' }}>زرد
+                                <option value="brown" {{ old('car_inside_color') == 'brown' ? 'selected' : '' }}>Brown
                                 </option>
-                                <option value="قرمز" {{ old('car_inside_color') == 'قرمز' ? 'selected' : '' }}>قرمز
+                                <option value="white" {{ old('car_inside_color') == 'white' ? 'selected' : '' }}>White
                                 </option>
-                                <option value="سبز" {{ old('car_inside_color') == 'سبز' ? 'selected' : '' }}>سبز
+                                <option value="red" {{ old('car_inside_color') == 'red' ? 'selected' : '' }}>Red
                                 </option>
-                                <option value="قهوه‌ای" {{ old('car_inside_color') == 'قهوه‌ای' ? 'selected' : '' }}>
-                                    قهوه‌ای</option>
-                                <option value="خرمایی" {{ old('car_inside_color') == 'خرمایی' ? 'selected' : '' }}>خرمایی
-                                </option>
-                                <option value="نارنجی" {{ old('car_inside_color') == 'نارنجی' ? 'selected' : '' }}>نارنجی
-                                </option>
-                                <option value="بنفش" {{ old('car_inside_color') == 'بنفش' ? 'selected' : '' }}>بنفش
-                                </option>
-                                <option value="مرجانی" {{ old('car_inside_color') == 'مرجانی' ? 'selected' : '' }}>مرجانی
-                                </option>
-                                <option value="یاقوتی" {{ old('car_inside_color') == 'یاقوتی' ? 'selected' : '' }}>یاقوتی
-                                </option>
-                                <option value="آبی آسمانی"
-                                    {{ old('car_inside_color') == 'آبی آسمانی' ? 'selected' : '' }}>آبی آسمانی</option>
-                                <option value="زیتونی" {{ old('car_inside_color') == 'زیتونی' ? 'selected' : '' }}>زیتونی
-                                </option>
-                                <option value="فیروزه‌ای" {{ old('car_inside_color') == 'فیروزه‌ای' ? 'selected' : '' }}>
-                                    فیروزه‌ای</option>
-                                <option value="یخی" {{ old('car_inside_color') == 'یخی' ? 'selected' : '' }}>یخی
+                                <option value="blue" {{ old('car_inside_color') == 'blue' ? 'selected' : '' }}>Blue
                                 </option>
                             </select>
                             @error('car_inside_color')
-                                <p class="car_inside_solor-error text-red-500 text-sm mt-1"> رنگ داخلي موتر را انتخاب کنید</p>
+                                <p class="text-red-500 text-sm mt-1">Interior color is required</p>
                             @enderror
                         </div>
-
-
-                        {{-- اسناد موتر  --}}
 
                         <div>
-                            <label class="block font-medium">اسناد موتر</label>
-                            <select x-model="form.car_documents" name="car_documents"
-                                class="w-full border rounded p-2 select2 text-right @error('car_documents') border-red-500 @enderror">
-                                <option value="">نوع سند موتر را انتخاب کنید</option>
-                                <option value="سند گمرک" {{ old('car_documents') == 'سند گمرک' ? 'selected' : '' }}>سند
-                                    گمرک</option>
-                                <option value="سند ثبت موتر"
-                                    {{ old('car_documents') == 'سند ثبت موتر' ? 'selected' : '' }}>سند ثبت موتر</option>
-                                <option value="سند مالکیت" {{ old('car_documents') == 'سند مالکیت' ? 'selected' : '' }}>
-                                    سند مالکیت</option>
-                                <option value="سند ترانسپورت"
-                                    {{ old('car_documents') == 'سند ترانسپورت' ? 'selected' : '' }}>سند ترانسپورت</option>
-                                <option value="سند بیمه" {{ old('car_documents') == 'سند بیمه' ? 'selected' : '' }}>سند
-                                    بیمه</option>
-                                <option value="سند فابریکه" {{ old('car_documents') == 'سند فابریکه' ? 'selected' : '' }}>
-                                    سند فابریکه</option>
-                                <option value="سند نمبر پلیت"
-                                    {{ old('car_documents') == 'سند نمبر پلیت' ? 'selected' : '' }}>سند نمبر پلیت</option>
-                                <option value="سند انتقال ملکیت"
-                                    {{ old('car_documents') == 'سند انتقال ملکیت' ? 'selected' : '' }}>سند انتقال ملکیت
+                            <label class="block font-medium">Car Documents</label>
+                            <select x-model="form.car_documents"
+                                class="w-full border rounded p-2 select2 @error('car_documents') border-red-500 @enderror"
+                                name="car_documents">
+                                <option value="">Select Document Status</option>
+                                <option value="complete" {{ old('car_documents') == 'complete' ? 'selected' : '' }}>
+                                    Complete</option>
+                                <option value="incomplete" {{ old('car_documents') == 'incomplete' ? 'selected' : '' }}>
+                                    Incomplete</option>
+                                <option value="pending" {{ old('car_documents') == 'pending' ? 'selected' : '' }}>Pending
                                 </option>
-                                <option value="سند پاسپورت موتر"
-                                    {{ old('car_documents') == 'سند پاسپورت موتر' ? 'selected' : '' }}>سند پاسپورت موتر
-                                </option>
-                                <option value="سند تخنیکی معاینه"
-                                    {{ old('car_documents') == 'سند تخنیکی معاینه' ? 'selected' : '' }}>سند تخنیکی معاینه
-                                </option>
-                                <option value="سند تصدیق ترانزیت"
-                                    {{ old('car_documents') == 'سند تصدیق ترانزیت' ? 'selected' : '' }}>سند تصدیق ترانزیت
-                                </option>
-                                <option value="سند اجازه تردد"
-                                    {{ old('car_documents') == 'سند اجازه تردد' ? 'selected' : '' }}>سند اجازه تردد
-                                </option>
-                                <option value="سند تصدیق گمرک قبلی"
-                                    {{ old('car_documents') == 'سند تصدیق گمرک قبلی' ? 'selected' : '' }}>سند تصدیق گمرک
-                                    قبلی</option>
-                                <option value="سند تایید انجین"
-                                    {{ old('car_documents') == 'سند تایید انجین' ? 'selected' : '' }}>سند تایید انجین
-                                </option>
-                                <option value="سند تایید شاسی"
-                                    {{ old('car_documents') == 'سند تایید شاسی' ? 'selected' : '' }}>سند تایید شاسی
-                                </option>
-                                <option value="سند ترافیکی" {{ old('car_documents') == 'سند ترافیکی' ? 'selected' : '' }}>
-                                    سند ترافیکی</option>
-                                <option value="سند موقت" {{ old('car_documents') == 'سند موقت' ? 'selected' : '' }}>سند
-                                    موقت</option>
-                                <option value="سند نمبر انجن"
-                                    {{ old('car_documents') == 'سند نمبر انجن' ? 'selected' : '' }}>سند نمبر انجن</option>
-                                <option value="سند نمبر شاسی"
-                                    {{ old('car_documents') == 'سند نمبر شاسی' ? 'selected' : '' }}>سند نمبر شاسی</option>
-                                <option value="سند نمبرگذاری"
-                                    {{ old('car_documents') == 'سند نمبرگذاری' ? 'selected' : '' }}>سند نمبرگذاری</option>
                             </select>
-
                             @error('car_documents')
-                                <p class="car_documents-error text-red-500 text-sm mt-1"> سند موتر را انتخاب کنید</p>
+                                <p class="text-red-500 text-sm mt-1">Car documents status is required</p>
                             @enderror
                         </div>
-
-
 
                         <div>
                             <label class="block font-medium">Transmission Type</label>
@@ -452,136 +374,113 @@
                                 class="w-full border rounded p-2 select2 @error('transmission_type') border-red-500 @enderror"
                                 name="transmission_type">
                                 <option value="">Select Transmission</option>
+                                <option value="manual" {{ old('transmission_type') == 'manual' ? 'selected' : '' }}>Manual
+                                </option>
                                 <option value="automatic" {{ old('transmission_type') == 'automatic' ? 'selected' : '' }}>
                                     Automatic</option>
-                                <option value="manual" {{ old('transmission_type') == 'manual' ? 'selected' : '' }}>Manual
+                                <option value="cvt" {{ old('transmission_type') == 'cvt' ? 'selected' : '' }}>CVT
+                                </option>
+                                <option value="semi-automatic"
+                                    {{ old('transmission_type') == 'semi-automatic' ? 'selected' : '' }}>Semi-Automatic
                                 </option>
                             </select>
                             @error('transmission_type')
-                                <p class="transmission_type-error text-red-500 text-sm mt-1"> نوع ترانسپورت را انتخاب کنید</p>
+                                <p class="text-red-500 text-sm mt-1">Transmission type is required</p>
                             @enderror
                         </div>
 
-                        <div class="flex gap-4">
-                            <!-- Regular Price -->
-                            <div class="flex-1">
-                                <label class="block font-medium">Regular Price</label>
-                                <input type="number" x-model="form.regular_price"
-                                    class="w-full border rounded p-2 @error('regular_price') border-red-500  @enderror"
-                                    name="regular_price" @input="watchProgress()" @keyup="watchProgress()"
-                                    @change="watchProgress()"
-                                    x-bind:class="{
-                                        'border-red-500': form
-                                            .regular_price <=
-                                            0 &&
-                                            step ===
-                                            2
-                                    }"
-                                    x-bind:placeholder="form.currency_type ?
-                                        `Regular price (${form.currency_type})` :
-                                        'Regular price'"
-                                    placeholder="Regular price" min="0" />
-                                @error('regular_price')
-                                    <p class="regular_price-error text-red-500 text-sm mt-1"> Regular price is required</p>
-                                @enderror
-                            </div>
-
-                            <!-- Currency Type -->
-                            <div class="flex-1">
-                                <label class="block font-medium">Currency Type</label>
-                                <select x-model="form.currency_type"
-                                    class="w-full border p-3 rounded select2 @error('currency_type') border-red-500 @enderror"
-                                    name="currency_type">
-                                    <option value="">Select currency</option>
-                                    <option value="Afn" {{ old('currency_type') == 'Afn' ? 'selected' : '' }}>Afn
-                                    </option>
-                                    <option value="$" {{ old('currency_type') == '$' ? 'selected' : '' }}>$</option>
-                                    <option value="ERU" {{ old('currency_type') == 'ERU' ? 'selected' : '' }}>ERU
-                                    </option>
-                                </select>
-                                @error('currency_type')
-                                    <p class="currency_typy-error text-red-500 text-sm mt-1"> Currency type is required</p>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <!-- Sale Price - separate row -->
-                        <div class="mt-4">
-                            <label class="block font-medium">Sale Price</label>
-                            <input type="number" x-model="form.sale_price"
-                                class="w-full border rounded p-2 @error('sale_price') border-red-500 @enderror"
-                                placeholder="Sale price" min="0" name="sale_price" @input="watchProgress()"
-                                @keyup="watchProgress()" @change="watchProgress()" />
-                            @error('sale_price')
-                                <p class="sale_price-error text-red-500 text-sm mt-1"> Sale price is required</p>
-                            @enderror
-                        </div>
-
-                        <!-- Sell / Rent Toggles -->
-                        <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <label class="inline-flex items-center gap-2">
-                                <input type="checkbox" name="is_for_sale" x-model="form.is_for_sale" value="1"
-                                    class="h-4 w-4"
-                                    @change="form.is_for_sale = $event.target.checked; watchProgress(); $nextTick(() => { $dispatch('form-changed'); })" />
-                                <span>For Sale</span>
-                            </label>
-                            <label class="inline-flex items-center gap-2">
-                                <input type="checkbox" name="is_for_rent" x-model="form.is_for_rent" value="1"
-                                    class="h-4 w-4"
-                                    @change="form.is_for_rent = $event.target.checked; watchProgress(); $nextTick(() => { $dispatch('form-changed'); })" />
-                                <span>For Rent</span>
-                            </label>
-                        </div>
-
-                        <!-- Rent Fields -->
-                        <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4" x-show="form.is_for_rent">
-                            <div>
-                                <label class="block font-medium">Rent per Day</label>
-                                <input type="number" min="0" step="0.01" name="rent_price_per_day"
-                                    x-model="form.rent_price_per_day" class="w-full border rounded p-2"
-                                    placeholder="e.g., 100" @input="watchProgress()" @keyup="watchProgress()"
-                                    @change="watchProgress()" />
-                            </div>
-                            <div>
-                                <label class="block font-medium">Rent per Month</label>
-                                <input type="number" min="0" step="0.01" name="rent_price_per_month"
-                                    x-model="form.rent_price_per_month" class="w-full border rounded p-2"
-                                    placeholder="e.g., 2000" @input="watchProgress()" @keyup="watchProgress()"
-                                    @change="watchProgress()" />
-                            </div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="mt-4">
-                            <label class="block font-medium">Description</label>
-                            <textarea name="description" x-model="form.description" class="w-full border rounded p-2" rows="4"
-                                placeholder="Describe the car (condition, features, history, etc.)" @input="watchProgress()"
-                                @keyup="watchProgress()"></textarea>
-                        </div>
-
-
-                        <div class="flex justify-between mt-4">
+                        <div class="flex justify-between">
                             <button type="button" @click="step--; watchProgress()"
                                 class="bg-gray-400 text-white px-4 py-2 rounded">← Back</button>
                             <button type="button" @click="nextStep"
-                                class="bg-blue-600 text-white px-4 py-2 rounded">Next
-                                →</button>
+                                class="bg-blue-600 text-white px-4 py-2 rounded">Next →</button>
                         </div>
                     </div>
 
-                    <!-- Step 3 -->
-                    <div x-show="step === 3" class="space-y-4">
+                    <!-- Step 3: Sale Details (Only for sale) -->
+                    <div x-show="form.is_for_sale && step === 3" class="space-y-4">
+                        <h2 class="text-lg font-semibold mb-4 text-blue-800">Step 3: Sale Information</h2>
 
                         <div>
-                            <label class="block font-medium">Upload Car Images (1–11)</label>
-                            <input type="file" name="images[]" id="imageInput" multiple accept="image/*"
-                                @change="handleImages($event)" class="w-full border rounded p-2">
-                            @error('images')
-                                <p class="image-error text-red-500 text-sm mt-1"> خدآقل یک عکس باید آبلوډ شود</p>
+                            <label class="block font-medium">Regular Price</label>
+                            <input type="number" x-model="form.regular_price"
+                                class="w-full border rounded p-2 @error('regular_price') border-red-500 @enderror"
+                                placeholder="Regular Price" name="regular_price" @input="watchProgress()" />
+                            @error('regular_price')
+                                <p class="text-red-500 text-sm mt-1">Regular price is required</p>
                             @enderror
                         </div>
 
-                        <div class="flex flex-wrap gap-2" x-show="imagePreviews.length > 0">
+                        <div>
+                            <label class="block font-medium">Sale Price</label>
+                            <input type="number" x-model="form.sale_price"
+                                class="w-full border rounded p-2 @error('sale_price') border-red-500 @enderror"
+                                placeholder="Sale Price" name="sale_price" @input="watchProgress()" />
+                            @error('sale_price')
+                                <p class="text-red-500 text-sm mt-1">Sale price is required</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block font-medium">Currency Type</label>
+                            <select x-model="form.currency_type"
+                                class="w-full border rounded p-2 select2 @error('currency_type') border-red-500 @enderror"
+                                name="currency_type">
+                                <option value="">Select Currency</option>
+                                <option value="USD" {{ old('currency_type') == 'USD' ? 'selected' : '' }}>USD</option>
+                                <option value="AFN" {{ old('currency_type') == 'AFN' ? 'selected' : '' }}>AFN</option>
+                                <option value="EUR" {{ old('currency_type') == 'EUR' ? 'selected' : '' }}>EUR</option>
+                            </select>
+                            @error('currency_type')
+                                <p class="text-red-500 text-sm mt-1">Currency type is required</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block font-medium">Location</label>
+                            <input type="text" x-model="form.location"
+                                class="w-full border rounded p-2 @error('location') border-red-500 @enderror"
+                                placeholder="Car Location" name="location" @input="watchProgress()"
+                                @keyup="watchProgress()" />
+                            <button type="button" @click="getCurrentLocation()"
+                                class="mt-2 bg-gray-500 text-white px-3 py-1 rounded text-sm">Get Current Location</button>
+                            @error('location')
+                                <p class="text-red-500 text-sm mt-1">Location is required</p>
+                            @enderror
+                        </div>
+
+                        <div>
+                            <label class="block font-medium">Description</label>
+                            <textarea x-model="form.description" class="w-full border rounded p-2 @error('description') border-red-500 @enderror"
+                                placeholder="Describe the car (condition, features, history, etc.)" rows="4" name="description"
+                                @input="watchProgress()" @keyup="watchProgress()"></textarea>
+                            @error('description')
+                                <p class="text-red-500 text-sm mt-1">Description is required</p>
+                            @enderror
+                        </div>
+
+                        <div class="flex justify-between">
+                            <button type="button" @click="step--; watchProgress()"
+                                class="bg-gray-400 text-white px-4 py-2 rounded">← Back</button>
+                            <button type="button" @click="nextStep"
+                                class="bg-blue-600 text-white px-4 py-2 rounded">Next →</button>
+                        </div>
+                    </div>
+
+                    <!-- Final Step: Media Upload -->
+                    <div x-show="(form.is_for_sale || form.is_for_rent) && step === getMaxSteps()" class="space-y-4">
+                        <h2 class="text-lg font-semibold mb-4 text-blue-800">Final Step: Upload Media</h2>
+
+                        <div>
+                            <label class="block font-medium">Upload Car Images (1–60)</label>
+                            <input type="file" name="images[]" id="imageInput" multiple accept="image/*"
+                                @change="handleImages($event)" class="w-full border rounded p-2">
+                            @error('images')
+                                <p class="image-error text-red-500 text-sm mt-1">خدآقل یک عکس باید آبلوډ شود</p>
+                            @enderror
+                        </div>
+
+                        <div class="flex flex-wrap gap-2 mb-4" x-show="imagePreviews.length > 0">
                             <template x-for="(img, index) in imagePreviews" :key="index">
                                 <div class="relative w-24 h-24">
                                     <img :src="img" class="w-full h-full object-cover rounded border" />
@@ -596,16 +495,16 @@
                         </div>
 
                         <div>
-                            <label class="block font-medium">Upload Videos (max 2)</label>
+                            <label class="block font-medium">Upload Videos (max 60)</label>
                             <input type="file" name="videos[]" id="videoInput" @change="handleVideos($event)"
                                 accept="video/*" multiple
                                 class="w-full border rounded p-2 @error('videos') border-red-500 @enderror" />
                             @error('videos')
-                                <p class="video-error text-red-500 text-sm mt-1"> خدآقل یک ویدیو باید آبلوډ شود</p>
+                                <p class="video-error text-red-500 text-sm mt-1">خدآقل یک ویدیو باید آبلوډ شود</p>
                             @enderror
                         </div>
 
-                        <div class="flex flex-wrap gap-2" x-show="videoPreviews.length > 0">
+                        <div class="flex flex-wrap gap-2 mb-4" x-show="videoPreviews.length > 0">
                             <template x-for="(video, index) in videoPreviews" :key="index">
                                 <div class="relative w-32 h-24">
                                     <video :src="video" controls
@@ -623,18 +522,20 @@
                         <div class="flex justify-between mt-4">
                             <button type="button" @click="step--; watchProgress()"
                                 class="bg-gray-400 text-white px-4 py-2 rounded">← Back</button>
-                            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Submit ✅</button>
+                            <button type="submit"
+                                class="bg-green-600 text-white px-4 py-3 rounded text-lg font-semibold">Submit Car
+                                Registration ✅</button>
                         </div>
                     </div>
                 </form>
             </div>
 
             <!-- Review Section -->
-            <div class="flex-1 lg:w-1/3 lg:ml-6">
+            <div class="w-1/2 pl-4">
                 <div class="bg-gray-50 p-6 rounded border max-h-[600px] overflow-auto sticky top-4"
                     x-data="{ formData: {} }" x-init="$watch('$parent.form', (value) => { formData = value; }, { deep: true })">
                     <h2 class="text-xl font-semibold mb-4">Review Your Inputs</h2>
-                    <div class="space-y-3 text-sm">
+                    <div class="space-y-3 text-sm" x-show="form.is_for_sale || form.is_for_rent">
                         <template x-if="form.title">
                             <div><strong>Title:</strong> <span x-text="form.title"></span></div>
                         </template>
@@ -644,34 +545,34 @@
                         <template x-if="form.make">
                             <div><strong>Make:</strong> <span x-text="form.make"></span></div>
                         </template>
-                        <template x-if="form.body_type">
+                        <template x-if="form.body_type && form.is_for_sale">
                             <div><strong>Body Type:</strong> <span x-text="form.body_type"></span></div>
                         </template>
-                        <template x-if="form.car_condition">
+                        <template x-if="form.car_condition && form.is_for_sale">
                             <div><strong>Car Condition:</strong> <span x-text="form.car_condition"></span></div>
                         </template>
-                        <template x-if="form.VIN_number">
+                        <template x-if="form.VIN_number && form.is_for_sale">
                             <div><strong>VIN Number:</strong> <span x-text="form.VIN_number"></span></div>
                         </template>
-                        <template x-if="form.location">
+                        <template x-if="form.location && form.is_for_sale">
                             <div><strong>Location:</strong> <span x-text="form.location"></span></div>
                         </template>
-                        <template x-if="form.model">
+                        <template x-if="form.model && form.is_for_sale">
                             <div><strong>Model:</strong> <span x-text="form.model"></span></div>
                         </template>
                         <template x-if="form.car_color">
                             <div><strong>Car Color:</strong> <span x-text="form.car_color"></span></div>
                         </template>
-                        <template x-if="form.car_inside_color">
+                        <template x-if="form.car_inside_color && form.is_for_sale">
                             <div><strong>Interior Color:</strong> <span x-text="form.car_inside_color"></span></div>
                         </template>
-                        <template x-if="form.car_documents">
+                        <template x-if="form.car_documents && form.is_for_sale">
                             <div><strong>Documents:</strong> <span x-text="form.car_documents"></span></div>
                         </template>
-                        <template x-if="form.transmission_type">
+                        <template x-if="form.transmission_type && form.is_for_sale">
                             <div><strong>Transmission:</strong> <span x-text="form.transmission_type"></span></div>
                         </template>
-                        <div class="flex">
+                        <div class="flex" x-show="form.is_for_sale">
                             <template x-if="form.regular_price">
                                 <div><strong>Regular Price:</strong> <span x-text="form.regular_price"></span> &nbsp;
                                 </div>
@@ -680,7 +581,7 @@
                                 <div> <span x-text="form.currency_type"></span></div>
                             </template>
                         </div>
-                        <div class="flex">
+                        <div class="flex" x-show="form.is_for_sale">
                             <template x-if="form.sale_price">
                                 <div><strong>Sale Price:</strong> <span x-text="form.sale_price"></span> &nbsp;</div>
                             </template>
@@ -706,7 +607,7 @@
                                 </div>
                             </div>
                         </template>
-                        <template x-if="form.description">
+                        <template x-if="form.description && form.is_for_sale">
                             <div><strong>Description:</strong> <span x-text="form.description"></span></div>
                         </template>
                         <template x-if="imagePreviews.length">
@@ -730,6 +631,9 @@
                                 </div>
                             </div>
                         </template>
+                    </div>
+                    <div x-show="!form.is_for_sale && !form.is_for_rent" class="text-gray-500 text-center py-8">
+                        Please select if the car is for sale or rent to see the review.
                     </div>
                 </div>
             </div>
@@ -847,7 +751,91 @@
                     this.watchProgress();
                 },
 
-                getLocation() {
+                getMaxSteps() {
+                    // For rent only: 2 steps (basic info + media)
+                    if (this.form.is_for_rent && !this.form.is_for_sale) {
+                        return 2;
+                    }
+                    // For sale only or both: 4 steps (basic + details + sale + media)
+                    return 4;
+                },
+
+                nextStep() {
+                    // First sync all Select2 values before validation
+                    this.syncSelect2Values();
+
+                    // Small delay to ensure sync is complete
+                    this.$nextTick(() => {
+                        // Validate current step
+                        if (!this.validateStep()) return;
+
+                        if (this.step < this.getMaxSteps()) {
+                            this.step++;
+                            this.watchProgress(); // Update progress when moving to next step
+                        }
+                    });
+                },
+
+                validateStep() {
+                    let errors = [];
+
+                    if (this.step === 1) {
+                        // Check if at least one purpose is selected
+                        if (!this.form.is_for_sale && !this.form.is_for_rent) {
+                            errors.push('Please select if the car is for sale or rent.');
+                        }
+
+                        // Basic required fields for all
+                        if (!this.form.title || !this.form.title.trim()) errors.push('Title is required.');
+                        if (!this.form.year || this.form.year === '') errors.push('Year is required.');
+                        if (!this.form.make || this.form.make === '') errors.push('Make is required.');
+                        if (!this.form.car_color || this.form.car_color === '') errors.push('Car color is required.');
+
+                        // Rent fields validation (when rent is selected)
+                        if (this.form.is_for_rent) {
+                            if ((!this.form.rent_price_per_day || Number(this.form.rent_price_per_day) <= 0) &&
+                                (!this.form.rent_price_per_month || Number(this.form.rent_price_per_month) <= 0)) {
+                                errors.push('Provide rent per day or rent per month.');
+                            }
+                        }
+                    } else if (this.step === 2 && this.form.is_for_sale) {
+                        // Additional fields for sale
+                        if (!this.form.body_type || this.form.body_type === '') errors.push('Body type is required.');
+                        if (!this.form.car_condition || this.form.car_condition === '') errors.push(
+                            'Car condition is required.');
+                        if (!this.form.VIN_number || !this.form.VIN_number.trim()) errors.push('VIN Number is required.');
+                    } else if (this.step === 3 && this.form.is_for_sale) {
+                        // Sale fields validation (only validate if sale is selected)
+                        if (!this.form.regular_price || this.form.regular_price <= 0) errors.push(
+                            'Regular price must be greater than zero.');
+                        if (!this.form.sale_price || this.form.sale_price <= 0) errors.push(
+                            'Sale price must be greater than zero.');
+                        if (!this.form.currency_type) errors.push('Currency Type is required.');
+
+                        // Following project specification: check for valid numeric values before comparison
+                        if (this.form.regular_price && this.form.sale_price &&
+                            Number(this.form.sale_price) > Number(this.form.regular_price)) {
+                            errors.push('Sale price must be less than or equal to regular price.');
+                        }
+                    } else if (this.step === this.getMaxSteps()) {
+                        // Media upload validation
+                        if (this.imageFiles.length < 1) errors.push('At least one image is required.');
+                        if (this.imageFiles.length > 60) errors.push('Maximum 60 images allowed.');
+                        if (this.videoFiles.length > 60) errors.push('Maximum 60 videos allowed.');
+                    }
+
+                    if (errors.length > 0) {
+                        console.log('Validation errors:', errors);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Validation Error',
+                            html: errors.join('<br>'),
+                        });
+                        return false;
+                    }
+                    return true;
+                },
+                getCurrentLocation() {
                     if (!navigator.geolocation) {
                         Swal.fire('Error', 'Geolocation is not supported by your browser.', 'error');
                         return;
@@ -864,100 +852,11 @@
                     );
                 },
 
-                nextStep() {
-                    // First sync all Select2 values before validation
-                    this.syncSelect2Values();
-
-                    // Small delay to ensure sync is complete
-                    this.$nextTick(() => {
-                        // Validate current step
-                        if (!this.validateStep()) return;
-
-                        if (this.step < 3) {
-                            this.step++;
-                            this.watchProgress(); // Update progress when moving to next step
-                        }
-                    });
-                },
-
-                validateStep() {
-                    let errors = [];
-
-                    if (this.step === 1) {
-                        // Debug: Log current form values
-                        console.log('Step 1 Validation - Current form values:', {
-                            title: this.form.title,
-                            year: this.form.year,
-                            make: this.form.make,
-                            body_type: this.form.body_type,
-                            car_condition: this.form.car_condition,
-                            VIN_number: this.form.VIN_number
-                        });
-
-                        if (!this.form.title || !this.form.title.trim()) errors.push('Title is required.');
-                        if (!this.form.year || this.form.year === '') errors.push('Year is required.');
-                        if (!this.form.make || this.form.make === '') errors.push('Make is required.');
-                        if (!this.form.body_type || this.form.body_type === '') errors.push('Body type is required.');
-                        if (!this.form.car_condition || this.form.car_condition === '') errors.push(
-                            'Car condition is required.');
-                        if (!this.form.VIN_number || !this.form.VIN_number.trim()) errors.push('VIN Number is required.');
-                        // Location is optional
-                    } else if (this.step === 2) {
-                        // Debug: Log step 2 form values
-                        console.log('Step 2 Validation - Current form values:', {
-                            model: this.form.model,
-                            car_color: this.form.car_color,
-                            car_inside_color: this.form.car_inside_color,
-                            car_documents: this.form.car_documents,
-                            transmission_type: this.form.transmission_type,
-                            currency_type: this.form.currency_type
-                        });
-
-                        if (!this.form.model) errors.push('Model is required.');
-                        if (!this.form.car_color) errors.push('Car color is required.');
-                        if (!this.form.car_inside_color) errors.push('Car inside color is required.');
-                        if (!this.form.car_documents) errors.push('Car documents is required.');
-                        if (!this.form.transmission_type) errors.push('Transmission type is required.');
-                        if (!this.form.currency_type) errors.push('Currency Type is required.');
-                        if (this.form.is_for_sale) {
-                            if (!this.form.regular_price || this.form.regular_price <= 0) errors.push(
-                                'Regular price must be greater than zero.');
-                            if (!this.form.sale_price || this.form.sale_price <= 0) errors.push(
-                                'Sale price must be greater than zero.');
-                            if (this.form.regular_price && this.form.sale_price &&
-                                Number(this.form.sale_price) > Number(this.form.regular_price)) {
-                                errors.push('Sale price must be less than or equal to regular price.');
-                            }
-                        }
-                        if (this.form.is_for_rent) {
-                            if ((!this.form.rent_price_per_day || Number(this.form.rent_price_per_day) <= 0) && (!this.form
-                                    .rent_price_per_month || Number(this.form.rent_price_per_month) <= 0)) {
-                                errors.push('Provide rent per day or rent per month.');
-                            }
-                        }
-                    } else if (this.step === 3) {
-                        if (this.imageFiles.length < 1) errors.push('At least one image is required.');
-                        if (this.imageFiles.length > 11) errors.push('Maximum 11 images allowed.');
-                        if (this.videoFiles.length > 2) errors.push('Maximum 2 videos allowed.');
-                    }
-
-                    if (errors.length > 0) {
-                        console.log('Validation errors:', errors);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Validation Error',
-                            html: errors.join('<br>'),
-                        });
-                        return false;
-                    }
-                    return true;
-                },
-
                 handleImages(event) {
                     const files = Array.from(event.target.files);
 
-                    if (files.length > 11) {
-                        Swal.fire('Error', 'You can upload max 11 images.', 'error');
+                    if (files.length > 60) {
+                        Swal.fire('Error', 'You can upload max 60 images.', 'error');
                         event.target.value = ''; // Clear the input
                         return;
                     }
@@ -999,8 +898,8 @@
                 handleVideos(event) {
                     const files = Array.from(event.target.files);
 
-                    if (files.length > 2) {
-                        Swal.fire('Error', 'You can upload max 2 videos.', 'error');
+                    if (files.length > 60) {
+                        Swal.fire('Error', 'You can upload max 60 videos.', 'error');
                         event.target.value = ''; // Clear the input
                         return;
                     }
@@ -1079,39 +978,46 @@
                 },
 
                 watchProgress() {
-                    // Define all form fields that contribute to progress
-                    const requiredFields = [
-                        'title', 'year', 'make', 'body_type', 'car_condition', 'VIN_number',
-                        'model', 'car_color', 'car_inside_color', 'car_documents', 'transmission_type', 'currency_type'
-                    ];
+                    // Define fields based on purpose selection
+                    let requiredFields = ['title', 'year', 'make', 'car_color'];
+                    let conditionalFields = [];
 
-                    const optionalFields = [
-                        'location', 'regular_price', 'sale_price', 'description',
-                        'rent_price_per_day', 'rent_price_per_month'
-                    ];
+                    // Add conditional fields based on purpose
+                    if (this.form.is_for_sale) {
+                        conditionalFields = conditionalFields.concat([
+                            'body_type', 'car_condition', 'VIN_number', 'location', 'model',
+                            'car_inside_color', 'car_documents', 'transmission_type',
+                            'currency_type', 'regular_price', 'sale_price', 'description'
+                        ]);
+                    }
 
+                    // Add rent fields if rent is selected
+                    if (this.form.is_for_rent) {
+                        conditionalFields = conditionalFields.concat(['rent_price_per_day', 'rent_price_per_month']);
+                    }
+
+                    // Boolean fields
                     const booleanFields = ['is_for_sale', 'is_for_rent'];
 
                     let filledFields = 0;
-                    // Calculate total possible fields: required + optional + boolean + files
-                    let totalFields = requiredFields.length + optionalFields.length + booleanFields.length +
+                    let totalFields = requiredFields.length + conditionalFields.length + booleanFields.length +
                         2; // +2 for images and videos
 
-                    // Check required fields (12 fields)
+                    // Check required fields
                     requiredFields.forEach(field => {
                         if (this.form[field] && this.form[field].toString().trim() !== '') {
                             filledFields++;
                         }
                     });
 
-                    // Check optional fields (6 fields)
-                    optionalFields.forEach(field => {
+                    // Check conditional fields
+                    conditionalFields.forEach(field => {
                         if (this.form[field] && this.form[field].toString().trim() !== '') {
                             filledFields++;
                         }
                     });
 
-                    // Check boolean fields individually (2 fields)
+                    // Check boolean fields
                     if (this.form.is_for_sale) {
                         filledFields++;
                     }
@@ -1119,19 +1025,18 @@
                         filledFields++;
                     }
 
-                    // Check images (required - at least 1) (1 field)
+                    // Check images (required - at least 1)
                     if (this.imageFiles && this.imageFiles.length > 0) {
                         filledFields++;
                     }
 
-                    // Check videos (optional) (1 field)
+                    // Check videos (optional)
                     if (this.videoFiles && this.videoFiles.length > 0) {
                         filledFields++;
                     }
 
                     // Calculate percentage (0-100%)
-                    // Total fields: 12 required + 6 optional + 2 boolean + 2 files = 22 fields
-                    this.filledFieldsCount = filledFields; // For debugging
+                    this.filledFieldsCount = filledFields;
                     this.progress = Math.min(100, Math.round((filledFields / totalFields) * 100));
                 }
             };
