@@ -143,7 +143,7 @@
                     <input type="hidden" name="transmission_type" :value="form.transmission_type">
                     <input type="hidden" name="currency_type" :value="form.currency_type">
                     <input type="hidden" name="regular_price" :value="form.regular_price">
-                    <input type="hidden" name="sale_price" :value="form.sale_price">
+
                     <input type="hidden" name="rent_price_per_day" :value="form.rent_price_per_day">
                     <input type="hidden" name="rent_price_per_month" :value="form.rent_price_per_month">
                     <input type="hidden" name="description" :value="form.description">
@@ -449,15 +449,7 @@
                             @enderror
                         </div>
 
-                        <div>
-                            <label class="block font-medium">Sale Price</label>
-                            <input type="number" x-model="form.sale_price"
-                                class="w-full border rounded p-2 @error('sale_price') border-red-500 @enderror"
-                                placeholder="Sale Price" name="sale_price" @input="watchProgress()" />
-                            @error('sale_price')
-                                <p class="text-red-500 text-sm mt-1">Sale price is required</p>
-                            @enderror
-                        </div>
+
 
                         <div>
                             <label class="block font-medium">Currency Type</label>
@@ -619,14 +611,7 @@
                                 <div> <span x-text="form.currency_type"></span></div>
                             </template>
                         </div>
-                        <div class="flex" x-show="form.is_for_sale">
-                            <template x-if="form.sale_price">
-                                <div><strong>Sale Price:</strong> <span x-text="form.sale_price"></span> &nbsp;</div>
-                            </template>
-                            <template x-if="form.currency_type">
-                                <div> <span x-text="form.currency_type"></span></div>
-                            </template>
-                        </div>
+
                         <template x-if="form.is_for_sale">
                             <div><strong>For Sale:</strong> Yes</div>
                         </template>
@@ -706,7 +691,7 @@
                     transmission_type: '{{ old('transmission_type') }}',
                     currency_type: '{{ old('currency_type') }}',
                     regular_price: '{{ old('regular_price') }}',
-                    sale_price: '{{ old('sale_price') }}',
+
                     description: '{{ old('description') }}',
                     is_for_sale: {{ old('is_for_sale') ? 'true' : 'false' }},
                     is_for_rent: {{ old('is_for_rent') ? 'true' : 'false' }},
@@ -848,16 +833,10 @@
                         if (this.form.regular_price && this.form.regular_price <= 0) {
                             errors.push('Regular price must be greater than zero if provided.');
                         }
-                        if (this.form.sale_price && this.form.sale_price <= 0) {
-                            errors.push('Sale price must be greater than zero if provided.');
-                        }
+
                         if (!this.form.currency_type) errors.push('Currency Type is required.');
 
-                        // Following project specification: check for valid numeric values before comparison
-                        if (this.form.regular_price && this.form.sale_price &&
-                            Number(this.form.sale_price) > Number(this.form.regular_price)) {
-                            errors.push('Sale price must be less than or equal to regular price.');
-                        }
+
                     } else if (this.step === this.getMaxSteps()) {
                         // Media upload validation
                         if (this.imageFiles.length < 1) errors.push('At least one image is required.');
@@ -1042,7 +1021,7 @@
                         transmission_type: '',
                         currency_type: '',
                         regular_price: '',
-                        sale_price: '',
+
                         description: '',
                         is_for_sale: false,
                         is_for_rent: false,
@@ -1072,7 +1051,7 @@
                         conditionalFields = conditionalFields.concat([
                             'body_type', 'car_condition', 'VIN_number', 'location', 'model',
                             'car_inside_color', 'car_documents', 'transmission_type',
-                            'currency_type', 'regular_price', 'sale_price', 'description'
+                            'currency_type', 'regular_price', 'description'
                         ]);
                     }
 
@@ -1167,7 +1146,7 @@
             const fields = [
                 'title', 'year', 'make', 'body_type', 'car_condition', 'vin_number', 'location',
                 'model', 'car_color', 'car_inside_color', 'car_documents', 'transmission_type',
-                'regular_price', 'currency_type', 'sale_price', 'image', 'video'
+                'regular_price', 'currency_type', 'image', 'video'
             ];
 
 
