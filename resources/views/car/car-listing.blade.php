@@ -728,7 +728,7 @@
                                         <div class="search-result-info">
                                             <div class="search-result-title">${car.year} ${car.make} ${car.model}</div>
                                             <div class="search-result-vin">VIN: ${car.VIN_number}</div>
-                                            <div class="search-result-price">$${car.sale_price}</div>
+                                            <div class="search-result-price">$${car.regular_price}</div>
                                         </div>
                                     `);
                         carDiv.click(() => window.location.href = `/car/show/${car.id}`);
@@ -1014,7 +1014,7 @@
                                 <div class="price d-flex justify-content-between gap-2 ${currentView == 'list' ? 'my-3': ''}">
                                     <div>
                                         <span class="old-price">$${car.regular_price}</span>
-                                        <span class="new-price">$${car.sale_price}</span>
+                                        <span class="new-price">$${car.regular_price}</span>
                                     </div>    
                                     ${currentView === 'list' ? details_button : ''}
                                 </div>
