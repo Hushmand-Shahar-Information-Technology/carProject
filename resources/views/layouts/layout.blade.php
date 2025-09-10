@@ -196,6 +196,9 @@
                                         </ul>
                                     </li>
                                     <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
+                                        <a href="{{ route('promotions.index') }}">Promoted</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
                                         <a href="{{ route('user.profile') }}">Profile</a>
                                     </li>
 

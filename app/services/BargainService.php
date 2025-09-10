@@ -48,6 +48,8 @@ class BargainService
         if (!$bargain->exists) {
             $bargain->registration_number = $this->generateRegistrationNumber();
             $bargain->edit_frequent = 0; // default for new
+            $bargain->registration_status = 'pending'; // default status for new registrations
+            $bargain->restriction_count = 0;
         } else {
             // Increment edit_frequent on update
             $bargain->edit_frequent += 1;

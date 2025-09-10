@@ -22,6 +22,13 @@ return new class extends Migration {
             $table->date('contract_end_date')->nullable();
             $table->integer('edit_frequent')->default(0);
             $table->enum('status', ['one-time', 'more-time'])->default('one-time');
+            
+            // Registration status management columns
+            $table->enum('registration_status', ['pending', 'approved', 'blocked', 'restricted'])->default('pending');
+            $table->integer('restriction_count')->default(0);
+            $table->text('status_reason')->nullable();
+            $table->timestamp('status_updated_at')->nullable();
+            
             $table->timestamps();
         });
     }
