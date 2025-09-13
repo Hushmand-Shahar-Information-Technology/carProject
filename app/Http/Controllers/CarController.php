@@ -48,6 +48,7 @@ class CarController extends Controller
     {
         $cars = Car::query()
             ->with('bargain')
+            ->where('is_for_rent', '!=', 0)
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
