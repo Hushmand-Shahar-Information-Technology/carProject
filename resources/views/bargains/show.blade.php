@@ -383,7 +383,7 @@
                 return;
             }
 
-            // ... existing promotion code ...
+            // Promotion buttons
             const btn = e.target.closest('#btn-promote-bargain');
             if (!btn) return;
             e.preventDefault();
@@ -399,22 +399,35 @@
                             type: 'bargain',
                             id: {{ $bargain->id }}
                         })
-                        .then(() => {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Unpromoted',
-                                timer: 1200,
-                                showConfirmButton: false
-                            });
-                            btn.textContent = 'Promote';
-                            clearPromotionCountdown('bargain-promotion-ends-at');
-                            const label = document.getElementById('bargain-promotion-ends-at');
-                            if (label) {
-                                label.removeAttribute('data-ends-at');
-                                label.textContent = '';
+                        .then(res => {
+                            if (res.data.status === 'ok') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Unpromoted',
+                                    timer: 1200,
+                                    showConfirmButton: false
+                                });
+                                btn.textContent = 'Promote';
+                                clearPromotionCountdown('bargain-promotion-ends-at');
+                                const label = document.getElementById('bargain-promotion-ends-at');
+                                if (label) {
+                                    label.removeAttribute('data-ends-at');
+                                    label.textContent = '';
+                                }
+                            } else {
+                                Swal.fire('Error', res.data.message || 'Failed to unpromote', 'error');
                             }
                         })
-                        .catch(() => Swal.fire('Error', 'Failed to unpromote', 'error'));
+                        .catch(error => {
+                            console.error('Unpromotion error:', error);
+                            let errorMessage = 'Failed to unpromote';
+                            if (error.response && error.response.data && error.response.data.message) {
+                                errorMessage = error.response.data.message;
+                            } else if (error.message) {
+                                errorMessage = error.message;
+                            }
+                            Swal.fire('Error', errorMessage, 'error');
+                        });
                 });
                 return;
             }
@@ -439,29 +452,42 @@
                         days
                     })
                     .then(res => {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Promoted',
-                            text: `Ends: ${res.data.ends_at}`,
-                            timer: 1600,
-                            showConfirmButton: false
-                        });
-                        btn.textContent = 'Promoted';
-                        // Insert/refresh countdown label
-                        let label = document.getElementById('bargain-promotion-ends-at');
-                        if (!label) {
-                            btn.parentElement.insertAdjacentHTML('beforeend',
-                                '<div class="small text-muted mt-1"><span id="bargain-promotion-ends-at"></span></div>'
-                            );
-                            label = document.getElementById('bargain-promotion-ends-at');
-                        }
-                        if (res.data.ends_at) {
-                            label.setAttribute('data-ends-at', new Date(res.data.ends_at)
-                                .toISOString());
-                            startPromotionCountdown('bargain-promotion-ends-at');
+                        if (res.data.status === 'ok') {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Promoted',
+                                text: `Ends: ${res.data.ends_at}`,
+                                timer: 1600,
+                                showConfirmButton: false
+                            });
+                            btn.textContent = 'Promoted';
+                            // Insert/refresh countdown label
+                            let label = document.getElementById('bargain-promotion-ends-at');
+                            if (!label) {
+                                btn.parentElement.insertAdjacentHTML('beforeend',
+                                    '<div class="small text-muted mt-1"><span id="bargain-promotion-ends-at"></span></div>'
+                                );
+                                label = document.getElementById('bargain-promotion-ends-at');
+                            }
+                            if (res.data.ends_at) {
+                                label.setAttribute('data-ends-at', new Date(res.data.ends_at)
+                                    .toISOString());
+                                startPromotionCountdown('bargain-promotion-ends-at');
+                            }
+                        } else {
+                            Swal.fire('Error', res.data.message || 'Failed to promote', 'error');
                         }
                     })
-                    .catch(() => Swal.fire('Error', 'Failed to promote', 'error'));
+                    .catch(error => {
+                        console.error('Promotion error:', error);
+                        let errorMessage = 'Failed to promote';
+                        if (error.response && error.response.data && error.response.data.message) {
+                            errorMessage = error.response.data.message;
+                        } else if (error.message) {
+                            errorMessage = error.message;
+                        }
+                        Swal.fire('Error', errorMessage, 'error');
+                    });
             });
         });
 
