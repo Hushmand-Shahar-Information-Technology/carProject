@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
             'user' => \App\Models\User::class,
             'car' => \App\Models\Car::class,
             'bargain' => \App\Models\Bargain::class,
+            'promotion' => \App\Models\Promotion::class,
             // Fallbacks for legacy namespaces
             'App\\User' => \App\Models\User::class,
             'App\\Car' => \App\Models\Car::class,
@@ -35,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
             'App\\Models\\User' => \App\Models\User::class,
             'App\\Models\\Car' => \App\Models\Car::class,
             'App\\Models\\Bargain' => \App\Models\Bargain::class,
+            'App\\Models\\Promotion' => \App\Models\Promotion::class,
         ]);
     }
 }
