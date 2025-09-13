@@ -1,0 +1,4 @@
+set ssl:verify-certificate no
+open -p 65002 -u u285585646,Wardak@1161997 46.28.46.86
+mirror -R --verbose --only-newer --parallel=10 . /home/u285585646/domains/topmotar.com/public_html/beta
+bye

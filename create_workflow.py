@@ -1,4 +1,5 @@
-name: Deploy to Hostinger
+workflow_content = '''name: Deploy to Hostinger
+
 on:
   push:
     branches:
@@ -9,30 +10,39 @@ on:
       - production
       - main
   workflow_dispatch:
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring,intl,gd,xml,dom,json,fileinfo,curl,zip,pdo,pdo_mysql
+          extensions: mbstring, intl, gd, xml, dom, json, fileinfo, curl, zip, pdo, pdo_mysql
           coverage: none
+
       - name: Check PHP version
         run: php -v
+
       - name: Check Composer installation
         run: composer --version
+
       - name: Install dependencies
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
+
       - name: Install lftp
         run: |
           sudo apt-get update
           sudo apt-get install -y lftp
+
       - name: Deploy via lftp
         run: |
           echo "Deploying files to Hostinger via lftp"
@@ -50,6 +60,7 @@ jobs:
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
           HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
           HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
+
       - name: Run Laravel post-deployment commands via SSH
         run: |
           ssh -o StrictHostKeyChecking=no -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
@@ -69,3 +80,7 @@ jobs:
           HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
           HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
           HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
+'''
+
+with open('.github/workflows/laravel.yml', 'w') as f:
+    f.write(workflow_content)
