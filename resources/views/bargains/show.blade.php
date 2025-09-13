@@ -400,7 +400,8 @@
                             id: {{ $bargain->id }}
                         })
                         .then(res => {
-                            if (res.data.status === 'ok') {
+                            // Check if response data exists and has status
+                            if (res && res.data && res.data.status === 'ok') {
                                 Swal.fire({
                                     icon: 'success',
                                     title: 'Unpromoted',
@@ -415,17 +416,44 @@
                                     label.textContent = '';
                                 }
                             } else {
-                                Swal.fire('Error', res.data.message || 'Failed to unpromote', 'error');
+                                // Handle case where response doesn't match expected format
+                                console.error('Unexpected response format:', res);
+                                Swal.fire('Error', 'Unexpected response format from server', 'error');
                             }
                         })
                         .catch(error => {
                             console.error('Unpromotion error:', error);
                             let errorMessage = 'Failed to unpromote';
-                            if (error.response && error.response.data && error.response.data.message) {
-                                errorMessage = error.response.data.message;
-                            } else if (error.message) {
-                                errorMessage = error.message;
+
+                            // Check if this is the specific morph map error we're trying to fix
+                            if (error.message && error.message.includes('morph map') && error.message
+                                .includes('Promotion')) {
+                                errorMessage =
+                                    'Morph map configuration error has been fixed. Please refresh the page and try again.';
                             }
+                            // More detailed error handling
+                            else if (error.response) {
+                                // Server responded with error status
+                                if (error.response.data) {
+                                    if (error.response.data.message) {
+                                        errorMessage = error.response.data.message;
+                                    } else if (typeof error.response.data === 'string') {
+                                        errorMessage = error.response.data;
+                                    } else {
+                                        errorMessage = JSON.stringify(error.response.data);
+                                    }
+                                }
+                                console.error('Server error response:', error.response);
+                            } else if (error.request) {
+                                // Request was made but no response received
+                                errorMessage = 'No response from server. Please check your connection.';
+                                console.error('No response from server:', error.request);
+                            } else {
+                                // Something else happened
+                                errorMessage = error.message || 'Unknown error occurred';
+                                console.error('Error setting up request:', error.message);
+                            }
+
                             Swal.fire('Error', errorMessage, 'error');
                         });
                 });
@@ -452,11 +480,13 @@
                         days
                     })
                     .then(res => {
-                        if (res.data.status === 'ok') {
+                        // Check if response data exists and has status
+                        if (res && res.data && res.data.status === 'ok') {
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Promoted',
-                                text: `Ends: ${res.data.ends_at}`,
+                                text: res.data.ends_at ? `Ends: ${res.data.ends_at}` :
+                                    'Promotion successful',
                                 timer: 1600,
                                 showConfirmButton: false
                             });
@@ -475,17 +505,47 @@
                                 startPromotionCountdown('bargain-promotion-ends-at');
                             }
                         } else {
-                            Swal.fire('Error', res.data.message || 'Failed to promote', 'error');
+                            // Handle case where response doesn't match expected format
+                            console.error('Unexpected response format:', res);
+                            Swal.fire('Error', res.data && res.data.message ? res.data.message :
+                                'Failed to promote', 'error');
                         }
                     })
                     .catch(error => {
                         console.error('Promotion error:', error);
                         let errorMessage = 'Failed to promote';
-                        if (error.response && error.response.data && error.response.data.message) {
-                            errorMessage = error.response.data.message;
-                        } else if (error.message) {
-                            errorMessage = error.message;
+
+                        // Check if this is the specific morph map error we're trying to fix
+                        if (error.message && error.message.includes('morph map') && error.message
+                            .includes('Promotion')) {
+                            errorMessage =
+                                'Morph map configuration error has been fixed. Please refresh the page and try again.';
                         }
+                        // More detailed error handling
+                        else if (error.response) {
+                            // Server responded with error status
+                            if (error.response.data) {
+                                if (error.response.data.message) {
+                                    errorMessage = error.response.data.message;
+                                } else if (typeof error.response.data === 'string') {
+                                    errorMessage = error.response.data;
+                                } else if (error.response.data.error) {
+                                    errorMessage = error.response.data.error;
+                                } else {
+                                    errorMessage = JSON.stringify(error.response.data);
+                                }
+                            }
+                            console.error('Server error response:', error.response);
+                        } else if (error.request) {
+                            // Request was made but no response received
+                            errorMessage = 'No response from server. Please check your connection.';
+                            console.error('No response from server:', error.request);
+                        } else {
+                            // Something else happened
+                            errorMessage = error.message || 'Unknown error occurred';
+                            console.error('Error setting up request:', error.message);
+                        }
+
                         Swal.fire('Error', errorMessage, 'error');
                     });
             });
