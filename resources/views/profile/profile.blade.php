@@ -51,17 +51,22 @@
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
+            background-color: #f8f9fa;
+            /* Light background for inactive tabs */
         }
 
         .nav-tabs .nav-link.active {
             color: #fff;
-            background: none;
+            background-color: #363636;
+            /* Dark background for active tab */
             border-bottom: 1px solid #fff;
         }
 
         .nav-tabs .nav-link:hover {
             color: #fff;
             border: none;
+            background-color: #555;
+            /* Hover effect */
         }
 
         .posts-grid {
@@ -134,6 +139,11 @@
             top: 10px;
             right: 10px;
             z-index: 10;
+        }
+
+        /* Ensure text is visible on dark background */
+        .dark-bg-text {
+            color: #fff;
         }
     </style>
     <!--================================ -->
