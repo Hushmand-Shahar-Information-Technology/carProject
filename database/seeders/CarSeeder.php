@@ -51,6 +51,19 @@ class CarSeeder extends Seeder
             ['images/car/01.jpg', 'images/car/02.jpg'],
             ['images/car/03.jpg', 'images/car/04.jpg'],
             ['images/car/05.jpg', 'images/car/06.jpg'],
+            ['images/car/06.jpg', 'images/car/06.jpg'],
+            ['images/car/07.jpg', 'images/car/06.jpg'],
+            ['images/car/08.jpg', 'images/car/06.jpg'],
+            ['images/car/09.jpg', 'images/car/06.jpg'],
+            ['images/car/10.jpg', 'images/car/06.jpg'],
+            ['images/car/11.jpg', 'images/car/06.jpg'],
+            ['images/car/12.jpg', 'images/car/06.jpg'],
+            ['images/car/13.png', 'images/car/14.png'],
+            ['images/car/15.jpg', 'images/car/16.jpg'],
+            ['images/car/17.jpg', 'images/car/18.png'],
+            ['images/car/19.jpg', 'images/car/21.jpg'],
+            ['images/car/22.jpg', 'images/car/23.png'],
+            ['images/car/24.jpg', 'images/car/25.jpg'],
         ];
 
         $videosList = [
