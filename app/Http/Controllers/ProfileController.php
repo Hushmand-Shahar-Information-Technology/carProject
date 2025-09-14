@@ -21,11 +21,11 @@ class ProfileController extends Controller
         $profile->load(['cars.offers']);
         // Get bargains associated with the user (based on email match for now)
         $bargains = \App\Models\Bargain::where('email', $profile->email)->with('promotions')->get();
-        
+
         // Debug: Log the user email and bargain count
         \Log::info('User email: ' . $profile->email);
         \Log::info('Bargain count: ' . $bargains->count());
-        
+
         return view('profile.profile', compact('profile', 'bargains'));
     }
     public function edit(Request $request): View
