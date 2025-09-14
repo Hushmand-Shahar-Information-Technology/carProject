@@ -42,6 +42,7 @@ return new class extends Migration
             $table->decimal('request_price', 10, 2)->nullable();
             $table->json('images')->nullable();
             $table->json('videos')->nullable();
+            $table->unsignedBigInteger('views')->default(0);
             $table->timestamps();
         });
     }

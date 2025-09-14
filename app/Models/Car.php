@@ -44,6 +44,7 @@ class Car extends BaseModel
         'is_promoted',
         'rent_price_per_day',
         'rent_price_per_month',
+        'views',
     ];
 
     protected $casts = [
@@ -82,4 +83,8 @@ class Car extends BaseModel
     {
         return $this->hasMany(Offer::class);
     }
+
+   public function auctions(){
+    return $this->hasMany(Auction::class);
+   }
 }

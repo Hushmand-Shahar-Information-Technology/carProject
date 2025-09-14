@@ -51,17 +51,22 @@
             font-weight: 600;
             letter-spacing: 1px;
             text-transform: uppercase;
+            background-color: #f8f9fa;
+            /* Light background for inactive tabs */
         }
 
         .nav-tabs .nav-link.active {
             color: #fff;
-            background: none;
+            background-color: #363636;
+            /* Dark background for active tab */
             border-bottom: 1px solid #fff;
         }
 
         .nav-tabs .nav-link:hover {
             color: #fff;
             border: none;
+            background-color: #555;
+            /* Hover effect */
         }
 
         .posts-grid {
@@ -111,6 +116,59 @@
             color: blue;
             text-decoration: underline;
         }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .promotion-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .promotion-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge-promotion {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 10;
+        }
+
+        /* Fix for tab content text visibility */
+        #bargains-tab {
+            color: #212529;
+            /* Dark text for better visibility */
+        }
+
+        /* Ensure all text is visible on all backgrounds */
+        .car-content a {
+            color: #212529;
+            /* Dark text for links */
+        }
+
+        .car-content a:hover {
+            color: #000;
+            /* Darker text on hover */
+        }
+
+        .car-content {
+            color: #212529;
+            /* Dark text for all content */
+        }
+
+        /* Improve card styling */
+        .car-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
     </style>
     <!--================================ -->
     <section class="inner-intro bg-8 bg-overlay-black-70">
@@ -129,7 +187,7 @@
                 </div>
             </div>
         </div>
-    </section>`
+    </section>
 
 
     <div class="container">
@@ -173,6 +231,10 @@
                                     <div class="col border-start">
                                         <h6 style="cursor: pointer;" class="hover-state">Offers</h6>
                                         <strong>{{ $profile->cars->sum(fn($car) => $car->offers->count()) }}</strong>
+                                    </div>
+                                    <div class="col border-start">
+                                        <h6>Bargains</h6>
+                                        <strong>{{ $bargains->count() }}</strong>
                                     </div>
                                 </div>
                             </div>
@@ -242,47 +304,141 @@
             </div>
         </a>
 
-        {{-- <div class="col-lg-9 col-md-8"> --}}
-        <div class="sorting-options-main">
-            <div class="row">
-                @foreach ($profile->cars as $car)
-                    <div class="col-lg-4 col-sm-6 mb-4">
-                        <div class="car-item gray-bg text-center">
-                            <div class="car-image">
-                                <img class="img-fluid" src="{{ asset('storage/' . $car->images[0]) }}" alt="">
-                                <div class="car-overlay-banner">
-                                    <ul>
-                                        <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a></li>
-                                        <li><a href="{{ route('car.show', $car->id) }}"><i
-                                                    class="fa fa-shopping-cart"></i></a></li>
+        <!-- Tab Navigation -->
+        <ul class="nav nav-tabs mb-4">
+            <li class="nav-item">
+                <a class="nav-link active" data-tab="cars">Cars ({{ $profile->cars->count() }})</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="bargains">Bargains ({{ $bargains->count() }})</a>
+            </li>
+        </ul>
+
+        <!-- Cars Tab Content -->
+        <div id="cars-tab" class="tab-content active">
+            <div class="sorting-options-main">
+                <div class="row">
+                    @forelse ($profile->cars as $car)
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="car-item gray-bg text-center promotion-card">
+                                @if ($car->is_promoted)
+                                    <span class="badge bg-success badge-promotion">Promoted</span>
+                                @endif
+                                <div class="car-image">
+                                    @if (isset($car->images[0]))
+                                        <img class="img-fluid" src="{{ asset('storage/' . $car->images[0]) }}"
+                                            alt="{{ $car->title }}">
+                                    @else
+                                        <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
+                                            alt="Default Car Image">
+                                    @endif
+                                    <div class="car-overlay-banner">
+                                        <ul>
+                                            <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a>
+                                            </li>
+                                            <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                        class="fa fa-shopping-cart"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="car-list">
+                                    <ul class="list-inline">
+                                        <li><i class="fa fa-registered"></i> {{ $car->year }}</li>
+                                        <li><i class="fa fa-cog"></i> {{ $car->transmission_type }} </li>
+                                        <li><i class="fa fa-shopping-cart"></i> {{ $car->currency_type }}
+                                            {{ number_format($car->regular_price) }}</li>
                                     </ul>
                                 </div>
-                            </div>
-                            <div class="car-list">
-                                <ul class="list-inline">
-                                    <li><i class="fa fa-registered"></i>{{ $car->year }}</li>
-                                    <li><i class="fa fa-cog"></i> {{ $car->transmission_type }} </li>
-                                    <li><i class="fa fa-shopping-cart"></i>{{ $car->currency }}</li>
-                                </ul>
-                            </div>
-                            <div class="car-content">
-                                <div class="star">
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star-o orange-color"></i>
-                                </div>
-                                <a href="#">Acura Rsx</a>
-                                <div class="separator"></div>
-                                <div class="price">
-                                    <span class="old-price">${{ $car->regular_price }}</span>
-                                    <span class="new-price">${{ $car->regular_price }}</span>
+                                <div class="car-content">
+                                    <div class="star">
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star-o orange-color"></i>
+                                    </div>
+                                    <a href="{{ route('car.show', $car->id) }}">{{ $car->make }}
+                                        {{ $car->model }}</a>
+                                    <div class="separator"></div>
+                                    <div class="price">
+                                        <span class="new-price">{{ $car->currency_type }}
+                                            {{ number_format($car->regular_price) }}</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                @endforeach
+                    @empty
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-car me-2"></i> No cars posted yet.
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+        </div>
+
+        <!-- Bargains Tab Content -->
+        <div id="bargains-tab" class="tab-content">
+            <div class="sorting-options-main">
+                <div class="row">
+                    @forelse ($bargains as $bargain)
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="car-item gray-bg text-center promotion-card">
+                                @if ($bargain->promotions->isNotEmpty())
+                                    <span class="badge bg-success badge-promotion">Promoted</span>
+                                @endif
+                                <div class="car-image">
+                                    @if ($bargain->profile_image)
+                                        <img class="img-fluid" src="{{ asset('storage/' . $bargain->profile_image) }}"
+                                            alt="{{ $bargain->name }}">
+                                    @else
+                                        <img class="img-fluid" src="{{ asset('images/02.png') }}" alt="Default Profile">
+                                    @endif
+                                    <div class="car-overlay-banner">
+                                        <ul>
+                                            <li><a href="{{ route('bargains.show', $bargain->id) }}"><i
+                                                        class="fa fa-link"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="car-list">
+                                    <ul class="list-inline">
+                                        <li><i class="fa fa-user"></i> {{ $bargain->username }}</li>
+                                        <li><i class="fa fa-globe"></i> {{ $bargain->website ?? 'N/A' }}</li>
+                                        <li><i class="fa fa-file-contract"></i> {{ ucfirst($bargain->status) }}</li>
+                                    </ul>
+                                </div>
+                                <div class="car-content">
+                                    <div class="star">
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star-o orange-color"></i>
+                                    </div>
+                                    <a href="{{ route('bargains.show', $bargain->id) }}">{{ $bargain->name }}</a>
+                                    <div class="separator"></div>
+                                    <div class="price">
+                                        <span class="new-price">Bargain Registration</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        <span class="badge bg-info">Bargain</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-handshake me-2"></i> No bargains registered yet.
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
             </div>
         </div>
     </div>
@@ -292,12 +448,23 @@
             const section = document.getElementById('offer-section');
             section.style.display = section.style.display === 'none' ? 'block' : 'none';
         }
-        // Add click functionality to tabs
+
+        // Tab switching functionality
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
+
+                // Remove active class from all tabs
                 document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove(
+                    'active'));
+
+                // Add active class to clicked tab
                 this.classList.add('active');
+
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId + '-tab').classList.add('active');
             });
         });
 

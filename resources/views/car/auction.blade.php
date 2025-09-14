@@ -457,6 +457,68 @@
                 margin: 24px 0 32px 0;
             }
         }
+
+        /* Auction-specific styling */
+        .auction-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 10;
+            box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            animation: pulse 2s infinite;
+        }
+        
+        .auction-badge.ended {
+            background: linear-gradient(45deg, #6c757d, #495057);
+            animation: none;
+            box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3); }
+            50% { box-shadow: 0 4px 16px rgba(255, 107, 107, 0.6); }
+            100% { box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3); }
+        }
+
+        .auction-timer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .auction-timer.expired {
+            background: rgba(220, 53, 69, 0.9);
+        }
+
+        .auction-timer.urgent {
+            background: rgba(255, 193, 7, 0.9);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+
+        .auction-starting-price {
+            background: rgba(40, 167, 69, 0.1);
+            border: 1px solid rgba(40, 167, 69, 0.3);
+            color: #28a745;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            margin-top: 4px;
+        }
     </style>
     <!--=================================banner -->
 
@@ -925,13 +987,6 @@
 
                     $.each(cars, function(index, car) {
                         let images;
-                        // try {
-                        //     images = JSON.parse(car.images || '[]');
-                        // } catch (e) {
-                        //     console.log('second')
-                        //     // If parsing fails, treat it as a single string
-                        //     images = car.images ? [car.images] : [];
-                        // }
                         // if images are json
                         if (typeof car.images === 'object') {
                             images = car.images;
@@ -944,6 +999,32 @@
                         const bargain_url = car.bargain ?
                             bargain_show.replace('__ID__', car.bargain.id) :
                             null;
+                        
+                        // Get auction information
+                        const auction = car.auctions && car.auctions.length > 0 ? car.auctions[0] : null;
+                        let auctionBadge = '';
+                        let auctionStartingPrice = auction ? auction.starting_price : car.regular_price;
+                        
+                        if (auction) {
+                            if (auction.status === 'active') {
+                                auctionBadge = '<div class="auction-badge"><i class="fa fa-gavel"></i> AUCTION</div>';
+                            } else if (auction.status === 'ended') {
+                                auctionBadge = '<div class="auction-badge ended"><i class="fa fa-flag-checkered"></i> ENDED</div>';
+                            }
+                        }
+                        
+                        // Create auction timer
+                        let auctionTimer = '';
+                        if (auction) {
+                            if (auction.status === 'ended') {
+                                auctionTimer = '<div class="auction-timer expired">Auction Ended</div>';
+                            } else if (auction.end_at) {
+                                auctionTimer = `<div class="auction-timer" data-end-time="${auction.end_at}">Loading...</div>`;
+                            } else if (auction.auction_type === 'open') {
+                                auctionTimer = '<div class="auction-timer">Open Auction - No End Time</div>';
+                            }
+                        }
+                        
                         const carDiv = $(`<div style="color: #a0a0a0">`);
                         const title = `<h4>${car.title}</h4>`;
                         const details_button = `
@@ -983,7 +1064,8 @@
 
                         <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
 
-                            <div class="car-item gray-bg text-center">
+                            <div class="car-item gray-bg text-center position-relative">
+                                ${auctionBadge}
                                 <div class="car-image">
                                     <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
                                     <div class="car-overlay-banner">
@@ -997,6 +1079,7 @@
                                         </ul>
                                     </div>
                                 </div>
+                                ${auctionTimer ? auctionTimer : "Not Started" }
                             </div>
 
                         </div>
@@ -1014,7 +1097,8 @@
                                 <div class="price d-flex justify-content-between gap-2 ${currentView == 'list' ? 'my-3': ''}">
                                     <div>
                                         <span class="old-price">$${car.regular_price}</span>
-                                        <span class="new-price">$${car.regular_price}</span>
+                                        <span class="new-price">$${auctionStartingPrice}</span>
+                                        
                                     </div>    
                                     ${currentView === 'list' ? details_button : ''}
                                 </div>
@@ -1048,12 +1132,60 @@
                     });
 
                     renderPagination(meta);
+                    
+                    // Initialize countdown timers for auctions
+                    initializeAuctionTimers();
                 })
                 .catch(error => {
                     console.error('Error fetching cars:', error);
                     container.innerHTML = '<p>Failed to load cars.</p>';
                     renderPagination(null);
                 });
+        }
+
+        // Initialize auction countdown timers
+        function initializeAuctionTimers() {
+            $('.auction-timer').each(function() {
+                const $timer = $(this);
+                const endTime = new Date($timer.data('end-time')).getTime();
+                const $timerText = $timer;
+
+                function updateTimer() {
+                    const now = new Date().getTime();
+                    const distance = endTime - now;
+
+                    if (distance < 0) {
+                        $timerText.text('Auction Ended');
+                        $timer.addClass('expired');
+                        return;
+                    }
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    let timeString = '';
+                    if (days > 0) {
+                        timeString = `${days}d ${hours}h ${minutes}m`;
+                    } else if (hours > 0) {
+                        timeString = `${hours}h ${minutes}m ${seconds}s`;
+                    } else {
+                        timeString = `${minutes}m ${seconds}s`;
+                    }
+
+                    $timerText.text(timeString);
+
+                    // Add urgency styling for last hour
+                    if (distance < 3600000) { // 1 hour in milliseconds
+                        $timer.addClass('urgent');
+                    }
+                }
+
+                // Update immediately and then every second
+                updateTimer();
+                setInterval(updateTimer, 1000);
+            });
         }
 
         function applyFilters() {

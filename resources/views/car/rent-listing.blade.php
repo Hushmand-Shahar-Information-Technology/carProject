@@ -19,6 +19,151 @@
             background: #db2d2e;
             color: #fff;
         }
+
+        /* Enhanced Price Styling - Different for Grid and List Views */
+        .price-container {
+            margin: 10px 0;
+        }
+
+        /* Grid View - Simple and Compact Design */
+        .grid-item .price-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            border-left: 3px solid #db2d2e;
+        }
+
+        .grid-item .price-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 4px 0;
+        }
+
+        .grid-item .price-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .grid-item .price-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+
+        .grid-item .price-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #db2d2e;
+        }
+
+        .grid-item .price-currency {
+            font-size: 12px;
+            color: #495057;
+        }
+
+        .grid-item .price-badge {
+            background: #db2d2e;
+            color: white;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        /* List View - Beautiful and Detailed Design */
+        .car-grid .price-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #db2d2e;
+        }
+
+        .car-grid .price-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .car-grid .price-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .car-grid .price-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .car-grid .price-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .car-grid .price-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #db2d2e;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .car-grid .price-currency {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .car-grid .price-icon {
+            width: 16px;
+            height: 16px;
+            background: #db2d2e;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .car-grid .price-badge {
+            background: linear-gradient(45deg, #db2d2e, #ff4757);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-left: 8px;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .price-container {
+                padding: 12px;
+            }
+            .price-value {
+                font-size: 14px;
+            }
+            .price-label {
+                font-size: 11px;
+            }
+        }
     </style>
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
@@ -264,9 +409,27 @@
                                 <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
                                     <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                         ${currentView === 'list' ? `<h4>${car.title ?? ''}</h4>` : ''}
-                                        <div class="price d-flex align-items-center gap-2">
-                                            <span class="old-price">Daily $${car.rent_price_per_day ?? ''}</span>
-                                            <span class="new-price">30Days $${car.rent_price_per_month ??  ''}</span>
+                                        <div class="price-container">
+                                            <div class="price-item">
+                                                <div class="price-label">
+                                                    ${currentView === 'list' ? '<span class="price-icon">📅</span>' : ''}
+                                                    Daily
+                                                </div>
+                                                <div class="price-value">
+                                                    <span class="price-currency">$</span>${car.rent_price_per_day ?? ''}
+                                                    <span class="price-badge">${currentView === 'list' ? 'Per Day' : '/day'}</span>
+                                                </div>
+                                            </div>
+                                            <div class="price-item">
+                                                <div class="price-label">
+                                                    ${currentView === 'list' ? '<span class="price-icon">📆</span>' : ''}
+                                                    Monthly
+                                                </div>
+                                                <div class="price-value">
+                                                    <span class="price-currency">$</span>${car.rent_price_per_month ?? ''}
+                                                    <span class="price-badge">${currentView === 'list' ? '30 Days' : '/month'}</span>
+                                                </div>
+                                            </div>
                                         </div>
                                         <div class="car-list">
                                             <ul class="list-inline" style="font-size: 12px;">

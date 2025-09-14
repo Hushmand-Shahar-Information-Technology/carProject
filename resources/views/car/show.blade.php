@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                                                                 inner-intro -->
+                                                                                                                                                                                                                                                                             inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -75,6 +75,55 @@
             background: #b91c1c;
             color: white;
         }
+
+        /* Auction Timer Styling */
+        .auction-timer-container {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .auction-timer {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+
+        .auction-timer.urgent {
+            animation: pulse-urgent 1s infinite;
+            color: #ffeb3b;
+        }
+
+        .auction-timer.expired {
+            color: #ff5252;
+            animation: none;
+        }
+
+        @keyframes pulse-urgent {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.7; }
+        }
+
+        .auction-info {
+            text-align: center;
+        }
+
+        .auction-starting-price {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .ended-auction {
+            background: linear-gradient(135deg, #6c757d, #495057) !important;
+        }
+        
+        .ended-auction .auction-timer {
+            background: rgba(108, 117, 125, 0.9) !important;
+        }
     </style>
 
     <section class="inner-intro bg-6 bg-overlay-black-70">
@@ -118,6 +167,10 @@
                 </div>
                 <div class="col-md-3">
                     <div class="car-price text-md-end">
+                        <div class="d-flex align-items-center justify-content-end mb-2">
+                            <i class="fa fa-eye me-1 text-muted"></i>
+                            <span class="text-muted">{{ $car->views }}</span>
+                        </div>
                         <strong>{{ $car->regular_price }}</strong>
                         <span>Plus Taxes & Licensing</span>
                         <div class="mt-2">
@@ -133,86 +186,172 @@
                     </div>
                 </div>
             </div>
+            
+            {{-- Auction Timer Section --}}
+            @if(isset($auction) && $auction)
+            <div class="auction-timer-container @if($auction->status === 'ended') ended-auction @endif">
+                <div class="auction-info">
+                    @if($auction->status === 'active')
+                        <h4><i class="fa fa-gavel"></i> AUCTION IN PROGRESS</h4>
+                    @else
+                        <h4><i class="fa fa-flag-checkered"></i> AUCTION ENDED</h4>
+                    @endif
+                    <div class="auction-starting-price">
+                        Starting Price: ${{ number_format($auction->starting_price, 2) }}
+                    </div>
+                    @if($auction->status === 'ended')
+                        <div class="auction-timer expired">
+                            Auction Ended on {{ $auction->end_at ? $auction->end_at->format('M d, Y \\a\\t g:i A') : 'N/A' }}
+                        </div>
+                    @elseif($auction->end_at)
+                        <div class="auction-timer" data-end-time="{{ $auction->end_at->toISOString() }}">
+                            Loading...
+                        </div>
+                    @else
+                        <div class="auction-timer">
+                            Open Auction - No End Time
+                        </div>
+                    @endif
+                    
+                    {{-- End Auction Button - Only show to auction owner for active auctions --}}
+                    @if($auction->status === 'active' && auth()->check() && $car->user_id === auth()->id())
+                    <div class="mt-3 text-center">
+                        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#endAuctionModal">
+                            <i class="fa fa-stop-circle"></i> End Auction Early
+                        </button>
+                    </div>
+                    @endif
+                </div>
+            </div>
+            @endif
+            
             <div class="row">
                 <div class="col-md-12">
                     <div class="details-nav">
                         <ul>
                             <li>
-                                <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                    <i class="fa fa-question-circle"></i>Request More Info
+                                <a href="#" data-bs-toggle="modal" data-bs-target="#auctionModal">
+                                    <i class="fa fa-question-circle"></i> Request to Auction
                                 </a>
-                                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
-                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog" role="document">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title" id="exampleModalLabel">Request More Info</h4>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                    aria-label="Close">×</button>
+
+                                <div class="modal fade" id="auctionModal" tabindex="-1" aria-labelledby="auctionModalLabel"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content rounded-3 shadow">
+                                            <div class="modal-header" style="background:#343a40;">
+                                                <h5 class="modal-title text-white" id="auctionModalLabel">Start an Auction
+                                                </h5>
+                                                <button type="button" class="btn-close btn-close-white"
+                                                    data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
-                                                <div id="rmi_notice" class="form-notice" style="display:none;"></div>
-                                                <p class="sub-title">Please fill out the information below and one of our
-                                                    representatives will contact you regarding your more information
-                                                    request. </p>
-                                                <form class="gray-form reset_css" id="rmi_form"
-                                                    action="https://themes.potenzaglobalsolutions.com/html/cardealer/post">
-                                                    <input type="hidden" name="action" value="request_more_info" />
-                                                    <div class="alrt">
-                                                        <span class="alrt"></span>
-                                                    </div>
+                                                <p class="text-muted">Set your car’s starting price and auction duration.
+                                                </p>
+
+                                                <form id="auctionForm" action="{{ route('auctions.store') }}"
+                                                    method="POST" data-max-price="<?= $car->regular_price ?>">
+                                                    @csrf
+                                                    <!-- Hidden car_id field -->
+                                                    <input type="hidden" name="car_id" value="{{ $car->id }}">
+                                                    
+                                                    <!-- Starting price -->
                                                     <div class="mb-3">
-                                                        <label class="form-label">Name*</label>
-                                                        <input type="text" class="form-control" name="rmi_name"
-                                                            id="rmi_name" />
+                                                        <label class="form-label">Price ($)*</label>
+                                                        <input type="number" class="form-control" name="starting_price"
+                                                            id="starting_price" required>
                                                     </div>
+
+                                                    <!-- Auction duration -->
                                                     <div class="mb-3">
-                                                        <label class="form-label">Email address*</label>
-                                                        <input type="text" class="form-control" name="rmi_email"
-                                                            id="rmi_email" />
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Phone*</label>
-                                                        <input type="text" class="form-control" id="rmi_phone"
-                                                            name="rmi_phone">
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label">Message</label>
-                                                        <textarea class="form-control" name="rmi_message" id="rmi_message"></textarea>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label class="form-label pe-3">Preferred Contact*</label>
-                                                        <div class="form-check form-check-inline">
+                                                        <label class="form-label">Auction Duration*</label>
+
+                                                        <div class="form-check" style="display: flex; align-items: center;">
                                                             <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault1">
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault1">
-                                                                Email
-                                                            </label>
+                                                                name="auction_type" id="fixed_time" value="fixed">
+                                                            <label class="form-check-label mt-1" for="fixed_time">Set
+                                                                duration</label>
                                                         </div>
-                                                        <div class="form-check form-check-inline">
+
+                                                        <!-- Hidden by default -->
+                                                        <input type="number" class="form-control mt-2" name="duration_days"
+                                                            id="duration_days" placeholder="Enter days (e.g. 4)"
+                                                            style="display:none;">
+
+                                                        <div class="form-check mt-2"
+                                                            style="display: flex; align-items: center;">
                                                             <input class="form-check-input" type="radio"
-                                                                name="flexRadioDefault" id="flexRadioDefault2" checked>
-                                                            <label class="form-check-label p-0 text-uppercase"
-                                                                for="flexRadioDefault2">
-                                                                Phone
-                                                            </label>
+                                                                name="auction_type" id="open_time" value="open" checked>
+                                                            <label class="form-check-label mt-1" for="open_time">Run until
+                                                                canceled</label>
                                                         </div>
                                                     </div>
+
+                                                    <!-- Message -->
                                                     <div class="mb-3">
-                                                        <div id="recaptcha1"></div>
+                                                        <label class="form-label">Message (optional)</label>
+                                                        <textarea class="form-control" name="message" id="message"></textarea>
                                                     </div>
-                                                    <div>
-                                                        <a class="button red" id="request_more_info_submit">Submit <i
-                                                                class="fa fa-spinner fa-spin fa-fw btn-loader"
-                                                                style="display: none;"></i></a>
-                                                    </div>
+
+                                                    <!-- Recaptcha -->
+                                                    <div class="mb-3" id="recaptcha1"></div>
+
+                                                    <!-- Submit -->
+                                                    <button type="submit" class="btn btn-danger w-100">
+                                                        Start Auction
+                                                        <i class="fa fa-spinner fa-spin fa-fw btn-loader"
+                                                            style="display: none;"></i>
+                                                    </button>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+
                             </li>
+                            
+                            {{-- End Auction Modal - Only show if there's an active auction --}}
+                            @if(isset($auction) && $auction && $auction->status === 'active' && auth()->check() && $car->user_id === auth()->id())
+                            <div class="modal fade" id="endAuctionModal" tabindex="-1" aria-labelledby="endAuctionModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content rounded-3 shadow">
+                                        <div class="modal-header" style="background: #dc3545;">
+                                            <h5 class="modal-title text-white" id="endAuctionModalLabel">
+                                                <i class="fa fa-exclamation-triangle"></i> End Auction Confirmation
+                                            </h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="text-center mb-3">
+                                                <i class="fa fa-gavel fa-3x text-warning mb-3"></i>
+                                                <h5>Are you sure you want to end this auction?</h5>
+                                                <p class="text-muted">This action cannot be undone. The auction will be permanently ended and no further bids can be placed.</p>
+                                            </div>
+                                            
+                                            <div class="alert alert-warning">
+                                                <strong>Auction Details:</strong><br>
+                                                Starting Price: ${{ number_format($auction->starting_price, 2) }}<br>
+                                                @if($auction->end_at)
+                                                    Originally scheduled to end: {{ $auction->end_at->format('M d, Y \\a\\t g:i A') }}
+                                                @else
+                                                    Type: Open Auction (No scheduled end time)
+                                                @endif
+                                            </div>
+                                            
+                                            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                    <i class="fa fa-times"></i> Cancel
+                                                </button>
+                                                <button type="button" class="btn btn-danger" id="confirmEndAuction">
+                                                    <i class="fa fa-stop-circle"></i> Yes, End Auction
+                                                    <i class="fa fa-spinner fa-spin" id="endAuctionSpinner" style="display: none;"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
+
                             <li>
                                 <a data-bs-toggle="modal" data-bs-target="#exampleModal3" data-whatever="@mdo"
                                     href="#" class="css_btn"><i class="fa fa-tag"></i>Make an Offer</a>
@@ -330,7 +469,7 @@
                                 <img class="img-fluid fixed-img" style="" src="/storage/{{ $image }}"
                                     alt="">
                             @endforeach
-                            {{-- <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="">
+                            {{-- <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/02.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/03.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/04.jpg') }}" alt="">
@@ -456,6 +595,34 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        // Display Laravel session messages with SweetAlert
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Success!',
+                text: '{{ session('success') }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        @endif
+
+        @if (session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: '{{ session('error') }}',
+                confirmButtonText: 'OK'
+            });
+        @endif
+
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error!',
+                html: '{!! implode('<br>', $errors->all()) !!}',
+                confirmButtonText: 'OK'
+            });
+        @endif
         document.addEventListener('click', function(e) {
             const btn = e.target.closest('#btn-promote-car');
             if (!btn) return;
@@ -718,6 +885,179 @@
                 ratio: 16 / 9,
                 autoplay: false
             }
+        });
+        document.addEventListener("DOMContentLoaded", function() {
+            const fixedRadio = document.getElementById("fixed_time");
+            const openRadio = document.getElementById("open_time");
+            const durationInput = document.getElementById("duration_days");
+            const auctionForm = document.getElementById("auctionForm");
+            
+            // Check if auction form exists before adding event listeners
+            if (!auctionForm) return;
+            
+            const maxPrice = parseFloat(auctionForm.dataset.maxPrice);
+
+            function toggleDuration() {
+                if (fixedRadio && fixedRadio.checked) {
+                    durationInput.style.display = "block";
+                    durationInput.required = true;
+                } else {
+                    durationInput.style.display = "none";
+                    durationInput.required = false;
+                    durationInput.value = ""; // clear if hidden
+                }
+            }
+
+            // Event listeners for radio buttons
+            if (fixedRadio) {
+                fixedRadio.addEventListener("change", toggleDuration);
+            }
+            if (openRadio) {
+                openRadio.addEventListener("change", toggleDuration);
+            }
+            toggleDuration(); // initial check
+
+            // Validate form before submit
+            auctionForm.addEventListener("submit", function(e) {
+                const amount = parseFloat(document.getElementById("starting_price").value);
+
+                if (isNaN(amount) || amount <= 0) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Price',
+                        text: 'Please enter a valid starting price.'
+                    });
+                    return;
+                }
+
+                if (amount >= maxPrice) {
+                    e.preventDefault();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Price Too High',
+                        text: `Starting price must be smaller than $${maxPrice}.`
+                    });
+                    return;
+                }
+
+                // Validate duration if "Set duration" is selected
+                if (fixedRadio && fixedRadio.checked) {
+                    const duration = parseInt(durationInput.value);
+                    if (isNaN(duration) || duration <= 0) {
+                        e.preventDefault();
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Invalid Duration',
+                            text: 'Please enter a valid auction duration in days.'
+                        });
+                        return;
+                    }
+                }
+            });
+            
+            // Initialize auction countdown timer
+            initializeAuctionTimer();
+        });
+        
+        function initializeAuctionTimer() {
+            const $timer = $('.auction-timer[data-end-time]');
+            if ($timer.length === 0) return;
+
+            const endTime = new Date($timer.data('end-time')).getTime();
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance < 0) {
+                    $timer.text('Auction Ended');
+                    $timer.addClass('expired');
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                let timeString = '';
+                if (days > 0) {
+                    timeString = `${days}d ${hours}h ${minutes}m`;
+                } else if (hours > 0) {
+                    timeString = `${hours}h ${minutes}m ${seconds}s`;
+                } else {
+                    timeString = `${minutes}m ${seconds}s`;
+                }
+
+                $timer.text(timeString);
+
+                // Add urgency styling for last hour
+                if (distance < 3600000) { // 1 hour in milliseconds
+                    $timer.addClass('urgent');
+                }
+            }
+
+            // Update immediately and then every second
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+        
+        // Handle end auction functionality
+        document.getElementById('confirmEndAuction')?.addEventListener('click', function() {
+            const button = this;
+            const spinner = document.getElementById('endAuctionSpinner');
+            
+            // Show loading state
+            button.disabled = true;
+            spinner.style.display = 'inline';
+            
+            // Make AJAX request to end auction
+            fetch('{{ route("auctions.end", ["id" => $auction->id ?? 0]) }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Auction Ended',
+                        text: 'Your auction has been successfully ended.',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // Reload the page to show updated status
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to end auction. Please try again.'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred. Please try again.'
+                });
+            })
+            .finally(() => {
+                // Hide loading state
+                button.disabled = false;
+                spinner.style.display = 'none';
+                // Close modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('endAuctionModal'));
+                modal?.hide();
+            });
         });
     </script>
 

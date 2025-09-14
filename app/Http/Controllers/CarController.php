@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class CarController extends Controller
@@ -48,6 +49,7 @@ class CarController extends Controller
     {
         $cars = Car::query()
             ->with('bargain')
+            ->where('is_for_rent', '!=', 1)
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -119,11 +121,7 @@ class CarController extends Controller
         $perPage = (int) ($request->integer('per_page') ?: 12);
 
         $cars = Car::query()
-            ->where(function ($q) {
-                $q->where('is_for_rent', true)
-                    ->orWhereNotNull('rent_price_per_day')
-                    ->orWhereNotNull('rent_price_per_month');
-            })
+            ->where('is_for_rent', true)
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -196,12 +194,18 @@ class CarController extends Controller
     }
 
     /**
-     * Filter only cars available for rent with pagination (12 per page).
+     * Filter cars for auction page - shows ONLY cars with active auctions.
      */
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            ->whereNotNull('regular_price')
+            // Show ONLY cars that have active auctions
+            ->whereHas('auctions', function ($subQuery) {
+                $subQuery->where('status', 'active');
+            })
+            ->with(['auctions' => function ($q) {
+                $q->where('status', 'active')->latest();
+            }])
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -216,11 +220,10 @@ class CarController extends Controller
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
-                // Use rent price if present; fall back to regular_price for range filtering compatibility
-                $q->where(function ($sub) use ($request) {
-                    $sub->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('regular_price', [$request->input('price_min'), $request->input('price_max')]);
+                // Use auction starting price for filtering
+                $q->whereHas('auctions', function ($auctionQuery) use ($request) {
+                    $auctionQuery->where('status', 'active')
+                                ->whereBetween('starting_price', [$request->input('price_min'), $request->input('price_max')]);
                 });
             })
             ->when($request->input('Year', []), function ($q, $years) {
@@ -247,11 +250,12 @@ class CarController extends Controller
             ->when($request->input('sort'), function ($q, $sort) {
                 match ($sort) {
                     'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, regular_price) ASC'),
+                    'price' => $q->orderByRaw('(SELECT starting_price FROM auctions WHERE auctions.car_id = cars.id AND auctions.status = "active" ORDER BY created_at DESC LIMIT 1) ASC'),
                     'date' => $q->orderByDesc('created_at'),
                     default => $q->latest(),
                 };
             }, function ($q) {
+                // Default sort by latest
                 $q->latest();
             })
             ->paginate(15)
@@ -303,7 +307,7 @@ class CarController extends Controller
             Log::info('Processed videos:', $videos);
 
             $carData = [
-                'user_id' => auth()->check() ? auth()->id() : 1, // Use authenticated user or default to 1
+                'user_id' => Auth::check() ? Auth::id() : 1, // Use authenticated user or default to 1
                 'bargain_id' => $data['bargain_id'] ?? null,
                 'title' => $data['title'],
                 'year' => $data['year'],
@@ -368,6 +372,10 @@ class CarController extends Controller
     public function show($id)
     {
         $car = Car::with('promotions')->findOrFail($id);
+
+        // Increment view count
+        $car->increment('views');
+
         $activePromotion = $car->promotions()
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
@@ -376,8 +384,12 @@ class CarController extends Controller
             ->first();
         $hasActivePromotion = (bool) $activePromotion;
         $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
+        
+        // Get the active auction for this car
+        $auction = $car->auctions->first();
+        
         $makes = Car::where('make', $car->make)->limit(10)->get();
-        return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt'));
+        return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt', 'auction'));
     }
 
     public function search(Request $request)

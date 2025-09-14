@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60cf036fb0bc1b40257f15632a9d075a",
+    "content-hash": "ea888dde4c025421cf8678cb066e7656",
     "packages": [
         {
             "name": "afsakar/filament-leaflet-map-picker",
@@ -3015,16 +3015,16 @@
         },
         {
             "name": "league/csv",
-            "version": "9.24.1",
+            "version": "9.25.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/csv.git",
-                "reference": "e0221a3f16aa2a823047d59fab5809d552e29bc8"
+                "reference": "f856f532866369fb1debe4e7c5a1db185f40ef86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/e0221a3f16aa2a823047d59fab5809d552e29bc8",
-                "reference": "e0221a3f16aa2a823047d59fab5809d552e29bc8",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/f856f532866369fb1debe4e7c5a1db185f40ef86",
+                "reference": "f856f532866369fb1debe4e7c5a1db185f40ef86",
                 "shasum": ""
             },
             "require": {
@@ -3040,7 +3040,7 @@
                 "phpstan/phpstan-deprecation-rules": "^1.2.1",
                 "phpstan/phpstan-phpunit": "^1.4.2",
                 "phpstan/phpstan-strict-rules": "^1.6.2",
-                "phpunit/phpunit": "^10.5.16 || ^11.5.22",
+                "phpunit/phpunit": "^10.5.16 || ^11.5.22 || ^12.3.6",
                 "symfony/var-dumper": "^6.4.8 || ^7.3.0"
             },
             "suggest": {
@@ -3102,7 +3102,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-06-25T14:53:51+00:00"
+            "time": "2025-09-11T08:29:08+00:00"
         },
         {
             "name": "league/flysystem",
@@ -9141,16 +9141,16 @@
         },
         {
             "name": "filament/upgrade",
-            "version": "v4.0.9",
+            "version": "v4.0.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/upgrade.git",
-                "reference": "21a3da29b7ebc4e85372b9a6dd39e391cbc47fdb"
+                "reference": "72f47ecdf4972f84085f300f19da04b9c835f60c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/upgrade/zipball/21a3da29b7ebc4e85372b9a6dd39e391cbc47fdb",
-                "reference": "21a3da29b7ebc4e85372b9a6dd39e391cbc47fdb",
+                "url": "https://api.github.com/repos/filamentphp/upgrade/zipball/72f47ecdf4972f84085f300f19da04b9c835f60c",
+                "reference": "72f47ecdf4972f84085f300f19da04b9c835f60c",
                 "shasum": ""
             },
             "require": {
@@ -9184,7 +9184,7 @@
                 "issues": "https://github.com/filamentphp/filament/issues",
                 "source": "https://github.com/filamentphp/filament"
             },
-            "time": "2025-09-02T11:01:30+00:00"
+            "time": "2025-09-11T14:01:25+00:00"
         },
         {
             "name": "filp/whoops",
@@ -10622,16 +10622,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.23",
+            "version": "2.1.25",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "a34502adbbd5c2366b5a97679848a5ace4f6f2f5"
+                "reference": "4087d28bd252895874e174d65e26b2c202ed893a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a34502adbbd5c2366b5a97679848a5ace4f6f2f5",
-                "reference": "a34502adbbd5c2366b5a97679848a5ace4f6f2f5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/4087d28bd252895874e174d65e26b2c202ed893a",
+                "reference": "4087d28bd252895874e174d65e26b2c202ed893a",
                 "shasum": ""
             },
             "require": {
@@ -10676,7 +10676,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-10T11:42:22+00:00"
+            "time": "2025-09-12T14:26:42+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -12400,7 +12400,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.4"
+        "php": "^8.2"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
