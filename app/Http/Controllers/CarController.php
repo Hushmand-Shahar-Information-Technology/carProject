@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 
 class CarController extends Controller
@@ -120,11 +121,7 @@ class CarController extends Controller
         $perPage = (int) ($request->integer('per_page') ?: 12);
 
         $cars = Car::query()
-            ->where(function ($q) {
-                $q->where('is_for_rent', true)
-                    ->orWhereNotNull('rent_price_per_day')
-                    ->orWhereNotNull('rent_price_per_month');
-            })
+            ->where('is_for_rent', true)
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -310,7 +307,7 @@ class CarController extends Controller
             Log::info('Processed videos:', $videos);
 
             $carData = [
-                'user_id' => auth()->check() ? auth()->id() : 1, // Use authenticated user or default to 1
+                'user_id' => Auth::check() ? Auth::id() : 1, // Use authenticated user or default to 1
                 'bargain_id' => $data['bargain_id'] ?? null,
                 'title' => $data['title'],
                 'year' => $data['year'],
