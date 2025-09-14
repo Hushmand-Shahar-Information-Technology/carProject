@@ -565,10 +565,10 @@
                                         <div class="flex-grow-1">
                                             {{-- <span>Sort by</span> --}}
                                             <select class="form-control" id="sort-select" name="sort">
-                                                <option value="">Sort by Default</option>
-                                                <option value="name">Sort by Name</option>
-                                                <option value="price">Sort by Price</option>
-                                                <option value="date">Sort by Date</option>
+                                                <option value="">Default</option>
+                                                <option value="name">Name (A-Z)</option>
+                                                <option value="price">Price (Low-High)</option>
+                                                <option value="date">Newest First</option>
                                             </select>
                                         </div>
                                     </div>
@@ -1005,7 +1005,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
