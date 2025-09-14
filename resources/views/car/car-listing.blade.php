@@ -1006,7 +1006,7 @@
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
                                 ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            `
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        `
                                 : `                                                                                                                                                                                                                                                                                  `
                             }
                                 ${currentView == 'list' ? title: ""}
@@ -1015,7 +1015,7 @@
                                 <div class="price d-flex justify-content-between gap-2 ${currentView == 'list' ? 'my-3': ''}">
                                     <div>
                                         <span class="old-price">$${car.regular_price}</span>
-                                        <span class="new-price">$${car.regular_price}</span>
+                                        <span class="new-price">$${car.request_price}</span>
                                     </div>    
                                     ${currentView === 'list' ? details_button : ''}
                                 </div>
@@ -1023,7 +1023,7 @@
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
                                         <li style="font-size: 10px;><i class="fa fa-registered"></i> ${car.year}</li>
                                         <li style="font-size: 10px;><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.currency_type}</li>
+                                        <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.model}</li>
                                     </ul>
                                <div class="compare-btn">
 </div>
