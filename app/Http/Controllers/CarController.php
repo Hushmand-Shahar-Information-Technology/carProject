@@ -197,17 +197,17 @@ class CarController extends Controller
     }
 
     /**
-     * Filter only cars available for rent with pagination (12 per page).
+     * Filter cars for auction page - shows ONLY cars with active auctions.
      */
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            // Show cars that have auctions (active or recently ended)
-            ->whereHas('auctions', function ($q) {
-                $q->whereIn('status', ['active', 'ended']);
+            // Show ONLY cars that have active auctions
+            ->whereHas('auctions', function ($subQuery) {
+                $subQuery->where('status', 'active');
             })
             ->with(['auctions' => function ($q) {
-                $q->whereIn('status', ['active', 'ended'])->latest();
+                $q->where('status', 'active')->latest();
             }])
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
@@ -223,11 +223,10 @@ class CarController extends Controller
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
-                // Use rent price if present; fall back to regular_price for range filtering compatibility
-                $q->where(function ($sub) use ($request) {
-                    $sub->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('regular_price', [$request->input('price_min'), $request->input('price_max')]);
+                // Use auction starting price for filtering
+                $q->whereHas('auctions', function ($auctionQuery) use ($request) {
+                    $auctionQuery->where('status', 'active')
+                                ->whereBetween('starting_price', [$request->input('price_min'), $request->input('price_max')]);
                 });
             })
             ->when($request->input('Year', []), function ($q, $years) {
@@ -254,11 +253,12 @@ class CarController extends Controller
             ->when($request->input('sort'), function ($q, $sort) {
                 match ($sort) {
                     'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, regular_price) ASC'),
+                    'price' => $q->orderByRaw('(SELECT starting_price FROM auctions WHERE auctions.car_id = cars.id AND auctions.status = "active" ORDER BY created_at DESC LIMIT 1) ASC'),
                     'date' => $q->orderByDesc('created_at'),
                     default => $q->latest(),
                 };
             }, function ($q) {
+                // Default sort by latest
                 $q->latest();
             })
             ->paginate(15)
