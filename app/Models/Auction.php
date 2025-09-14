@@ -16,6 +16,11 @@ class Auction extends Model
         'message',
     ];
 
+    protected $casts = [
+        'end_at' => 'datetime',
+        'starting_price' => 'decimal:2',
+    ];
+
 
     // Optional helper to check if auction is active
     public function isActive()
