@@ -202,7 +202,13 @@ class CarController extends Controller
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            ->whereNotNull('regular_price')
+            // Show cars that have auctions (active or recently ended)
+            ->whereHas('auctions', function ($q) {
+                $q->whereIn('status', ['active', 'ended']);
+            })
+            ->with(['auctions' => function ($q) {
+                $q->whereIn('status', ['active', 'ended'])->latest();
+            }])
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -368,7 +374,10 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::with('promotions')->findOrFail($id);
+        $car = Car::with(['promotions', 'auctions' => function($query) {
+            $query->whereIn('status', ['active', 'ended'])->latest();
+        }])->findOrFail($id);
+        
         $activePromotion = $car->promotions()
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
@@ -377,8 +386,12 @@ class CarController extends Controller
             ->first();
         $hasActivePromotion = (bool) $activePromotion;
         $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
+        
+        // Get the active auction for this car
+        $auction = $car->auctions->first();
+        
         $makes = Car::where('make', $car->make)->limit(10)->get();
-        return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt'));
+        return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt', 'auction'));
     }
 
     public function search(Request $request)
