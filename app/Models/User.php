@@ -53,6 +53,6 @@ class User extends Authenticatable
 
     public function bargains()
     {
-        return $this->hasMany(\App\Models\Bargain::class, 'email', 'email');
+        return $this->hasMany(Bargain::class);
     }
 }
