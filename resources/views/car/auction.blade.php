@@ -992,7 +992,7 @@
                             images = car.images;
 
                         } else {
-                            images = car.images ? [car.images] : [];
+                            images = car.images ? [car.i    mages] : [];
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
