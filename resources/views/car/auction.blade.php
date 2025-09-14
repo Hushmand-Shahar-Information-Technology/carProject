@@ -992,7 +992,7 @@
                             images = car.images;
 
                         } else {
-                            images = car.images ? [car.i    mages] : [];
+                            images = car.images ? [car.images] : [];
                         }
                         const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
                         const url = car_show.replace('__ID__', car.id);
@@ -1079,7 +1079,7 @@
                                         </ul>
                                     </div>
                                 </div>
-                                ${auctionTimer}
+                                ${auctionTimer ? auctionTimer : "Not Started" }
                             </div>
 
                         </div>
