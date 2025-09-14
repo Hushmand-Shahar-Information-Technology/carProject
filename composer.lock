@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "60cf036fb0bc1b40257f15632a9d075a",
+    "content-hash": "ea888dde4c025421cf8678cb066e7656",
     "packages": [
         {
             "name": "afsakar/filament-leaflet-map-picker",
@@ -11125,17 +11125,13 @@
         {
             "name": "rector/rector",
             "version": "2.1.7",
-            "version": "2.1.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
                 "reference": "c34cc07c4698f007a20dc5c99ff820089ae413ce"
-                "reference": "c34cc07c4698f007a20dc5c99ff820089ae413ce"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c34cc07c4698f007a20dc5c99ff820089ae413ce",
-                "reference": "c34cc07c4698f007a20dc5c99ff820089ae413ce",
                 "url": "https://api.github.com/repos/rectorphp/rector/zipball/c34cc07c4698f007a20dc5c99ff820089ae413ce",
                 "reference": "c34cc07c4698f007a20dc5c99ff820089ae413ce",
                 "shasum": ""
@@ -11177,7 +11173,6 @@
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
                 "source": "https://github.com/rectorphp/rector/tree/2.1.7"
-                "source": "https://github.com/rectorphp/rector/tree/2.1.7"
             },
             "funding": [
                 {
@@ -11185,7 +11180,6 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-10T11:13:58+00:00"
             "time": "2025-09-10T11:13:58+00:00"
         },
         {
@@ -12406,7 +12400,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.4"
+        "php": "^8.2"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
