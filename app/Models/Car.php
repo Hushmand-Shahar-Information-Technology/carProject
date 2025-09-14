@@ -82,4 +82,8 @@ class Car extends BaseModel
     {
         return $this->hasMany(Offer::class);
     }
+
+   public function auctions(){
+    return $this->hasMany(Auction::class);
+   }
 }
