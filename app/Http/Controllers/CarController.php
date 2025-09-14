@@ -369,6 +369,10 @@ class CarController extends Controller
     public function show($id)
     {
         $car = Car::with('promotions')->findOrFail($id);
+
+        // Increment view count
+        $car->increment('views');
+
         $activePromotion = $car->promotions()
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
