@@ -6,6 +6,7 @@ use App\Models\Bargain;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class BargainService
 {
@@ -43,6 +44,11 @@ class BargainService
             'address' => $data['address'] ?? null,
             'status' => $data['status'] ?? $bargain->status ?? 'one-time',
         ]);
+
+        // Associate with user if creating new bargain and user is logged in
+        if (!$bargain->exists && Auth::check()) {
+            $bargain->user_id = Auth::id();
+        }
 
         // Generate registration number if new
         if (!$bargain->exists) {
