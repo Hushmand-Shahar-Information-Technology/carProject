@@ -49,7 +49,7 @@ class CarController extends Controller
     {
         $cars = Car::query()
             ->with('bargain')
-            ->where('is_for_rent', '!=', 0)
+            ->where('is_for_rent', '!=', 1)
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -371,10 +371,11 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::with(['promotions', 'auctions' => function($query) {
-            $query->whereIn('status', ['active', 'ended'])->latest();
-        }])->findOrFail($id);
-        
+        $car = Car::with('promotions')->findOrFail($id);
+
+        // Increment view count
+        $car->increment('views');
+
         $activePromotion = $car->promotions()
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());

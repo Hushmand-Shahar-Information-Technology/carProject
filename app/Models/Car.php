@@ -44,6 +44,7 @@ class Car extends BaseModel
         'is_promoted',
         'rent_price_per_day',
         'rent_price_per_month',
+        'views',
     ];
 
     protected $casts = [

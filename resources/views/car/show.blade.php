@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="{{ asset('css/slick/slick.css') }}">
     <link rel="stylesheet" href="{{ asset('css/slick/slick-theme.css') }}">
     <!--=================================
-                                                                                                                                                                                                                                                                     inner-intro -->
+                                                                                                                                                                                                                                                                             inner-intro -->
     <style>
         .fixed-img {
             width: 100%;
@@ -167,6 +167,10 @@
                 </div>
                 <div class="col-md-3">
                     <div class="car-price text-md-end">
+                        <div class="d-flex align-items-center justify-content-end mb-2">
+                            <i class="fa fa-eye me-1 text-muted"></i>
+                            <span class="text-muted">{{ $car->views }}</span>
+                        </div>
                         <strong>{{ $car->regular_price }}</strong>
                         <span>Plus Taxes & Licensing</span>
                         <div class="mt-2">
@@ -465,7 +469,7 @@
                                 <img class="img-fluid fixed-img" style="" src="/storage/{{ $image }}"
                                     alt="">
                             @endforeach
-                            {{-- <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="">
+                            {{-- <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/02.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/03.jpg') }}" alt="">
                             <img class="img-fluid fixed-img" src="{{ asset('images/car/04.jpg') }}" alt="">

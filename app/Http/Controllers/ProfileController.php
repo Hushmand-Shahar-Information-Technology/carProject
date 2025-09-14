@@ -17,7 +17,13 @@ class ProfileController extends Controller
     public function show()
     {
         $profile = Auth::user();
-        return view('profile.profile', compact('profile'));
+        // Load cars with offers count for better performance
+        $profile->load(['cars.offers']);
+
+        // Get bargains associated with the user via the direct relationship
+        $bargains = $profile->bargains()->with('promotions')->get();
+
+        return view('profile.profile', compact('profile', 'bargains'));
     }
     public function edit(Request $request): View
     {
@@ -31,13 +37,15 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        /** @var \App\Models\User $user */
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -51,6 +59,7 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
+        /** @var \App\Models\User $user */
         $user = $request->user();
 
         Auth::logout();

@@ -30,6 +30,7 @@ class Bargain extends BaseModel
         'restriction_starts_at',
         'restriction_ends_at',
         'restriction_duration_days',
+        'user_id', // Add user_id to fillable attributes
     ];
 
     protected $dates = ['contract_start_date', 'contract_end_date', 'status_updated_at', 'restriction_starts_at', 'restriction_ends_at'];
@@ -44,6 +45,11 @@ class Bargain extends BaseModel
         'restriction_duration_days' => 'integer',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function promotions()
     {
         return $this->morphMany(\App\Models\Promotion::class, 'promotable');
@@ -54,9 +60,9 @@ class Bargain extends BaseModel
      */
     public function hasActiveRestriction()
     {
-        return $this->registration_status === 'restricted' && 
-               $this->restriction_ends_at && 
-               $this->restriction_ends_at->isFuture();
+        return $this->registration_status === 'restricted' &&
+            $this->restriction_ends_at &&
+            $this->restriction_ends_at->isFuture();
     }
 
     /**
@@ -64,8 +70,8 @@ class Bargain extends BaseModel
      */
     public function isRestrictionExpired()
     {
-        return $this->restriction_ends_at && 
-               $this->restriction_ends_at->isPast();
+        return $this->restriction_ends_at &&
+            $this->restriction_ends_at->isPast();
     }
 
     /**
@@ -76,7 +82,7 @@ class Bargain extends BaseModel
         if (!$this->restriction_ends_at || $this->restriction_ends_at->isPast()) {
             return null;
         }
-        
+
         return $this->restriction_ends_at->diffForHumans();
     }
 
@@ -89,12 +95,12 @@ class Bargain extends BaseModel
         if ($this->registration_status === 'blocked') {
             return false;
         }
-        
+
         // Cannot promote if actively restricted
         if ($this->hasActiveRestriction()) {
             return false;
         }
-        
+
         return true;
     }
 }

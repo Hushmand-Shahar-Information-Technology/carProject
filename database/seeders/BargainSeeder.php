@@ -1,14 +1,27 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use App\Models\Bargain;
+use App\Models\User;
 use Illuminate\Support\Str;
 
 class BargainSeeder extends Seeder
 {
     public function run()
     {
+        // Get the first user or create one if none exists
+        $user = User::first();
+        if (!$user) {
+            $user = User::create([
+                'name' => 'Default User',
+                'email' => 'default@example.com',
+                'password' => bcrypt('password'),
+                'email_verified_at' => now(),
+            ]);
+        }
+
         $names = ['AutoHub', 'CarPoint', 'DriveNow', 'Wheels4U', 'MotorLand'];
         $usernames = ['autohub', 'carpoint', 'drivenow', 'wheels4u', 'motorland'];
         $websites = [
@@ -21,6 +34,7 @@ class BargainSeeder extends Seeder
 
         foreach ($names as $index => $name) {
             Bargain::create([
+                'user_id' => $user->id, // Associate with user
                 'name' => $name,
                 'username' => $usernames[$index],
                 'profile_image' => null, // or some seeded image path
