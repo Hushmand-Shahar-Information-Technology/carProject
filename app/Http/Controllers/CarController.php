@@ -202,7 +202,7 @@ class CarController extends Controller
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            ->whereNotNull('regular_price')
+            ->whereNotNull('request_price')
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
