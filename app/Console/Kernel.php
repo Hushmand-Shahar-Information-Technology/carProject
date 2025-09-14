@@ -12,13 +12,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // Example: end expired auctions every minute
-        $schedule->call(function () {
-            \App\Models\Auction::where('status', 'active')
-                ->whereNotNull('end_at')
-                ->where('end_at', '<=', now())
-                ->update(['status' => 'ended']);
-        })->everyMinute();
+        // End expired auctions every minute using dedicated command
+        $schedule->command('auctions:end-expired')
+            ->everyMinute()
+            ->name('end-expired-auctions')
+            ->withoutOverlapping()
+            ->runInBackground();
     }
 
     /**
