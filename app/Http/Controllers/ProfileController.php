@@ -20,9 +20,8 @@ class ProfileController extends Controller
         // Load cars with offers count for better performance
         $profile->load(['cars.offers']);
 
-        // For now, show all bargains (since there's no direct relationship)
-        // In a production environment, you would want to establish a proper relationship
-        $bargains = \App\Models\Bargain::with('promotions')->get();
+        // Get bargains associated with the user via the direct relationship
+        $bargains = $profile->bargains()->with('promotions')->get();
 
         return view('profile.profile', compact('profile', 'bargains'));
     }
