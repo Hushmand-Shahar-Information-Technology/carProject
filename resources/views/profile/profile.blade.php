@@ -141,9 +141,33 @@
             z-index: 10;
         }
 
-        /* Ensure text is visible on dark background */
-        .dark-bg-text {
-            color: #fff;
+        /* Fix for tab content text visibility */
+        #bargains-tab {
+            color: #212529;
+            /* Dark text for better visibility */
+        }
+
+        /* Ensure all text is visible on all backgrounds */
+        .car-content a {
+            color: #212529;
+            /* Dark text for links */
+        }
+
+        .car-content a:hover {
+            color: #000;
+            /* Darker text on hover */
+        }
+
+        .car-content {
+            color: #212529;
+            /* Dark text for all content */
+        }
+
+        /* Improve card styling */
+        .car-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
     </style>
     <!--================================ -->
