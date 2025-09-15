@@ -2,17 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\CarController;
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CarController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BargainController;
 use App\Http\Controllers\OfferController;
-use App\Http\Controllers\PromotionController;
-use App\Http\Controllers\ChatController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\PromotionController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -100,8 +114,8 @@ Route::prefix('promotions')->group(function () {
     Route::post('/unpromote', [PromotionController::class, 'unpromote'])->name('promotions.unpromote');
 });
 
-
-
+// Notification routes
+Route::post('mark-notification-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
 
