@@ -371,7 +371,7 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::with('promotions')->findOrFail($id);
+        $car = Car::with(['promotions', 'user', 'auctions', 'offers'])->findOrFail($id);
 
         // Increment view count
         $car->increment('views');
@@ -390,6 +390,44 @@ class CarController extends Controller
         
         $makes = Car::where('make', $car->make)->limit(10)->get();
         return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt', 'auction'));
+    }
+
+    /**
+     * Get offers for a specific car (AJAX endpoint)
+     */
+    public function getOffers($id)
+    {
+        $car = Car::with('offers')->findOrFail($id);
+        
+        // Ensure only the car owner can access offers
+        if (!auth()->check() || $car->user_id !== auth()->id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+        
+        // Format offers for JSON response
+        $formattedOffers = $car->offers->map(function ($offer) {
+            return [
+                'id' => $offer->id,
+                'name' => $offer->name,
+                'phone' => $offer->phone,
+                'email' => $offer->email,
+                'price' => $offer->price,
+                'remark' => $offer->remark,
+                'created_at' => $offer->created_at->toIso8601String(),
+                'formatted_date' => $offer->created_at->format('M d, Y'),
+                'formatted_time' => $offer->created_at->format('g:i A')
+            ];
+        });
+        
+        return response()->json([
+            'offers' => $formattedOffers->sortByDesc('created_at')->values(),
+            'count' => $car->offers->count(),
+            'stats' => [
+                'highest' => $car->offers->max('price'),
+                'average' => $car->offers->avg('price'),
+                'asking' => $car->regular_price
+            ]
+        ]);
     }
 
     public function search(Request $request)

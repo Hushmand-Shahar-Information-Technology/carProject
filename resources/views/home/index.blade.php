@@ -78,6 +78,44 @@
                 width: 70% !important;
             }
         }
+        
+        /* Our Stocks section styling - same as car listing */
+        #carListContainer .fixed-img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        #carListContainer .car-image {
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+        
+        #carListContainer .car-image:hover .fixed-img {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
+        }
+        
+        /* Responsive spacing for car items */
+        #carListContainer .car-item {
+            margin-bottom: 20px;
+        }
+        
+        /* Mobile devices - more spacing */
+        @media (max-width: 576px) {
+            #carListContainer .car-item {
+                margin-bottom: 30px;
+            }
+        }
+        
+        /* Small tablets */
+        @media (max-width: 768px) {
+            #carListContainer .car-item {
+                margin-bottom: 25px;
+            }
+        }
     </style>
     <!--=================================
                                                                                                                                          rev slider -->
@@ -247,7 +285,7 @@
 
     <!--=================================
                                                                                                                                             rev slider -->
-    @include('components.feature-car')
+    @include('components.feature-car', ['promotedCars' => $promotedCars ?? [], 'latestCars' => $latestCars ?? []]))
 
     <!--================================= -->
     {{-- Car list cart --}}
@@ -551,7 +589,7 @@
 
     <!-- ==================================
                                                                                                                                          {{-- feature car -->
-@include('components.feature-car') --}}
+<!-- @include('components.feature-car') --}} -->
 
                                                                                                                                         <!--=================================
                                                                                                                                          feature car -->
@@ -790,7 +828,7 @@
           <div class="col-lg-3 col-sm-4 col-md-5">
             <div class="car-item gray-bg text-center">
               <div class="car-image">
-                <img class="img-fluid" src="/storage/${car.images[0]}" alt="">
+                <img class="img-fluid fixed-img" src="/storage/${car.images[0]}" alt="">
                 <div class="car-overlay-banner">
                   <ul>
                     <li><a href="${url}"><i class="fa fa-link"></i></a></li>

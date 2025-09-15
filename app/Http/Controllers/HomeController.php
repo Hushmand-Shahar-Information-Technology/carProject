@@ -4,9 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Car;
+use App\Models\Promotion;
 
 class HomeController extends Controller
 {
+    public function index()
+    {
+        $promotedCars = $this->getPromotedCars();
+        $latestCars = $this->getLatestCars();
+        return view('home.index', compact('promotedCars', 'latestCars'));
+    }
+
     public function filter(Request $request)
     {
         $filters = $request->input('filters', []);
@@ -45,5 +53,33 @@ class HomeController extends Controller
             ->get();
 
         return response()->json(['cars' => $cars]);
+    }
+
+    public function getPromotedCars()
+    {
+        $promotedCars = Car::whereHas('promotions', function ($query) {
+            $query->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            });
+        })
+        ->with(['promotions' => function ($query) {
+            $query->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })->latest('ends_at');
+        }])
+        ->orderByDesc('id')
+        ->take(6)
+        ->get();
+
+        return $promotedCars;
+    }
+
+    public function getLatestCars()
+    {
+        $latestCars = Car::orderByDesc('id')
+            ->take(6)
+            ->get();
+
+        return $latestCars;
     }
 }
