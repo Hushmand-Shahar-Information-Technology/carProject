@@ -371,7 +371,7 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        $car = Car::with('promotions')->findOrFail($id);
+        $car = Car::with(['promotions', 'user', 'auctions', 'offers'])->findOrFail($id);
 
         // Increment view count
         $car->increment('views');
