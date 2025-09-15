@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row text-center intro-title">
                 <div class="col-md-6 text-md-start d-inline-block">
-                    <h1 class="text-white">Bargian Details</h1>
+                    <h1 class="text-white">Bargain Details</h1>
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
@@ -354,6 +354,92 @@
                                 <i class="fas fa-arrow-left me-2"></i> Back to List
                             </a>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cars registered by this bargain -->
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-3">
+                    <div class="card-header bg-danger text-white pt-4">
+                        <h4 class="card-title text-white fw-bold mb-0">
+                            <i class="fas fa-car me-2"></i> Cars Registered by this Bargain
+                        </h4>
+                    </div>
+                    <div class="card-body bg-white">
+                        @if ($bargain->cars && $bargain->cars->count() > 0)
+                            <div class="row">
+                                @foreach ($bargain->cars as $car)
+                                    <div class="col-lg-4 col-md-6 mb-4">
+                                        <div class="car-item gray-bg text-center promotion-card">
+                                            @if ($car->is_promoted)
+                                                <span class="badge bg-success badge-promotion">Promoted</span>
+                                            @endif
+                                            <div class="car-image">
+                                                @if (isset($car->images[0]))
+                                                    <img class="img-fluid"
+                                                        src="{{ asset('storage/' . $car->images[0]) }}"
+                                                        alt="{{ $car->title }}">
+                                                @else
+                                                    <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
+                                                        alt="Default Car Image">
+                                                @endif
+                                                <div class="car-overlay-banner">
+                                                    <ul>
+                                                        <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                                    class="fa fa-link"></i></a>
+                                                        </li>
+                                                        <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                                    class="fa fa-shopping-cart"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="car-list">
+                                                <ul class="list-inline">
+                                                    <li><i class="fa fa-registered"></i>
+                                                        {{ $car->year }}</li>
+                                                    <li><i class="fa fa-cog"></i>
+                                                        {{ $car->transmission_type->value ?? $car->transmission_type }}
+                                                    </li>
+                                                    <li><i class="fa fa-shopping-cart"></i>
+                                                        {{ $car->currency_type }}
+                                                        {{ number_format($car->regular_price) }}</li>
+                                                </ul>
+                                            </div>
+                                            <div class="car-content">
+                                                <div class="star">
+                                                    <i class="fa fa-star orange-color"></i>
+                                                    <i class="fa fa-star orange-color"></i>
+                                                    <i class="fa fa-star orange-color"></i>
+                                                    <i class="fa fa-star orange-color"></i>
+                                                    <i class="fa fa-star-o orange-color"></i>
+                                                </div>
+                                                <a href="{{ route('car.show', $car->id) }}">{{ $car->make }}
+                                                    {{ $car->model }}</a>
+                                                <div class="separator"></div>
+                                                <div class="price">
+                                                    <span class="new-price">{{ $car->currency_type }}
+                                                        {{ number_format($car->regular_price) }}</span>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <span class="badge bg-primary">{{ $car->offers->count() }}
+                                                        Offers</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @else
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-car me-2"></i> No cars registered by this bargain yet.
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
