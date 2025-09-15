@@ -68,6 +68,12 @@
 
     <div class="container mx-auto py-10" x-data="carForm()" x-init="$nextTick(() => {
         initSelect2();
+        // Check if we're registering as a bargain
+        const urlParams = new URLSearchParams(window.location.search);
+        const bargainId = urlParams.get('bargain_id');
+        if (bargainId) {
+            this.form.bargain_id = bargainId;
+        }
         $nextTick(() => {
             // Sync Select2 values and calculate initial progress
             syncSelect2Values();
@@ -143,13 +149,14 @@
                     <input type="hidden" name="transmission_type" :value="form.transmission_type">
                     <input type="hidden" name="currency_type" :value="form.currency_type">
                     <input type="hidden" name="regular_price" :value="form.regular_price">
-
                     <input type="hidden" name="rent_price_per_day" :value="form.rent_price_per_day">
                     <input type="hidden" name="rent_price_per_month" :value="form.rent_price_per_month">
                     <input type="hidden" name="description" :value="form.description">
                     <input type="hidden" name="VIN_number" :value="form.VIN_number">
                     <input type="hidden" name="location" :value="form.location">
                     <input type="hidden" name="title" :value="form.title">
+                    <!-- Hidden input for bargain_id -->
+                    <input type="hidden" name="bargain_id" :value="form.bargain_id">
 
                     <!-- Step 1: Basic Information -->
                     <div x-show="(form.is_for_sale || form.is_for_rent) && step === 1" class="space-y-4">
@@ -691,14 +698,13 @@
                     transmission_type: '{{ old('transmission_type') }}',
                     currency_type: '{{ old('currency_type') }}',
                     regular_price: '{{ old('regular_price') }}',
-
                     description: '{{ old('description') }}',
                     is_for_sale: {{ old('is_for_sale') ? 'true' : 'false' }},
                     is_for_rent: {{ old('is_for_rent') ? 'true' : 'false' }},
                     rent_price_per_day: '{{ old('rent_price_per_day') }}',
                     rent_price_per_month: '{{ old('rent_price_per_month') }}',
+                    bargain_id: null, // Will be set from URL params
                 },
-
 
                 imagePreviews: [],
                 imageFiles: [],
