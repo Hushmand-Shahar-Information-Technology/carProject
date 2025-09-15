@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,10 +22,37 @@ class ProfileController extends Controller
         $profile->load(['cars.offers']);
 
         // Get bargains associated with the user via the direct relationship
-        $bargains = $profile->bargains()->with('promotions')->get();
+        // Also load the cars relationship for each bargain with offers count
+        $bargains = $profile->bargains()->with(['promotions', 'cars.offers'])->get();
+
+        // Add offers count to each bargain
+        foreach ($bargains as $bargain) {
+            $bargain->total_offers = $bargain->cars->sum(function ($car) {
+                return $car->offers->count();
+            });
+        }
 
         return view('profile.profile', compact('profile', 'bargains'));
     }
+
+    /**
+     * Get cars for a specific bargain
+     */
+    public function getBargainCars(Request $request, $bargainId)
+    {
+        $profile = Auth::user();
+        $bargain = $profile->bargains()->with('cars.offers')->find($bargainId);
+
+        if (!$bargain) {
+            return response()->json(['error' => 'Bargain not found'], 404);
+        }
+
+        return response()->json([
+            'cars' => $bargain->cars,
+            'bargain' => $bargain
+        ]);
+    }
+
     public function edit(Request $request): View
     {
         return view('profile.edit', [
@@ -37,7 +65,7 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = $request->user();
         $user->fill($request->validated());
 
@@ -59,7 +87,7 @@ class ProfileController extends Controller
             'password' => ['required', 'current_password'],
         ]);
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = $request->user();
 
         Auth::logout();
