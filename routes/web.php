@@ -82,6 +82,7 @@ Route::prefix('car')->group(function () {
     Route::get('filter-auction', [CarController::class, 'filterAuction'])->name('cars.filter-auction');
     Route::get('register', [CarController::class, 'create'])->name('car.create');
     Route::get('show/{id}', [CarController::class, 'show'])->name('car.show');
+    Route::get('show/{id}/offers', [CarController::class, 'getOffers'])->name('car.show.offers');
     Route::post('store', [CarController::class, 'store'])->name('car.store');
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
