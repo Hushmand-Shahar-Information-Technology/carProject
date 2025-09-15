@@ -367,9 +367,9 @@
                                             <div class="modal-body">
                                                 <div id="mao_notice" class="form-notice" style="display:none;"></div>
                                                 <form class="gray-form reset_css"
-                                                    action="https://themes.potenzaglobalsolutions.com/html/cardealer/post"
+                                                    action="{{ route('car.offer') }}"
                                                     id="mao_form">
-                                                    <input type="hidden" name="action" value="make_an_offer" />
+                                                    @csrf
                                                     <div class="mb-3">
                                                         <label class="form-label">Name*</label>
                                                         <input type="text" id="mao_name" name="mao_name"
@@ -566,6 +566,44 @@
                 </div>
                 <div class="col-md-4">
                     <div class="car-details-sidebar">
+                        {{-- Car Owner Information --}}
+                        @if($car->user)
+                        <div class="details-block details-weight mb-4">
+                            <h5>CAR OWNER</h5>
+                            <div class="owner-info bg-light p-3 rounded">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="fa fa-user-circle fa-2x text-primary me-3"></i>
+                                    <div>
+                                        <h6 class="mb-0">{{ $car->user->name }}</h6>
+                                        <small class="text-muted">Car Owner</small>
+                                    </div>
+                                </div>
+                                @if($car->user->email)
+                                <div class="contact-info">
+                                    <small class="text-muted">
+                                        <i class="fa fa-envelope me-1"></i>
+                                        {{ $car->user->email }}
+                                    </small>
+                                </div>
+                                @endif
+                                @if($car->user->phone)
+                                <div class="contact-info mt-1">
+                                    <small class="text-muted">
+                                        <i class="fa fa-phone me-1"></i>
+                                        {{ $car->user->phone }}
+                                    </small>
+                                </div>
+                                @endif
+                                <div class="mt-2">
+                                    <small class="text-muted">
+                                        <i class="fa fa-calendar me-1"></i>
+                                        Listed {{ $car->created_at->diffForHumans() }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+                        
                         <div class="details-block details-weight">
                             <h5>DESCRIPTION</h5>
                             <ul>
@@ -590,6 +628,142 @@
                     </div>
                 </div>
             </div>
+            
+            {{-- Offers Section - Only visible to car owner --}}
+            @if(auth()->check() && $car->user_id === auth()->id() && $car->offers->count() > 0)
+            <div class="row mt-5">
+                <div class="col-md-12">
+                    <div class="details-block">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="fa fa-handshake me-2"></i>
+                                    Offers Received ({{ $car->offers->count() }})
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th><i class="fa fa-user me-1"></i>Name</th>
+                                                <th><i class="fa fa-phone me-1"></i>Phone</th>
+                                                <th><i class="fa fa-envelope me-1"></i>Email</th>
+                                                <th><i class="fa fa-dollar-sign me-1"></i>Offered Price</th>
+                                                <th><i class="fa fa-comment me-1"></i>Comments</th>
+                                                <th><i class="fa fa-calendar me-1"></i>Date</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($car->offers->sortByDesc('created_at') as $offer)
+                                            <tr>
+                                                <td>
+                                                    <strong>{{ $offer->name }}</strong>
+                                                </td>
+                                                <td>
+                                                    <a href="tel:{{ $offer->phone }}" class="text-decoration-none">
+                                                        {{ $offer->phone }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="mailto:{{ $offer->email }}" class="text-decoration-none">
+                                                        {{ $offer->email }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-success fs-6">
+                                                        ${{ number_format($offer->price) }}
+                                                    </span>
+                                                    @if($offer->price > $car->regular_price)
+                                                        <small class="text-success d-block">
+                                                            <i class="fa fa-arrow-up"></i>
+                                                            +${{ number_format($offer->price - $car->regular_price) }} above asking
+                                                        </small>
+                                                    @elseif($offer->price < $car->regular_price)
+                                                        <small class="text-warning d-block">
+                                                            <i class="fa fa-arrow-down"></i>
+                                                            -${{ number_format($car->regular_price - $offer->price) }} below asking
+                                                        </small>
+                                                    @else
+                                                        <small class="text-info d-block">
+                                                            <i class="fa fa-check"></i> Exact asking price
+                                                        </small>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($offer->remark)
+                                                        <button class="btn btn-sm btn-outline-info" 
+                                                                data-bs-toggle="tooltip" 
+                                                                title="{{ $offer->remark }}">
+                                                            <i class="fa fa-eye"></i> View
+                                                        </button>
+                                                    @else
+                                                        <span class="text-muted">No comments</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <small class="text-muted">
+                                                        {{ $offer->created_at->format('M d, Y') }}<br>
+                                                        {{ $offer->created_at->format('g:i A') }}
+                                                    </small>
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group-vertical btn-group-sm">
+                                                        <a href="mailto:{{ $offer->email }}?subject=Re: Car Offer - {{ $car->title }}&body=Hi {{ $offer->name }}, Thank you for your offer of ${{ number_format($offer->price) }} for my {{ $car->title }}." 
+                                                           class="btn btn-success btn-sm">
+                                                            <i class="fa fa-reply"></i> Reply
+                                                        </a>
+                                                        <a href="tel:{{ $offer->phone }}" class="btn btn-primary btn-sm">
+                                                            <i class="fa fa-phone"></i> Call
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                {{-- Summary Stats --}}
+                                <div class="row mt-3">
+                                    <div class="col-md-4">
+                                        <div class="card border-success">
+                                            <div class="card-body text-center">
+                                                <h6 class="text-success">Highest Offer</h6>
+                                                <h4 class="text-success">
+                                                    ${{ number_format($car->offers->max('price')) }}
+                                                </h4>
+                                            </div>sss
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border-warning">
+                                            <div class="card-body text-center">
+                                                <h6 class="text-warning">Average Offer</h6>
+                                                <h4 class="text-warning">
+                                                    ${{ number_format($car->offers->avg('price')) }}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="card border-info">
+                                            <div class="card-body text-center">
+                                                <h6 class="text-info">Your Asking Price</h6>
+                                                <h4 class="text-info">
+                                                    ${{ number_format($car->regular_price) }}
+                                                </h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endif
     </section>
 
 
@@ -797,7 +971,8 @@
             $('#make_an_offer_submit').on('click', function(e) {
                 e.preventDefault();
                 $('.btn-loader').show();
-                console.log(car_id);
+                console.log('Car ID:', car_id);
+                
                 var formData = {
                     mao_name: $('#mao_name').val(),
                     mao_email: $('#mao_email').val(),
@@ -807,40 +982,63 @@
                     mao_car_id: car_id
                 };
 
+                console.log('Form data:', formData);
+
                 $.ajax({
                     type: 'POST',
-                    url: '/car/offer', // Replace with your actual route
+                    url: '/car/offer',
                     data: formData,
                     dataType: 'json',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function(response) {
-                        $('.btn-loader').hide();
-                        $('#mao_form')[0].reset();
-
-                        // Hide the modal
-                        $('#exampleModal3').modal('hide');
-
-                        // Show alert after modal is fully hidden
-                        $('#exampleModal3').on('hidden.bs.modal', function() {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success',
-                                text: response.message,
-                                heightAuto: false, // prevents body scrollbar shift
-                                willClose: () => {
-                                    // Remove modal-related classes and reset overflow to re-enable scrolling
-                                    $('body').removeClass('modal-open').css(
-                                        'overflow', '');
-                                    $('.modal-backdrop').remove();
-                                }
-                            });
-
-                            $('#exampleModal3').off('hidden.bs.modal');
-                        });
+                    beforeSend: function() {
+                        console.log('Sending AJAX request...');
                     },
-                    error: function(xhr) {
+                    success: function(response) {
+                        console.log('Success response received:', response);
+                        $('.btn-loader').hide();
+                        
+                        // Check if the response indicates success
+                        if (response && response.success === true) {
+                            console.log('Offer submitted successfully');
+                            $('#mao_form')[0].reset();
+                            $('#exampleModal3').modal('hide');
+
+                            // Show success alert immediately after modal is hidden
+                            $('#exampleModal3').on('hidden.bs.modal', function() {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response.message || 'Offer submitted successfully!',
+                                    timer: 3000,
+                                    showConfirmButton: false,
+                                    heightAuto: false,
+                                    willClose: () => {
+                                        $('body').removeClass('modal-open').css('overflow', '');
+                                        $('.modal-backdrop').remove();
+                                    }
+                                });
+                                $('#exampleModal3').off('hidden.bs.modal');
+                            });
+                        } else {
+                            console.log('Server returned success=false');
+                            // Handle case where response.success is false
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message || 'Something went wrong. Please try again.',
+                                heightAuto: false
+                            });
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.log('AJAX Error:', {
+                            xhr: xhr,
+                            status: status,
+                            error: error,
+                            responseText: xhr.responseText
+                        });
                         $('.btn-loader').hide();
 
                         let swalOptions = {
@@ -853,15 +1051,18 @@
                         };
 
                         if (xhr.status === 422) {
-                            let errors = xhr.responseJSON.errors;
-                            let errorMessages = Object.values(errors).map(msgArray => msgArray[
-                                0]).join('<br>');
-                            swalOptions.title = 'Validation Error';
-                            swalOptions.html = errorMessages;
+                            let errors = xhr.responseJSON ? xhr.responseJSON.errors : null;
+                            if (errors) {
+                                let errorMessages = Object.values(errors).map(msgArray => msgArray[0]).join('<br>');
+                                swalOptions.title = 'Validation Error';
+                                swalOptions.html = errorMessages;
+                            } else {
+                                swalOptions.title = 'Validation Error';
+                                swalOptions.text = 'Please check your input and try again.';
+                            }
                         } else {
                             swalOptions.title = 'Server Error';
-                            swalOptions.text = xhr.responseJSON?.message ||
-                                'An unexpected error occurred.';
+                            swalOptions.text = xhr.responseJSON?.message || 'An unexpected error occurred.';
                         }
 
                         Swal.fire(swalOptions);
