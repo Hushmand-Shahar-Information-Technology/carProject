@@ -408,11 +408,10 @@
                                     </div>
                                 </div>
                             </li>
+                            @if(auth()->check() && $car->user_id === auth()->id())
+                                <li><a href=""  data-bs-toggle="modal" data-bs-target="#offersModal"> <i class="fa fa-handshake me-2"></i>Show Offers Received <span class="badge bg-light text-dark ms-2">{{ $car->offers->count() }}</span></a></li>
+                            @endif
                             <li><a href="javascript:window.print()"><i class="fa fa-print"></i>Print this page</a></li>
-                                                          @if(auth()->check() && $car->user_id === auth()->id())
-                            <li><a href=""  data-bs-toggle="modal" data-bs-target="#offersModal"> <i class="fa fa-handshake me-2"></i>Show Offers Received <span class="badge bg-light text-dark ms-2">{{ $car->offers->count() }}</span></a></li>
-                         @endif
-
                         </ul>
                     </div>
                 </div>
