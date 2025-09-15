@@ -328,6 +328,14 @@
             color: #ced4da;
         }
 
+        /* Car image styling - consistent dimensions */
+        .fixed-img {
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .notification-header {
@@ -468,7 +476,7 @@
             </li>
         </ul>
 
-        <!-- Cars Tab Content -->
+        <!-- Cars Tab Content - Consistent Image Dimensions -->
         <div id="cars-tab" class="tab-content active">
             <div class="sorting-options-main">
                 <div class="row">
@@ -480,10 +488,10 @@
                                 @endif
                                 <div class="car-image">
                                     @if (isset($car->images[0]))
-                                        <img class="img-fluid" src="{{ asset('storage/' . $car->images[0]) }}"
+                                        <img class="fixed-img" src="{{ asset('storage/' . $car->images[0]) }}"
                                             alt="{{ $car->title }}">
                                     @else
-                                        <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
+                                        <img class="fixed-img" src="{{ asset('images/car/01.jpg') }}"
                                             alt="Default Car Image">
                                     @endif
                                     <div class="car-overlay-banner">
@@ -535,7 +543,7 @@
             </div>
         </div>
 
-        <!-- Notifications Tab Content - Modern Redesign -->
+        <!-- Notifications Tab Content - With Links to Cars -->
         <div id="notifications-tab" class="tab-content">
             <div class="notifications-container">
                 @if(auth()->user()->notifications->count() > 0)
@@ -550,7 +558,12 @@
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <div class="notification-sender">{{ $notification->data['sender_name'] }}</div>
-                                            <div class="notification-car-title">{{ $notification->data['car_title'] }}</div>
+                                            <div class="notification-car-title">
+                                                <a href="{{ route('car.show', $notification->data['car_id']) }}" 
+                                                   class="text-decoration-none">
+                                                    {{ $notification->data['car_title'] }}
+                                                </a>
+                                            </div>
                                         </div>
                                         <div class="d-flex align-items-center">
                                             <div class="notification-time">{{ $notification->created_at->diffForHumans() }}</div>
