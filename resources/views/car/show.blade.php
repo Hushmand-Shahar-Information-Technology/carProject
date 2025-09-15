@@ -972,6 +972,14 @@
             });
         });
         $(document).ready(function() {
+            // Initialize tooltips
+            $('[data-bs-toggle="tooltip"]').tooltip();
+            
+            // Reinitialize tooltips when modal is shown
+            $('#offersModal').on('shown.bs.modal', function () {
+                $('[data-bs-toggle="tooltip"]').tooltip('dispose').tooltip();
+            });
+            
             $('.popup-youtube').magnificPopup({
                 type: 'iframe',
                 mainClass: 'mfp-fade',
