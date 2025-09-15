@@ -423,11 +423,6 @@
                                 </option>
                                 <option value="automatic" {{ old('transmission_type') == 'automatic' ? 'selected' : '' }}>
                                     Automatic</option>
-                                <option value="cvt" {{ old('transmission_type') == 'cvt' ? 'selected' : '' }}>CVT
-                                </option>
-                                <option value="semi-automatic"
-                                    {{ old('transmission_type') == 'semi-automatic' ? 'selected' : '' }}>Semi-Automatic
-                                </option>
                             </select>
                             @error('transmission_type')
                                 <p class="text-red-500 text-sm mt-1">Transmission type is required</p>

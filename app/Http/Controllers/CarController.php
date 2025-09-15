@@ -373,7 +373,7 @@ class CarController extends Controller
                 'location' => $data['location'] ?? null,
                 'model' => $data['model'],
                 'car_color' => $data['car_color'],
-                'transmission_type' => $data['transmission_type'] ?? null,
+                'transmission_type' => in_array($data['transmission_type'] ?? null, ['manual', 'automatic']) ? $data['transmission_type'] : null,
                 'regular_price' => $data['regular_price'] ?? null,
                 'body_type' => $data['body_type'] ?? null,
                 'car_condition' => $data['car_condition'] ?? null,
