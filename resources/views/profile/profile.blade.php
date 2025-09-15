@@ -169,6 +169,196 @@
             overflow: hidden;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
+        /* Notification styles - Modern Redesign */
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .notifications-container {
+            max-width: 100%;
+        }
+
+        .notification-card {
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
+            margin-bottom: 15px;
+            background: #fff;
+        }
+
+        .notification-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-card.unread {
+            border-left: 4px solid #007bff;
+            background-color: #f8f9ff;
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .notification-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+            background-color: #f1f3f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 20px;
+        }
+
+        .notification-info {
+            flex: 1;
+        }
+
+        .notification-sender {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 3px;
+        }
+
+        .notification-car-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+
+        .notification-body {
+            padding: 15px;
+        }
+
+        .notification-details {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            flex: 1 1 50%;
+            min-width: 200px;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: #212529;
+        }
+
+        .notification-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .mark-as-read-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .mark-as-read-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .read-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #28a745;
+            margin-left: 10px;
+        }
+
+        .unread-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #007bff;
+            margin-left: 10px;
+        }
+
+        .no-notifications {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .no-notifications i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ced4da;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .notification-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .notification-image {
+                margin-bottom: 10px;
+            }
+
+            .detail-item {
+                flex: 1 1 100%;
+            }
+
+            .notification-actions {
+                justify-content: center;
+                margin-top: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .notification-card {
+                margin-bottom: 10px;
+            }
+
+            .notification-header,
+            .notification-body {
+                padding: 12px;
+            }
+        }
     </style>
     <!--================================ -->
     <section class="inner-intro bg-8 bg-overlay-black-70">
@@ -210,8 +400,6 @@
                                     <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="toggleOffers()"><i
-                                            class="fas fa-inbox"></i> see offers</a>
                                 </div>
                             </h5>
                             <p class="card-text text-muted">
@@ -257,43 +445,6 @@
             </div>
         </div>
 
-        <div class="border-top pt-2 " id="offer-section" style="display: none;">
-            <h1 class="text-center mt-4">offers</h1>
-            <div class="row">
-                <div class="col">
-                    @foreach ($profile->cars->filter(fn($car) => $car->offers->isNotEmpty()) as $car)
-                        <h5 class="text-primary"> {{ $car->title }} ({{ $car->offers->count() }} Offers)</h5>
-                        <div class="pt-2 pb-5">
-                            <div class="table-responsive">
-                                <table class="table table-row-dashed table-row-gray-300 gy-7">
-                                    <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
-                                            <th>Name</th>
-                                            <th>Phone</th>
-                                            {{-- <th>Email</th> --}}
-                                            <th>Price</th>
-                                            <th>Remark</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($car->offers as $offer)
-                                            <tr>
-                                                <td>{{ $offer->name }}</td>
-                                                <td>{{ $offer->phone }}</td>
-                                                {{-- <td>{{ $offer->email }}</td> --}}
-                                                <td>{{ $offer->price }}</td>
-                                                <td>{{ $offer->remark }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-
         <!-- New Post Section -->
         <a href="{{ route('car.create') }}">
             <div class="new-post">
@@ -308,6 +459,9 @@
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
                 <a class="nav-link active" data-tab="cars">Cars ({{ $profile->cars->count() }})</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="notifications">Notifications (<span id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>)</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-tab="bargains">Bargains ({{ $bargains->count() }})</a>
@@ -381,6 +535,76 @@
             </div>
         </div>
 
+        <!-- Notifications Tab Content - Modern Redesign -->
+        <div id="notifications-tab" class="tab-content">
+            <div class="notifications-container">
+                @if(auth()->user()->notifications->count() > 0)
+                    @foreach(auth()->user()->notifications as $notification)
+                        <div class="notification-card {{ $notification->read_at ? '' : 'unread' }}" 
+                             data-notification-id="{{ $notification->id }}">
+                            <div class="notification-header">
+                                <div class="notification-image">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="notification-info">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <div class="notification-sender">{{ $notification->data['sender_name'] }}</div>
+                                            <div class="notification-car-title">{{ $notification->data['car_title'] }}</div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="notification-time">{{ $notification->created_at->diffForHumans() }}</div>
+                                            @if(!$notification->read_at)
+                                                <div class="unread-indicator" title="Unread"></div>
+                                            @else
+                                                <div class="read-indicator" title="Read"></div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-body">
+                                <div class="notification-details">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Offer Price</div>
+                                        <div class="detail-value">${{ number_format($notification->data['offer_price']) }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Contact</div>
+                                        <div class="detail-value">{{ $notification->data['sender_email'] }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Phone</div>
+                                        <div class="detail-value">{{ $notification->data['sender_phone'] ?? 'N/A' }}</div>
+                                    </div>
+                                    @if($notification->data['remark'])
+                                        <div class="detail-item">
+                                            <div class="detail-label">Message</div>
+                                            <div class="detail-value">{{ $notification->data['remark'] }}</div>
+                                        </div>
+                                    @endif
+                                </div>
+                                @if(!$notification->read_at)
+                                    <div class="notification-actions">
+                                        <button class="mark-as-read-btn" 
+                                                data-notification-id="{{ $notification->id }}">
+                                            Mark as Read
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="no-notifications">
+                        <i class="fas fa-bell-slash"></i>
+                        <h4>No Notifications</h4>
+                        <p>You don't have any offer notifications yet.</p>
+                    </div>
+                @endif
+            </div>
+        </div>
+
         <!-- Bargains Tab Content -->
         <div id="bargains-tab" class="tab-content">
             <div class="sorting-options-main">
@@ -443,11 +667,8 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        function toggleOffers() {
-            const section = document.getElementById('offer-section');
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        }
 
         // Tab switching functionality
         document.querySelectorAll('.nav-link').forEach(link => {
@@ -477,6 +698,48 @@
 
             item.addEventListener('mouseleave', function() {
                 this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Mark notification as read
+        document.querySelectorAll('.mark-as-read-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationId = this.getAttribute('data-notification-id');
+                const notificationElement = document.querySelector(`[data-notification-id="${notificationId}"]`);
+                
+                fetch(`/mark-notification-as-read/${notificationId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the button
+                        this.closest('.notification-actions').remove();
+                        
+                        // Remove unread class and indicator
+                        notificationElement.classList.remove('unread');
+                        const indicator = notificationElement.querySelector('.unread-indicator');
+                        if (indicator) {
+                            indicator.classList.remove('unread-indicator');
+                            indicator.classList.add('read-indicator');
+                            indicator.title = 'Read';
+                        }
+                        
+                        // Update notification count
+                        const countElement = document.getElementById('notification-count');
+                        let count = parseInt(countElement.textContent);
+                        if (count > 0) {
+                            countElement.textContent = count - 1;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
             });
         });
     </script>
