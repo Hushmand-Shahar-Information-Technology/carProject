@@ -59,9 +59,9 @@ class Car extends BaseModel
         'request_price' => 'decimal:2',
         'rent_price_per_day' => 'decimal:2',
         'rent_price_per_month' => 'decimal:2',
-        // Remove enum casts:
-        // 'transmission_type' => TransmissionType::class,
-        // 'car_color' => CarColor::class,
+        // Add enum casts:
+        'transmission_type' => TransmissionType::class,
+        'car_color' => 'string',
     ];
 
     public function user()
@@ -84,7 +84,8 @@ class Car extends BaseModel
         return $this->hasMany(Offer::class);
     }
 
-   public function auctions(){
-    return $this->hasMany(Auction::class);
-   }
+    public function auctions()
+    {
+        return $this->hasMany(Auction::class);
+    }
 }
