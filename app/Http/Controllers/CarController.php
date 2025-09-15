@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\Bargain;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCarRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Http\UploadedFile;
+use Illuminate\Http\JsonResponse;
 
 class CarController extends Controller
 {
@@ -103,7 +105,6 @@ class CarController extends Controller
 
         return response()->json($cars);
     }
-
 
     /**
      * Display rent-only car index page (same UI as listing).
@@ -223,7 +224,7 @@ class CarController extends Controller
                 // Use auction starting price for filtering
                 $q->whereHas('auctions', function ($auctionQuery) use ($request) {
                     $auctionQuery->where('status', 'active')
-                                ->whereBetween('starting_price', [$request->input('price_min'), $request->input('price_max')]);
+                        ->whereBetween('starting_price', [$request->input('price_min'), $request->input('price_max')]);
                 });
             })
             ->when($request->input('Year', []), function ($q, $years) {
@@ -269,9 +270,30 @@ class CarController extends Controller
      */
     public function create()
     {
-        return view('car.register');
-    }
+        // Check if user is trying to register as a bargain
+        $bargainId = request()->query('bargain_id');
+        $bargain = null;
 
+        if ($bargainId && Auth::check()) {
+            // Get the bargain and verify it belongs to the user
+            $bargain = Auth::user()->bargains()->find($bargainId);
+
+            // Check if bargain has restrictions
+            if ($bargain) {
+                // If bargain is blocked, redirect with error
+                if ($bargain->registration_status === 'blocked') {
+                    return redirect()->back()->with('error', 'Your bargain is currently blocked. You cannot register cars at this time.');
+                }
+
+                // If bargain is restricted, check if restriction period is still active
+                if ($bargain->registration_status === 'restricted' && $bargain->hasActiveRestriction()) {
+                    return redirect()->back()->with('error', 'Your bargain is currently restricted until ' . $bargain->restriction_ends_at->format('M d, Y') . '. You cannot register cars during this period.');
+                }
+            }
+        }
+
+        return view('car.register', compact('bargain'));
+    }
 
     /**
      * @param StoreCarRequest $request
@@ -283,6 +305,41 @@ class CarController extends Controller
         try {
             Log::info('Car store method started');
             Log::info('Validated data:', $data);
+
+            // Check if registering as a bargain
+            $bargainId = $data['bargain_id'] ?? null;
+            $bargain = null;
+
+            if ($bargainId && Auth::check()) {
+                // Get the bargain and verify it belongs to the user
+                $bargain = Auth::user()->bargains()->find($bargainId);
+
+                // Check if bargain has restrictions
+                if ($bargain) {
+                    // If bargain is blocked, return error
+                    if ($bargain->registration_status === 'blocked') {
+                        if ($request->wantsJson()) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => 'Your bargain is currently blocked. You cannot register cars at this time.'
+                            ], 403);
+                        }
+                        return back()->with('error', 'Your bargain is currently blocked. You cannot register cars at this time.');
+                    }
+
+                    // If bargain is restricted, check if restriction period is still active
+                    if ($bargain->registration_status === 'restricted' && $bargain->hasActiveRestriction()) {
+                        $restrictionMessage = 'Your bargain is currently restricted until ' . $bargain->restriction_ends_at->format('M d, Y') . '. You cannot register cars during this period.';
+                        if ($request->wantsJson()) {
+                            return response()->json([
+                                'success' => false,
+                                'message' => $restrictionMessage
+                            ], 403);
+                        }
+                        return back()->with('error', $restrictionMessage);
+                    }
+                }
+            }
 
             // Handle image uploads
             $images = [];
@@ -308,7 +365,7 @@ class CarController extends Controller
 
             $carData = [
                 'user_id' => Auth::check() ? Auth::id() : 1, // Use authenticated user or default to 1
-                'bargain_id' => $data['bargain_id'] ?? null,
+                'bargain_id' => $bargainId ?? null, // Set bargain_id if provided
                 'title' => $data['title'],
                 'year' => $data['year'],
                 'make' => $data['make'],
@@ -316,7 +373,7 @@ class CarController extends Controller
                 'location' => $data['location'] ?? null,
                 'model' => $data['model'],
                 'car_color' => $data['car_color'],
-                'transmission_type' => $data['transmission_type'] ?? null,
+                'transmission_type' => in_array($data['transmission_type'] ?? null, ['manual', 'automatic']) ? $data['transmission_type'] : null,
                 'regular_price' => $data['regular_price'] ?? null,
                 'body_type' => $data['body_type'] ?? null,
                 'car_condition' => $data['car_condition'] ?? null,
@@ -365,7 +422,6 @@ class CarController extends Controller
         }
     }
 
-
     /**
      * Show the form for creating a new car.
      */
@@ -384,10 +440,10 @@ class CarController extends Controller
             ->first();
         $hasActivePromotion = (bool) $activePromotion;
         $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
-        
+
         // Get the active auction for this car
         $auction = $car->auctions->first();
-        
+
         $makes = Car::where('make', $car->make)->limit(10)->get();
         return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt', 'auction'));
     }
@@ -456,7 +512,6 @@ class CarController extends Controller
         $car->save();
         return response()->json(['status' => 'ok', 'is_promoted' => $car->is_promoted]);
     }
-
 
     public function CarDirectory()
     {

@@ -50,6 +50,11 @@ class Bargain extends BaseModel
         return $this->belongsTo(User::class);
     }
 
+    public function cars()
+    {
+        return $this->hasMany(Car::class);
+    }
+
     public function promotions()
     {
         return $this->morphMany(\App\Models\Promotion::class, 'promotable');
