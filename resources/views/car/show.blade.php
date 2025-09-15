@@ -409,9 +409,10 @@
                                 </div>
                             </li>
                             <li><a href="javascript:window.print()"><i class="fa fa-print"></i>Print this page</a></li>
-                              @if(auth()->check() && $car->user_id === auth()->id())
+                                                          @if(auth()->check() && $car->user_id === auth()->id())
                             <li><a href=""  data-bs-toggle="modal" data-bs-target="#offersModal"> <i class="fa fa-handshake me-2"></i>Show Offers Received <span class="badge bg-light text-dark ms-2">{{ $car->offers->count() }}</span></a></li>
                          @endif
+
                         </ul>
                     </div>
                 </div>
@@ -619,13 +620,12 @@
                     </div>
                 </div>
             </div>
-            
-            {{-- Offers Button - Only visible to car owner --}}
-            @if(auth()->check() && $car->user_id === auth()->id())
+                                          @if(auth()->check() && $car->user_id === auth()->id())
+
             <!-- <div class="row mt-4">
                 <div class="col-12">
                     <div class="d-grid gap-2">
-                        <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#offersModal">
+                        <button class="btn btn-danger btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#offersModal">
                             <i class="fa fa-handshake me-2"></i>Show Offers Received <span class="badge bg-light text-dark ms-2">{{ $car->offers->count() }}</span>
                         </button>
                     </div>
@@ -636,7 +636,7 @@
             <div class="modal fade" id="offersModal" tabindex="-1" aria-labelledby="offersModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-xl modal-dialog-scrollable">
                     <div class="modal-content">
-                        <div class="modal-header bg-primary text-white">
+                        <div class="modal-header bg-danger text-white">
                             <h5 class="modal-title" id="offersModalLabel">
                                 <i class="fa fa-handshake me-2"></i>Offers Received ({{ $car->offers->count() }})
                             </h5>
@@ -695,7 +695,7 @@
                                             </td>
                                             <td>
                                                 @if($offer->remark)
-                                                    <button class="btn btn-sm btn-outline-info" 
+                                                    <button class="btn btn-sm btn-outline-danger" 
                                                             data-bs-toggle="tooltip" 
                                                             title="{{ $offer->remark }}">
                                                         <i class="fa fa-eye"></i> View
@@ -770,7 +770,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary" onclick="location.reload()">
+                            <button type="button" class="btn btn-danger" onclick="location.reload()">
                                 <i class="fa fa-refresh me-1"></i>Refresh
                             </button>
                         </div>
@@ -1365,7 +1365,7 @@
                 
                 // Comments button
                 let commentsHtml = offer.remark ? 
-                    `<button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="${offer.remark}"><i class="fa fa-eye"></i> View</button>` :
+                    `<button class="btn btn-sm btn-outline-danger" data-bs-toggle="tooltip" title="${offer.remark}"><i class="fa fa-eye"></i> View</button>` :
                     `<span class="text-muted">No comments</span>`;
                 
                 tableHtml += `
