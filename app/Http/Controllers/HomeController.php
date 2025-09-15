@@ -11,7 +11,8 @@ class HomeController extends Controller
     public function index()
     {
         $promotedCars = $this->getPromotedCars();
-        return view('home.index', compact('promotedCars'));
+        $latestCars = $this->getLatestCars();
+        return view('home.index', compact('promotedCars', 'latestCars'));
     }
 
     public function filter(Request $request)
@@ -71,5 +72,14 @@ class HomeController extends Controller
         ->get();
 
         return $promotedCars;
+    }
+
+    public function getLatestCars()
+    {
+        $latestCars = Car::orderByDesc('id')
+            ->take(6)
+            ->get();
+
+        return $latestCars;
     }
 }
