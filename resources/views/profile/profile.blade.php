@@ -38,37 +38,6 @@
             font-weight: 600;
         }
 
-        .nav-tabs {
-            border-bottom: 1px solid #363636;
-            margin-bottom: 30px;
-        }
-
-        .nav-tabs .nav-link {
-            color: #a8a8a8;
-            border: none;
-            padding: 15px 20px;
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            background-color: #f8f9fa;
-            /* Light background for inactive tabs */
-        }
-
-        .nav-tabs .nav-link.active {
-            color: #fff;
-            background-color: #363636;
-            /* Dark background for active tab */
-            border-bottom: 1px solid #fff;
-        }
-
-        .nav-tabs .nav-link:hover {
-            color: #fff;
-            border: none;
-            background-color: #555;
-            /* Hover effect */
-        }
-
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -198,6 +167,7 @@
             border: 1px solid #e9ecef;
             margin-bottom: 15px;
             background: #fff;
+            cursor: pointer;
         }
 
         .notification-card:hover {
@@ -336,6 +306,46 @@
             border-radius: 8px 8px 0 0;
         }
 
+        /* Modern Tab Navigation */
+        .modern-tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 30px;
+            padding: 0;
+        }
+
+        .modern-tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #718096;
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: -2px;
+        }
+
+        .modern-tab:hover {
+            color: #4a5568;
+            background-color: #f7fafc;
+        }
+
+        .modern-tab.active {
+            color: #2d3748;
+            background-color: #ffffff;
+            border-bottom: 2px solid #3182ce;
+        }
+
+        .notification-count-badge {
+            background-color: #e53e3e;
+            color: white;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
         /* Responsive adjustments */
         @media (max-width: 768px) {
             .notification-header {
@@ -355,6 +365,11 @@
                 justify-content: center;
                 margin-top: 10px;
             }
+            
+            .modern-tab {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -365,6 +380,16 @@
             .notification-header,
             .notification-body {
                 padding: 12px;
+            }
+            
+            .modern-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .modern-tab {
+                flex: 1 0 auto;
+                text-align: center;
+                margin-bottom: 0;
             }
         }
     </style>
@@ -463,18 +488,18 @@
             </div>
         </a>
 
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link active" data-tab="cars">Cars ({{ $profile->cars->count() }})</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-tab="notifications">Notifications (<span id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>)</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-tab="bargains">Bargains ({{ $bargains->count() }})</a>
-            </li>
-        </ul>
+        <!-- Modern Tab Navigation -->
+        <div class="modern-tabs">
+            <div class="modern-tab active" data-tab="cars">
+                Cars ({{ $profile->cars->count() }})
+            </div>
+            <div class="modern-tab" data-tab="notifications">
+                Notifications <span class="notification-count-badge" id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
+            </div>
+            <div class="modern-tab" data-tab="bargains">
+                Bargains ({{ $bargains->count() }})
+            </div>
+        </div>
 
         <!-- Cars Tab Content - Consistent Image Dimensions -->
         <div id="cars-tab" class="tab-content active">
@@ -549,7 +574,8 @@
                 @if(auth()->user()->notifications->count() > 0)
                     @foreach(auth()->user()->notifications as $notification)
                         <div class="notification-card {{ $notification->read_at ? '' : 'unread' }}" 
-                             data-notification-id="{{ $notification->id }}">
+                             data-notification-id="{{ $notification->id }}"
+                             data-car-url="{{ route('car.show', $notification->data['car_id']) }}">
                             <div class="notification-header">
                                 <div class="notification-image">
                                     <i class="fas fa-car"></i>
@@ -559,10 +585,7 @@
                                         <div>
                                             <div class="notification-sender">{{ $notification->data['sender_name'] }}</div>
                                             <div class="notification-car-title">
-                                                <a href="{{ route('car.show', $notification->data['car_id']) }}" 
-                                                   class="text-decoration-none">
-                                                    {{ $notification->data['car_title'] }}
-                                                </a>
+                                                {{ $notification->data['car_title'] }}
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center">
@@ -683,15 +706,14 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
 
-        // Tab switching functionality
-        document.querySelectorAll('.nav-link').forEach(link => {
-            link.addEventListener('click', function(e) {
+        // Modern Tab switching functionality
+        document.querySelectorAll('.modern-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
                 e.preventDefault();
 
                 // Remove active class from all tabs
-                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove(
-                    'active'));
+                document.querySelectorAll('.modern-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
 
                 // Add active class to clicked tab
                 this.classList.add('active');
@@ -714,9 +736,29 @@
             });
         });
 
+        // Make entire notification card clickable
+        document.querySelectorAll('.notification-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Prevent click if the user clicked on the "Mark as Read" button
+                if (e.target.classList.contains('mark-as-read-btn')) {
+                    return;
+                }
+                
+                // Get the car URL from the data attribute
+                const carUrl = this.getAttribute('data-car-url');
+                
+                // Redirect to the car page
+                if (carUrl) {
+                    window.location.href = carUrl;
+                }
+            });
+        });
+
         // Mark notification as read
         document.querySelectorAll('.mark-as-read-btn').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent triggering the card click event
+                
                 const notificationId = this.getAttribute('data-notification-id');
                 const notificationElement = document.querySelector(`[data-notification-id="${notificationId}"]`);
                 
