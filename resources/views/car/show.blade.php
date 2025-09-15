@@ -409,6 +409,9 @@
                                 </div>
                             </li>
                             <li><a href="javascript:window.print()"><i class="fa fa-print"></i>Print this page</a></li>
+                              @if(auth()->check() && $car->user_id === auth()->id())
+                            <li><a href=""  data-bs-toggle="modal" data-bs-target="#offersModal"> <i class="fa fa-handshake me-2"></i>Show Offers Received <span class="badge bg-light text-dark ms-2">{{ $car->offers->count() }}</span></a></li>
+                         @endif
                         </ul>
                     </div>
                 </div>
@@ -497,18 +500,6 @@
                                 <p>Temporibus possimus quasi beatae, consectetur adipisicing elit. Obcaecati unde molestias
                                     sunt officiis aliquid sapiente, numquam, porro perspiciatis neque voluptatem sint hic
                                     quam eveniet ad adipisci laudantium corporis ipsam ea!
-                                    <br /><br />
-                                    Consectetur adipisicing elit. Dicta, amet quia ad debitis fugiat voluptatem neque
-                                    dolores tempora iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa,
-                                    illo a You will begin to realize why, consectetur adipisicing elit. Commodi, doloribus,
-                                    earum modi consectetur molestias asperiores sequi ipsam neque error itaque veniam culpa
-                                    eligendi similique ducimus nulla, blanditiis, perspiciatis atque saepe! veritatis.
-
-                                    <br /><br />
-                                    Adipisicing consectetur elit. Dicta, amet quia ad debitis fugiat voluptatem neque
-                                    dolores tempora iste saepe cupiditate, molestiae iure voluptatibus est beatae? Culpa,
-                                    illo a You will begin to realize why, consectetur adipisicing elit. Commodi, doloribus,
-                                    earum modi consectetur molestias asperiores.
                                 </p>
                             </div>
                         </div>
@@ -629,136 +620,159 @@
                 </div>
             </div>
             
-            {{-- Offers Section - Only visible to car owner --}}
-            @if(auth()->check() && $car->user_id === auth()->id() && $car->offers->count() > 0)
-            <div class="row mt-5">
-                <div class="col-md-12">
-                    <div class="details-block">
-                        <div class="card">
-                            <div class="card-header bg-primary text-white">
-                                <h5 class="mb-0">
-                                    <i class="fa fa-handshake me-2"></i>
-                                    Offers Received ({{ $car->offers->count() }})
-                                </h5>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th><i class="fa fa-user me-1"></i>Name</th>
-                                                <th><i class="fa fa-phone me-1"></i>Phone</th>
-                                                <th><i class="fa fa-envelope me-1"></i>Email</th>
-                                                <th><i class="fa fa-dollar-sign me-1"></i>Offered Price</th>
-                                                <th><i class="fa fa-comment me-1"></i>Comments</th>
-                                                <th><i class="fa fa-calendar me-1"></i>Date</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($car->offers->sortByDesc('created_at') as $offer)
-                                            <tr>
-                                                <td>
-                                                    <strong>{{ $offer->name }}</strong>
-                                                </td>
-                                                <td>
-                                                    <a href="tel:{{ $offer->phone }}" class="text-decoration-none">
-                                                        {{ $offer->phone }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <a href="mailto:{{ $offer->email }}" class="text-decoration-none">
-                                                        {{ $offer->email }}
-                                                    </a>
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-success fs-6">
-                                                        ${{ number_format($offer->price) }}
-                                                    </span>
-                                                    @if($offer->price > $car->regular_price)
-                                                        <small class="text-success d-block">
-                                                            <i class="fa fa-arrow-up"></i>
-                                                            +${{ number_format($offer->price - $car->regular_price) }} above asking
-                                                        </small>
-                                                    @elseif($offer->price < $car->regular_price)
-                                                        <small class="text-warning d-block">
-                                                            <i class="fa fa-arrow-down"></i>
-                                                            -${{ number_format($car->regular_price - $offer->price) }} below asking
-                                                        </small>
-                                                    @else
-                                                        <small class="text-info d-block">
-                                                            <i class="fa fa-check"></i> Exact asking price
-                                                        </small>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if($offer->remark)
-                                                        <button class="btn btn-sm btn-outline-info" 
-                                                                data-bs-toggle="tooltip" 
-                                                                title="{{ $offer->remark }}">
-                                                            <i class="fa fa-eye"></i> View
-                                                        </button>
-                                                    @else
-                                                        <span class="text-muted">No comments</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <small class="text-muted">
-                                                        {{ $offer->created_at->format('M d, Y') }}<br>
-                                                        {{ $offer->created_at->format('g:i A') }}
+            {{-- Offers Button - Only visible to car owner --}}
+            @if(auth()->check() && $car->user_id === auth()->id())
+            <!-- <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg" type="button" data-bs-toggle="modal" data-bs-target="#offersModal">
+                            <i class="fa fa-handshake me-2"></i>Show Offers Received <span class="badge bg-light text-dark ms-2">{{ $car->offers->count() }}</span>
+                        </button>
+                    </div>
+                </div>
+            </div> -->
+
+            <!-- Offers Modal -->
+            <div class="modal fade" id="offersModal" tabindex="-1" aria-labelledby="offersModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="offersModalLabel">
+                                <i class="fa fa-handshake me-2"></i>Offers Received ({{ $car->offers->count() }})
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            @if($car->offers->count() > 0)
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th><i class="fa fa-user me-1"></i>Name</th>
+                                            <th><i class="fa fa-phone me-1"></i>Phone</th>
+                                            <th><i class="fa fa-envelope me-1"></i>Email</th>
+                                            <th><i class="fa fa-dollar-sign me-1"></i>Offered Price</th>
+                                            <th><i class="fa fa-comment me-1"></i>Comments</th>
+                                            <th><i class="fa fa-calendar me-1"></i>Date</th>
+                                            <!-- <th>Actions</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($car->offers->sortByDesc('created_at') as $offer)
+                                        <tr>
+                                            <td>
+                                                <strong>{{ $offer->name }}</strong>
+                                            </td>
+                                            <td>
+                                                <a href="tel:{{ $offer->phone }}" class="text-decoration-none">
+                                                    {{ $offer->phone }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <a href="mailto:{{ $offer->email }}" class="text-decoration-none">
+                                                    {{ $offer->email }}
+                                                </a>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-success fs-6">
+                                                    ${{ number_format($offer->price) }}
+                                                </span>
+                                                @if($offer->price > $car->regular_price)
+                                                    <small class="text-success d-block">
+                                                        <i class="fa fa-arrow-up"></i>
+                                                        +${{ number_format($offer->price - $car->regular_price) }} above asking
                                                     </small>
-                                                </td>
-                                                <td>
-                                                    <div class="btn-group-vertical btn-group-sm">
-                                                        <a href="mailto:{{ $offer->email }}?subject=Re: Car Offer - {{ $car->title }}&body=Hi {{ $offer->name }}, Thank you for your offer of ${{ number_format($offer->price) }} for my {{ $car->title }}." 
-                                                           class="btn btn-success btn-sm">
-                                                            <i class="fa fa-reply"></i> Reply
-                                                        </a>
-                                                        <a href="tel:{{ $offer->phone }}" class="btn btn-primary btn-sm">
-                                                            <i class="fa fa-phone"></i> Call
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                                @elseif($offer->price < $car->regular_price)
+                                                    <small class="text-warning d-block">
+                                                        <i class="fa fa-arrow-down"></i>
+                                                        -${{ number_format($car->regular_price - $offer->price) }} below asking
+                                                    </small>
+                                                @else
+                                                    <small class="text-info d-block">
+                                                        <i class="fa fa-check"></i> Exact asking price
+                                                    </small>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if($offer->remark)
+                                                    <button class="btn btn-sm btn-outline-info" 
+                                                            data-bs-toggle="tooltip" 
+                                                            title="{{ $offer->remark }}">
+                                                        <i class="fa fa-eye"></i> View
+                                                    </button>
+                                                @else
+                                                    <span class="text-muted">No comments</span>
+                                                @endif
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    {{ $offer->created_at->format('M d, Y') }}<br>
+                                                    {{ $offer->created_at->format('g:i A') }}
+                                                </small>
+                                            </td>
+                                            <!-- <td>
+                                                <div class="btn-group-vertical btn-group-sm">
+                                                    <a href="mailto:{{ $offer->email }}?subject=Re: Car Offer - {{ $car->title }}&body=Hi {{ $offer->name }}, Thank you for your offer of ${{ number_format($offer->price) }} for my {{ $car->title }}." 
+                                                       class="btn btn-success btn-sm">
+                                                        <i class="fa fa-reply"></i> Reply
+                                                    </a>
+                                                    <a href="tel:{{ $offer->phone }}" class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-phone"></i> Call
+                                                    </a>
+                                                </div>
+                                            </td> -->
+                                        </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            {{-- Summary Stats --}}
+                            <div class="row mt-4">
+                                <div class="col-md-4 col-sm-6 mb-3">
+                                    <div class="card border-success h-100">
+                                        <div class="card-body text-center">
+                                            <h6 class="text-success">Highest Offer</h6>
+                                            <h4 class="text-success">
+                                                ${{ number_format($car->offers->max('price')) }}
+                                            </h4>
+                                        </div>
+                                    </div>
                                 </div>
-                                
-                                {{-- Summary Stats --}}
-                                <div class="row mt-3">
-                                    <div class="col-md-4">
-                                        <div class="card border-success">
-                                            <div class="card-body text-center">
-                                                <h6 class="text-success">Highest Offer</h6>
-                                                <h4 class="text-success">
-                                                    ${{ number_format($car->offers->max('price')) }}
-                                                </h4>
-                                            </div>sss
+                                <div class="col-md-4 col-sm-6 mb-3">
+                                    <div class="card border-warning h-100">
+                                        <div class="card-body text-center">
+                                            <h6 class="text-warning">Average Offer</h6>
+                                            <h4 class="text-warning">
+                                                ${{ number_format($car->offers->avg('price')) }}
+                                            </h4>
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
-                                        <div class="card border-warning">
-                                            <div class="card-body text-center">
-                                                <h6 class="text-warning">Average Offer</h6>
-                                                <h4 class="text-warning">
-                                                    ${{ number_format($car->offers->avg('price')) }}
-                                                </h4>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="card border-info">
-                                            <div class="card-body text-center">
-                                                <h6 class="text-info">Your Asking Price</h6>
-                                                <h4 class="text-info">
-                                                    ${{ number_format($car->regular_price) }}
-                                                </h4>
-                                            </div>
+                                </div>
+                                <div class="col-md-4 col-sm-6 mb-3">
+                                    <div class="card border-info h-100">
+                                        <div class="card-body text-center">
+                                            <h6 class="text-info">Your Asking Price</h6>
+                                            <h4 class="text-info">
+                                                ${{ number_format($car->regular_price) }}
+                                            </h4>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            @else
+                            <div class="text-center py-5">
+                                <i class="fa fa-inbox fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No offers received yet</h5>
+                                <p class="text-muted">Offers from interested buyers will appear here</p>
+                            </div>
+                            @endif
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="location.reload()">
+                                <i class="fa fa-refresh me-1"></i>Refresh
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -1019,6 +1033,10 @@
                                         $('.modal-backdrop').remove();
                                     }
                                 });
+                                
+                                // Auto-refresh offers modal if it's open
+                                refreshOffersModal();
+                                
                                 $('#exampleModal3').off('hidden.bs.modal');
                             });
                         } else {
@@ -1260,6 +1278,163 @@
                 modal?.hide();
             });
         });
+        
+        // Function to refresh offers modal dynamically
+        function refreshOffersModal() {
+            // Only refresh if user is the car owner and offers modal exists
+            if (typeof car_id !== 'undefined' && $('#offersModal').length > 0) {
+                // Check if modal is currently open
+                if ($('#offersModal').hasClass('show')) {
+                    // Show loading state
+                    const modalBody = $('#offersModal .modal-body');
+                    const originalContent = modalBody.html();
+                    modalBody.html('<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Refreshing offers...</p></div>');
+                    
+                    // Make AJAX request to get updated offers
+                    $.ajax({
+                        url: '/car/show/' + car_id + '/offers',
+                        type: 'GET',
+                        dataType: 'json',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(response) {
+                            if (response.offers) {
+                                // Update offers count badge
+                                $('.offers-count-badge').text(response.count);
+                                $('#offersModalLabel').html('<i class="fa fa-handshake me-2"></i>Offers Received (' + response.count + ')');
+                                
+                                // If there are offers, update the table
+                                if (response.count > 0) {
+                                    updateOffersTableInModal(response.offers, response.stats);
+                                } else {
+                                    // Show no offers message
+                                    modalBody.html(`
+                                        <div class="text-center py-5">
+                                            <i class="fa fa-inbox fa-3x text-muted mb-3"></i>
+                                            <h5 class="text-muted">No offers received yet</h5>
+                                            <p class="text-muted">Offers from interested buyers will appear here</p>
+                                        </div>
+                                    `);
+                                }
+                            }
+                        },
+                        error: function(xhr) {
+                            // Restore original content on error
+                            modalBody.html(originalContent);
+                            console.log('Failed to refresh offers modal:', xhr);
+                        }
+                    });
+                }
+            }
+        }
+
+        // Function to update offers table in modal with new data
+        function updateOffersTableInModal(offers, stats) {
+            let tableHtml = `
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th><i class="fa fa-user me-1"></i>Name</th>
+                                <th><i class="fa fa-phone me-1"></i>Phone</th>
+                                <th><i class="fa fa-envelope me-1"></i>Email</th>
+                                <th><i class="fa fa-dollar-sign me-1"></i>Offered Price</th>
+                                <th><i class="fa fa-comment me-1"></i>Comments</th>
+                                <th><i class="fa fa-calendar me-1"></i>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+    `;
+    
+            offers.forEach(function(offer) {
+                // Format date
+                const offerDate = new Date(offer.created_at);
+                const formattedDate = offerDate.toLocaleDateString() + '<br>' + offerDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                // Price comparison
+                let priceComparison = '';
+                if (offer.price > stats.asking) {
+                    priceComparison = `<small class="text-success d-block"><i class="fa fa-arrow-up"></i> +$${(offer.price - stats.asking).toLocaleString()} above asking</small>`;
+                } else if (offer.price < stats.asking) {
+                    priceComparison = `<small class="text-warning d-block"><i class="fa fa-arrow-down"></i> -$${(stats.asking - offer.price).toLocaleString()} below asking</small>`;
+                } else {
+                    priceComparison = `<small class="text-info d-block"><i class="fa fa-check"></i> Exact asking price</small>`;
+                }
+                
+                // Comments button
+                let commentsHtml = offer.remark ? 
+                    `<button class="btn btn-sm btn-outline-info" data-bs-toggle="tooltip" title="${offer.remark}"><i class="fa fa-eye"></i> View</button>` :
+                    `<span class="text-muted">No comments</span>`;
+                
+                tableHtml += `
+                    <tr>
+                        <td><strong>${offer.name}</strong></td>
+                        <td><a href="tel:${offer.phone}" class="text-decoration-none">${offer.phone}</a></td>
+                        <td><a href="mailto:${offer.email}" class="text-decoration-none">${offer.email}</a></td>
+                        <td>
+                            <span class="badge bg-success fs-6">$${parseFloat(offer.price).toLocaleString()}</span>
+                            ${priceComparison}
+                        </td>
+                        <td>${commentsHtml}</td>
+                        <td><small class="text-muted">${formattedDate}</small></td>
+                        <td>
+                            <div class="btn-group-vertical btn-group-sm">
+                                <a href="mailto:${offer.email}?subject=Re: Car Offer&body=Hi ${offer.name}, Thank you for your offer of $${parseFloat(offer.price).toLocaleString()}." class="btn btn-success btn-sm">
+                                    <i class="fa fa-reply"></i> Reply
+                                </a>
+                                <a href="tel:${offer.phone}" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-phone"></i> Call
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+    
+            tableHtml += `
+                </tbody>
+            </table>
+        </div>
+    `;
+    
+    // Summary stats
+    tableHtml += `
+        <div class="row mt-4">
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card border-success h-100">
+                    <div class="card-body text-center">
+                        <h6 class="text-success">Highest Offer</h6>
+                        <h4 class="text-success">$${parseFloat(stats.highest).toLocaleString()}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card border-warning h-100">
+                    <div class="card-body text-center">
+                        <h6 class="text-warning">Average Offer</h6>
+                        <h4 class="text-warning">$${parseFloat(stats.average).toLocaleString()}</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6 mb-3">
+                <div class="card border-info h-100">
+                    <div class="card-body text-center">
+                        <h6 class="text-info">Your Asking Price</h6>
+                        <h4 class="text-info">$${parseFloat(stats.asking).toLocaleString()}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    $('#offersModal .modal-body').html(tableHtml);
+    
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+}
+
     </script>
 
 
