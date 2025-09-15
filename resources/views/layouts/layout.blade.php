@@ -142,6 +142,19 @@
                                             </li>
                                         </ul>
                                     </li>
+
+                                    <!-- Profile/Bargain Switcher -->
+                                    @if (Route::currentRouteName() == 'user.profile')
+                                        <li class="list-inline-item dropdown" id="navbar-switcher">
+                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                <i class="fas fa-exchange-alt"></i> Switch
+                                            </a>
+                                            <ul class="dropdown-menu dropdown-menu-end" id="navbar-switcher-content">
+                                                <!-- Will be populated by JavaScript -->
+                                            </ul>
+                                        </li>
+                                    @endif
                                 @endauth
                             </ul>
                         </div>
@@ -547,6 +560,58 @@
 
         // Update count every minute to check for expiration
         setInterval(updateNavbarCompareCount, 60000);
+
+        // Profile/Bargain switcher for navbar
+        function initializeNavbarSwitcher() {
+            // Only initialize if we're on the profile page
+            if (window.location.pathname !== '/profile') {
+                return;
+            }
+
+            const switcher = document.getElementById('navbar-switcher');
+            const switcherContent = document.getElementById('navbar-switcher-content');
+
+            if (!switcher || !switcherContent) {
+                return;
+            }
+
+            // Get bargains data from localStorage (set by profile page)
+            try {
+                const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
+
+                // Clear existing content
+                switcherContent.innerHTML = '';
+
+                // Add user profile option
+                const userItem = document.createElement('li');
+                userItem.innerHTML =
+                    '<a class="dropdown-item" href="javascript:void(0)" onclick="switchToProfileFromNavbar()"><i class="fas fa-user"></i> User Profile</a>';
+                switcherContent.appendChild(userItem);
+
+                // Add bargain options
+                bargainsData.forEach(bargain => {
+                    const item = document.createElement('li');
+                    item.innerHTML =
+                        `<a class="dropdown-item" href="javascript:void(0)" onclick="switchToBargainFromNavbar(${bargain.id}, '${bargain.name.replace(/'/g, "\\'")}')"><i class="fas fa-handshake"></i> ${bargain.name}</a>`;
+                    switcherContent.appendChild(item);
+                });
+            } catch (e) {
+                console.error('Error initializing navbar switcher:', e);
+            }
+        }
+
+        function switchToProfileFromNavbar() {
+            // Redirect to profile page in user mode
+            window.location.href = '/profile';
+        }
+
+        function switchToBargainFromNavbar(bargainId, bargainName) {
+            // Redirect to profile page in bargain mode
+            window.location.href = `/profile?bargain_id=${bargainId}`;
+        }
+
+        // Initialize navbar switcher when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeNavbarSwitcher);
     </script>
 </body>
 
