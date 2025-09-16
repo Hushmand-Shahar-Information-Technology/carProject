@@ -172,4 +172,22 @@ Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatCo
 // API route for car comparison
 Route::get('/api/cars/details', [CarController::class, 'getCarDetails'])->name('api.cars.details');
 
+// Test route for auction filtering
+Route::get('/test-auction-filter', function () {
+    $cars = App\Models\Car::query()
+        // Show ONLY cars that have active auctions
+        ->whereHas('auctions', function ($subQuery) {
+            $subQuery->where('status', 'active');
+        })
+        ->with(['auctions' => function ($q) {
+            $q->where('status', 'active')->latest();
+        }])
+        ->get();
+    
+    return response()->json([
+        'count' => $cars->count(),
+        'cars' => $cars->toArray()
+    ]);
+});
+
 require __DIR__ . '/auth.php';
