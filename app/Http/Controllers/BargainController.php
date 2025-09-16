@@ -6,6 +6,7 @@ use App\Models\Bargain;
 use App\services\BargainService;
 use App\Http\Requests\BargainRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BargainController extends Controller
 {
@@ -52,7 +53,7 @@ class BargainController extends Controller
                 'written_contract_number' => $b->registration_number,
                 'registration_status' => $b->registration_status ?? 'pending',
                 'restriction_count' => $b->restriction_count ?? 0,
-                'can_manage_status' => auth()->check() && $this->canManageStatus(),
+                'can_manage_status' => Auth::check() && $this->canManageStatus(),
                 'showUrl' => route('bargains.show', $b->id),
                 'editUrl' => route('bargains.edit', $b->id),
                 'deleteUrl' => route('bargains.destroy', $b->id),
@@ -111,8 +112,8 @@ class BargainController extends Controller
     }
     public function show($id)
     {
-        $bargain = Bargain::with('promotions')->findOrFail($id);
-        
+        $bargain = Bargain::with(['promotions', 'cars'])->findOrFail($id);
+
         // Check if restriction has expired and auto-remove it
         if ($bargain->isRestrictionExpired() && $bargain->registration_status === 'restricted') {
             $bargain->registration_status = 'approved';
@@ -123,7 +124,7 @@ class BargainController extends Controller
             $bargain->status_updated_at = now();
             $bargain->save();
         }
-        
+
         $activePromotion = $bargain->promotions()
             ->where(function ($q) {
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
@@ -141,13 +142,13 @@ class BargainController extends Controller
     public function updateStatus(Request $request, $id)
     {
         // Temporarily disabled for testing - enable auth check in production
-        // if (!auth()->check() || !$this->canManageStatus()) {
+        // if (!Auth::check() || !$this->canManageStatus()) {
         //     abort(403, 'Unauthorized to manage bargain status');
         // }
-        
+
         $bargain = Bargain::findOrFail($id);
         $oldStatus = $bargain->registration_status;
-        
+
         // Handle reset restrictions action
         if ($request->has('reset_restrictions') && $request->reset_restrictions) {
             $bargain->restriction_count = 0;
@@ -157,10 +158,10 @@ class BargainController extends Controller
             $bargain->status_reason = null;
             $bargain->status_updated_at = now();
             $bargain->save();
-            
+
             return response()->json(['message' => 'All restrictions cleared successfully!']);
         }
-        
+
         $request->validate([
             'status' => 'required|in:pending,approved,blocked,restricted',
             'description' => 'nullable|string|max:500',
@@ -174,29 +175,29 @@ class BargainController extends Controller
         // Handle restriction count logic
         if ($newStatus === 'restricted') {
             $bargain->restriction_count = ($bargain->restriction_count ?? 0) + 1;
-            
+
             // Set restriction duration
             $bargain->restriction_starts_at = now()->startOfDay();
             $bargain->restriction_ends_at = now()->addDays($restrictionDays)->endOfDay();
             $bargain->restriction_duration_days = $restrictionDays;
-            
+
             // Ensure restriction count doesn't exceed 3
             if ($bargain->restriction_count > 3) {
                 $bargain->restriction_count = 3;
             }
-            
+
             // Auto-block after 3 restrictions
             if ($bargain->restriction_count >= 3) {
                 $newStatus = 'blocked';
                 $bargain->restriction_starts_at = null;
                 $bargain->restriction_ends_at = null;
                 $bargain->restriction_duration_days = null;
-                $bargain->status_reason = $description ? 
-                    "Automatically blocked after 3 restrictions. Admin note: {$description}" : 
+                $bargain->status_reason = $description ?
+                    "Automatically blocked after 3 restrictions. Admin note: {$description}" :
                     'Automatically blocked after 3 restrictions';
             } else {
-                $bargain->status_reason = $description ? 
-                    "Restriction #{$bargain->restriction_count}/3 for {$restrictionDays} days. Admin note: {$description}" : 
+                $bargain->status_reason = $description ?
+                    "Restriction #{$bargain->restriction_count}/3 for {$restrictionDays} days. Admin note: {$description}" :
                     "Restriction #{$bargain->restriction_count}/3 for {$restrictionDays} days - ends on {$bargain->restriction_ends_at->format('M d, Y')}";
             }
         } elseif ($newStatus === 'approved' || $newStatus === 'pending') {
@@ -215,8 +216,8 @@ class BargainController extends Controller
             $bargain->restriction_starts_at = null;
             $bargain->restriction_ends_at = null;
             $bargain->restriction_duration_days = null;
-            $bargain->status_reason = $description ? 
-                "Account blocked by administrator. Reason: {$description}" : 
+            $bargain->status_reason = $description ?
+                "Account blocked by administrator. Reason: {$description}" :
                 'Account blocked by administrator';
         }
 
@@ -226,7 +227,7 @@ class BargainController extends Controller
 
         $statusText = ucfirst($newStatus);
         $message = "User status updated to {$statusText} successfully!";
-        
+
         if ($newStatus === 'blocked' && $bargain->restriction_count >= 3) {
             $message = "User has been automatically blocked after 3 restrictions!";
         }
@@ -240,39 +241,39 @@ class BargainController extends Controller
     public function sendWarning(Request $request, $id)
     {
         // Temporarily disabled for testing - enable auth check in production
-        // if (!auth()->check() || !$this->canManageStatus()) {
+        // if (!Auth::check() || !$this->canManageStatus()) {
         //     abort(403, 'Unauthorized to send warnings');
         // }
-        
+
         $request->validate([
             'warning_message' => 'nullable|string|max:500'
         ]);
-        
+
         $bargain = Bargain::findOrFail($id);
         $warningMessage = $request->warning_message;
-        
+
         // Here you could implement actual warning notification logic
         // For now, we'll store it in the status_reason field with a timestamp
-        
+
         $timestamp = now()->format('M d, Y');
-        $warningText = $warningMessage ? 
-            "Warning sent on {$timestamp}: {$warningMessage}" : 
+        $warningText = $warningMessage ?
+            "Warning sent on {$timestamp}: {$warningMessage}" :
             "Warning sent on {$timestamp}: General account activity warning";
-        
+
         // If there's already a status reason, append the warning
         if ($bargain->status_reason) {
             $bargain->status_reason .= "\n" . $warningText;
         } else {
             $bargain->status_reason = $warningText;
         }
-        
+
         $bargain->status_updated_at = now();
         $bargain->save();
-        
-        $responseMessage = $warningMessage ? 
-            "Warning sent to {$bargain->name} with custom message." : 
+
+        $responseMessage = $warningMessage ?
+            "Warning sent to {$bargain->name} with custom message." :
             "General warning sent to {$bargain->name}.";
-        
+
         return response()->json([
             'message' => $responseMessage
         ]);
@@ -283,23 +284,23 @@ class BargainController extends Controller
      */
     private function canManageStatus(): bool
     {
-        if (!auth()->check()) {
+        if (!Auth::check()) {
             return false;
         }
-        
-        $user = auth()->user();
-        
+
+        $user = Auth::user();
+
         // First check if user has admin email (fallback for systems without roles)
         if (in_array($user->email, ['admin@example.com', 'admin@admin.com', 'dev@dev.com'])) {
             return true;
         }
-        
+
         // Check if the system has roles/permissions and user has admin role
         try {
             if (method_exists($user, 'hasRole') && $user->hasRole('admin')) {
                 return true;
             }
-            
+
             if (method_exists($user, 'can') && $user->can('manage_bargain_status')) {
                 return true;
             }
@@ -307,7 +308,7 @@ class BargainController extends Controller
             // If roles/permissions are not set up, default to false
             return false;
         }
-        
+
         return false;
     }
 }

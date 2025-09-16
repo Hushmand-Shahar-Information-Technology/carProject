@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Http\Requests\AuctionRequest;
 use Illuminate\Support\Facades\Log;
@@ -16,6 +17,15 @@ class AuctionController extends Controller
     {
         // dd($request->all());
         $data = $request->validated();
+
+        // Check if there's already an active auction for this car
+        $existingActiveAuction = Auction::where('car_id', $data['car_id'])
+            ->where('status', 'active')
+            ->exists();
+
+        if ($existingActiveAuction) {
+            return redirect()->back()->with('error', 'This car already has an active auction. You cannot create another auction until the current one expires or is ended.');
+        }
 
         // Create auction
         if ($request->auction_type === 'fixed') {

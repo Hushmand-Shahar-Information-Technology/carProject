@@ -58,6 +58,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
+    Route::get('/user/profile/bargain/{id}/cars', [ProfileController::class, 'getBargainCars'])->name('user.profile.bargain.cars');
 });
 
 // Language switch route
@@ -68,7 +69,56 @@ Route::get('/lang/{locale}', function ($locale, Request $request) {
     return Redirect::back();
 })->name('lang.switch');
 
+Route::get('/test-bargain', function () {
+    try {
+        $bargain = \App\Models\Bargain::with(['promotions', 'cars'])->find(1);
+        return response()->json([
+            'bargain' => $bargain->toArray(),
+            'cars_count' => $bargain->cars->count(),
+            'cars' => $bargain->cars->map(function ($car) {
+                return [
+                    'id' => $car->id,
+                    'make' => $car->make,
+                    'model' => $car->model,
+                    'offers_count' => $car->offers->count()
+                ];
+            })->toArray()
+        ]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
+    }
+});
 
+Route::get('/test-bargain-cars', function () {
+    try {
+        $bargain = \App\Models\Bargain::with(['promotions', 'cars'])->find(1);
+        return view('test-cars', compact('bargain'));
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
+    }
+});
+
+Route::get('/test-bargain-show/{id}', function ($id) {
+    try {
+        $bargain = \App\Models\Bargain::with(['promotions', 'cars'])->findOrFail($id);
+        $hasActivePromotion = $bargain->promotions()->where(function ($q) {
+            $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+        })->exists();
+
+        $activePromotion = $bargain->promotions()
+            ->where(function ($q) {
+                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+            })
+            ->latest('ends_at')
+            ->first();
+
+        $activePromotionEndsAt = $activePromotion?->ends_at;
+
+        return view('bargains.show', compact('bargain', 'hasActivePromotion', 'activePromotionEndsAt'));
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage(), 'trace' => $e->getTraceAsString()], 500);
+    }
+});
 
 Route::prefix('bargains')->group(function () {
     Route::get('/', [BargainController::class, 'index'])->name('bargains.index');
@@ -121,5 +171,23 @@ Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatCo
 
 // API route for car comparison
 Route::get('/api/cars/details', [CarController::class, 'getCarDetails'])->name('api.cars.details');
+
+// Test route for auction filtering
+Route::get('/test-auction-filter', function () {
+    $cars = App\Models\Car::query()
+        // Show ONLY cars that have active auctions
+        ->whereHas('auctions', function ($subQuery) {
+            $subQuery->where('status', 'active');
+        })
+        ->with(['auctions' => function ($q) {
+            $q->where('status', 'active')->latest();
+        }])
+        ->get();
+    
+    return response()->json([
+        'count' => $cars->count(),
+        'cars' => $cars->toArray()
+    ]);
+});
 
 require __DIR__ . '/auth.php';

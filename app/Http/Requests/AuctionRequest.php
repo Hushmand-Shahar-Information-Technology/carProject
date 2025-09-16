@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Car;
+use App\Models\Auction;
 
 class AuctionRequest extends FormRequest
 {
@@ -26,7 +27,16 @@ class AuctionRequest extends FormRequest
         $car = Car::find($carId);
 
         return [
-            'car_id' => ['required', 'exists:cars,id'],
+            'car_id' => ['required', 'exists:cars,id', function ($attribute, $value, $fail) {
+                // Check if there's already an active auction for this car
+                $existingActiveAuction = Auction::where('car_id', $value)
+                    ->where('status', 'active')
+                    ->exists();
+
+                if ($existingActiveAuction) {
+                    $fail('This car already has an active auction. You cannot create another auction until the current one expires or is ended.');
+                }
+            }],
             'starting_price' => ['required', 'numeric', 'gt:0', function ($attribute, $value, $fail) use ($car) {
                 if ($car && $value >= $car->regular_price) {
                     $fail("The starting price must be smaller than the car's regular price ({$car->regular_price}).");

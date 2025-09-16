@@ -29,10 +29,10 @@ class StoreCarRequest extends FormRequest
             'year' => 'required|integer|min:1990|max:' . now()->year,
             'make' => 'required|string',
             'car_color' => 'required|string',
-            
+
             // Conditional fields - only required for sale
             'body_type' => 'nullable|string',
-            'car_condition' => 'nullable|string', 
+            'car_condition' => 'nullable|string',
             'VIN_number' => 'nullable|string',
             'location' => 'nullable|string',
             'model' => 'nullable|string',
@@ -41,19 +41,19 @@ class StoreCarRequest extends FormRequest
             'transmission_type' => 'nullable|string',
             'currency_type' => 'nullable|string',
             'description' => 'nullable|string',
-            
+
             // Purpose selections
             'is_for_sale' => 'sometimes|boolean',
             'is_for_rent' => 'sometimes|boolean',
             'is_promoted' => 'sometimes|boolean',
             'bargain_id' => 'nullable|exists:bargains,id',
-            
+
             // Price fields - conditional validation in withValidator
             'regular_price' => 'nullable|numeric|min:0',
 
             'rent_price_per_day' => 'nullable|numeric|min:0',
             'rent_price_per_month' => 'nullable|numeric|min:0',
-            
+
             // Media files - updated limits
             'images' => 'required|array|min:1|max:60',
             'images.*' => 'required|file|image|mimes:jpeg,jpg,png,gif,webp,svg|max:20480',
@@ -94,6 +94,12 @@ class StoreCarRequest extends FormRequest
                     }
                 }
 
+                // Validate transmission type values
+                $transmissionType = $request['transmission_type'] ?? null;
+                if ($transmissionType && !in_array($transmissionType, ['manual', 'automatic'])) {
+                    $validator->errors()->add('transmission_type', 'Please select a valid transmission type: manual or automatic.');
+                }
+
                 // Price validation for sale - regular price is optional
                 $regularPrice = $request['regular_price'] ?? null;
 
@@ -107,7 +113,7 @@ class StoreCarRequest extends FormRequest
             if ($isForRent) {
                 $dayPrice = $request['rent_price_per_day'] ?? null;
                 $monthPrice = $request['rent_price_per_month'] ?? null;
-                
+
                 // At least one rent price is required
                 if ((empty($dayPrice) || $dayPrice <= 0) && (empty($monthPrice) || $monthPrice <= 0)) {
                     $validator->errors()->add('rent_price_per_day', 'Provide rent per day or rent per month.');
