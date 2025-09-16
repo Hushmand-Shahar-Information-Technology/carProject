@@ -112,7 +112,7 @@ class BargainController extends Controller
     }
     public function show($id)
     {
-        $bargain = Bargain::with(['promotions', 'cars'])->findOrFail($id);
+        $bargain = Bargain::with(['promotions', 'cars.auctions'])->findOrFail($id);
 
         // Check if restriction has expired and auto-remove it
         if ($bargain->isRestrictionExpired() && $bargain->registration_status === 'restricted') {
