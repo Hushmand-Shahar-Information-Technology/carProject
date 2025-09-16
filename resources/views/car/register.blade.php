@@ -66,21 +66,27 @@
         </div>
     @endif
 
-    <div class="container mx-auto py-10" x-data="carForm()" x-init="$nextTick(() => {
-                initSelect2();
-                // Check if we're registering as a bargain
-                const urlParams = new URLSearchParams(window.location.search);
-                const bargainId = urlParams.get('bargain_id');
-                if (bargainId) {
-                    this.form.bargain_id = bargainId;
-                    // Also update the hidden input directly to ensure it's set
-                    const bargainInput = document.querySelector('input[name=\"bargain_id\"]'); if (bargainInput) {
-        bargainInput.value=bargainId; } } $nextTick(()=> {
-        // Sync Select2 values and calculate initial progress
-        syncSelect2Values();
-        watchProgress();
+    <div class="container mx-auto py-10" x-data="carForm()" x-init="() => {
+        $nextTick(() => {
+            initSelect2();
+            // Check if we're registering as a bargain
+            const urlParams = new URLSearchParams(window.location.search);
+            const bargainId = urlParams.get('bargain_id');
+            if (bargainId) {
+                this.form.bargain_id = bargainId;
+                // Also update the hidden input directly to ensure it's set
+                const bargainInput = document.querySelector('input[name=&quot;bargain_id&quot;]');
+                if (bargainInput) {
+                    bargainInput.value = bargainId;
+                }
+            }
+            $nextTick(() => {
+                // Sync Select2 values and calculate initial progress
+                syncSelect2Values();
+                watchProgress();
+            });
         });
-        })" x-cloak>
+    }" x-cloak>
         <div class="bg-white p-6 rounded shadow-md max-w-7xl mx-auto flex flex-row gap-6"
             style="box-shadow: 0 0 2px black; margin: 1rem 0;">
             <!-- Form Section -->
