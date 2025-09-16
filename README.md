@@ -36,10 +36,17 @@ php artisan auctions:end-expired
 ```
 
 ### Option 3: Running Scheduler in Development
-For development, you can run the scheduler continuously:
+For development, you can run the scheduler continuously using one of these methods:
+
+**Method 1: Using the provided batch file**
+Double-click on `run-scheduler.bat` to start the scheduler in a command window.
+
+**Method 2: Using the provided PowerShell script**
+Right-click on `run-scheduler.ps1` and select "Run with PowerShell".
+
+**Method 3: Running the scheduler command directly**
 ```bash
 php artisan schedule:work
 ```
 
 The system will automatically check every minute for expired auctions and update their status to 'ended'.
-
