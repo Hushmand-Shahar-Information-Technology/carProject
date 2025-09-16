@@ -562,13 +562,15 @@
                         <div class="details-block details-weight mb-4">
                             <h5>CAR OWNER</h5>
                             <div class="owner-info bg-light p-3 rounded">
+                                <a href="{{ route('user.profile') }}">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="fa fa-user-circle fa-2x text-primary me-3"></i>
                                     <div>
-                                        <h6 class="mb-0">{{ $car->user->name }}</h6>
-                                        <small class="text-muted">Car Owner</small>
+                                            <h6 class="mb-0">{{ $car->user->name }}</h6>
+                                            <small class="text-muted">Car Owner</small>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                                 @if($car->user->email)
                                 <div class="contact-info">
                                     <small class="text-muted">
