@@ -450,13 +450,20 @@
                     padding: 12px;
                 }
             }
+
+            /* Car type badge styling */
+            .car-type-badge {
+                margin-right: 5px;
+                font-size: 0.75rem;
+            }
     </style>
     <!--================================ -->
     <section class="inner-intro bg-8 bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
                 <div class="col-md-6 text-md-start d-inline-block">
-                    <h1 class="text-white" id="profile-title">{{ $profile->name }}</h1>
+                    <h1 class="text-white" id="profile-title">
+                        {{ $user->name }}{{ isset($activeBargain) ? ' - ' . $activeBargain->name : '' }}</h1>
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
@@ -477,8 +484,8 @@
             <div class="card shadow-sm" style="margin: 0 auto;">
                 <div class="row g-0">
                     <div class="col-md-4 p-3 text-center">
-                        <img src="{{ asset('images/02.png') }}" class="rounded-circle img-thumbnail profile-img"
-                            alt="Profile Picture" id="profile-image">
+                        <img src="{{ isset($activeBargain) && $activeBargain->profile_image ? asset('storage/' . $activeBargain->profile_image) : asset('images/02.png') }}"
+                            class="rounded-circle img-thumbnail profile-img" alt="Profile Picture" id="profile-image">
                         <div class="mt-2">
                             <!-- <span class="badge bg-success">Online</span> -->
                         </div>
@@ -486,38 +493,51 @@
                     <div class="col-md-8">
                         <div class="card-body">
                             <h5 class="card-title d-flex justify-content-between align-items-center">
-                                <span id="profile-name">{{ $profile->name }}</span>
+                                <span
+                                    id="profile-name">{{ isset($activeBargain) ? $activeBargain->name : $user->name }}</span>
                                 <div>
-                                    <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary"
-                                        id="edit-profile-btn">
-                                        <i class="fas fa-edit"></i> Edit
-                                    </a>
+                                    @if (isset($activeBargain))
+                                        <a href="{{ route('bargains.edit', $activeBargain->id) }}"
+                                            class="btn btn-sm btn-outline-primary" id="edit-profile-btn">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    @else
+                                        <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary"
+                                            id="edit-profile-btn">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                    @endif
                                 </div>
                             </h5>
                             <p class="card-text text-muted">
-                                <i class="fas fa-briefcase"></i> <span id="profile-email">{{ $profile->email }}</span>
+                                <i class="fas fa-briefcase"></i> <span
+                                    id="profile-email">{{ isset($activeBargain) ? $activeBargain->email : $user->email }}</span>
                             </p>
                             <p class="card-text">
                                 <small class="text-muted">
-                                    <i class="fas fa-map-marker-alt"></i> <span id="profile-location">San Francisco,
-                                        CA</span>
+                                    <i class="fas fa-map-marker-alt"></i> <span
+                                        id="profile-location">{{ isset($activeBargain) ? $activeBargain->address ?? 'N/A' : 'San Francisco, CA' }}</span>
                                 </small>
                             </p>
                             <div class="border-top pt-2">
                                 <div class="row text-center">
                                     <div class="col">
                                         <h6>Post</h6>
-                                        <strong id="post-count">{{ $profile->cars_count }}</strong>
+                                        <strong
+                                            id="post-count">{{ isset($activeBargain) ? $activeBargain->cars->count() : $user->cars->count() }}</strong>
                                     </div>
                                     <div class="col border-start">
                                         <h6 style="cursor: pointer;" class="hover-state">Offers</h6>
                                         <strong
-                                            id="offers-count">{{ $profile->cars->sum(fn($car) => $car->offers->count()) }}</strong>
+                                            id="offers-count">{{ isset($activeBargain) ? $activeBargain->cars->sum(fn($car) => $car->offers->count()) : $user->cars->sum(fn($car) => $car->offers->count()) }}</strong>
                                     </div>
-                                    <div class="col border-start" id="bargains-count-container">
-                                        <h6>Bargains</h6>
-                                        <strong id="bargains-count">{{ $bargains->count() }}</strong>
-                                    </div>
+                                    <!-- Only show bargains count when in user profile mode -->
+                                    @if (!isset($activeBargain))
+                                        <div class="col border-start" id="bargains-count-container">
+                                            <h6>Bargains</h6>
+                                            <strong id="bargains-count">{{ $bargains->count() }}</strong>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
 
@@ -529,7 +549,8 @@
                                         <h6>Registration Mode</h6>
                                         <div class="profile-dropdown">
                                             <button class="dropdown-btn" id="registration-mode-btn">
-                                                <i class="fas fa-user"></i> User Profile
+                                                <i class="fas fa-user"></i>
+                                                {{ isset($activeBargain) ? $activeBargain->name : 'User Profile' }}
                                             </button>
                                             <div class="dropdown-content">
                                                 <a href="javascript:void(0)" onclick="switchToProfile()"><i
@@ -543,18 +564,16 @@
                                         </div>
                                     </div>
 
-                                    <!-- Bargain Status Display -->
-                                    @if ($bargains->count() > 0)
-                                        @php
-                                            // We'll determine the active bargain in JavaScript
-                                            $activeBargain = $bargains->first();
-                                        @endphp
-
-                                        <div class="col border-start" id="bargain-status-container" style="display: none;">
+                                    <!-- Bargain Status Display (only shown when in bargain mode) -->
+                                    @if (isset($activeBargain))
+                                        <div class="col border-start" id="bargain-status-container">
                                             <h6>Bargain Status</h6>
-                                            <span class="badge bg-secondary" id="bargain-status-badge">
-                                                <span class="status-indicator status-pending"></span>
-                                                Pending
+                                            <span
+                                                class="badge {{ $activeBargain->status === 'approved' ? 'bg-success' : ($activeBargain->status === 'pending' ? 'bg-warning' : 'bg-danger') }}"
+                                                id="bargain-status-badge">
+                                                <span
+                                                    class="status-indicator {{ 'status-' . $activeBargain->status }}"></span>
+                                                {{ ucfirst($activeBargain->status) }}
                                             </span>
                                             <div id="bargain-restriction-info"></div>
                                         </div>
@@ -562,10 +581,20 @@
                                 </div>
 
                                 <!-- Show restriction message if bargain is restricted or blocked -->
-                                <div class="alert alert-warning mt-2 mb-0" id="restriction-message" style="display: none;">
-                                    <i class="fas fa-exclamation-triangle"></i>
-                                    <span id="restriction-message-text"></span>
-                                </div>
+                                @if (isset($activeBargain) && in_array($activeBargain->status, ['blocked', 'restricted']))
+                                    <div class="alert alert-warning mt-2 mb-0" id="restriction-message">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        <span id="restriction-message-text">
+                                            @if ($activeBargain->status === 'blocked')
+                                                This bargain profile is currently blocked. Please contact support for
+                                                assistance.
+                                            @elseif ($activeBargain->status === 'restricted')
+                                                This bargain profile has restrictions until
+                                                {{ $activeBargain->restriction_until ? $activeBargain->restriction_until->format('M d, Y') : 'further notice' }}.
+                                            @endif
+                                        </span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -587,7 +616,8 @@
         </div>
 
         <!-- New Post Section -->
-        <a href="{{ route('car.create') }}" id="new-car-link">
+        <a href="{{ route('car.create') }}{{ isset($activeBargain) ? '?bargain_id=' . $activeBargain->id : '' }}"
+            id="new-car-link">
             <div class="new-post">
                 <div class="new-post-circle">
                     <i class="fas fa-plus"></i>
@@ -600,22 +630,26 @@
         <ul class="nav nav-tabs mb-4">
             <li class="nav-item">
                 <a class="nav-link active" data-tab="cars">Cars (<span
-                        id="cars-tab-count">{{ $profile->cars->count() }}</span>)</a>
+                        id="cars-tab-count">{{ isset($activeBargain) ? $activeBargain->cars->count() : $user->cars->count() }}</span>)</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" data-tab="notifications">Notifications (<span
                         id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>)</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" data-tab="bargains">Bargains ({{ $bargains->count() }})</a>
-            </li>
+            <!-- Only show bargains tab when in user profile mode -->
+            @if (!isset($activeBargain))
+                <li class="nav-item">
+                    <a class="nav-link" data-tab="bargains">Bargains ({{ $bargains->count() }})</a>
+                </li>
+            @endif
         </ul>
 
         <!-- Cars Tab Content - Consistent Image Dimensions -->
         <div id="cars-tab" class="tab-content active">
             <div class="sorting-options-main">
-                <div class="row" id="user-cars-container">
-                    @forelse ($profile->cars as $car)
+                <div class="row" id="user-cars-container"
+                    style="{{ isset($activeBargain) ? 'display: none;' : 'display: flex;' }}">
+                    @forelse ($user->cars as $car)
                         <div class="col-lg-4 col-md-6 mb-4">
                             <div class="car-item gray-bg text-center promotion-card">
                                 @if ($car->is_promoted)
@@ -663,6 +697,20 @@
                                             {{ number_format($car->regular_price) }}</span>
                                     </div>
                                     <div class="mt-2">
+                                        <!-- Car type badges -->
+                                        @if ($car->is_for_sale)
+                                            <span class="badge bg-success">For Sale</span>
+                                        @endif
+                                        @if ($car->is_for_rent)
+                                            <span class="badge bg-info">For Rent</span>
+                                        @endif
+                                        @if ($car->auctions && $car->auctions->count() > 0)
+                                            <span class="badge bg-warning">Auction</span>
+                                        @endif
+                                        @if ($car->request_price_status)
+                                            <span class="badge bg-primary">Request Price: {{ $car->currency_type }}
+                                                {{ number_format($car->request_price) }}</span>
+                                        @endif
                                         <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
                                     </div>
                                 </div>
@@ -677,8 +725,84 @@
                     @endforelse
                 </div>
                 <!-- Bargain cars container (hidden by default) -->
-                <div class="row" id="bargain-cars-container" style="display: none;">
-                    <!-- Bargain cars will be loaded here dynamically -->
+                <div class="row" id="bargain-cars-container"
+                    style="{{ isset($activeBargain) ? 'display: flex;' : 'display: none;' }}">
+                    @if (isset($activeBargain))
+                        @forelse ($activeBargain->cars as $car)
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="car-item gray-bg text-center promotion-card">
+                                    @if ($car->is_promoted)
+                                        <span class="badge bg-success badge-promotion">Promoted</span>
+                                    @endif
+                                    <div class="car-image">
+                                        @if (isset($car->images[0]))
+                                            <img class="fixed-img" src="{{ asset('storage/' . $car->images[0]) }}"
+                                                alt="{{ $car->title }}">
+                                        @else
+                                            <img class="fixed-img" src="{{ asset('images/car/01.jpg') }}"
+                                                alt="Default Car Image">
+                                        @endif
+                                        <div class="car-overlay-banner">
+                                            <ul>
+                                                <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                            class="fa fa-link"></i></a>
+                                                </li>
+                                                <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                            class="fa fa-shopping-cart"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-registered"></i> {{ $car->year }}</li>
+                                            <li><i class="fa fa-cog"></i> {{ $car->transmission_type }} </li>
+                                            <li><i class="fa fa-shopping-cart"></i> {{ $car->currency_type }}
+                                                {{ number_format($car->regular_price) }}</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="{{ route('car.show', $car->id) }}">{{ $car->make }}
+                                            {{ $car->model }}</a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="new-price">{{ $car->currency_type }}
+                                                {{ number_format($car->regular_price) }}</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <!-- Car type badges -->
+                                            @if ($car->is_for_sale)
+                                                <span class="badge bg-success">For Sale</span>
+                                            @endif
+                                            @if ($car->is_for_rent)
+                                                <span class="badge bg-info">For Rent</span>
+                                            @endif
+                                            @if ($car->auctions && $car->auctions->count() > 0)
+                                                <span class="badge bg-warning">Auction</span>
+                                            @endif
+                                            @if ($car->request_price_status)
+                                                <span class="badge bg-primary">Request Price: {{ $car->currency_type }}
+                                                    {{ number_format($car->request_price) }}</span>
+                                            @endif
+                                            <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="col-12">
+                                <div class="alert alert-info text-center">
+                                    <i class="fas fa-car me-2"></i> No cars posted for this bargain yet.
+                                </div>
+                            </div>
+                        @endforelse
+                    @endif
                 </div>
             </div>
         </div>
@@ -760,66 +884,70 @@
             </div>
         </div>
 
-        <!-- Bargains Tab Content -->
-        <div id="bargains-tab" class="tab-content">
-            <div class="sorting-options-main">
-                <div class="row">
-                    @forelse ($bargains as $bargain)
-                        <div class="col-lg-4 col-md-6 mb-4">
-                            <div class="car-item gray-bg text-center promotion-card">
-                                @if ($bargain->promotions->isNotEmpty())
-                                    <span class="badge bg-success badge-promotion">Promoted</span>
-                                @endif
-                                <div class="car-image">
-                                    @if ($bargain->profile_image)
-                                        <img class="img-fluid" src="{{ asset('storage/' . $bargain->profile_image) }}"
-                                            alt="{{ $bargain->name }}">
-                                    @else
-                                        <img class="img-fluid" src="{{ asset('images/02.png') }}" alt="Default Profile">
+        <!-- Bargains Tab Content (only shown when in user profile mode) -->
+        @if (!isset($activeBargain))
+            <div id="bargains-tab" class="tab-content">
+                <div class="sorting-options-main">
+                    <div class="row">
+                        @forelse ($bargains as $bargain)
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="car-item gray-bg text-center promotion-card">
+                                    @if ($bargain->promotions->isNotEmpty())
+                                        <span class="badge bg-success badge-promotion">Promoted</span>
                                     @endif
-                                    <div class="car-overlay-banner">
-                                        <ul>
-                                            <li><a href="{{ route('bargains.show', $bargain->id) }}"><i
-                                                        class="fa fa-link"></i></a></li>
+                                    <div class="car-image">
+                                        @if ($bargain->profile_image)
+                                            <img class="img-fluid"
+                                                src="{{ asset('storage/' . $bargain->profile_image) }}"
+                                                alt="{{ $bargain->name }}">
+                                        @else
+                                            <img class="img-fluid" src="{{ asset('images/02.png') }}"
+                                                alt="Default Profile">
+                                        @endif
+                                        <div class="car-overlay-banner">
+                                            <ul>
+                                                <li><a href="{{ route('bargains.show', $bargain->id) }}"><i
+                                                            class="fa fa-link"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-user"></i> {{ $bargain->username }}</li>
+                                            <li><i class="fa fa-globe"></i> {{ $bargain->website ?? 'N/A' }}</li>
+                                            <li><i class="fa fa-file-contract"></i> {{ ucfirst($bargain->status) }}</li>
                                         </ul>
                                     </div>
-                                </div>
-                                <div class="car-list">
-                                    <ul class="list-inline">
-                                        <li><i class="fa fa-user"></i> {{ $bargain->username }}</li>
-                                        <li><i class="fa fa-globe"></i> {{ $bargain->website ?? 'N/A' }}</li>
-                                        <li><i class="fa fa-file-contract"></i> {{ ucfirst($bargain->status) }}</li>
-                                    </ul>
-                                </div>
-                                <div class="car-content">
-                                    <div class="star">
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star orange-color"></i>
-                                        <i class="fa fa-star-o orange-color"></i>
-                                    </div>
-                                    <a href="{{ route('bargains.show', $bargain->id) }}">{{ $bargain->name }}</a>
-                                    <div class="separator"></div>
-                                    <div class="price">
-                                        <span class="new-price">Bargain Registration</span>
-                                    </div>
-                                    <div class="mt-2">
-                                        <span class="badge bg-info">Bargain</span>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="{{ route('bargains.show', $bargain->id) }}">{{ $bargain->name }}</a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="new-price">Bargain Registration</span>
+                                        </div>
+                                        <div class="mt-2">
+                                            <span class="badge bg-info">Bargain</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <div class="alert alert-info text-center">
-                                <i class="fas fa-handshake me-2"></i> No bargains registered yet.
+                        @empty
+                            <div class="col-12">
+                                <div class="alert alert-info text-center">
+                                    <i class="fas fa-handshake me-2"></i> No bargains registered yet.
+                                </div>
                             </div>
-                        </div>
-                    @endforelse
+                        @endforelse
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -886,7 +1014,8 @@
                             }
 
                             // Update notification count
-                            const countElement = document.getElementById('notification-count');
+                            const countElement = document
+                                .getElementById('notification-count');
                             let count = parseInt(countElement.textContent);
                             if (count > 0) {
                                 countElement.textContent = count - 1;
@@ -898,6 +1027,207 @@
                     });
             });
         });
+
+        // Profile/Bargain switching functions
+        function switchToProfile() {
+            // Reload the page in user profile mode (without bargain_id parameter)
+            window.location.href = '{{ route('user.profile') }}';
+
+            // Also store in session via AJAX
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'user'
+                })
+            }).catch(error => console.error('Error setting profile mode:', error));
+        }
+
+        function switchToBargain(bargainId, bargainName) {
+            // Reload the page in bargain profile mode (with bargain_id parameter)
+            window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
+
+            // Store the current mode in localStorage
+            localStorage.setItem('registrationMode', 'bargain_' + bargainId);
+            localStorage.setItem('registrationModeName', bargainName);
+
+            // Also store in session via AJAX
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'bargain',
+                    bargain_id: bargainId
+                })
+            }).catch(error => console.error('Error setting profile mode:', error));
+        }
+
+        // Set the registration mode button text based on current mode
+        document.addEventListener('DOMContentLoaded', function() {
+            const modeButton = document.getElementById('registration-mode-btn');
+            const urlParams = new URLSearchParams(window.location.search);
+            const bargainId = urlParams.get('bargain_id');
+
+            if (bargainId) {
+                // We're in bargain mode, find the bargain name
+                const bargainLinks = document.querySelectorAll('.dropdown-content a');
+                for (let i = 0; i < bargainLinks.length; i++) {
+                    const onclickAttr = bargainLinks[i].getAttribute('onclick');
+                    if (onclickAttr && onclickAttr.includes(bargainId)) {
+                        const bargainName = bargainLinks[i].textContent.trim();
+                        modeButton.innerHTML = '<i class="fas fa-handshake"></i> ' + bargainName;
+                        break;
+                    }
+                }
+            } else {
+                // We're in user profile mode
+                modeButton.innerHTML = '<i class="fas fa-user"></i> User Profile';
+            }
+
+            // Store bargains data in localStorage for navbar switcher
+            const bargainsData = [
+                @foreach ($bargains as $bargain)
+                    {
+                        id: {{ $bargain->id }},
+                        name: "{{ addslashes($bargain->name) }}"
+                    },
+                @endforeach
+            ];
+            localStorage.setItem('bargainsData', JSON.stringify(bargainsData));
+
+            // Also store current mode in localStorage for navbar
+            if (bargainId) {
+                localStorage.setItem('currentProfileMode', 'bargain');
+                localStorage.setItem('currentBargainId', bargainId);
+
+                // Update the navbar switcher text to show current bargain name
+                const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
+                if (switcherButton) {
+                    // Find the bargain name
+                    const bargain = bargainsData.find(b => b.id == bargainId);
+                    if (bargain) {
+                        switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' + bargain.name;
+                    }
+                }
+            } else {
+                localStorage.setItem('currentProfileMode', 'user');
+
+                // Update the navbar switcher text to show user profile
+                const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
+                if (switcherButton) {
+                    switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> User Profile';
+                }
+            }
+
+            // Initialize navbar switcher
+            initializeNavbarSwitcher();
+        });
+
+        // Profile/Bargain switcher for navbar (copied from layout)
+        function initializeNavbarSwitcher() {
+            const switcher = document.getElementById('navbar-switcher');
+            const switcherContent = document.getElementById('navbar-switcher-content');
+
+            if (!switcher || !switcherContent) {
+                return;
+            }
+
+            // Get bargains data from localStorage (set by profile page)
+            try {
+                const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
+                const currentMode = localStorage.getItem('currentProfileMode') || 'user';
+                const currentBargainId = localStorage.getItem('currentBargainId') || null;
+
+                // Clear existing content
+                switcherContent.innerHTML = '';
+
+                // Add user profile option
+                const userItem = document.createElement('li');
+                userItem.innerHTML =
+                    '<a class="dropdown-item" href="javascript:void(0)" onclick="switchToProfileFromNavbar()"><i class="fas fa-user"></i> User Profile</a>';
+                switcherContent.appendChild(userItem);
+
+                // Add bargain options
+                bargainsData.forEach(bargain => {
+                    const item = document.createElement('li');
+                    item.innerHTML =
+                        `<a class="dropdown-item" href="javascript:void(0)" onclick="switchToBargainFromNavbar(${bargain.id}, '${bargain.name.replace(/'/g, "\\'")}')"><i class="fas fa-handshake"></i> ${bargain.name}</a>`;
+                    switcherContent.appendChild(item);
+                });
+
+                // Show the switcher
+                switcher.style.display = 'block';
+
+                // Highlight the current mode
+                setTimeout(() => {
+                    highlightCurrentModeInNavbar(currentMode, currentBargainId);
+                }, 100);
+            } catch (e) {
+                console.error('Error initializing navbar switcher:', e);
+            }
+        }
+
+        function switchToProfileFromNavbar() {
+            // Redirect to profile page in user mode
+            window.location.href = '/user/profile';
+        }
+
+        function switchToBargainFromNavbar(bargainId, bargainName) {
+            // Redirect to profile page in bargain mode
+            window.location.href = `/user/profile?bargain_id=${bargainId}`;
+        }
+
+        function highlightCurrentModeInNavbar(currentMode, bargainId) {
+            // Get all dropdown items
+            const items = document.querySelectorAll('#navbar-switcher-content .dropdown-item');
+
+            // Remove any existing highlights
+            items.forEach(item => {
+                item.classList.remove('bg-primary', 'text-white');
+            });
+
+            // Highlight the current mode
+            if (currentMode === 'user') {
+                // Highlight user profile item (first item)
+                if (items.length > 0) {
+                    items[0].classList.add('bg-primary', 'text-white');
+                }
+            } else if (currentMode === 'bargain' && bargainId) {
+                // Find and highlight the matching bargain item
+                for (let i = 1; i < items.length; i++) { // Start from 1 to skip user profile item
+                    const onclickAttr = items[i].getAttribute('onclick');
+                    if (onclickAttr && onclickAttr.includes(bargainId)) {
+                        items[i].classList.add('bg-primary', 'text-white');
+                        break;
+                    }
+                }
+            }
+
+            // Update the navbar switcher text to show current mode
+            const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
+            if (switcherButton) {
+                if (currentMode === 'user') {
+                    switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> User Profile';
+                } else if (currentMode === 'bargain' && bargainId) {
+                    // Find the bargain name from localStorage
+                    try {
+                        const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
+                        const bargain = bargainsData.find(b => b.id == bargainId);
+                        if (bargain) {
+                            switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' + bargain.name;
+                        }
+                    } catch (e) {
+                        console.error('Error updating navbar switcher text:', e);
+                    }
+                }
+            }
+        }
     </script>
 
 @endsection
