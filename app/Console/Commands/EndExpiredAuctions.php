@@ -11,7 +11,7 @@ class EndExpiredAuctions extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'auctions:end-expired';
+    protected $signature = 'auctions:end-expired {--verbose : Display detailed information about ended auctions}';
 
     /**
      * The console command description.
@@ -23,16 +23,17 @@ class EndExpiredAuctions extends Command
      */
     public function handle()
     {
-        $this->info('Checking for expired auctions...');
+        $this->info('[' . now()->toDateTimeString() . '] Checking for expired auctions...');
 
+        // Get expired auctions that are still marked as active
         $expiredAuctions = Auction::where('status', 'active')
             ->whereNotNull('end_at')
             ->where('end_at', '<=', now())
             ->get();
 
         if ($expiredAuctions->isEmpty()) {
-            $this->info('No expired auctions found.');
-            return;
+            $this->info('[' . now()->toDateTimeString() . '] No expired auctions found.');
+            return 0;
         }
 
         $count = $expiredAuctions->count();
@@ -42,7 +43,7 @@ class EndExpiredAuctions extends Command
         $updated = Auction::where('status', 'active')
             ->whereNotNull('end_at')
             ->where('end_at', '<=', now())
-            ->update(['status' => 'ended']);
+            ->update(['status' => 'ended', 'updated_at' => now()]);
 
         $this->info("Successfully ended {$updated} auction(s).");
         
@@ -53,7 +54,7 @@ class EndExpiredAuctions extends Command
             'auction_ids' => $expiredAuctions->pluck('id')->toArray()
         ]);
 
-        // Display details of ended auctions
+        // Display details of ended auctions if verbose option is used
         if ($this->option('verbose')) {
             $this->table(
                 ['ID', 'Car ID', 'Starting Price', 'End Date', 'Status'],
@@ -68,5 +69,7 @@ class EndExpiredAuctions extends Command
                 })
             );
         }
+
+        return 0;
     }
 }
