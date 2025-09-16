@@ -79,24 +79,6 @@
         // Sync Select2 values and calculate initial progress
         syncSelect2Values();
         watchProgress();
-        // Watch for form changes with deep watching for live updates
-        $watch('form', () => {
-        watchProgress();
-        // Trigger reactivity for review section
-        $dispatch('form-changed');
-        }, { deep: true });
-        // Watch for step changes to trigger sync
-        $watch('step', () => {
-        $nextTick(() => {
-        syncSelect2Values();
-        });
-        });
-        // Periodic sync to ensure live updates (every 500ms when form is active)
-        setInterval(() => {
-        if (document.hasFocus()) {
-        syncSelect2Values();
-        }
-        }, 500);
         });
         })" x-cloak>
         <div class="bg-white p-6 rounded shadow-md max-w-7xl mx-auto flex flex-row gap-6"
