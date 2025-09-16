@@ -442,7 +442,10 @@ class CarController extends Controller
         $activePromotionEndsAt = $activePromotion?->ends_at; // Carbon|null
 
         // Get the active auction for this car
-        $auction = $car->auctions->first();
+        $auction = $car->auctions()
+            ->where('status', 'active')
+            ->latest()
+            ->first();
 
         $makes = Car::where('make', $car->make)->limit(10)->get();
         return view('car.show', compact('car', 'makes', 'hasActivePromotion', 'activePromotionEndsAt', 'auction'));
