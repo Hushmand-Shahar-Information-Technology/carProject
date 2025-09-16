@@ -13,7 +13,7 @@
 
         .new-post-circle {
             width: 60px;
-            height: 60px;
+            height: 50px;
             border: 2px dashed #363636;
             border-radius: 50%;
             display: flex;
@@ -185,7 +185,7 @@
             border: none;
             cursor: pointer;
             border-radius: 4px;
-            min-width: 180px;
+            min-width: 160px;
             text-align: left;
             width: 100%;
         }
@@ -413,10 +413,54 @@
 
             /* Car image styling - consistent dimensions */
             .fixed-img {
-                aspect-ratio: 16 / 9;
+                aspect-ratio: 3 / 2; /* Adjusted for shorter height */
                 object-fit: cover;
                 width: 100%;
                 border-radius: 8px 8px 0 0;
+                height: auto;
+                transition: transform 0.3s ease;
+            }
+
+            /* Improve car item styling */
+            .car-item {
+                border-radius: 8px;
+                overflow: hidden;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                transition: transform 0.3s ease, box-shadow 0.3s ease;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                background: #fff;
+            }
+
+            .car-item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .car-item:hover .fixed-img {
+                transform: scale(1.05);
+            }
+
+            .car-image {
+                overflow: hidden;
+                border-radius: 8px 8px 0 0;
+                height: 30px;
+                /* Further reduced height for shorter images */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .car-content {
+                flex-grow: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 15px;
+            }
+
+            .car-content .price {
+                margin-top: auto;
             }
 
             /* Responsive adjustments */
