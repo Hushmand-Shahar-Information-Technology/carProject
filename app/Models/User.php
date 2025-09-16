@@ -55,4 +55,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Bargain::class);
     }
+
+    public function notifications()
+    {
+        return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')
+            ->orderBy('created_at', 'desc');
+    }
 }

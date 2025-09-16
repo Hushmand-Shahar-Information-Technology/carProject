@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
+use Illuminate\Database\Eloquent\Model;
+use App\Notifications\OfferSubmitted;
 
-class Offer extends BaseModel
+class Offer extends Model
 {
    protected $fillable = [
     'name', 'phone', 'email', 'price', 'car_id', 'remark',
@@ -13,5 +14,18 @@ class Offer extends BaseModel
 
     public function car(){
         return $this -> belongsTo(Car::class);
+    }
+
+    public static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($offer) {
+            // Send notification to the car owner
+            $car = $offer->car;
+            if ($car && $car->user) {
+                $car->user->notify(new OfferSubmitted($offer));
+            }
+        });
     }
 }

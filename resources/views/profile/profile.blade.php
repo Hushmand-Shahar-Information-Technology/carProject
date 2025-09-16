@@ -252,7 +252,204 @@
 
         .user-profile-view {
             display: block;
-        }
+
+            /* Notification styles - Modern Redesign */
+            .notification-badge {
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background-color: #dc3545;
+                color: white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+            .notifications-container {
+                max-width: 100%;
+            }
+
+            .notification-card {
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                transition: all 0.3s ease;
+                border: 1px solid #e9ecef;
+                margin-bottom: 15px;
+                background: #fff;
+            }
+
+            .notification-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .notification-card.unread {
+                border-left: 4px solid #007bff;
+                background-color: #f8f9ff;
+            }
+
+            .notification-header {
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .notification-image {
+                width: 50px;
+                height: 50px;
+                border-radius: 8px;
+                object-fit: cover;
+                margin-right: 15px;
+                background-color: #f1f3f5;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: #6c757d;
+                font-size: 20px;
+            }
+
+            .notification-info {
+                flex: 1;
+            }
+
+            .notification-sender {
+                font-weight: 600;
+                color: #212529;
+                margin-bottom: 3px;
+            }
+
+            .notification-car-title {
+                font-size: 0.9rem;
+                color: #6c757d;
+                margin-bottom: 0;
+            }
+
+            .notification-time {
+                font-size: 0.8rem;
+                color: #6c757d;
+                margin-bottom: 0;
+            }
+
+            .notification-body {
+                padding: 15px;
+            }
+
+            .notification-details {
+                display: flex;
+                flex-wrap: wrap;
+                margin-bottom: 15px;
+            }
+
+            .detail-item {
+                flex: 1 1 50%;
+                min-width: 200px;
+                margin-bottom: 10px;
+            }
+
+            .detail-label {
+                font-size: 0.8rem;
+                color: #6c757d;
+                margin-bottom: 3px;
+            }
+
+            .detail-value {
+                font-weight: 500;
+                color: #212529;
+            }
+
+            .notification-actions {
+                display: flex;
+                justify-content: flex-end;
+            }
+
+            .mark-as-read-btn {
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 20px;
+                padding: 5px 15px;
+                font-size: 0.85rem;
+                transition: all 0.2s;
+            }
+
+            .mark-as-read-btn:hover {
+                background-color: #0056b3;
+                transform: translateY(-1px);
+            }
+
+            .read-indicator {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: #28a745;
+                margin-left: 10px;
+            }
+
+            .unread-indicator {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background-color: #007bff;
+                margin-left: 10px;
+            }
+
+            .no-notifications {
+                text-align: center;
+                padding: 40px 20px;
+                color: #6c757d;
+            }
+
+            .no-notifications i {
+                font-size: 3rem;
+                margin-bottom: 15px;
+                color: #ced4da;
+            }
+
+            /* Car image styling - consistent dimensions */
+            .fixed-img {
+                aspect-ratio: 16 / 9;
+                object-fit: cover;
+                width: 100%;
+                border-radius: 8px 8px 0 0;
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 768px) {
+                .notification-header {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+
+                .notification-image {
+                    margin-bottom: 10px;
+                }
+
+                .detail-item {
+                    flex: 1 1 100%;
+                }
+
+                .notification-actions {
+                    justify-content: center;
+                    margin-top: 10px;
+                }
+            }
+
+            @media (max-width: 576px) {
+                .notification-card {
+                    margin-bottom: 10px;
+                }
+
+                .notification-header,
+                .notification-body {
+                    padding: 12px;
+                }
+            }
     </style>
     <!--================================ -->
     <section class="inner-intro bg-8 bg-overlay-black-70">
@@ -295,8 +492,6 @@
                                         id="edit-profile-btn">
                                         <i class="fas fa-edit"></i> Edit
                                     </a>
-                                    <button class="btn btn-sm btn-outline-primary" onclick="toggleOffers()"><i
-                                            class="fas fa-inbox"></i> see offers</a>
                                 </div>
                             </h5>
                             <p class="card-text text-muted">
@@ -391,43 +586,6 @@
             </div>
         </div>
 
-        <div class="border-top pt-2 " id="offer-section" style="display: none;">
-            <h1 class="text-center mt-4">offers</h1>
-            <div class="row">
-                <div class="col">
-                    @foreach ($profile->cars->filter(fn($car) => $car->offers->isNotEmpty()) as $car)
-                        <h5 class="text-primary"> {{ $car->title }} ({{ $car->offers->count() }} Offers)</h5>
-                        <div class="pt-2 pb-5">
-                            <div class="table-responsive">
-                                <table class="table table-row-dashed table-row-gray-300 gy-7">
-                                    <thead>
-                                        <tr class="fw-bold fs-6 text-gray-800">
-                                            <th>Name</th>
-                                            <th>Phone</th>
-                                            {{-- <th>Email</th> --}}
-                                            <th>Price</th>
-                                            <th>Remark</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($car->offers as $offer)
-                                            <tr>
-                                                <td>{{ $offer->name }}</td>
-                                                <td>{{ $offer->phone }}</td>
-                                                {{-- <td>{{ $offer->email }}</td> --}}
-                                                <td>{{ $offer->price }}</td>
-                                                <td>{{ $offer->remark }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-
         <!-- New Post Section -->
         <a href="{{ route('car.create') }}" id="new-car-link">
             <div class="new-post">
@@ -445,12 +603,15 @@
                         id="cars-tab-count">{{ $profile->cars->count() }}</span>)</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-tab="bargains">Bargains (<span
-                        id="bargains-tab-count">{{ $bargains->count() }}</span>)</a>
+                <a class="nav-link" data-tab="notifications">Notifications (<span
+                        id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>)</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-tab="bargains">Bargains ({{ $bargains->count() }})</a>
             </li>
         </ul>
 
-        <!-- Cars Tab Content -->
+        <!-- Cars Tab Content - Consistent Image Dimensions -->
         <div id="cars-tab" class="tab-content active">
             <div class="sorting-options-main">
                 <div class="row" id="user-cars-container">
@@ -462,10 +623,10 @@
                                 @endif
                                 <div class="car-image">
                                     @if (isset($car->images[0]))
-                                        <img class="img-fluid" src="{{ asset('storage/' . $car->images[0]) }}"
+                                        <img class="fixed-img" src="{{ asset('storage/' . $car->images[0]) }}"
                                             alt="{{ $car->title }}">
                                     @else
-                                        <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
+                                        <img class="fixed-img" src="{{ asset('images/car/01.jpg') }}"
                                             alt="Default Car Image">
                                     @endif
                                     <div class="car-overlay-banner">
@@ -519,6 +680,83 @@
                 <div class="row" id="bargain-cars-container" style="display: none;">
                     <!-- Bargain cars will be loaded here dynamically -->
                 </div>
+            </div>
+        </div>
+
+        <!-- Notifications Tab Content - With Links to Cars -->
+        <div id="notifications-tab" class="tab-content">
+            <div class="notifications-container">
+                @if (auth()->user()->notifications->count() > 0)
+                    @foreach (auth()->user()->notifications as $notification)
+                        <div class="notification-card {{ $notification->read_at ? '' : 'unread' }}"
+                            data-notification-id="{{ $notification->id }}">
+                            <div class="notification-header">
+                                <div class="notification-image">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="notification-info">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <div class="notification-sender">{{ $notification->data['sender_name'] }}
+                                            </div>
+                                            <div class="notification-car-title">
+                                                <a href="{{ route('car.show', $notification->data['car_id']) }}"
+                                                    class="text-decoration-none">
+                                                    {{ $notification->data['car_title'] }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="notification-time">
+                                                {{ $notification->created_at->diffForHumans() }}</div>
+                                            @if (!$notification->read_at)
+                                                <div class="unread-indicator" title="Unread"></div>
+                                            @else
+                                                <div class="read-indicator" title="Read"></div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="notification-body">
+                                <div class="notification-details">
+                                    <div class="detail-item">
+                                        <div class="detail-label">Offer Price</div>
+                                        <div class="detail-value">${{ number_format($notification->data['offer_price']) }}
+                                        </div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Contact</div>
+                                        <div class="detail-value">{{ $notification->data['sender_email'] }}</div>
+                                    </div>
+                                    <div class="detail-item">
+                                        <div class="detail-label">Phone</div>
+                                        <div class="detail-value">{{ $notification->data['sender_phone'] ?? 'N/A' }}</div>
+                                    </div>
+                                    @if ($notification->data['remark'])
+                                        <div class="detail-item">
+                                            <div class="detail-label">Message</div>
+                                            <div class="detail-value">{{ $notification->data['remark'] }}</div>
+                                        </div>
+                                    @endif
+                                </div>
+                                @if (!$notification->read_at)
+                                    <div class="notification-actions">
+                                        <button class="mark-as-read-btn" data-notification-id="{{ $notification->id }}">
+                                            Mark as Read
+                                        </button>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    @endforeach
+                @else
+                    <div class="no-notifications">
+                        <i class="fas fa-bell-slash"></i>
+                        <h4>No Notifications</h4>
+                        <p>You don't have any offer notifications yet.</p>
+                    </div>
+                @endif
             </div>
         </div>
 
@@ -584,47 +822,8 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // Get the current registration mode from localStorage or default to 'user'
-        let currentRegistrationMode = localStorage.getItem('registrationMode') || 'user';
-        let currentBargainId = localStorage.getItem('currentBargainId') || null;
-        let currentBargainName = localStorage.getItem('currentBargainName') || null;
-        let currentBargainData = null;
-
-        // Store bargains data for easy access
-        const bargainsData = @json($bargains);
-
-        // Store bargains data in localStorage for navbar switcher
-        localStorage.setItem('bargainsData', JSON.stringify(bargainsData));
-
-        // Initialize the registration mode on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set the initial state of the dropdown based on localStorage or URL parameters
-            const urlParams = new URLSearchParams(window.location.search);
-            const bargainIdFromUrl = urlParams.get('bargain_id');
-
-            if (bargainIdFromUrl) {
-                // If there's a bargain_id in the URL, find the corresponding bargain
-                const selectedBargain = bargainsData.find(b => b.id == bargainIdFromUrl);
-                if (selectedBargain) {
-                    switchToBargain(selectedBargain.id, selectedBargain.name);
-                }
-            } else if (currentRegistrationMode === 'bargain' && currentBargainId && currentBargainName) {
-                const selectedBargain = bargainsData.find(b => b.id == currentBargainId);
-                if (selectedBargain) {
-                    switchToBargain(selectedBargain.id, selectedBargain.name);
-                }
-            } else {
-                // Default to user profile
-                switchToProfile();
-            }
-        });
-
-        function toggleOffers() {
-            const section = document.getElementById('offer-section');
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        }
-
         // Tab switching functionality
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', function(e) {
@@ -656,291 +855,49 @@
             });
         });
 
-        // Profile/Bargain switching functions
-        function switchToProfile() {
-            // Update the new car link to point to user registration
-            document.getElementById('new-car-link').href = "{{ route('car.create') }}";
+        // Mark notification as read
+        document.querySelectorAll('.mark-as-read-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const notificationId = this.getAttribute('data-notification-id');
+                const notificationElement = document.querySelector(
+                    `[data-notification-id="${notificationId}"]`);
 
-            // Update dropdown button text
-            updateRegistrationModeButton('user', 'User Profile');
+                fetch(`/mark-notification-as-read/${notificationId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove the button
+                            this.closest('.notification-actions').remove();
 
-            // Hide bargain status display
-            document.getElementById('bargain-status-container').style.display = 'none';
-            document.getElementById('restriction-message').style.display = 'none';
+                            // Remove unread class and indicator
+                            notificationElement.classList.remove('unread');
+                            const indicator = notificationElement.querySelector('.unread-indicator');
+                            if (indicator) {
+                                indicator.classList.remove('unread-indicator');
+                                indicator.classList.add('read-indicator');
+                                indicator.title = 'Read';
+                            }
 
-            // Show user profile view
-            document.getElementById('profile-title').textContent = "{{ $profile->name }}";
-            document.getElementById('profile-name').textContent = "{{ $profile->name }}";
-            document.getElementById('profile-email').textContent = "{{ $profile->email }}";
-            document.getElementById('profile-location').textContent = "San Francisco, CA";
-            document.getElementById('post-count').textContent = "{{ $profile->cars_count }}";
-            document.getElementById('offers-count').textContent =
-                "{{ $profile->cars->sum(fn($car) => $car->offers->count()) }}";
-            document.getElementById('bargains-count-container').style.display = 'block';
-            document.getElementById('bargains-count').textContent = "{{ $bargains->count() }}";
-            document.getElementById('cars-tab-count').textContent = "{{ $profile->cars->count() }}";
-            document.getElementById('bargains-tab-count').textContent = "{{ $bargains->count() }}";
-
-            // Show user cars and hide bargain cars
-            document.getElementById('user-cars-container').style.display = 'flex';
-            document.getElementById('bargain-cars-container').style.display = 'none';
-
-            // Show edit profile button
-            document.getElementById('edit-profile-btn').style.display = 'inline-block';
-
-            // Store the registration mode in localStorage
-            localStorage.setItem('registrationMode', 'user');
-            localStorage.removeItem('currentBargainId');
-            localStorage.removeItem('currentBargainName');
-            currentBargainData = null;
-
-            // Update URL to remove bargain_id parameter
-            const url = new URL(window.location);
-            url.searchParams.delete('bargain_id');
-            window.history.replaceState({}, '', url);
-        }
-
-        function switchToBargain(bargainId, bargainName) {
-            // Find the bargain data
-            const selectedBargain = bargainsData.find(b => b.id == bargainId);
-
-            if (selectedBargain) {
-                // Check if the bargain is blocked or restricted
-                if (selectedBargain.registration_status === 'blocked') {
-                    alert('Your bargain is currently blocked. You cannot post cars at this time.');
-                    return;
-                }
-
-                if (selectedBargain.registration_status === 'restricted' && selectedBargain.restriction_ends_at) {
-                    const restrictionEndDate = new Date(selectedBargain.restriction_ends_at);
-                    const today = new Date();
-                    if (restrictionEndDate > today) {
-                        alert('Your bargain is currently restricted until ' + restrictionEndDate.toLocaleDateString() +
-                            '. You cannot post cars during this period.');
-                        return;
-                    }
-                }
-
-                // Update the new car link to point to bargain registration
-                document.getElementById('new-car-link').href = "{{ route('car.create') }}?bargain_id=" + bargainId;
-
-                // Update dropdown button text
-                updateRegistrationModeButton('bargain', bargainName);
-
-                // Update profile information to show bargain details
-                document.getElementById('profile-title').textContent = selectedBargain.name;
-                document.getElementById('profile-name').textContent = selectedBargain.name;
-                document.getElementById('profile-email').textContent = selectedBargain.email || 'N/A';
-                document.getElementById('profile-location').textContent = selectedBargain.address || 'N/A';
-                document.getElementById('post-count').textContent = selectedBargain.cars_count || 0;
-                document.getElementById('offers-count').textContent = selectedBargain.total_offers || 0;
-                // Hide bargains count for bargain profile
-                document.getElementById('bargains-count-container').style.display = 'none';
-                document.getElementById('cars-tab-count').textContent = selectedBargain.cars_count || 0;
-                document.getElementById('bargains-tab-count').textContent = '0';
-
-                // Show bargain status display
-                updateBargainStatusDisplay(selectedBargain);
-
-                // Hide edit profile button for bargain view
-                document.getElementById('edit-profile-btn').style.display = 'none';
-
-                // Load and display bargain cars via AJAX
-                loadBargainCars(bargainId);
-
-                // Store the registration mode and bargain info in localStorage
-                localStorage.setItem('registrationMode', 'bargain');
-                localStorage.setItem('currentBargainId', bargainId.toString());
-                localStorage.setItem('currentBargainName', bargainName);
-                currentBargainData = selectedBargain;
-
-                // Update URL to include bargain_id parameter
-                const url = new URL(window.location);
-                url.searchParams.set('bargain_id', bargainId);
-                window.history.replaceState({}, '', url);
-            }
-        }
-
-        function updateRegistrationModeButton(mode, name) {
-            const button = document.getElementById('registration-mode-btn');
-            if (button) {
-                if (mode === 'user') {
-                    button.innerHTML = '<i class="fas fa-user"></i> ' + name;
-                } else {
-                    button.innerHTML = '<i class="fas fa-handshake"></i> ' + name;
-                }
-            }
-        }
-
-        function updateBargainStatusDisplay(bargain) {
-            const statusContainer = document.getElementById('bargain-status-container');
-            const statusBadge = document.getElementById('bargain-status-badge');
-            const restrictionInfo = document.getElementById('bargain-restriction-info');
-            const restrictionMessage = document.getElementById('restriction-message');
-            const restrictionMessageText = document.getElementById('restriction-message-text');
-
-            if (!statusContainer || !statusBadge) return;
-
-            // Show the status container
-            statusContainer.style.display = 'block';
-
-            // Update status badge
-            statusBadge.className = 'badge';
-            statusBadge.innerHTML = '';
-
-            let statusText = '';
-            let statusClass = '';
-            let statusIndicatorClass = '';
-
-            switch (bargain.registration_status) {
-                case 'approved':
-                    statusText = 'Approved';
-                    statusClass = 'bg-success';
-                    statusIndicatorClass = 'status-approved';
-                    break;
-                case 'blocked':
-                    statusText = 'Blocked';
-                    statusClass = 'bg-danger';
-                    statusIndicatorClass = 'status-blocked';
-                    break;
-                case 'restricted':
-                    statusText = 'Restricted';
-                    statusClass = 'bg-warning text-dark';
-                    statusIndicatorClass = 'status-restricted';
-                    break;
-                default: // pending
-                    statusText = 'Pending';
-                    statusClass = 'bg-secondary';
-                    statusIndicatorClass = 'status-pending';
-            }
-
-            statusBadge.classList.add(statusClass);
-            statusBadge.innerHTML = `<span class="status-indicator ${statusIndicatorClass}"></span> ${statusText}`;
-
-            // Handle restriction info
-            restrictionInfo.innerHTML = '';
-            if (bargain.registration_status === 'restricted' && bargain.restriction_ends_at) {
-                restrictionInfo.innerHTML =
-                    `<small class="d-block">Ends: ${new Date(bargain.restriction_ends_at).toLocaleDateString()}</small>`;
-            }
-
-            // Handle restriction message
-            if (bargain.registration_status === 'restricted' || bargain.registration_status === 'blocked') {
-                restrictionMessage.style.display = 'block';
-                if (bargain.registration_status === 'blocked') {
-                    restrictionMessageText.textContent =
-                        'Your bargain is currently blocked. You cannot post cars at this time.';
-                } else {
-                    restrictionMessageText.textContent =
-                        `Your bargain is currently restricted until ${new Date(bargain.restriction_ends_at).toLocaleDateString()}. You cannot post cars during this period.`;
-                }
-            } else {
-                restrictionMessage.style.display = 'none';
-            }
-        }
-
-        function loadBargainCars(bargainId) {
-            // Show bargain cars container and hide user cars
-            document.getElementById('user-cars-container').style.display = 'none';
-            document.getElementById('bargain-cars-container').style.display = 'flex';
-
-            // Clear existing content and show loading indicator
-            document.getElementById('bargain-cars-container').innerHTML =
-                '<div class="col-12"><div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div></div>';
-
-            // Fetch bargain cars via AJAX
-            fetch(`/user/profile/bargain/${bargainId}/cars`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.error) {
-                        document.getElementById('bargain-cars-container').innerHTML = `
-                            <div class="col-12">
-                                <div class="alert alert-danger text-center">
-                                    <i class="fas fa-exclamation-triangle me-2"></i> Error loading cars: ${data.error}
-                                </div>
-                            </div>
-                        `;
-                    } else {
-                        displayBargainCars(data.cars);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading bargain cars:', error);
-                    document.getElementById('bargain-cars-container').innerHTML = `
-                        <div class="col-12">
-                            <div class="alert alert-danger text-center">
-                                <i class="fas fa-exclamation-triangle me-2"></i> Error loading cars. Please try again.
-                            </div>
-                        </div>
-                    `;
-                });
-        }
-
-        function displayBargainCars(cars) {
-            const container = document.getElementById('bargain-cars-container');
-            if (!cars || cars.length === 0) {
-                container.innerHTML = `
-                    <div class="col-12">
-                        <div class="alert alert-info text-center">
-                            <i class="fas fa-car me-2"></i> No cars registered by this bargain yet.
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            let carsHtml = '';
-            cars.forEach(car => {
-                // Format price with commas
-                const formattedPrice = car.regular_price ? Number(car.regular_price).toLocaleString() : 'N/A';
-
-                carsHtml += `
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="car-item gray-bg text-center promotion-card">
-                            ${car.is_promoted ? '<span class="badge bg-success badge-promotion">Promoted</span>' : ''}
-                            <div class="car-image">
-                                ${car.images && car.images.length > 0 ? 
-                                    `<img class="img-fluid" src="/storage/${car.images[0]}" alt="${car.title}">` :
-                                    `<img class="img-fluid" src="/images/car/01.jpg" alt="Default Car Image">`
-                                }
-                                <div class="car-overlay-banner">
-                                    <ul>
-                                        <li><a href="/car/show/${car.id}"><i class="fa fa-link"></i></a></li>
-                                        <li><a href="/car/show/${car.id}"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="car-list">
-                                <ul class="list-inline">
-                                    <li><i class="fa fa-registered"></i> ${car.year || 'N/A'}</li>
-                                    <li><i class="fa fa-cog"></i> ${car.transmission_type || 'N/A'}</li>
-                                    <li><i class="fa fa-shopping-cart"></i> ${car.currency_type || 'USD'} ${formattedPrice}</li>
-                                </ul>
-                            </div>
-                            <div class="car-content">
-                                <div class="star">
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star-o orange-color"></i>
-                                </div>
-                                <a href="/car/show/${car.id}">${car.make || 'N/A'} ${car.model || 'N/A'}</a>
-                                <div class="separator"></div>
-                                <div class="price">
-                                    <span class="new-price">${car.currency_type || 'USD'} ${formattedPrice}</span>
-                                </div>
-                                <div class="mt-2">
-                                    <span class="badge bg-primary">${car.offers_count || 0} Offers</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
+                            // Update notification count
+                            const countElement = document.getElementById('notification-count');
+                            let count = parseInt(countElement.textContent);
+                            if (count > 0) {
+                                countElement.textContent = count - 1;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
-
-            container.innerHTML = carsHtml;
-        }
+        });
     </script>
 
 @endsection

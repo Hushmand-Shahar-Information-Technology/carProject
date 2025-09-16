@@ -2,17 +2,31 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use App\Http\Controllers\CarController;
+use Illuminate\Support\Facades\Redirect;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CarController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BargainController;
 use App\Http\Controllers\OfferController;
-use App\Http\Controllers\PromotionController;
-use App\Http\Controllers\ChatController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\PromotionController;
 
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
 
 Route::get('/', function () {
     return view('welcome');
@@ -22,7 +36,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::view('/', 'home.index')->name('home.index');
+Route::get('/', [HomeController::class, 'index'])->name('home.index');
 Route::post('/home/filter-cars', [HomeController::class, 'filter']);
 Route::get('/default-cars', [HomeController::class, 'default']);
 Route::view('/otp', 'auth.otp');
@@ -132,13 +146,14 @@ Route::prefix('car')->group(function () {
     Route::get('filter-auction', [CarController::class, 'filterAuction'])->name('cars.filter-auction');
     Route::get('register', [CarController::class, 'create'])->name('car.create');
     Route::get('show/{id}', [CarController::class, 'show'])->name('car.show');
+    Route::get('show/{id}/offers', [CarController::class, 'getOffers'])->name('car.show.offers');
     Route::post('store', [CarController::class, 'store'])->name('car.store');
     Route::get('search', [CarController::class, 'search'])->name('cars.search');
     Route::get('feature', [CarController::class, 'feature'])->name('cars.feature');
     Route::get('directory', [CarController::class, 'CarDirectory'])->name('car.directory');
     Route::get('compare', [CarController::class, 'compare'])->name('car.compare');
     Route::post('carts', [CarController::class, 'cart'])->name('carts.show');
-    Route::post('offer', [OfferController::class, 'store'])->name('offer.store');
+    Route::post('offer', [OfferController::class, 'store'])->name('car.offer');
     Route::post('toggle-promoted/{id}', [CarController::class, 'togglePromoted'])->name('car.toggle-promoted');
 });
 
@@ -149,8 +164,8 @@ Route::prefix('promotions')->group(function () {
     Route::post('/unpromote', [PromotionController::class, 'unpromote'])->name('promotions.unpromote');
 });
 
-
-
+// Notification routes
+Route::post('mark-notification-as-read/{id}', [NotificationController::class, 'markAsRead'])->name('notification.markAsRead');
 
 Route::get('/chat/send-product/{user_id}/{car_id}', [App\Http\Controllers\ChatController::class, 'sendProductMessage'])->name('send.product.message');
 
