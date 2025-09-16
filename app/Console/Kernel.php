@@ -18,6 +18,13 @@ class Kernel extends ConsoleKernel
             ->name('end-expired-auctions')
             ->withoutOverlapping()
             ->runInBackground();
+            
+        // Test command to verify scheduler is working
+        $schedule->command('test:scheduler')
+            ->everyMinute()
+            ->name('test-scheduler')
+            ->withoutOverlapping()
+            ->runInBackground();
     }
 
     /**
