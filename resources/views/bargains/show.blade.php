@@ -401,13 +401,11 @@
                                             </div>
                                             <div class="car-list">
                                                 <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i>
-                                                        {{ $car->year }}</li>
+                                                    <li><i class="fa fa-registered"></i> {{ $car->year }}</li>
                                                     <li><i class="fa fa-cog"></i>
                                                         {{ $car->transmission_type->value ?? $car->transmission_type }}
                                                     </li>
-                                                    <li><i class="fa fa-shopping-cart"></i>
-                                                        {{ $car->currency_type }}
+                                                    <li><i class="fa fa-shopping-cart"></i> {{ $car->currency_type }}
                                                         {{ number_format($car->regular_price) }}</li>
                                                 </ul>
                                             </div>
@@ -427,6 +425,29 @@
                                                         {{ number_format($car->regular_price) }}</span>
                                                 </div>
                                                 <div class="mt-2">
+                                                    <!-- Car type badges -->
+                                                    @if ($car->is_for_sale)
+                                                        <span class="badge bg-success">For Sale</span>
+                                                    @endif
+                                                    @if ($car->is_for_rent)
+                                                        <span class="badge bg-info">For Rent</span>
+                                                    @endif
+                                                    @if ($car->auctions && $car->auctions->count() > 0)
+                                                        <span class="badge bg-warning">Auction</span>
+                                                        @php
+                                                            $activeAuction = $car->auctions->first();
+                                                        @endphp
+                                                        @if ($activeAuction)
+                                                            <span class="badge bg-primary">Starting Price:
+                                                                {{ $car->currency_type }}
+                                                                {{ number_format($activeAuction->starting_price) }}</span>
+                                                        @endif
+                                                    @endif
+                                                    @if ($car->request_price_status)
+                                                        <span class="badge bg-primary">Request Price:
+                                                            {{ $car->currency_type }}
+                                                            {{ number_format($car->request_price) }}</span>
+                                                    @endif
                                                     <span class="badge bg-primary">{{ $car->offers->count() }}
                                                         Offers</span>
                                                 </div>

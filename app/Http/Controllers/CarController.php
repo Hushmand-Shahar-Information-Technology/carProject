@@ -77,28 +77,39 @@ class CarController extends Controller
             ->when($request->query('Model', []), function ($q, $models) {
                 $q->whereIn('model', $models);
             })
-            ->when($request->query('Transmission', []), function ($q, $transmissions) {
-                $q->whereIn('transmission_type', $transmissions);
-            })
             ->when($request->query('Body', []), function ($q, $bodies) {
                 $q->whereIn('body_type', $bodies);
             })
             ->when($request->query('Color', []), function ($q, $colors) {
                 $q->whereIn('car_color', $colors);
             })
+            ->when($request->query('Transmission', []), function ($q, $transmissions) {
+                $q->whereIn('transmission_type', $transmissions);
+            })
             ->when($request->query('Condition', []), function ($q, $conditions) {
                 $q->whereIn('car_condition', $conditions);
             })
-
             ->when($request->input('sort'), function ($q, $sort) {
-                match ($sort) {
-                    'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->whereNotNull('regular_price')->orderBy('regular_price'),
-                    'date' => $q->orderByDesc('created_at'),
-                    default => $q->latest(),
-                };
-            }, function ($q) {
-                $q->latest();
+                switch ($sort) {
+                    case 'year_asc':
+                        $q->orderBy('year', 'asc');
+                        break;
+                    case 'year_desc':
+                        $q->orderBy('year', 'desc');
+                        break;
+                    case 'price_asc':
+                        $q->orderBy('regular_price', 'asc');
+                        break;
+                    case 'price_desc':
+                        $q->orderBy('regular_price', 'desc');
+                        break;
+                    case 'created_at_desc':
+                        $q->orderBy('created_at', 'desc');
+                        break;
+                    case 'created_at_asc':
+                        $q->orderBy('created_at', 'asc');
+                        break;
+                }
             })
             ->paginate(15)
             ->withQueryString();
@@ -106,23 +117,11 @@ class CarController extends Controller
         return response()->json($cars);
     }
 
-    /**
-     * Display rent-only car index page (same UI as listing).
-     */
-    public function rentIndex()
-    {
-        return view('car.rent-listing');
-    }
-
-    /**
-     * Filter only cars available for rent with pagination (12 per page).
-     */
     public function filterRent(Request $request)
     {
-        $perPage = (int) ($request->integer('per_page') ?: 12);
-
         $cars = Car::query()
-            ->where('is_for_rent', true)
+            ->with('bargain')
+            ->where('is_for_rent', 1)
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -137,76 +136,68 @@ class CarController extends Controller
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
-                // Use rent price if present; fall back to regular_price for range filtering compatibility
-                $q->where(function ($sub) use ($request) {
-                    $sub->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')])
-                        ->orWhereBetween('regular_price', [$request->input('price_min'), $request->input('price_max')]);
-                });
+                $q->whereBetween('rent_price_per_day', [$request->input('price_min'), $request->input('price_max')])
+                    ->orWhereBetween('rent_price_per_month', [$request->input('price_min'), $request->input('price_max')]);
             })
-            ->when($request->input('Year', []), function ($q, $years) {
+            ->when($request->query('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);
             })
-            ->when($request->input('Make', []), function ($q, $models) {
-                $q->whereIn('make', $models);
+            ->when($request->query('Make', []), function ($q, $makes) {
+                $q->whereIn('make', $makes);
             })
-            ->when($request->input('Model', []), function ($q, $models) {
+            ->when($request->query('Model', []), function ($q, $models) {
                 $q->whereIn('model', $models);
             })
-            ->when($request->input('Transmission', []), function ($q, $transmissions) {
-                $q->whereIn('transmission_type', $transmissions);
-            })
-            ->when($request->input('Body', []), function ($q, $bodies) {
+            ->when($request->query('Body', []), function ($q, $bodies) {
                 $q->whereIn('body_type', $bodies);
             })
-            ->when($request->input('Color', []), function ($q, $colors) {
+            ->when($request->query('Color', []), function ($q, $colors) {
                 $q->whereIn('car_color', $colors);
             })
-            ->when($request->input('Condition', []), function ($q, $condition) {
-                $q->whereIn('car_condition', $condition);
+            ->when($request->query('Transmission', []), function ($q, $transmissions) {
+                $q->whereIn('transmission_type', $transmissions);
+            })
+            ->when($request->query('Condition', []), function ($q, $conditions) {
+                $q->whereIn('car_condition', $conditions);
             })
             ->when($request->input('sort'), function ($q, $sort) {
-                match ($sort) {
-                    'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->orderByRaw('COALESCE(rent_price_per_day, rent_price_per_month, regular_price) ASC'),
-                    'date' => $q->orderByDesc('created_at'),
-                    default => $q->latest(),
-                };
-            }, function ($q) {
-                $q->latest();
+                switch ($sort) {
+                    case 'year_asc':
+                        $q->orderBy('year', 'asc');
+                        break;
+                    case 'year_desc':
+                        $q->orderBy('year', 'desc');
+                        break;
+                    case 'price_asc':
+                        $q->orderBy('rent_price_per_day', 'asc')->orderBy('rent_price_per_month', 'asc');
+                        break;
+                    case 'price_desc':
+                        $q->orderBy('rent_price_per_day', 'desc')->orderBy('rent_price_per_month', 'desc');
+                        break;
+                    case 'created_at_desc':
+                        $q->orderBy('created_at', 'desc');
+                        break;
+                    case 'created_at_asc':
+                        $q->orderBy('created_at', 'asc');
+                        break;
+                }
             })
-            ->paginate($perPage);
+            ->paginate(15)
+            ->withQueryString();
 
-        return response()->json([
-            'data' => $cars->items(),
-            'current_page' => $cars->currentPage(),
-            'last_page' => $cars->lastPage(),
-            'per_page' => $cars->perPage(),
-            'total' => $cars->total(),
-        ]);
+        return response()->json($cars);
     }
 
-    /**
-     * Display rent-only car index page (same UI as listing).
-     */
     public function auction()
     {
         return view('car.auction');
     }
 
-    /**
-     * Filter cars for auction page - shows ONLY cars with active auctions.
-     */
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            // Show ONLY cars that have active auctions
-            ->whereHas('auctions', function ($subQuery) {
-                $subQuery->where('status', 'active');
-            })
-            ->with(['auctions' => function ($q) {
-                $q->where('status', 'active')->latest();
-            }])
+            ->with(['bargain', 'auctions'])
+            ->whereHas('auctions')
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
@@ -221,43 +212,53 @@ class CarController extends Controller
                 $q->whereBetween('year', [$request->input('year_min'), $request->input('year_max')]);
             })
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
-                // Use auction starting price for filtering
-                $q->whereHas('auctions', function ($auctionQuery) use ($request) {
-                    $auctionQuery->where('status', 'active')
-                        ->whereBetween('starting_price', [$request->input('price_min'), $request->input('price_max')]);
-                });
+                // For auctions, we might want to filter by starting bid or current bid
+                // This would depend on your auction implementation
             })
-            ->when($request->input('Year', []), function ($q, $years) {
+            ->when($request->query('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);
             })
-            ->when($request->input('Make', []), function ($q, $models) {
-                $q->whereIn('make', $models);
+            ->when($request->query('Make', []), function ($q, $makes) {
+                $q->whereIn('make', $makes);
             })
-            ->when($request->input('Model', []), function ($q, $models) {
+            ->when($request->query('Model', []), function ($q, $models) {
                 $q->whereIn('model', $models);
             })
-            ->when($request->input('Transmission', []), function ($q, $transmissions) {
-                $q->whereIn('transmission_type', $transmissions);
-            })
-            ->when($request->input('Body', []), function ($q, $bodies) {
+            ->when($request->query('Body', []), function ($q, $bodies) {
                 $q->whereIn('body_type', $bodies);
             })
-            ->when($request->input('Color', []), function ($q, $colors) {
+            ->when($request->query('Color', []), function ($q, $colors) {
                 $q->whereIn('car_color', $colors);
             })
-            ->when($request->input('Condition', []), function ($q, $condition) {
-                $q->whereIn('car_condition', $condition);
+            ->when($request->query('Transmission', []), function ($q, $transmissions) {
+                $q->whereIn('transmission_type', $transmissions);
+            })
+            ->when($request->query('Condition', []), function ($q, $conditions) {
+                $q->whereIn('car_condition', $conditions);
             })
             ->when($request->input('sort'), function ($q, $sort) {
-                match ($sort) {
-                    'name' => $q->whereNotNull('model')->orderBy('model'),
-                    'price' => $q->orderByRaw('(SELECT starting_price FROM auctions WHERE auctions.car_id = cars.id AND auctions.status = "active" ORDER BY created_at DESC LIMIT 1) ASC'),
-                    'date' => $q->orderByDesc('created_at'),
-                    default => $q->latest(),
-                };
-            }, function ($q) {
-                // Default sort by latest
-                $q->latest();
+                switch ($sort) {
+                    case 'year_asc':
+                        $q->orderBy('year', 'asc');
+                        break;
+                    case 'year_desc':
+                        $q->orderBy('year', 'desc');
+                        break;
+                    case 'price_asc':
+                        // For auctions, this might be starting bid or current bid
+                        $q->orderBy('regular_price', 'asc');
+                        break;
+                    case 'price_desc':
+                        // For auctions, this might be starting bid or current bid
+                        $q->orderBy('regular_price', 'desc');
+                        break;
+                    case 'created_at_desc':
+                        $q->orderBy('created_at', 'desc');
+                        break;
+                    case 'created_at_asc':
+                        $q->orderBy('created_at', 'asc');
+                        break;
+                }
             })
             ->paginate(15)
             ->withQueryString();
@@ -268,15 +269,23 @@ class CarController extends Controller
     /**
      * Show the form for creating a new car.
      */
-    public function create()
+    public function create(Request $request)
     {
         // Check if user is trying to register as a bargain
-        $bargainId = request()->query('bargain_id');
+        $bargainId = $request->query('bargain_id');
         $bargain = null;
 
         if ($bargainId && Auth::check()) {
             // Get the bargain and verify it belongs to the user
             $bargain = Auth::user()->bargains()->find($bargainId);
+
+            // Prevent bargains from registering other bargains
+            if ($bargain) {
+                // Check if this is a bargain trying to register as another bargain
+                if ($request->has('bargain_registration')) {
+                    return redirect()->back()->with('error', 'Bargains cannot register other bargains.');
+                }
+            }
 
             // Check if bargain has restrictions
             if ($bargain) {
@@ -307,7 +316,8 @@ class CarController extends Controller
             Log::info('Validated data:', $data);
 
             // Check if registering as a bargain
-            $bargainId = $data['bargain_id'] ?? null;
+            // First check form data, then check session for active bargain
+            $bargainId = $data['bargain_id'] ?? session('active_bargain_id');
             $bargain = null;
 
             if ($bargainId && Auth::check()) {
@@ -318,7 +328,7 @@ class CarController extends Controller
                 if ($bargain) {
                     // If bargain is blocked, return error
                     if ($bargain->registration_status === 'blocked') {
-                        if ($request->wantsJson()) {
+                        if (request()->wantsJson()) {
                             return response()->json([
                                 'success' => false,
                                 'message' => 'Your bargain is currently blocked. You cannot register cars at this time.'
@@ -330,7 +340,7 @@ class CarController extends Controller
                     // If bargain is restricted, check if restriction period is still active
                     if ($bargain->registration_status === 'restricted' && $bargain->hasActiveRestriction()) {
                         $restrictionMessage = 'Your bargain is currently restricted until ' . $bargain->restriction_ends_at->format('M d, Y') . '. You cannot register cars during this period.';
-                        if ($request->wantsJson()) {
+                        if (request()->wantsJson()) {
                             return response()->json([
                                 'success' => false,
                                 'message' => $restrictionMessage
@@ -343,22 +353,28 @@ class CarController extends Controller
 
             // Handle image uploads
             $images = [];
-            if ($request->hasFile('images')) {
-                /** @var array<int, \Illuminate\Http\UploadedFile> $imageFiles */
-                $imageFiles = (array) $request->file('images');
-                foreach ($imageFiles as $image) {
-                    $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
+            if (request()->hasFile('images')) {
+                $imageFiles = request()->file('images');
+                if (is_array($imageFiles)) {
+                    foreach ($imageFiles as $image) {
+                        if ($image instanceof \Illuminate\Http\UploadedFile) {
+                            $images[] = str_replace('public/', '', $image->store('images/car', 'public'));
+                        }
+                    }
                 }
             }
             Log::info('Processed images:', $images);
 
             // Handle video uploads
             $videos = [];
-            if ($request->hasFile('videos')) {
-                /** @var array<int, \Illuminate\Http\UploadedFile> $videoFiles */
-                $videoFiles = (array) $request->file('videos');
-                foreach ($videoFiles as $video) {
-                    $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
+            if (request()->hasFile('videos')) {
+                $videoFiles = request()->file('videos');
+                if (is_array($videoFiles)) {
+                    foreach ($videoFiles as $video) {
+                        if ($video instanceof \Illuminate\Http\UploadedFile) {
+                            $videos[] = str_replace('public/', '', $video->store('videos/car', 'public'));
+                        }
+                    }
                 }
             }
             Log::info('Processed videos:', $videos);
@@ -398,7 +414,7 @@ class CarController extends Controller
             $car = Car::create($carData);
             Log::info('Car created successfully with ID: ' . $car->id);
 
-            if ($request->wantsJson()) {
+            if (request()->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => 'Car created successfully.',
@@ -406,19 +422,34 @@ class CarController extends Controller
                 ]);
             }
 
-            return redirect()->route('car.index')->with('success', 'Car created successfully.');
+            // Redirect back to the correct profile page
+            if ($bargainId) {
+                // Store the bargain mode in session to persist after redirect
+                session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
+                return redirect()->route('user.profile', ['bargain_id' => $bargainId])->with('success', 'Car created successfully.');
+            } else {
+                // Store the user mode in session
+                session(['profile_mode' => 'user']);
+                return redirect()->route('user.profile')->with('success', 'Car created successfully.');
+            }
         } catch (\Throwable $th) {
             Log::error('Error storing car: ' . $th->getMessage());
             Log::error('Stack trace: ' . $th->getTraceAsString());
 
-            if ($request->wantsJson()) {
+            if (request()->wantsJson()) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Something went wrong while saving the car: ' . $th->getMessage()
                 ], 500);
             }
 
-            return back()->withErrors(['error' => 'Something went wrong while saving the car: ' . $th->getMessage()]);
+            // Redirect back to the correct profile page even on error
+            $bargainId = $data['bargain_id'] ?? session('active_bargain_id') ?? null;
+            if ($bargainId) {
+                return redirect()->route('user.profile', ['bargain_id' => $bargainId])->withInput()->withErrors(['error' => 'Something went wrong while saving the car: ' . $th->getMessage()]);
+            } else {
+                return redirect()->route('user.profile')->withInput()->withErrors(['error' => 'Something went wrong while saving the car: ' . $th->getMessage()]);
+            }
         }
     }
 
@@ -457,12 +488,12 @@ class CarController extends Controller
     public function getOffers($id)
     {
         $car = Car::with('offers')->findOrFail($id);
-        
+
         // Ensure only the car owner can access offers
-        if (!auth()->check() || $car->user_id !== auth()->id()) {
+        if (!Auth::check() || $car->user_id !== Auth::id()) {
             return response()->json(['error' => 'Unauthorized'], 403);
         }
-        
+
         // Format offers for JSON response
         $formattedOffers = $car->offers->map(function ($offer) {
             return [
@@ -477,7 +508,7 @@ class CarController extends Controller
                 'formatted_time' => $offer->created_at->format('g:i A')
             ];
         });
-        
+
         return response()->json([
             'offers' => $formattedOffers->sortByDesc('created_at')->values(),
             'count' => $car->offers->count(),

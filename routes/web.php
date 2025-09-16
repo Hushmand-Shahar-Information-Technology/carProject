@@ -59,6 +59,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
     Route::get('/user/profile/bargain/{id}/cars', [ProfileController::class, 'getBargainCars'])->name('user.profile.bargain.cars');
+    Route::post('/set-profile-mode', [ProfileController::class, 'setProfileMode'])->name('profile.set-mode');
 });
 
 // Language switch route
