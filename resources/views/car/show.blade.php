@@ -229,6 +229,7 @@
                 <div class="col-md-12">
                     <div class="details-nav">
                         <ul>
+                            @if(auth()->check() && $car->user_id === auth()->id())
                             <li>
                                 <a href="#" data-bs-toggle="modal" data-bs-target="#auctionModal">
                                     <i class="fa fa-question-circle"></i> Request to Auction
@@ -308,7 +309,7 @@
                                 </div>
 
                             </li>
-                            
+                            @endif
                             {{-- End Auction Modal - Only show if there's an active auction --}}
                             @if(isset($auction) && $auction && $auction->status === 'active' && auth()->check() && $car->user_id === auth()->id())
                             <div class="modal fade" id="endAuctionModal" tabindex="-1" aria-labelledby="endAuctionModalLabel" aria-hidden="true">
@@ -351,7 +352,7 @@
                                 </div>
                             </div>
                             @endif
-
+                            @if(!auth()->check() || auth()->id() !== $car->user_id)
                             <li>
                                 <a data-bs-toggle="modal" data-bs-target="#exampleModal3" data-whatever="@mdo"
                                     href="#" class="css_btn"><i class="fa fa-tag"></i>Make an Offer</a>
@@ -408,6 +409,7 @@
                                     </div>
                                 </div>
                             </li>
+                            @endif
                             @if(auth()->check() && $car->user_id === auth()->id())
                                 <li><a href=""  data-bs-toggle="modal" data-bs-target="#offersModal"> <i class="fa fa-handshake me-2"></i>Show Offers Received <span class="badge bg-light text-dark ms-2">{{ $car->offers->count() }}</span></a></li>
                             @endif
