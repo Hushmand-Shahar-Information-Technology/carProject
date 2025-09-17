@@ -164,6 +164,140 @@
                 font-size: 11px;
             }
         }
+
+        /* Modern Slider Styles */
+        .filter-widget {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); */
+            margin-bottom: 20px;
+            /* border: 1px solid #eef0f3; */
+        }
+
+        .filter-widget h6 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-widget h6 button {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+
+        #year-range-slider, #price-range-slider {
+            margin: 15px 0;
+            height: 6px;
+            border-radius: 3px;
+            background: #e9ecef;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .noUi-connect {
+            background: linear-gradient(90deg, #db2d2e, #ff6b6b);
+            border-radius: 3px;
+        }
+
+        .noUi-handle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #db2d2e;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            cursor: grab;
+            transition: all 0.2s ease;
+            top: -6px;
+        }
+
+        .noUi-handle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .noUi-handle:before, .noUi-handle:after {
+            display: none;
+        }
+
+        .year-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #db2d2e;
+        }
+
+        .year-values span {
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Modern Filter Category Styles */
+        .filter-category {
+            border: none;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+
+        .filter-header {
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #eef0f3;
+        }
+
+        .filter-header:hover {
+            background: #e9ecef;
+        }
+
+        .filter-header.active {
+            background: #db2d2e;
+            color: #fff;
+            border-color: #db2d2e;
+        }
+
+        .filter-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .filter-header.active .filter-arrow {
+            transform: rotate(180deg);
+        }
+
+        .filter-options {
+            padding: 15px 10px;
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #eef0f3;
+            border-top: none;
+        }
+
+        .filter-options li {
+            padding: 5px 10px;
+        }
+
+        .form-check-input:checked {
+            background-color: #db2d2e;
+            border-color: #db2d2e;
+        }
+
+        .form-check-label {
+            font-size: 14px;
+            color: #495057;
+        }
+
     </style>
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
@@ -558,6 +692,22 @@
                 applyFilters(1)));
             document.getElementById('car-search').addEventListener('input', () => applyFilters(1));
             document.getElementById('sort-select').addEventListener('change', () => applyFilters(1));
+            
+            // Collapsible filters
+            document.querySelectorAll('.filter-header').forEach(header => {
+                header.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const submenu = this.nextElementSibling;
+                    this.classList.toggle('active');
+                    
+                    // Simple toggle without animation
+                    if (submenu.style.display === 'block') {
+                        submenu.style.display = 'none';
+                    } else {
+                        submenu.style.display = 'block';
+                    }
+                });
+            });
             
             // Initial load
             applyFilters(1);
