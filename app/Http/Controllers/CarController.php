@@ -225,6 +225,7 @@ class CarController extends Controller
             ->when($request->input('price_min') && $request->input('price_max'), function ($q) use ($request) {
                 // For auctions, we might want to filter by starting bid or current bid
                 // This would depend on your auction implementation
+                $q->whereBetween('regular_price', [$request->input('price_min'), $request->input('price_max')]);
             })
             ->when($request->query('Year', []), function ($q, $years) {
                 $q->whereIn('year', $years);

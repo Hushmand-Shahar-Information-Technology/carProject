@@ -605,10 +605,6 @@
             applyFilters();
         });
 
-        document.getElementById('reset-year').addEventListener('click', () => {
-            yearSlider.noUiSlider.set([1990, new Date().getFullYear()]); // reset slider
-            fetchFilteredCars(); // reload all cars
-        });
         document.addEventListener("DOMContentLoaded", function() {
             const priceSlider = document.getElementById('price-range-slider');
             const priceMin = document.getElementById('price-min');
@@ -1018,9 +1014,9 @@
                                 </div>
                                 <div class="car-list" >
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
-                                        <li style="font-size: 10px;><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li style="font-size: 10px;><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.model}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-registered"></i> ${car.year}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-shopping-cart"></i>${car.model}</li>
                                     </ul>
                                <div class="compare-btn">
 </div>
