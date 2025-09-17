@@ -577,8 +577,6 @@
                                     <div class="filter-widget" style="padding: 10px;">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <h6>Year Range</h6>
-                                            <button type="button" id="reset-year" class="btn btn-sm btn-light mt-2">All
-                                                Years</button>
                                         </div>
                                         <div id="year-range-slider"></div>
                                         <div class="year-values">
