@@ -278,6 +278,61 @@
     @yield('content')
     @stack('scripts')
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Function to check if we're in bargain mode and show alert for bargain registration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we're on the bargain registration page link
+            const bargainRegisterLink = document.querySelector('a[href="{{ route('bargains.create') }}"]');
+
+            if (bargainRegisterLink) {
+                bargainRegisterLink.addEventListener('click', function(e) {
+                    // Check if we're in bargain mode by looking at localStorage or URL parameters
+                    const currentProfileMode = localStorage.getItem('currentProfileMode');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const bargainId = urlParams.get('bargain_id');
+
+                    // If in bargain mode, show SweetAlert
+                    if (currentProfileMode === 'bargain' || bargainId) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Switch to User Profile?',
+                            text: 'You are currently in bargain mode. To register a new bargain, please switch to user profile mode first.',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Switch to User Profile',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect to user profile mode with proper session handling
+                                fetch('/set-profile-mode', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    },
+                                    body: JSON.stringify({
+                                        mode: 'user'
+                                    })
+                                }).then(() => {
+                                    window.location.href =
+                                        '{{ route('user.profile') }}?mode=user';
+                                }).catch(error => {
+                                    console.error('Error setting profile mode:', error);
+                                    window.location.href =
+                                        '{{ route('user.profile') }}?mode=user';
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 
     <!--=================================
  footer -->

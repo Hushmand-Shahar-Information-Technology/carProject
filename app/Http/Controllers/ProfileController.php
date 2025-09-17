@@ -20,31 +20,32 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         // Load cars with all necessary relationships for proper display
-        $user->load(['cars.auctions.offers']);
+        $user->load(['cars.auctions']);
 
         // Get bargains associated with the user via the direct relationship
         // Also load the cars relationship for each bargain with all necessary relationships
-        $bargains = $user->bargains()->with(['promotions', 'cars.auctions.offers'])->get();
-
-        // Add offers count to each bargain
-        foreach ($bargains as $bargain) {
-            $bargain->total_offers = $bargain->cars->sum(function ($car) {
-                return $car->offers->count();
-            });
-        }
+        $bargains = $user->bargains()->with(['promotions', 'cars.auctions'])->get();
 
         // Check if we're viewing a specific bargain profile
         // First check query parameter, then check session
-        $bargainId = $request->query('bargain_id') ?? session('active_bargain_id');
+        $bargainId = $request->query('bargain_id');
+
+        // If no bargain_id in query parameter, check if we should use session value
+        // But only if we're not explicitly in user mode
+        if (!$bargainId) {
+            // Check if we're explicitly in user mode via query parameter
+            $profileMode = $request->query('mode');
+            if ($profileMode !== 'user') {
+                // Only fall back to session if not explicitly in user mode
+                $bargainId = session('active_bargain_id');
+            }
+        }
+
         $activeBargain = null;
 
         if ($bargainId) {
-            $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions.offers'])->find($bargainId);
+            $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions'])->find($bargainId);
             if ($activeBargain) {
-                // Add offers count to the active bargain
-                $activeBargain->total_offers = $activeBargain->cars->sum(function ($car) {
-                    return $car->offers->count();
-                });
                 // Store in session to persist mode
                 session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
             }
@@ -79,7 +80,7 @@ class ProfileController extends Controller
     public function getBargainCars(Request $request, $bargainId)
     {
         $user = Auth::user();
-        $bargain = $user->bargains()->with('cars.auctions.offers')->find($bargainId);
+        $bargain = $user->bargains()->with('cars.auctions')->find($bargainId);
 
         if (!$bargain) {
             return response()->json(['error' => 'Bargain not found'], 404);

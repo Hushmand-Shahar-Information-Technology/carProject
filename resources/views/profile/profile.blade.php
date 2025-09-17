@@ -38,6 +38,37 @@
             font-weight: 600;
         }
 
+        .nav-tabs {
+            border-bottom: 1px solid #867272;
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #a8a8a8;
+            border: none;
+            padding: 15px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background-color: #f8f9fa;
+            /* Light background for inactive tabs */
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #fff;
+            background-color: #363636;
+            /* Dark background for active tab */
+            border-bottom: 1px solid #fff;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #fff;
+            border: none;
+            background-color: #555;
+            /* Hover effect */
+        }
+
         .posts-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -454,7 +485,8 @@
         }
             /* Car image styling - consistent dimensions */
             .fixed-img {
-                aspect-ratio: 3 / 2; /* Adjusted for shorter height */
+                aspect-ratio: 3 / 2;
+                /* Adjusted for shorter height */
                 object-fit: cover;
                 width: 100%;
                 border-radius: 8px 8px 0 0;
@@ -635,11 +667,6 @@
                                         <h6>Post</h6>
                                         <strong
                                             id="post-count">{{ isset($activeBargain) ? $activeBargain->cars->count() : $user->cars->count() }}</strong>
-                                    </div>
-                                    <div class="col border-start">
-                                        <h6 style="cursor: pointer;" class="hover-state">Offers</h6>
-                                        <strong
-                                            id="offers-count">{{ isset($activeBargain) ? $activeBargain->cars->sum(fn($car) => $car->offers->count()) : $user->cars->sum(fn($car) => $car->offers->count()) }}</strong>
                                     </div>
                                     <!-- Only show bargains count when in user profile mode -->
                                     @if (!isset($activeBargain))
@@ -833,7 +860,6 @@
                                             <span class="badge bg-primary">Request Price: {{ $car->currency_type }}
                                                 {{ number_format($car->request_price) }}</span>
                                         @endif
-                                        <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
                                     </div>
                                 </div>
                             </div>
@@ -912,7 +938,6 @@
                                                 <span class="badge bg-primary">Request Price: {{ $car->currency_type }}
                                                     {{ number_format($car->request_price) }}</span>
                                             @endif
-                                            <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1152,6 +1177,8 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         // Get the current registration mode from localStorage or default to 'user'
         let currentRegistrationMode = localStorage.getItem('registrationMode') || 'user';
@@ -1295,10 +1322,7 @@
 
         // Profile/Bargain switching functions
         function switchToProfile() {
-            // Reload the page in user profile mode (without bargain_id parameter)
-            window.location.href = '{{ route('user.profile') }}';
-
-            // Also store in session via AJAX
+            // Clear the bargain_id from session via AJAX first
             fetch('/set-profile-mode', {
                 method: 'POST',
                 headers: {
@@ -1308,13 +1332,18 @@
                 body: JSON.stringify({
                     mode: 'user'
                 })
-            }).catch(error => console.error('Error setting profile mode:', error));
+            }).then(() => {
+                // After session is cleared, reload the page without bargain_id parameter
+                // Add explicit mode parameter to ensure we're in user mode
+                window.location.href = '{{ route('user.profile') }}?mode=user';
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Even if AJAX fails, still redirect to ensure we're in user mode
+                window.location.href = '{{ route('user.profile') }}?mode=user';
+            });
         }
 
         function switchToBargain(bargainId, bargainName) {
-            // Reload the page in bargain profile mode (with bargain_id parameter)
-            window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
-
             // Store the registration mode in localStorage
             localStorage.setItem('registrationMode', 'user');
             localStorage.removeItem('currentBargainId');
@@ -1568,11 +1597,7 @@
 
             container.innerHTML = carsHtml;
         }
-            // Store the current mode in localStorage
-            localStorage.setItem('registrationMode', 'bargain_' + bargainId);
-            localStorage.setItem('registrationModeName', bargainName);
-
-            // Also store in session via AJAX
+            // Set the session to bargain mode via AJAX first
             fetch('/set-profile-mode', {
                 method: 'POST',
                 headers: {
@@ -1583,11 +1608,49 @@
                     mode: 'bargain',
                     bargain_id: bargainId
                 })
-            }).catch(error => console.error('Error setting profile mode:', error));
+            }).then(() => {
+                // After session is set, reload the page with bargain_id parameter
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Even if AJAX fails, still redirect to ensure we're in bargain mode
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
+            });
+
+            // Store the current mode in localStorage
+            localStorage.setItem('registrationMode', 'bargain_' + bargainId);
+            localStorage.setItem('registrationModeName', bargainName);
         }
 
         // Set the registration mode button text based on current mode
         document.addEventListener('DOMContentLoaded', function() {
+            // Add SweetAlert for bargain registration prevention
+            const newCarLink = document.getElementById('new-car-link');
+            if (newCarLink) {
+                newCarLink.addEventListener('click', function(e) {
+                    // Check if we're in bargain mode
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const bargainId = urlParams.get('bargain_id');
+
+                    // If in bargain mode, show SweetAlert
+                    if (bargainId) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Switch to User Profile?',
+                            text: 'You are currently in bargain mode. To register a new bargain, please switch to user profile mode first.',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Switch to User Profile',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                switchToProfile();
+                            }
+                        });
+                    }
+                });
+            }
+
             const modeButton = document.getElementById('registration-mode-btn');
             const urlParams = new URLSearchParams(window.location.search);
             const bargainId = urlParams.get('bargain_id');
@@ -1692,13 +1755,47 @@
         }
 
         function switchToProfileFromNavbar() {
-            // Redirect to profile page in user mode
-            window.location.href = '/user/profile';
+            // Clear the bargain_id from session via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'user'
+                })
+            }).then(() => {
+                // After session is cleared, reload the page without bargain_id parameter
+                // Add explicit mode parameter to ensure we're in user mode
+                window.location.href = '{{ route('user.profile') }}?mode=user';
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Even if AJAX fails, still redirect to ensure we're in user mode
+                window.location.href = '{{ route('user.profile') }}?mode=user';
+            });
         }
 
         function switchToBargainFromNavbar(bargainId, bargainName) {
-            // Redirect to profile page in bargain mode
-            window.location.href = `/user/profile?bargain_id=${bargainId}`;
+            // Set the session to bargain mode via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'bargain',
+                    bargain_id: bargainId
+                })
+            }).then(() => {
+                // After session is set, reload the page with bargain_id parameter
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Even if AJAX fails, still redirect to ensure we're in bargain mode
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
+            });
         }
 
         function highlightCurrentModeInNavbar(currentMode, bargainId) {
