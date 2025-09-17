@@ -11,9 +11,9 @@ class EndExpiredAuctions extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'auctions:end-expired {--verbose : Display detailed information about ended auctions}';
+    protected $signature = 'auctions:end-expired';
 
-    /**
+    /**sss
      * The console command description.
      */
     protected $description = 'End all expired auctions';
@@ -54,21 +54,19 @@ class EndExpiredAuctions extends Command
             'auction_ids' => $expiredAuctions->pluck('id')->toArray()
         ]);
 
-        // Display details of ended auctions if verbose option is used
-        if ($this->option('verbose')) {
-            $this->table(
-                ['ID', 'Car ID', 'Starting Price', 'End Date', 'Status'],
-                $expiredAuctions->map(function ($auction) {
-                    return [
-                        $auction->id,
-                        $auction->car_id,
-                        '$' . number_format($auction->starting_price, 2),
-                        $auction->end_at->format('Y-m-d H:i:s'),
-                        'ended'
-                    ];
-                })
-            );
-        }
+        // Display details of ended auctions
+        $this->table(
+            ['ID', 'Car ID', 'Starting Price', 'End Date', 'Status'],
+            $expiredAuctions->map(function ($auction) {
+                return [
+                    $auction->id,
+                    $auction->car_id,
+                    '$' . number_format($auction->starting_price, 2),
+                    $auction->end_at ? $auction->end_at->format('Y-m-d H:i:s') : 'N/A',
+                    'ended'
+                ];
+            })
+        );
 
         return 0;
     }
