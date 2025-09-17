@@ -196,8 +196,13 @@ class CarController extends Controller
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            ->with(['bargain', 'auctions'])
-            ->whereHas('auctions')
+            ->with(['bargain', 'auctions' => function($query) {
+                $query->where('status', 'active')->latest();
+            }])
+            // Show ONLY cars that have active auctions
+            ->whereHas('auctions', function ($subQuery) {
+                $subQuery->where('status', 'active');
+            })
             ->when($request->input('keyword'), function ($q, $keyword) {
                 $q->where(function ($q2) use ($keyword) {
                     $q2->where('model', 'like', "%$keyword%")
