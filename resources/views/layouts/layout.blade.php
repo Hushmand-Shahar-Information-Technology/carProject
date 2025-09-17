@@ -306,8 +306,26 @@
                             cancelButtonText: 'Cancel'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Redirect to user profile mode
-                                window.location.href = '{{ route('user.profile') }}';
+                                // Redirect to user profile mode with proper session handling
+                                fetch('/set-profile-mode', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    },
+                                    body: JSON.stringify({
+                                        mode: 'user'
+                                    })
+                                }).then(() => {
+                                    window.location.href =
+                                        '{{ route('user.profile') }}?mode=user';
+                                }).catch(error => {
+                                    console.error('Error setting profile mode:', error);
+                                    window.location.href =
+                                        '{{ route('user.profile') }}?mode=user';
+                                });
                             }
                         });
                     }
