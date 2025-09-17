@@ -116,7 +116,13 @@ class CarController extends Controller
 
         return response()->json($cars);
     }
-
+ /**
+     * Display the rent car index.
+     */
+    public function rentIndex()
+    {
+        return view('car.rent-listing');
+    }
     public function filterRent(Request $request)
     {
         $cars = Car::query()
