@@ -247,7 +247,7 @@
             margin-bottom: 10px;
         }
 
-        .filter-header {
+        /* .filter-header {
             padding: 12px 15px;
             background: #f8f9fa;
             border-radius: 8px;
@@ -256,25 +256,25 @@
             text-decoration: none;
             transition: all 0.3s ease;
             border: 1px solid #eef0f3;
-        }
+        } */
 
-        .filter-header:hover {
+        /* .filter-header:hover {
             background: #e9ecef;
-        }
+        } */
 
-        .filter-header.active {
+        /* .filter-header.active {
             background: #db2d2e;
             color: #fff;
             border-color: #db2d2e;
-        }
+        } */
 
         .filter-arrow {
             transition: transform 0.3s ease;
         }
-
+/* 
         .filter-header.active .filter-arrow {
             transform: rotate(180deg);
-        }
+        } */
 
         .filter-options {
             padding: 15px 10px;
@@ -342,8 +342,6 @@
                                     <div class="filter-widget" style="padding: 10px;">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <h6>Year Range</h6>
-                                            <button type="button" id="reset-year" class="btn btn-sm btn-light mt-2">All
-                                                Years</button>
                                         </div>
                                         <div id="year-range-slider"></div>
                                         <div class="year-values">
@@ -415,6 +413,8 @@
                         </nav>
                     </div>
                 </div>
+                 <div class="pagination-link" style="display: flex; justify-content: center; margin: 2rem 0 3rem 0;">
+                </div>
             </div>
         </div>
     </section>
@@ -485,7 +485,80 @@
                 applyFilters(1);
             });
         });
+        function renderPagination(meta) {
+            let pagContainer = document.querySelector('.pagination-link');
+            if (!pagContainer) return;
 
+            if (!meta) {
+                pagContainer.innerHTML = '';
+                return;
+            }
+
+            const current = meta.current_page || 1;
+            const last = meta.last_page || 1;
+            const maxButtons = 5; // how many page numbers to display around current
+            const parts = [];
+
+            const makeBtn = (label, page, disabled = false, active = false, isEllipsis = false) => {
+                if (isEllipsis) {
+                    return `<span class="mx-1">...</span>`;
+                }
+                const cls = ['btn', 'btn-sm', 'mx-1', 'mb-2', 'px-3', 'py-1'];
+                if (active) cls.push('btn-danger');
+                else cls.push('btn-light');
+                const disabledAttr = disabled ? 'disabled' : '';
+                return `<button type="button" class="${cls.join(' ')} pagination" data-page="${page}" ${disabledAttr}>${label}</button>`;
+            };
+
+            // Prev button
+            parts.push(makeBtn('Prev', current - 1, current === 1));
+
+            // Always show the first page
+            parts.push(makeBtn(1, 1, false, current === 1));
+
+            // Show second page only if current is close
+            if (current > 3) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Pages around current
+            let start = Math.max(2, current - 2);
+            let end = Math.min(last - 1, current + 2);
+
+            for (let p = start; p <= end; p++) {
+                parts.push(makeBtn(p, p, false, p === current));
+            }
+
+            // Show ellipsis before last page
+            if (current < last - 2) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Always show last page if > 1
+            if (last > 1) {
+                parts.push(makeBtn(last, last, false, current === last));
+            }
+
+            // Next button
+            parts.push(makeBtn('Next', current + 1, current === last));
+
+            // Render
+            pagContainer.innerHTML = parts.join('');
+
+            // Attach events
+            pagContainer.querySelectorAll('button[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const page = parseInt(e.currentTarget.getAttribute('data-page'));
+                    if (isNaN(page)) return;
+                    const q = setQueryParam(lastQuery, 'page', page);
+                    fetchFilteredCars(q);
+                    pagContainer.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+                });
+            });
+        }
         function setView(view) {
             currentView = view;
             document.getElementById('grid-view').classList.toggle('active', view === 'grid');
