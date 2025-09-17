@@ -434,7 +434,7 @@
                                         <div class="car-list">
                                             <ul class="list-inline" style="font-size: 12px;">
                                                 <li><i class="fa fa-registered"></i> ${car.year}</li>
-                                                <li><i class="fa fa-cog"></i> ${car.transmission_type ?? ''}</li>
+                                                ${currentView == 'list' ? "<li><i class=\"fa fa-cog\"></i> " + (car.transmission_type ?? '') + "</li>" : ''}
                                                 <li><i class="fa fa-car"></i> ${car.make ?? ''} ${car.model ?? ''}</li>
                                             </ul>
                                         </div>
