@@ -35,7 +35,19 @@ class ProfileController extends Controller
 
         // Check if we're viewing a specific bargain profile
         // First check query parameter, then check session
-        $bargainId = $request->query('bargain_id') ?? session('active_bargain_id');
+        $bargainId = $request->query('bargain_id');
+
+        // If no bargain_id in query parameter, check if we should use session value
+        // But only if we're not explicitly in user mode
+        if (!$bargainId) {
+            // Check if we're explicitly in user mode via query parameter
+            $profileMode = $request->query('mode');
+            if ($profileMode !== 'user') {
+                // Only fall back to session if not explicitly in user mode
+                $bargainId = session('active_bargain_id');
+            }
+        }
+
         $activeBargain = null;
 
         if ($bargainId) {
