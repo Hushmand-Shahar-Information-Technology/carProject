@@ -571,11 +571,6 @@
                                         <strong
                                             id="post-count">{{ isset($activeBargain) ? $activeBargain->cars->count() : $user->cars->count() }}</strong>
                                     </div>
-                                    <div class="col border-start">
-                                        <h6 style="cursor: pointer;" class="hover-state">Offers</h6>
-                                        <strong
-                                            id="offers-count">{{ isset($activeBargain) ? $activeBargain->cars->sum(fn($car) => $car->offers->count()) : $user->cars->sum(fn($car) => $car->offers->count()) }}</strong>
-                                    </div>
                                     <!-- Only show bargains count when in user profile mode -->
                                     @if (!isset($activeBargain))
                                         <div class="col border-start" id="bargains-count-container">
@@ -756,7 +751,6 @@
                                             <span class="badge bg-primary">Request Price: {{ $car->currency_type }}
                                                 {{ number_format($car->request_price) }}</span>
                                         @endif
-                                        <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
                                     </div>
                                 </div>
                             </div>
@@ -835,7 +829,6 @@
                                                 <span class="badge bg-primary">Request Price: {{ $car->currency_type }}
                                                     {{ number_format($car->request_price) }}</span>
                                             @endif
-                                            <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
                                         </div>
                                     </div>
                                 </div>
@@ -855,77 +848,11 @@
         <!-- Notifications Tab Content - With Links to Cars -->
         <div id="notifications-tab" class="tab-content">
             <div class="notifications-container">
-                @if (auth()->user()->notifications->count() > 0)
-                    @foreach (auth()->user()->notifications as $notification)
-                        <div class="notification-card {{ $notification->read_at ? '' : 'unread' }}"
-                            data-notification-id="{{ $notification->id }}">
-                            <div class="notification-header">
-                                <div class="notification-image">
-                                    <i class="fas fa-car"></i>
-                                </div>
-                                <div class="notification-info">
-                                    <div class="d-flex justify-content-between">
-                                        <div>
-                                            <div class="notification-sender">{{ $notification->data['sender_name'] }}
-                                            </div>
-                                            <div class="notification-car-title">
-                                                <a href="{{ route('car.show', $notification->data['car_id']) }}"
-                                                    class="text-decoration-none">
-                                                    {{ $notification->data['car_title'] }}
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="d-flex align-items-center">
-                                            <div class="notification-time">
-                                                {{ $notification->created_at->diffForHumans() }}</div>
-                                            @if (!$notification->read_at)
-                                                <div class="unread-indicator" title="Unread"></div>
-                                            @else
-                                                <div class="read-indicator" title="Read"></div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="notification-body">
-                                <div class="notification-details">
-                                    <div class="detail-item">
-                                        <div class="detail-label">Offer Price</div>
-                                        <div class="detail-value">${{ number_format($notification->data['offer_price']) }}
-                                        </div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <div class="detail-label">Contact</div>
-                                        <div class="detail-value">{{ $notification->data['sender_email'] }}</div>
-                                    </div>
-                                    <div class="detail-item">
-                                        <div class="detail-label">Phone</div>
-                                        <div class="detail-value">{{ $notification->data['sender_phone'] ?? 'N/A' }}</div>
-                                    </div>
-                                    @if ($notification->data['remark'])
-                                        <div class="detail-item">
-                                            <div class="detail-label">Message</div>
-                                            <div class="detail-value">{{ $notification->data['remark'] }}</div>
-                                        </div>
-                                    @endif
-                                </div>
-                                @if (!$notification->read_at)
-                                    <div class="notification-actions">
-                                        <button class="mark-as-read-btn" data-notification-id="{{ $notification->id }}">
-                                            Mark as Read
-                                        </button>
-                                    </div>
-                                @endif
-                            </div>
-                        </div>
-                    @endforeach
-                @else
-                    <div class="no-notifications">
-                        <i class="fas fa-bell-slash"></i>
-                        <h4>No Notifications</h4>
-                        <p>You don't have any offer notifications yet.</p>
-                    </div>
-                @endif
+                <div class="no-notifications">
+                    <i class="fas fa-bell-slash"></i>
+                    <h4>No Notifications</h4>
+                    <p>Notifications are not available at this time.</p>
+                </div>
             </div>
         </div>
 
