@@ -285,7 +285,6 @@
         </div>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const API_URL = "{{ route('cars.filter-rent') }}";
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
@@ -296,6 +295,63 @@
         let currentPage = 1;
         const perPage = 12;
 
+        // Initialize sliders when DOM is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Price Range Slider
+            const priceSlider = document.getElementById('price-range-slider');
+            const priceMin = document.getElementById('price-min');
+            const priceMax = document.getElementById('price-max');
+
+            noUiSlider.create(priceSlider, {
+                start: [300, 50000],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 300,
+                    'max': 50000
+                }
+            });
+
+            priceSlider.noUiSlider.on('update', function(values) {
+                priceMin.innerHTML = Math.round(values[0]);
+                priceMax.innerHTML = Math.round(values[1]);
+            });
+
+            priceSlider.noUiSlider.on('change', function(values) {
+                applyFilters(1);
+            });
+
+            // Year Range Slider
+            const yearSlider = document.getElementById('year-range-slider');
+            const yearMin = document.getElementById('year-min');
+            const yearMax = document.getElementById('year-max');
+
+            noUiSlider.create(yearSlider, {
+                start: [1990, new Date().getFullYear()],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 1990,
+                    'max': new Date().getFullYear()
+                }
+            });
+
+            yearSlider.noUiSlider.on('update', function(values) {
+                yearMin.innerHTML = Math.round(values[0]);
+                yearMax.innerHTML = Math.round(values[1]);
+            });
+
+            yearSlider.noUiSlider.on('change', function(values) {
+                applyFilters(1);
+            });
+
+            // Reset Year Button
+            document.getElementById('reset-year').addEventListener('click', () => {
+                yearSlider.noUiSlider.set([1990, new Date().getFullYear()]);
+                applyFilters(1);
+            });
+        });
+
         function setView(view) {
             currentView = view;
             document.getElementById('grid-view').classList.toggle('active', view === 'grid');
@@ -305,6 +361,8 @@
 
         function buildQuery(page = 1) {
             const formData = new FormData();
+            
+            // Add checkbox filters
             document.querySelectorAll('.filter-option:checked').forEach(input => {
                 if (input.value !== '*') {
                     const name = input.name.replace('[]', '');
@@ -312,11 +370,38 @@
                 }
             });
 
+            // Add search keyword
             const keyword = document.getElementById('car-search').value.trim();
             if (keyword) formData.append('keyword', keyword);
 
+            // Add sort option
             const sortValue = document.getElementById('sort-select').value;
             if (sortValue) formData.append('sort', sortValue);
+
+            // Add price range
+            const priceSlider = document.getElementById('price-range-slider');
+            if (priceSlider && priceSlider.noUiSlider) {
+                const priceValues = priceSlider.noUiSlider.get();
+                const minPrice = Math.round(priceValues[0]);
+                const maxPrice = Math.round(priceValues[1]);
+                formData.append('price_min', minPrice);
+                formData.append('price_max', maxPrice);
+            }
+
+            // Add year range
+            const yearSlider = document.getElementById('year-range-slider');
+            if (yearSlider && yearSlider.noUiSlider) {
+                const yearValues = yearSlider.noUiSlider.get();
+                const minYear = Math.round(yearValues[0]);
+                const maxYear = Math.round(yearValues[1]);
+                
+                // Push all years in range to 'Year[]'
+                const years = [];
+                for (let y = minYear; y <= maxYear; y++) {
+                    years.push(y);
+                }
+                years.forEach(y => formData.append('Year[]', y));
+            }
 
             formData.append('page', page);
             formData.append('per_page', perPage);
@@ -464,12 +549,17 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize view toggle buttons
             document.getElementById('grid-view').addEventListener('click', () => setView('grid'));
             document.getElementById('list-view').addEventListener('click', () => setView('list'));
+            
+            // Initialize filter event listeners
             document.querySelectorAll('.filter-option').forEach(el => el.addEventListener('change', () =>
                 applyFilters(1)));
             document.getElementById('car-search').addEventListener('input', () => applyFilters(1));
             document.getElementById('sort-select').addEventListener('change', () => applyFilters(1));
+            
+            // Initial load
             applyFilters(1);
         });
     </script>
