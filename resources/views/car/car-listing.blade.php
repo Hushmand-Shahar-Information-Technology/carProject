@@ -1014,9 +1014,9 @@
                                 </div>
                                 <div class="car-list" >
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
-                                        <li style="font-size: 10px;"><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li style="font-size: 10px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li style="font-size: 10px;"><i class="fa fa-shopping-cart"></i>${car.model}</li>
+                                        <li style="font-size: 8px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                        <li style="font-size: 8px;"><i class="fa fa-shopping-cart"></i>${car.model}</li>
+                                        <li style="font-size: 8px;"><i class="fa fa-registered"></i> ${car.year}</li>
                                     </ul>
                                <div class="compare-btn">
 </div>

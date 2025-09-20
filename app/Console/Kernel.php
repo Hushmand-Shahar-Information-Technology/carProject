@@ -21,7 +21,7 @@ class Kernel extends ConsoleKernel
             
         // Test command to verify scheduler is working
         $schedule->command('test:scheduler')
-            ->everyMinute()
+            ->everyFiveMinutes()
             ->name('test-scheduler')
             ->withoutOverlapping()
             ->runInBackground();
