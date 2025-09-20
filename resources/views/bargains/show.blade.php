@@ -112,7 +112,7 @@
                             @if ($hasActivePromotion && $activePromotionEndsAt)
                                 <div class="small text-muted mt-1">
                                     <span id="bargain-promotion-ends-at"
-                                        data-ends-at="{{ $activePromotionEndsAt->toIso8601String() }}"></span>
+                                        data-ends-at="{{ $activePromotionEndsAt->toIso86601String() }}"></span>
                                 </div>
                             @endif
                         </div>
@@ -375,54 +375,66 @@
                             <div class="row">
                                 @foreach ($bargain->cars as $car)
                                     <div class="col-lg-4 col-md-6 mb-4">
-                                        <div class="car-item gray-bg text-center promotion-card">
+                                        <div class="car-item gray-bg text-center promotion-card position-relative">
                                             @if ($car->is_promoted)
-                                                <span class="badge bg-success badge-promotion">Promoted</span>
+                                                <span class="badge bg-success badge-promotion position-absolute" style="top: 10px; right: 10px; z-index: 10;">Promoted</span>
+                                            @endif
+                                            @if ($car->auctions && $car->auctions->count() > 0)
+                                                <span class="badge bg-warning position-absolute" style="top: 10px; left: 10px; z-index: 10;">Auction</span>
                                             @endif
                                             <div class="car-image">
                                                 @if (isset($car->images[0]))
-                                                    <img class="img-fluid"
-                                                        src="{{ asset('storage/' . $car->images[0]) }}"
-                                                        alt="{{ $car->title }}">
+                                                    <img class="img-fluid fixed-img" src="{{ asset('storage/' . $car->images[0]) }}" alt="{{ $car->title }}">
                                                 @else
-                                                    <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
-                                                        alt="Default Car Image">
+                                                    <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="Default Car Image">
                                                 @endif
                                                 <div class="car-overlay-banner">
-                                                    <ul>
-                                                        <li><a href="{{ route('car.show', $car->id) }}"><i
-                                                                    class="fa fa-link"></i></a>
-                                                        </li>
-                                                        <li><a href="{{ route('car.show', $car->id) }}"><i
-                                                                    class="fa fa-shopping-cart"></i></a>
-                                                        </li>
+                                                    <ul style="display: flex; justify-content: center; align-items: center;">
+                                                        <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a></li>
+                                                        <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-shopping-cart"></i></a></li>
                                                     </ul>
                                                 </div>
                                             </div>
-                                            <div class="car-list">
-                                                <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i> {{ $car->year }}</li>
-                                                    <li><i class="fa fa-cog"></i>
-                                                        {{ $car->transmission_type->value ?? $car->transmission_type }}
-                                                    </li>
-                                                    <li><i class="fa fa-shopping-cart"></i> {{ $car->currency_type }}
-                                                        {{ number_format($car->regular_price) }}</li>
-                                                </ul>
-                                            </div>
-                                            <div class="car-content">
-                                                <div class="star">
+                                            <div class="car-content p-3">
+                                                <div class="car-list mb-2">
+                                                    <ul class="list-inline d-flex justify-content-around mb-0">
+                                                        <li class="list-inline-item"><i class="fa fa-registered"></i> {{ $car->year }}</li>
+                                                        <li class="list-inline-item"><i class="fa fa-cog"></i> {{ $car->transmission_type->value ?? $car->transmission_type }}</li>
+                                                        <li class="list-inline-item"><i class="fa fa-shopping-cart"></i> {{ $car->currency_type }} {{ number_format($car->regular_price) }}</li>
+                                                    </ul>
+                                                </div>
+                                                <div class="car-title mb-2">
+                                                    <a href="{{ route('car.show', $car->id) }}" class="text-decoration-none">
+                                                        <h5 class="mb-1">{{ $car->make }} {{ $car->model }}</h5>
+                                                    </a>
+                                                </div>
+                                                <div class="star mb-2">
                                                     <i class="fa fa-star orange-color"></i>
                                                     <i class="fa fa-star orange-color"></i>
                                                     <i class="fa fa-star orange-color"></i>
                                                     <i class="fa fa-star orange-color"></i>
                                                     <i class="fa fa-star-o orange-color"></i>
                                                 </div>
-                                                <a href="{{ route('car.show', $car->id) }}">{{ $car->make }}
-                                                    {{ $car->model }}</a>
-                                                <div class="separator"></div>
-                                                <div class="price">
-                                                    <span class="new-price">{{ $car->currency_type }}
-                                                        {{ number_format($car->regular_price) }}</span>
+                                                <div class="price-container">
+                                                    <div class="price-item">
+                                                        <div class="price-label">Price</div>
+                                                        <div class="price-value">
+                                                            <span class="price-currency">{{ $car->currency_type }}</span>{{ number_format($car->regular_price) }}
+                                                        </div>
+                                                    </div>
+                                                    @if ($car->auctions && $car->auctions->count() > 0)
+                                                        @php
+                                                            $activeAuction = $car->auctions->first();
+                                                        @endphp
+                                                        @if ($activeAuction)
+                                                            <div class="price-item">
+                                                                <div class="price-label">Starting Price</div>
+                                                                <div class="price-value">
+                                                                    <span class="price-currency">{{ $car->currency_type }}</span>{{ number_format($activeAuction->starting_price) }}
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    @endif
                                                 </div>
                                                 <div class="mt-2">
                                                     <!-- Car type badges -->
@@ -434,23 +446,13 @@
                                                     @endif
                                                     @if ($car->auctions && $car->auctions->count() > 0)
                                                         <span class="badge bg-warning">Auction</span>
-                                                        @php
-                                                            $activeAuction = $car->auctions->first();
-                                                        @endphp
-                                                        @if ($activeAuction)
-                                                            <span class="badge bg-primary">Starting Price:
-                                                                {{ $car->currency_type }}
-                                                                {{ number_format($activeAuction->starting_price) }}</span>
-                                                        @endif
                                                     @endif
                                                     @if ($car->request_price_status)
-                                                        <span class="badge bg-primary">Request Price:
-                                                            {{ $car->currency_type }}
-                                                            {{ number_format($car->request_price) }}</span>
+                                                        <span class="badge bg-primary">Request Price</span>
                                                     @endif
-                                                    <span class="badge bg-primary">{{ $car->offers->count() }}
-                                                        Offers</span>
+                                                    <span class="badge bg-primary">{{ $car->offers->count() }} Offers</span>
                                                 </div>
+                                                
                                             </div>
                                         </div>
                                     </div>
@@ -466,6 +468,19 @@
             </div>
         </div>
     </div>
+    
+    <!-- Data for JavaScript -->
+    <div id="js-data" 
+         data-bargain-id="{{ $bargain->id }}" 
+         data-has-active-promotion="{{ $hasActivePromotion ? 'true' : 'false' }}" 
+         data-restriction-count="{{ $bargain->restriction_count ?? 0 }}"
+         data-unpromote-url="{{ route('promotions.unpromote') }}"
+         data-promote-url="{{ route('promotions.promote') }}"
+         data-send-warning-url="{{ route('bargains.send-warning', $bargain->id) }}"
+         data-update-status-url="{{ route('bargains.update-status', $bargain->id) }}"
+         data-csrf-token="{{ csrf_token() }}"
+         style="display: none;">
+    </div>
 @endsection
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -478,6 +493,12 @@
             var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+            
+            // Initialize promotion countdown if needed
+            const hasActivePromotion = document.getElementById('js-data').getAttribute('data-has-active-promotion') === 'true';
+            if (hasActivePromotion) {
+                startPromotionCountdown('bargain-promotion-ends-at');
+            }
         });
     </script>
     <script>
@@ -494,18 +515,29 @@
             const btn = e.target.closest('#btn-promote-bargain');
             if (!btn) return;
             e.preventDefault();
-            if (btn.textContent.trim().toLowerCase() === 'promoted' ||
-                {{ $hasActivePromotion ? 'true' : 'false' }}) {
+            
+            // Get values from data attributes
+            const jsData = document.getElementById('js-data');
+            const bargainId = parseInt(jsData.getAttribute('data-bargain-id'));
+            const hasActivePromotion = jsData.getAttribute('data-has-active-promotion') === 'true';
+            const unpromoteUrl = jsData.getAttribute('data-unpromote-url');
+            const promoteUrl = jsData.getAttribute('data-promote-url');
+            const csrfToken = jsData.getAttribute('data-csrf-token');
+            
+            if (btn.textContent.trim().toLowerCase() === 'promoted' || hasActivePromotion) {
                 Swal.fire({
                     title: 'Unpromote this bargain?',
                     icon: 'warning',
                     showCancelButton: true
                 }).then(r => {
                     if (!r.isConfirmed) return;
-                    axios.post('{{ route('promotions.unpromote') }}', {
-                            type: 'bargain',
-                            id: {{ $bargain->id }}
-                        })
+                    // Create the data object separately
+                    const postData = {
+                        type: 'bargain',
+                        id: bargainId,
+                        _token: csrfToken
+                    };
+                    axios.post(unpromoteUrl, postData)
                         .then(res => {
                             // Check if response data exists and has status
                             if (res && res.data && res.data.status === 'ok') {
@@ -581,11 +613,14 @@
                 if (!result.isConfirmed) return;
                 const days = parseInt(result.value, 10);
                 if (!days || days < 1) return;
-                axios.post('{{ route('promotions.promote') }}', {
-                        type: 'bargain',
-                        id: {{ $bargain->id }},
-                        days
-                    })
+                // Create the data object separately
+                const postData = {
+                    type: 'bargain',
+                    id: bargainId,
+                    days: days,
+                    _token: csrfToken
+                };
+                axios.post(promoteUrl, postData)
                     .then(res => {
                         // Check if response data exists and has status
                         if (res && res.data && res.data.status === 'ok') {
@@ -662,6 +697,13 @@
         function handleStatusAction(btn) {
             const status = btn.getAttribute('data-status');
             const action = btn.getAttribute('data-action');
+            
+            // Get values from data attributes
+            const jsData = document.getElementById('js-data');
+            const sendWarningUrl = jsData.getAttribute('data-send-warning-url');
+            const updateStatusUrl = jsData.getAttribute('data-update-status-url');
+            const csrfToken = jsData.getAttribute('data-csrf-token');
+            const restrictionCount = parseInt(jsData.getAttribute('data-restriction-count'));
 
             let confirmMessage = '';
             let actionText = '';
@@ -672,17 +714,17 @@
             if (action === 'warning') {
                 confirmMessage = 'Send a warning to this user?';
                 actionText = 'Warning sent successfully!';
-                url = '{{ route('bargains.send-warning', $bargain->id) }}';
+                url = sendWarningUrl;
                 showDescriptionInput = true;
                 descriptionLabel = 'Warning Message (Optional):';
             } else if (action === 'reset-restrictions') {
                 confirmMessage = 'Reset restriction count to 0? This will clear all previous restrictions.';
                 actionText = 'Restrictions reset successfully!';
-                url = '{{ route('bargains.update-status', $bargain->id) }}';
+                url = updateStatusUrl;
             } else if (action === 'set-pending') {
                 confirmMessage = 'Set this user\'s status back to Pending?';
                 actionText = 'Status changed to Pending successfully!';
-                url = '{{ route('bargains.update-status', $bargain->id) }}';
+                url = updateStatusUrl;
                 showDescriptionInput = true;
                 descriptionLabel = 'Reason for setting to pending (Optional):';
             } else {
@@ -702,20 +744,19 @@
                         descriptionLabel = 'Reason for blocking (Optional):';
                         break;
                     case 'restrict':
-                        const currentRestrictions = {{ $bargain->restriction_count ?? 0 }};
-                        if (currentRestrictions >= 3) {
+                        if (restrictionCount >= 3) {
                             Swal.fire('Cannot Restrict', 'User already has maximum restrictions (3/3) and is blocked.',
                                 'error');
                             return;
                         }
                         confirmMessage =
-                            `Add restriction to this user? (${currentRestrictions + 1}/3)\n\nWarning: User will be automatically blocked after 3 restrictions.`;
+                            `Add restriction to this user? (${restrictionCount + 1}/3)\n\nWarning: User will be automatically blocked after 3 restrictions.`;
                         actionText = 'User restricted successfully!';
                         showDescriptionInput = true;
                         descriptionLabel = 'Reason for restriction (Optional):';
                         break;
                 }
-                url = '{{ route('bargains.update-status', $bargain->id) }}';
+                url = updateStatusUrl;
             }
 
             // Create SweetAlert with optional description input
@@ -758,7 +799,7 @@
             Swal.fire(swalConfig).then((result) => {
                 if (result.isConfirmed) {
                     const postData = {
-                        _token: '{{ csrf_token() }}'
+                        _token: csrfToken
                     };
 
                     if (status) {
@@ -910,9 +951,6 @@
             }, 1000);
             el.setAttribute('data-countdown', String(handle));
         }
-        @if ($hasActivePromotion && $activePromotionEndsAt)
-            startPromotionCountdown('bargain-promotion-ends-at');
-        @endif
     </script>
 @endpush
 
@@ -940,7 +978,6 @@
         .status-action-btn[data-status="pending"] {
             background: linear-gradient(45deg, #6c757d, #8a8a8a);
             border: none;
-            color: white;
         }
 
         .status-action-btn[data-status="approved"] {
@@ -962,63 +999,270 @@
         }
 
         .status-action-btn[data-action="warning"] {
-            background: linear-gradient(45deg, #dc3545, #e4606d);
+            background: linear-gradient(45deg, #17a2b8, #20c997);
             border: none;
             color: white;
         }
 
         .status-action-btn[data-action="reset-restrictions"] {
-            background: white;
-            border: 2px solid #dc3545;
-            color: #dc3545;
-        }
-
-        .status-action-btn[data-action="reset-restrictions"]:hover {
-            background: #dc3545;
+            background: linear-gradient(45deg, #28a745, #34ce57);
+            border: none;
             color: white;
         }
 
-        /* Activity Log Styling */
-        #additional-actions .btn-outline-secondary {
-            border: 2px solid #dc3545;
-            color: #dc3545;
+        /* Car Item Styling - Updated to match car listing page */
+        .car-item {
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .car-image {
+            position: relative;
+            overflow: hidden;
+            height: 200px;
+        }
+
+        .car-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .car-item:hover .car-image img {
+            transform: scale(1.05);
+        }
+
+        .car-overlay-banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .car-item:hover .car-overlay-banner {
+            opacity: 1;
+        }
+
+        .car-overlay-banner ul {
+            display: flex;
+            gap: 15px;
+            padding: 0;
+            margin: 0;
+        }
+
+        .car-overlay-banner ul li {
+            list-style: none;
+        }
+
+        .car-overlay-banner ul li a {
+            display: block;
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #db2d2e;
+            font-size: 16px;
             transition: all 0.3s ease;
         }
 
-        #additional-actions .btn-outline-secondary:hover {
+        .car-overlay-banner ul li a:hover {
+            background: #db2d2e;
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .car-content {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .car-list ul {
+            display: flex;
+            justify-content: space-between;
+            padding: 0;
+            margin: 0 0 15px;
+        }
+
+        .car-list ul li {
+            list-style: none;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .car-title h5 {
+            font-size: 18px;
+            font-weight: 600;
+            margin: 0 0 10px;
+        }
+
+        .car-title h5 a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .car-title h5 a:hover {
+            color: #db2d2e;
+        }
+
+        .star {
+            margin: 0 0 15px;
+        }
+
+        .star i {
+            font-size: 14px;
+            margin: 0 1px;
+        }
+
+        .orange-color {
+            color: #ff9800;
+        }
+
+        /* Enhanced Price Styling */
+        .price-container {
+            margin: 10px 0;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .price-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .price-item:first-child {
+            border-left: 3px solid #db2d2e;
+        }
+
+        .price-label {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .price-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .price-currency {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .price-badge {
+            background: #28a745;
+            color: white;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .auction-price {
+            background: #ffc107;
+            color: #000;
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        /* Badges */
+        .badge-promotion {
+            background: linear-gradient(45deg, #28a745, #34ce57) !important;
+            padding: 8px 12px !important;
+            font-weight: 600 !important;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-details, .btn-bargain {
+            flex: 1;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-details {
+            background: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .btn-details:hover {
+            background: #0056b3;
+            border-color: #0056b3;
+        }
+
+        .btn-bargain {
             background: #dc3545;
             color: white;
-            transform: translateY(-1px);
+            border: 1px solid #dc3545;
         }
 
-        /* Status Badge Enhancement */
-        .badge {
-            font-size: 0.875rem;
-            padding: 0.5rem 0.75rem;
+        .btn-bargain:hover {
+            background: #c82333;
+            border-color: #c82333;
         }
 
-        /* Card Header Enhancement */
-        .card-header.bg-danger {
-            background: linear-gradient(45deg, #dc3545, #b91c1c) !important;
-        }
-
-        /* Button Groups */
-        #status-actions,
-        #additional-actions {
-            gap: 8px !important;
-        }
-
-        /* Responsive Design */
+        /* Responsive adjustments */
         @media (max-width: 768px) {
-            .status-action-btn {
-                min-width: auto;
-                width: 100%;
-                margin-bottom: 5px;
-            }
-
-            #status-actions,
-            #additional-actions {
+            .car-list ul {
                 flex-direction: column;
+                gap: 5px;
+            }
+            
+            .car-list ul li {
+                text-align: center;
+            }
+            
+            .price-value {
+                font-size: 16px;
             }
         }
     </style>
