@@ -107,28 +107,251 @@
             font-weight: 500;
         }
 
+        /* Enhanced Price Styling - Different for Grid and List Views */
+        .price-container {
+            margin: 10px 0;
+        }
+
+        /* Grid View - Simple and Compact Design */
+        .grid-item .price-container {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            border-left: 3px solid #db2d2e;
+        }
+
+        .grid-item .price-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            padding: 4px 0;
+        }
+
+        .grid-item .price-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .grid-item .price-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: #6c757d;
+            text-transform: uppercase;
+        }
+
+        .grid-item .price-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #db2d2e;
+        }
+
+        .grid-item .price-currency {
+            font-size: 12px;
+            color: #495057;
+        }
+
+        .grid-item .price-badge {
+            background: #db2d2e;
+            color: white;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        /* List View - Beautiful and Detailed Design */
+        .car-grid .price-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #db2d2e;
+        }
+
+        .car-grid .price-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .car-grid .price-item:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .car-grid .price-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .car-grid .price-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .car-grid .price-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #db2d2e;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .car-grid .price-currency {
+            font-size: 14px;
+            color: #495057;
+        }
+
+        .car-grid .price-icon {
+            width: 16px;
+            height: 16px;
+            background: #db2d2e;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+        }
+
+        .car-grid .price-badge {
+            background: linear-gradient(45deg, #db2d2e, #ff4757);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-left: 8px;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .price-container {
+                padding: 12px;
+            }
+            .price-value {
+                font-size: 14px;
+            }
+            .price-label {
+                font-size: 11px;
+            }
+        }
+
+        /* Modern Slider Styles */
         .filter-widget {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
             margin-bottom: 20px;
-            padding: 10px 0;
         }
 
-        #year-range-slider {
-            margin: 10px 5px;
+        .filter-widget h6 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .link-style {
-            display: block;
-            border-radius: none !important;
-            border: none !important;
+        .filter-widget h6 button {
+            font-size: 12px;
+            padding: 4px 8px;
         }
 
-        .link-style:hover {
-            background-color: none !;
+        #year-range-slider, #price-range-slider {
+            margin: 15px 0;
+            height: 6px;
+            border-radius: 3px;
+            background: #e9ecef;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
         }
 
-        .filter-widget {
-            margin-bottom: 20px;
-            padding: 10px 0;
+        .noUi-connect {
+            background: linear-gradient(90deg, #db2d2e, #ff6b6b);
+            border-radius: 3px;
+        }
+
+        .noUi-handle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #db2d2e;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            cursor: grab;
+            transition: all 0.2s ease;
+            top: -6px;
+        }
+
+        .noUi-handle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .noUi-handle:before, .noUi-handle:after {
+            display: none;
+        }
+
+        .year-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #db2d2e;
+        }
+
+        .year-values span {
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Modern Filter Category Styles */
+        .filter-category {
+            border: none;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+
+        .filter-options {
+            padding: 15px 10px;
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #eef0f3;
+            border-top: none;
+        }
+
+        .filter-options li {
+            padding: 5px 10px;
+        }
+
+        .form-check-input:checked {
+            background-color: #db2d2e;
+            border-color: #db2d2e;
+        }
+
+        .form-check-label {
+            font-size: 14px;
+            color: #495057;
         }
 
         .link-style {
@@ -999,22 +1222,39 @@
                         <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
                                 ${currentView === 'list'
-                                ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
-                                : `                                                                                                                                                                                                                                                                                  `
+                                ? `</div>`
+                                : ``
                             }
                                 ${currentView == 'list' ? title: ""}
                                 ${currentView == 'list' ? description  : ""}
                                 ${currentView == 'list' ? details : ""}
-                                <div class="price d-flex justify-content-between gap-2 ${currentView == 'list' ? 'my-3': ''}">
-                                    <div>
-                                        <span class="new-price">$${car.regular_price}</span>
-                                    </div>    
-                                    ${currentView === 'list' ? details_button : ''}
+                                <div class="price-container">
+                                    <div class="price-item">
+                                        <div class="price-label">
+                                            ${currentView === 'list' ? '<span class="price-icon">💰</span>' : ''}
+                                            Price
+                                        </div>
+                                        <div class="price-value">
+                                            <span class="price-currency">$</span>${car.regular_price ?? ''}
+                                            ${currentView === 'list' ? '<span class="price-badge">Total</span>' : ''}
+                                        </div>
+                                    </div>
+                                    ${currentView === 'list' ? `
+                                    <div class="price-item">
+                                        <div class="price-label">
+                                            <span class="price-icon">%</span>
+                                            Discount
+                                        </div>
+                                        <div class="price-value">
+                                            <span class="price-currency">$</span>${car.discount_amount ?? '0'}
+                                            <span class="price-badge">Save</span>
+                                        </div>
+                                    </div>
+                                    ` : ''}
                                 </div>
                                 <div class="car-list" >
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
-                                        <li style="font-size: 8px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                         ${currentView == 'list' ? `<li style="font-size: 8px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>` : ""}
                                         <li style="font-size: 8px;"><i class="fa fa-shopping-cart"></i>${car.model}</li>
                                         <li style="font-size: 8px;"><i class="fa fa-registered"></i> ${car.year}</li>
                                     </ul>
