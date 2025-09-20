@@ -304,8 +304,8 @@
     <!--=================================
                                                                                                      play-video -->
 
-    {{-- <section class="play-video popup-gallery">
-        <div class="play-video-bg bg-3 bg-overlay-black-70">
+     <section class="play-video popup-gallery">
+        <div class="p-5 bg-3 bg-overlay-black-70">
             <div class="row justify-content-center">
                 <h3 class="text-white text-center mt-0 mb-5">Bargains Section Features</h3>
             </div>
@@ -496,7 +496,7 @@
             </div>
 
         </div>
-    </section> --}}
+    </section> 
 
     <!--=================================
                                                                                                                                      play-video -->
