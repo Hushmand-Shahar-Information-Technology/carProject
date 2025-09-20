@@ -239,6 +239,71 @@
             margin-left: 8px;
         }
 
+        /* Auction Badge Styling */
+        .auction-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .auction-price {
+            background: linear-gradient(45deg, #ff9800, #ff5722);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-left: 8px;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-buttons .btn {
+            flex: 1;
+            text-align: center;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-details {
+            background:rgb(220, 22, 22);
+            color: white;
+            border: 1px solid rgb(184, 23, 23);
+        }
+
+        .btn-details:hover {
+            background:rgb(219, 51, 51);
+            border-color:rgb(201, 51, 51);
+        }
+
+        .btn-bargain {
+            background: #28a745;
+            color: white;
+            border: 1px solid #28a745;
+        }
+
+        .btn-bargain:hover {
+            background: #218838;
+            border-color: #1e7e34;
+        }
+
         /* Mobile responsive */
         @media (max-width: 768px) {
             .price-container {
@@ -249,6 +314,9 @@
             }
             .price-label {
                 font-size: 11px;
+            }
+            .action-buttons {
+                flex-direction: column;
             }
         }
 
@@ -436,6 +504,7 @@
             background: #fff;
             box-shadow: 0 1px 2px rgba(16, 24, 40, 0.06);
             transition: transform .2s ease, box-shadow .2s ease;
+            position: relative;
         }
 
         .grid-item .car-item:hover {
@@ -447,6 +516,7 @@
             border-top-left-radius: 12px;
             border-top-right-radius: 12px;
             overflow: hidden;
+            position: relative;
         }
 
         .grid-item .car-image img {
@@ -1203,6 +1273,7 @@
 
                             <div class="car-item gray-bg text-center">
                                 <div class="car-image">
+                                    ${car.auction ? '<div class="auction-badge">AUCTION</div>' : ''}
                                     <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
                                     <div class="car-overlay-banner">
                                         <ul>
@@ -1232,26 +1303,35 @@
                                     <div class="price-item">
                                         <div class="price-label">
                                             ${currentView === 'list' ? '<span class="price-icon">💰</span>' : ''}
-                                            Price
+                                            ${car.auction ? 'Starting Price' : 'Price'}
                                         </div>
                                         <div class="price-value">
                                             <span class="price-currency">$</span>${car.regular_price ?? ''}
                                             ${currentView === 'list' ? '<span class="price-badge">Total</span>' : ''}
                                         </div>
                                     </div>
-                                    ${currentView === 'list' ? `
+                                    ${car.auction ? `
                                     <div class="price-item">
                                         <div class="price-label">
-                                            <span class="price-icon">%</span>
-                                            Discount
+                                            ${currentView === 'list' ? '<span class="price-icon">🔨</span>' : ''}
+                                            Auction Price
                                         </div>
                                         <div class="price-value">
-                                            <span class="price-currency">$</span>${car.discount_amount ?? '0'}
-                                            <span class="price-badge">Save</span>
+                                            <span class="price-currency">$</span>${car.auction.current_bid ?? car.auction.starting_bid ?? '0'}
+                                            ${currentView === 'list' ? '<span class="auction-price">Current Bid</span>' : ''}
                                         </div>
                                     </div>
                                     ` : ''}
+                                    ${currentView === 'list' && car.bargain ? `
+                                    ` : ''}
                                 </div>
+                                ${currentView === 'list' ? `
+                                <div class="action-buttons">
+                                    <a href="${url}" class="btn btn-details">Details</a>
+                                    ${bargain_url ? `<a href="${bargain_url}" class="btn btn-bargain">Bargain</a>` : ''}
+                                    
+                                </div>
+                                ` : ''}
                                 <div class="car-list" >
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
                                          ${currentView == 'list' ? `<li style="font-size: 8px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>` : ""}
@@ -1366,40 +1446,6 @@
 
             // If Body[] is present, show it in the search bar as a comma separated string
             const bodies = urlParams.getAll('Body[]');
-            if (bodies.length > 0) {
-                searchInput.value = bodies.join(', ');
-                fetchFilteredCars(urlParams.toString());
-            } else {
-                // Load all cars initially if no filters
-                fetchFilteredCars();
-            }
-
-            // Listen for input changes on search bar
-            searchInput.addEventListener('input', function() {
-                const keyword = searchInput.value.trim();
-
-                if (keyword === '') {
-                    // If search input is empty, show all cars
-                    fetchFilteredCars();
-                } else {
-                    // Use keyword as filter param, assuming backend supports 'keyword' param for searching Body or other fields
-                    // Note: you may want to adapt backend to search body types by keyword or modify this to fit your needs
-                    const query = new URLSearchParams();
-                    query.append('keyword', keyword);
-                    fetchFilteredCars(query.toString());
-                }
-            });
-        });
-
-
-        // search for make car company code
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const searchInput = document.getElementById('car-search');
-            const container = document.getElementById('car-results');
-
-            // If Body[] is present, show it in the search bar as a comma separated string
-            const bodies = urlParams.getAll('make');
             if (bodies.length > 0) {
                 searchInput.value = bodies.join(', ');
                 fetchFilteredCars(urlParams.toString());
