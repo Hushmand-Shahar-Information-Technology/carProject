@@ -13,7 +13,7 @@ class EndExpiredAuctions extends Command
      */
     protected $signature = 'auctions:end-expired';
 
-    /**sss
+    /**
      * The console command description.
      */
     protected $description = 'End all expired auctions';
