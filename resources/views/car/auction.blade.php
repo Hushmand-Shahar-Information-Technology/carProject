@@ -577,8 +577,6 @@
                                     <div class="filter-widget" style="padding: 10px;">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <h6>Year Range</h6>
-                                            <button type="button" id="reset-year" class="btn btn-sm btn-light mt-2">All
-                                                Years</button>
                                         </div>
                                         <div id="year-range-slider"></div>
                                         <div class="year-values">
@@ -668,10 +666,6 @@
             applyFilters();
         });
 
-        document.getElementById('reset-year').addEventListener('click', () => {
-            yearSlider.noUiSlider.set([1990, new Date().getFullYear()]); // reset slider
-            fetchFilteredCars(); // reload all cars
-        });
         document.addEventListener("DOMContentLoaded", function() {
             const priceSlider = document.getElementById('price-range-slider');
             const priceMin = document.getElementById('price-min');
@@ -1104,9 +1098,9 @@
                                 </div>
                                 <div class="car-list" >
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
-                                        <li style="font-size: 10px;><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li style="font-size: 10px;><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.currency_type}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-registered"></i> ${car.year}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-shopping-cart"></i>${car.currency_type}</li>
                                     </ul>
                                <div class="compare-btn">
 </div>
@@ -1147,7 +1141,23 @@
         function initializeAuctionTimers() {
             $('.auction-timer').each(function() {
                 const $timer = $(this);
-                const endTime = new Date($timer.data('end-time')).getTime();
+                const endTimeString = $timer.data('end-time');
+                
+                // Skip if no end time or invalid
+                if (!endTimeString) {
+                    $timer.text('No End Time');
+                    return;
+                }
+                
+                // Try to parse the date
+                const endTime = new Date(endTimeString).getTime();
+                
+                // Check if date is valid
+                if (isNaN(endTime)) {
+                    $timer.text('Invalid End Time');
+                    return;
+                }
+                
                 const $timerText = $timer;
 
                 function updateTimer() {
@@ -1187,6 +1197,81 @@
                 setInterval(updateTimer, 1000);
             });
         }
+
+        // Handle end auction button clicks
+        $(document).on('click', '.end-auction-btn', function(e) {
+            e.stopPropagation();
+            const auctionId = $(this).data('auction-id');
+            const button = $(this);
+            
+            if (confirm('Are you sure you want to end this auction early?')) {
+                // Disable button and show loading state
+                button.prop('disabled', true).text('Ending...');
+                
+                // Make AJAX request to end auction
+                $.ajax({
+                    url: `/auctions/${auctionId}/end`,
+                    method: 'POST',
+                    data: {
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Show success message
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Auction Ended',
+                                    text: response.message,
+                                    timer: 2000,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    // Reload the page to reflect changes
+                                    location.reload();
+                                });
+                            } else {
+                                alert(response.message);
+                                location.reload();
+                            }
+                        } else {
+                            // Show error message
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: response.message,
+                                    timer: 3000,
+                                    showConfirmButton: false
+                                });
+                            } else {
+                                alert('Error: ' + response.message);
+                            }
+                            button.prop('disabled', false).text('End Auction Early');
+                        }
+                    },
+                    error: function(xhr) {
+                        // Show error message
+                        let errorMessage = 'An error occurred while ending the auction.';
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+                        
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: errorMessage,
+                                timer: 3000,
+                                showConfirmButton: false
+                            });
+                        } else {
+                            alert('Error: ' + errorMessage);
+                        }
+                        button.prop('disabled', false).text('End Auction Early');
+                    }
+                });
+            }
+        });
 
         function applyFilters() {
             const formData = new FormData();

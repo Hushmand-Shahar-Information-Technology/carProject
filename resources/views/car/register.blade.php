@@ -66,38 +66,27 @@
         </div>
     @endif
 
-    <div class="container mx-auto py-10" x-data="carForm()" x-init="$nextTick(() => {
-        initSelect2();
-        // Check if we're registering as a bargain
-        const urlParams = new URLSearchParams(window.location.search);
-        const bargainId = urlParams.get('bargain_id');
-        if (bargainId) {
-            this.form.bargain_id = bargainId;
-        }
+    <div class="container mx-auto py-10" x-data="carForm()" x-init="() => {
         $nextTick(() => {
-            // Sync Select2 values and calculate initial progress
-            syncSelect2Values();
-            watchProgress();
-            // Watch for form changes with deep watching for live updates
-            $watch('form', () => {
-                watchProgress();
-                // Trigger reactivity for review section
-                $dispatch('form-changed');
-            }, { deep: true });
-            // Watch for step changes to trigger sync
-            $watch('step', () => {
-                $nextTick(() => {
-                    syncSelect2Values();
-                });
-            });
-            // Periodic sync to ensure live updates (every 500ms when form is active)
-            setInterval(() => {
-                if (document.hasFocus()) {
-                    syncSelect2Values();
+            initSelect2();
+            // Check if we're registering as a bargain
+            const urlParams = new URLSearchParams(window.location.search);
+            const bargainId = urlParams.get('bargain_id');
+            if (bargainId) {
+                this.form.bargain_id = bargainId;
+                // Also update the hidden input directly to ensure it's set
+                const bargainInput = document.querySelector('input[name=&quot;bargain_id&quot;]');
+                if (bargainInput) {
+                    bargainInput.value = bargainId;
                 }
-            }, 500);
+            }
+            $nextTick(() => {
+                // Sync Select2 values and calculate initial progress
+                syncSelect2Values();
+                watchProgress();
+            });
         });
-    })" x-cloak>
+    }" x-cloak>
         <div class="bg-white p-6 rounded shadow-md max-w-7xl mx-auto flex flex-row gap-6"
             style="box-shadow: 0 0 2px black; margin: 1rem 0;">
             <!-- Form Section -->
@@ -133,7 +122,7 @@
                     <p class="text-sm text-center text-gray-700" x-text="`${progress}% completed`"></p>
                 </div>
                 <form action="{{ route('car.store') }}" method="post" enctype="multipart/form-data"
-                    @submit="syncSelect2Values()">
+                    @submit="syncFormValues()">
                     @csrf
                     <!-- Hidden inputs to ensure all values are submitted -->
                     <input type="hidden" name="is_for_sale" :value="form.is_for_sale ? '1' : '0'">
@@ -698,7 +687,11 @@
                     is_for_rent: {{ old('is_for_rent') ? 'true' : 'false' }},
                     rent_price_per_day: '{{ old('rent_price_per_day') }}',
                     rent_price_per_month: '{{ old('rent_price_per_month') }}',
-                    bargain_id: null, // Will be set from URL params
+                    bargain_id: (function() {
+                        // Get bargain_id from URL params
+                        const urlParams = new URLSearchParams(window.location.search);
+                        return urlParams.get('bargain_id') || null;
+                    })(),
                 },
 
                 imagePreviews: [],
@@ -775,6 +768,34 @@
                     this.watchProgress();
                 },
 
+                // Function to sync all form values before submission
+                syncFormValues() {
+                    // Sync Select2 values first
+                    this.syncSelect2Values();
+
+                    // Sync all form values to hidden inputs
+                    const formFields = [
+                        'is_for_sale', 'is_for_rent', 'year', 'make', 'body_type',
+                        'car_condition', 'model', 'car_color', 'car_inside_color',
+                        'car_documents', 'transmission_type', 'currency_type',
+                        'regular_price', 'rent_price_per_day', 'rent_price_per_month',
+                        'description', 'VIN_number', 'location', 'title', 'bargain_id'
+                    ];
+
+                    formFields.forEach(field => {
+                        const input = document.querySelector(`input[name=\"${field}\"]`);
+                        if (input) {
+                            // Special handling for boolean fields
+                            if (field === 'is_for_sale' || field === 'is_for_rent') {
+                                input.value = this.form[field] ? '1' : '0';
+                            } else {
+                                input.value = this.form[field] || '';
+                            }
+                            console.log(`Synced ${field}:`, input.value);
+                        }
+                    });
+                },
+
                 getMaxSteps() {
                     // For rent only: 2 steps (basic info + media)
                     if (this.form.is_for_rent && !this.form.is_for_sale) {
@@ -785,8 +806,8 @@
                 },
 
                 nextStep() {
-                    // First sync all Select2 values before validation
-                    this.syncSelect2Values();
+                    // First sync all form values before validation
+                    this.syncFormValues();
 
                     // Small delay to ensure sync is complete
                     this.$nextTick(() => {

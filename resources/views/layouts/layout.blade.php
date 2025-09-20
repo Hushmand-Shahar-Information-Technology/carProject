@@ -144,17 +144,15 @@
                                     </li>
 
                                     <!-- Profile/Bargain Switcher -->
-                                    @if (Route::currentRouteName() == 'user.profile')
-                                        <li class="list-inline-item dropdown" id="navbar-switcher">
-                                            <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
-                                                aria-expanded="false">
-                                                <i class="fas fa-exchange-alt"></i> Switch
-                                            </a>
-                                            <ul class="dropdown-menu dropdown-menu-end" id="navbar-switcher-content">
-                                                <!-- Will be populated by JavaScript -->
-                                            </ul>
-                                        </li>
-                                    @endif
+                                    <li class="list-inline-item dropdown" id="navbar-switcher" style="display: none;">
+                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <i class="fas fa-exchange-alt"></i> Switch
+                                        </a>
+                                        <ul class="dropdown-menu dropdown-menu-end" id="navbar-switcher-content">
+                                            <!-- Will be populated by JavaScript -->
+                                        </ul>
+                                    </li>
                                 @endauth
                             </ul>
                         </div>
@@ -280,6 +278,61 @@
     @yield('content')
     @stack('scripts')
 
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Function to check if we're in bargain mode and show alert for bargain registration
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we're on the bargain registration page link
+            const bargainRegisterLink = document.querySelector('a[href="{{ route('bargains.create') }}"]');
+
+            if (bargainRegisterLink) {
+                bargainRegisterLink.addEventListener('click', function(e) {
+                    // Check if we're in bargain mode by looking at localStorage or URL parameters
+                    const currentProfileMode = localStorage.getItem('currentProfileMode');
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const bargainId = urlParams.get('bargain_id');
+
+                    // If in bargain mode, show SweetAlert
+                    if (currentProfileMode === 'bargain' || bargainId) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Switch to User Profile?',
+                            text: 'You are currently in bargain mode. To register a new bargain, please switch to user profile mode first.',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Switch to User Profile',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Redirect to user profile mode with proper session handling
+                                fetch('/set-profile-mode', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    },
+                                    body: JSON.stringify({
+                                        mode: 'user'
+                                    })
+                                }).then(() => {
+                                    window.location.href =
+                                        '{{ route('user.profile') }}?mode=user';
+                                }).catch(error => {
+                                    console.error('Error setting profile mode:', error);
+                                    window.location.href =
+                                        '{{ route('user.profile') }}?mode=user';
+                                });
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 
     <!--=================================
  footer -->
@@ -563,11 +616,6 @@
 
         // Profile/Bargain switcher for navbar
         function initializeNavbarSwitcher() {
-            // Only initialize if we're on the profile page
-            if (window.location.pathname !== '/profile') {
-                return;
-            }
-
             const switcher = document.getElementById('navbar-switcher');
             const switcherContent = document.getElementById('navbar-switcher-content');
 
@@ -578,6 +626,8 @@
             // Get bargains data from localStorage (set by profile page)
             try {
                 const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
+                const currentMode = localStorage.getItem('currentProfileMode') || 'user';
+                const currentBargainId = localStorage.getItem('currentBargainId') || null;
 
                 // Clear existing content
                 switcherContent.innerHTML = '';
@@ -595,6 +645,16 @@
                         `<a class="dropdown-item" href="javascript:void(0)" onclick="switchToBargainFromNavbar(${bargain.id}, '${bargain.name.replace(/'/g, "\\'")}')"><i class="fas fa-handshake"></i> ${bargain.name}</a>`;
                     switcherContent.appendChild(item);
                 });
+
+                // Show the switcher if we have data
+                if (bargainsData.length > 0) {
+                    switcher.style.display = 'block';
+                }
+
+                // Highlight the current mode
+                setTimeout(() => {
+                    highlightCurrentModeInNavbar(currentMode, currentBargainId);
+                }, 100);
             } catch (e) {
                 console.error('Error initializing navbar switcher:', e);
             }
@@ -602,16 +662,65 @@
 
         function switchToProfileFromNavbar() {
             // Redirect to profile page in user mode
-            window.location.href = '/profile';
+            window.location.href = '/user/profile';
         }
 
         function switchToBargainFromNavbar(bargainId, bargainName) {
             // Redirect to profile page in bargain mode
-            window.location.href = `/profile?bargain_id=${bargainId}`;
+            window.location.href = `/user/profile?bargain_id=${bargainId}`;
+        }
+
+        function highlightCurrentModeInNavbar(currentMode, bargainId) {
+            // Get all dropdown items
+            const items = document.querySelectorAll('#navbar-switcher-content .dropdown-item');
+
+            // Remove any existing highlights
+            items.forEach(item => {
+                item.classList.remove('bg-primary', 'text-white');
+            });
+
+            // Highlight the current mode
+            if (currentMode === 'user') {
+                // Highlight user profile item (first item)
+                if (items.length > 0) {
+                    items[0].classList.add('bg-primary', 'text-white');
+                }
+            } else if (currentMode === 'bargain' && bargainId) {
+                // Find and highlight the matching bargain item
+                for (let i = 1; i < items.length; i++) { // Start from 1 to skip user profile item
+                    const onclickAttr = items[i].getAttribute('onclick');
+                    if (onclickAttr && onclickAttr.includes(bargainId)) {
+                        items[i].classList.add('bg-primary', 'text-white');
+                        break;
+                    }
+                }
+            }
+
+            // Update the navbar switcher text to show current mode
+            const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
+            if (switcherButton) {
+                if (currentMode === 'user') {
+                    switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> User Profile';
+                } else if (currentMode === 'bargain' && bargainId) {
+                    // Find the bargain name from localStorage
+                    try {
+                        const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
+                        const bargain = bargainsData.find(b => b.id == bargainId);
+                        if (bargain) {
+                            switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' + bargain.name;
+                        }
+                    } catch (e) {
+                        console.error('Error updating navbar switcher text:', e);
+                    }
+                }
+            }
         }
 
         // Initialize navbar switcher when DOM is loaded
-        document.addEventListener('DOMContentLoaded', initializeNavbarSwitcher);
+        document.addEventListener('DOMContentLoaded', function() {
+            // Small delay to ensure localStorage is populated
+            setTimeout(initializeNavbarSwitcher, 100);
+        });
     </script>
 </body>
 

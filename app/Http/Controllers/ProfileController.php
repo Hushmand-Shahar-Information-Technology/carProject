@@ -6,6 +6,7 @@ use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
@@ -15,24 +16,62 @@ class ProfileController extends Controller
     /**
      * Display the user's profile form.
      */
-    public function show()
+    public function show(Request $request)
     {
-        $profile = Auth::user();
-        // Load cars with offers count for better performance
-        $profile->load(['cars.offers']);
+        $user = Auth::user();
+        // Load cars with all necessary relationships for proper display
+        $user->load(['cars.auctions']);
 
         // Get bargains associated with the user via the direct relationship
-        // Also load the cars relationship for each bargain with offers count
-        $bargains = $profile->bargains()->with(['promotions', 'cars.offers'])->get();
+        // Also load the cars relationship for each bargain with all necessary relationships
+        $bargains = $user->bargains()->with(['promotions', 'cars.auctions'])->get();
 
-        // Add offers count to each bargain
-        foreach ($bargains as $bargain) {
-            $bargain->total_offers = $bargain->cars->sum(function ($car) {
-                return $car->offers->count();
-            });
+        // Check if we're viewing a specific bargain profile
+        // First check query parameter, then check session
+        $bargainId = $request->query('bargain_id');
+
+        // If no bargain_id in query parameter, check if we should use session value
+        // But only if we're not explicitly in user mode
+        if (!$bargainId) {
+            // Check if we're explicitly in user mode via query parameter
+            $profileMode = $request->query('mode');
+            if ($profileMode !== 'user') {
+                // Only fall back to session if not explicitly in user mode
+                $bargainId = session('active_bargain_id');
+            }
         }
 
-        return view('profile.profile', compact('profile', 'bargains'));
+        $activeBargain = null;
+
+        if ($bargainId) {
+            $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions'])->find($bargainId);
+            if ($activeBargain) {
+                // Store in session to persist mode
+                session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
+            }
+        } else {
+            // Ensure we're in user mode if no bargain is selected
+            session(['profile_mode' => 'user', 'active_bargain_id' => null]);
+        }
+
+        return view('profile.profile', compact('user', 'bargains', 'activeBargain'));
+    }
+
+    /**
+     * Set the profile mode (user or bargain) via AJAX
+     */
+    public function setProfileMode(Request $request): JsonResponse
+    {
+        $mode = $request->input('mode');
+        $bargainId = $request->input('bargain_id');
+
+        if ($mode === 'user') {
+            session(['profile_mode' => 'user', 'active_bargain_id' => null]);
+        } elseif ($mode === 'bargain' && $bargainId) {
+            session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
+        }
+
+        return response()->json(['success' => true]);
     }
 
     /**
@@ -40,8 +79,8 @@ class ProfileController extends Controller
      */
     public function getBargainCars(Request $request, $bargainId)
     {
-        $profile = Auth::user();
-        $bargain = $profile->bargains()->with('cars.offers')->find($bargainId);
+        $user = Auth::user();
+        $bargain = $user->bargains()->with('cars.auctions')->find($bargainId);
 
         if (!$bargain) {
             return response()->json(['error' => 'Bargain not found'], 404);
@@ -56,7 +95,7 @@ class ProfileController extends Controller
     public function edit(Request $request): View
     {
         return view('profile.edit', [
-            'user' => $request->user(),
+            'user' => Auth::user(),
         ]);
     }
 
@@ -66,7 +105,7 @@ class ProfileController extends Controller
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         /** @var User $user */
-        $user = $request->user();
+        $user = Auth::user();
         $user->fill($request->validated());
 
         if ($user->isDirty('email')) {
@@ -88,7 +127,7 @@ class ProfileController extends Controller
         ]);
 
         /** @var User $user */
-        $user = $request->user();
+        $user = Auth::user();
 
         Auth::logout();
 

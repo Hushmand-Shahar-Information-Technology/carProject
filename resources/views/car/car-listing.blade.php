@@ -515,8 +515,6 @@
                                     <div class="filter-widget" style="padding: 10px;">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <h6>Year Range</h6>
-                                            <button type="button" id="reset-year" class="btn btn-sm btn-light mt-2">All
-                                                Years</button>
                                         </div>
                                         <div id="year-range-slider"></div>
                                         <div class="year-values">
@@ -607,10 +605,6 @@
             applyFilters();
         });
 
-        document.getElementById('reset-year').addEventListener('click', () => {
-            yearSlider.noUiSlider.set([1990, new Date().getFullYear()]); // reset slider
-            fetchFilteredCars(); // reload all cars
-        });
         document.addEventListener("DOMContentLoaded", function() {
             const priceSlider = document.getElementById('price-range-slider');
             const priceMin = document.getElementById('price-min');
@@ -1020,9 +1014,9 @@
                                 </div>
                                 <div class="car-list" >
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
-                                        <li style="font-size: 10px;><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li style="font-size: 10px;><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li style="font-size: 10px;><i class="fa fa-shopping-cart"></i>${car.model}</li>
+                                        <li style="font-size: 8px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>
+                                        <li style="font-size: 8px;"><i class="fa fa-shopping-cart"></i>${car.model}</li>
+                                        <li style="font-size: 8px;"><i class="fa fa-registered"></i> ${car.year}</li>
                                     </ul>
                                <div class="compare-btn">
 </div>

@@ -164,6 +164,140 @@
                 font-size: 11px;
             }
         }
+
+        /* Modern Slider Styles */
+        .filter-widget {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); */
+            margin-bottom: 20px;
+            /* border: 1px solid #eef0f3; */
+        }
+
+        .filter-widget h6 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .filter-widget h6 button {
+            font-size: 12px;
+            padding: 4px 8px;
+        }
+
+        #year-range-slider, #price-range-slider {
+            margin: 15px 0;
+            height: 6px;
+            border-radius: 3px;
+            background: #e9ecef;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .noUi-connect {
+            background: linear-gradient(90deg, #db2d2e, #ff6b6b);
+            border-radius: 3px;
+        }
+
+        .noUi-handle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #db2d2e;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            cursor: grab;
+            transition: all 0.2s ease;
+            top: -6px;
+        }
+
+        .noUi-handle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .noUi-handle:before, .noUi-handle:after {
+            display: none;
+        }
+
+        .year-values {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+            color: #db2d2e;
+        }
+
+        .year-values span {
+            background: #f8f9fa;
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Modern Filter Category Styles */
+        .filter-category {
+            border: none;
+            padding: 0;
+            margin-bottom: 10px;
+        }
+
+        /* .filter-header {
+            padding: 12px 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: #333;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid #eef0f3;
+        } */
+
+        /* .filter-header:hover {
+            background: #e9ecef;
+        } */
+
+        /* .filter-header.active {
+            background: #db2d2e;
+            color: #fff;
+            border-color: #db2d2e;
+        } */
+
+        .filter-arrow {
+            transition: transform 0.3s ease;
+        }
+/* 
+        .filter-header.active .filter-arrow {
+            transform: rotate(180deg);
+        } */
+
+        .filter-options {
+            padding: 15px 10px;
+            background: #fff;
+            border-radius: 0 0 8px 8px;
+            border: 1px solid #eef0f3;
+            border-top: none;
+        }
+
+        .filter-options li {
+            padding: 5px 10px;
+        }
+
+        .form-check-input:checked {
+            background-color: #db2d2e;
+            border-color: #db2d2e;
+        }
+
+        .form-check-label {
+            font-size: 14px;
+            color: #495057;
+        }
+
     </style>
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
@@ -208,8 +342,6 @@
                                     <div class="filter-widget" style="padding: 10px;">
                                         <div style="display: flex; align-items: center; justify-content: space-between;">
                                             <h6>Year Range</h6>
-                                            <button type="button" id="reset-year" class="btn btn-sm btn-light mt-2">All
-                                                Years</button>
                                         </div>
                                         <div id="year-range-slider"></div>
                                         <div class="year-values">
@@ -281,11 +413,12 @@
                         </nav>
                     </div>
                 </div>
+                 <div class="pagination-link" style="display: flex; justify-content: center; margin: 2rem 0 3rem 0;">
+                </div>
             </div>
         </div>
     </section>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         const API_URL = "{{ route('cars.filter-rent') }}";
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
@@ -296,6 +429,136 @@
         let currentPage = 1;
         const perPage = 12;
 
+        // Initialize sliders when DOM is loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Price Range Slider
+            const priceSlider = document.getElementById('price-range-slider');
+            const priceMin = document.getElementById('price-min');
+            const priceMax = document.getElementById('price-max');
+
+            noUiSlider.create(priceSlider, {
+                start: [300, 50000],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 300,
+                    'max': 50000
+                }
+            });
+
+            priceSlider.noUiSlider.on('update', function(values) {
+                priceMin.innerHTML = Math.round(values[0]);
+                priceMax.innerHTML = Math.round(values[1]);
+            });
+
+            priceSlider.noUiSlider.on('change', function(values) {
+                applyFilters(1);
+            });
+
+            // Year Range Slider
+            const yearSlider = document.getElementById('year-range-slider');
+            const yearMin = document.getElementById('year-min');
+            const yearMax = document.getElementById('year-max');
+
+            noUiSlider.create(yearSlider, {
+                start: [1990, new Date().getFullYear()],
+                connect: true,
+                step: 1,
+                range: {
+                    'min': 1990,
+                    'max': new Date().getFullYear()
+                }
+            });
+
+            yearSlider.noUiSlider.on('update', function(values) {
+                yearMin.innerHTML = Math.round(values[0]);
+                yearMax.innerHTML = Math.round(values[1]);
+            });
+
+            yearSlider.noUiSlider.on('change', function(values) {
+                applyFilters(1);
+            });
+
+            // Reset Year Button
+            document.getElementById('reset-year').addEventListener('click', () => {
+                yearSlider.noUiSlider.set([1990, new Date().getFullYear()]);
+                applyFilters(1);
+            });
+        });
+        function renderPagination(meta) {
+            let pagContainer = document.querySelector('.pagination-link');
+            if (!pagContainer) return;
+
+            if (!meta) {
+                pagContainer.innerHTML = '';
+                return;
+            }
+
+            const current = meta.current_page || 1;
+            const last = meta.last_page || 1;
+            const maxButtons = 5; // how many page numbers to display around current
+            const parts = [];
+
+            const makeBtn = (label, page, disabled = false, active = false, isEllipsis = false) => {
+                if (isEllipsis) {
+                    return `<span class="mx-1">...</span>`;
+                }
+                const cls = ['btn', 'btn-sm', 'mx-1', 'mb-2', 'px-3', 'py-1'];
+                if (active) cls.push('btn-danger');
+                else cls.push('btn-light');
+                const disabledAttr = disabled ? 'disabled' : '';
+                return `<button type="button" class="${cls.join(' ')} pagination" data-page="${page}" ${disabledAttr}>${label}</button>`;
+            };
+
+            // Prev button
+            parts.push(makeBtn('Prev', current - 1, current === 1));
+
+            // Always show the first page
+            parts.push(makeBtn(1, 1, false, current === 1));
+
+            // Show second page only if current is close
+            if (current > 3) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Pages around current
+            let start = Math.max(2, current - 2);
+            let end = Math.min(last - 1, current + 2);
+
+            for (let p = start; p <= end; p++) {
+                parts.push(makeBtn(p, p, false, p === current));
+            }
+
+            // Show ellipsis before last page
+            if (current < last - 2) {
+                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
+            }
+
+            // Always show last page if > 1
+            if (last > 1) {
+                parts.push(makeBtn(last, last, false, current === last));
+            }
+
+            // Next button
+            parts.push(makeBtn('Next', current + 1, current === last));
+
+            // Render
+            pagContainer.innerHTML = parts.join('');
+
+            // Attach events
+            pagContainer.querySelectorAll('button[data-page]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const page = parseInt(e.currentTarget.getAttribute('data-page'));
+                    if (isNaN(page)) return;
+                    const q = setQueryParam(lastQuery, 'page', page);
+                    fetchFilteredCars(q);
+                    pagContainer.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'nearest'
+                    });
+                });
+            });
+        }
         function setView(view) {
             currentView = view;
             document.getElementById('grid-view').classList.toggle('active', view === 'grid');
@@ -305,6 +568,8 @@
 
         function buildQuery(page = 1) {
             const formData = new FormData();
+            
+            // Add checkbox filters
             document.querySelectorAll('.filter-option:checked').forEach(input => {
                 if (input.value !== '*') {
                     const name = input.name.replace('[]', '');
@@ -312,11 +577,38 @@
                 }
             });
 
+            // Add search keyword
             const keyword = document.getElementById('car-search').value.trim();
             if (keyword) formData.append('keyword', keyword);
 
+            // Add sort option
             const sortValue = document.getElementById('sort-select').value;
             if (sortValue) formData.append('sort', sortValue);
+
+            // Add price range
+            const priceSlider = document.getElementById('price-range-slider');
+            if (priceSlider && priceSlider.noUiSlider) {
+                const priceValues = priceSlider.noUiSlider.get();
+                const minPrice = Math.round(priceValues[0]);
+                const maxPrice = Math.round(priceValues[1]);
+                formData.append('price_min', minPrice);
+                formData.append('price_max', maxPrice);
+            }
+
+            // Add year range
+            const yearSlider = document.getElementById('year-range-slider');
+            if (yearSlider && yearSlider.noUiSlider) {
+                const yearValues = yearSlider.noUiSlider.get();
+                const minYear = Math.round(yearValues[0]);
+                const maxYear = Math.round(yearValues[1]);
+                
+                // Push all years in range to 'Year[]'
+                const years = [];
+                for (let y = minYear; y <= maxYear; y++) {
+                    years.push(y);
+                }
+                years.forEach(y => formData.append('Year[]', y));
+            }
 
             formData.append('page', page);
             formData.append('per_page', perPage);
@@ -434,7 +726,7 @@
                                         <div class="car-list">
                                             <ul class="list-inline" style="font-size: 12px;">
                                                 <li><i class="fa fa-registered"></i> ${car.year}</li>
-                                                <li><i class="fa fa-cog"></i> ${car.transmission_type ?? ''}</li>
+                                                ${currentView == 'list' ? "<li><i class=\"fa fa-cog\"></i> " + (car.transmission_type ?? '') + "</li>" : ''}
                                                 <li><i class="fa fa-car"></i> ${car.make ?? ''} ${car.model ?? ''}</li>
                                             </ul>
                                         </div>
@@ -464,12 +756,33 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize view toggle buttons
             document.getElementById('grid-view').addEventListener('click', () => setView('grid'));
             document.getElementById('list-view').addEventListener('click', () => setView('list'));
+            
+            // Initialize filter event listeners
             document.querySelectorAll('.filter-option').forEach(el => el.addEventListener('change', () =>
                 applyFilters(1)));
             document.getElementById('car-search').addEventListener('input', () => applyFilters(1));
             document.getElementById('sort-select').addEventListener('change', () => applyFilters(1));
+            
+            // Collapsible filters
+            document.querySelectorAll('.filter-header').forEach(header => {
+                header.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const submenu = this.nextElementSibling;
+                    this.classList.toggle('active');
+                    
+                    // Simple toggle without animation
+                    if (submenu.style.display === 'block') {
+                        submenu.style.display = 'none';
+                    } else {
+                        submenu.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Initial load
             applyFilters(1);
         });
     </script>
