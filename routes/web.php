@@ -60,13 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
     Route::get('/user/profile/bargain/{id}/cars', [ProfileController::class, 'getBargainCars'])->name('user.profile.bargain.cars');
     Route::post('/set-profile-mode', [ProfileController::class, 'setProfileMode'])->name('profile.set-mode');
-    Route::get('/test-profile-switching', function () {
-        return view('test-profile-switching');
-    })->name('test.profile.switching');
-
-    Route::get('/test-profile-js', function () {
-        return view('test-profile-js');
-    })->name('test.profile.js');
+    // Test routes removed
 });
 
 // Language switch route
