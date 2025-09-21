@@ -1,6 +1,19 @@
 @extends('layouts.layout')
 @section('title', 'Profile')
 @section('content')
+    @if (session('swal_error'))
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    title: 'Action Not Allowed',
+                    text: '{{ session('swal_error') }}',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            });
+        </script>
+    @endif
 
 
     <style>
@@ -229,7 +242,8 @@
             background-color: #f1f1f1;
         }
 
-        .profile-dropdown:hover .dropdown-content {
+        .profile-dropdown:hover .dropdown-content,
+        .profile-dropdown:focus-within .dropdown-content {
             display: block;
         }
 
@@ -769,7 +783,8 @@
                 Notifications <span class="notification-count-badge"
                     id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
             </div>
-            <div class="modern-tab" data-tab="bargains">
+            <div class="modern-tab" data-tab="bargains" id="bargains-modern-tab"
+                style="{{ isset($activeBargain) ? 'display: none;' : 'display: block;' }}">
                 Bargains ({{ $bargains->count() }})
             </div>
         </div>
@@ -1100,12 +1115,41 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        // Get the current registration mode from localStorage or default to 'user'
-        let currentRegistrationMode = localStorage.getItem('registrationMode') || 'user';
-        let currentBargainId = localStorage.getItem('currentBargainId') || null;
-        let currentBargainName = localStorage.getItem('currentBargainName') || null;
-        let currentBargainData = null;
+        // Debug dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded');
 
+            // Add click handler to dropdown button
+            const dropdownBtn = document.querySelector('.dropdown-btn');
+            const dropdownContent = document.querySelector('.dropdown-content');
+
+            if (dropdownBtn && dropdownContent) {
+                dropdownBtn.addEventListener('click', function(e) {
+                    console.log('Dropdown button clicked');
+                    e.stopPropagation();
+                    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' :
+                        'block';
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!dropdownBtn.contains(e.target) && !dropdownContent.contains(e.target)) {
+                        dropdownContent.style.display = 'none';
+                    }
+                });
+            }
+
+            // Add click handlers to dropdown items for debugging
+            const dropdownLinks = document.querySelectorAll('.dropdown-content a');
+            dropdownLinks.forEach((link, index) => {
+                console.log('Dropdown link ' + index + ':', link.textContent);
+                link.addEventListener('click', function(e) {
+                    console.log('Dropdown link clicked:', e.target.textContent);
+                });
+            });
+        });
+    </script>
+    <script>
         // Store bargains data for easy access
         const bargainsData = @json($bargains);
 
@@ -1114,24 +1158,82 @@
 
         // Initialize the registration mode on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // Set the initial state of the dropdown based on localStorage or URL parameters
+            // First check localStorage for the current profile mode
+            const storedProfileMode = localStorage.getItem('currentProfileMode');
+            const storedBargainId = localStorage.getItem('currentBargainId');
+
+            // Check if we're currently in bargain mode by looking at the URL or server-provided data
             const urlParams = new URLSearchParams(window.location.search);
             const bargainIdFromUrl = urlParams.get('bargain_id');
 
+            // Check if we have an active bargain from the server
+            const activeBargain = @json(isset($activeBargain) ? $activeBargain : null);
+
+            // Debug information
+            console.log('Initialization debug info:');
+            console.log('storedProfileMode:', storedProfileMode);
+            console.log('storedBargainId:', storedBargainId);
+            console.log('bargainIdFromUrl:', bargainIdFromUrl);
+            console.log('activeBargain:', activeBargain);
+            console.log('bargainsData:', bargainsData);
+
+            // Priority order: URL parameter > localStorage > server data > default to user
             if (bargainIdFromUrl) {
                 // If there's a bargain_id in the URL, find the corresponding bargain
                 const selectedBargain = bargainsData.find(b => b.id == bargainIdFromUrl);
+                console.log('Found bargain from URL:', selectedBargain);
                 if (selectedBargain) {
-                    switchToBargain(selectedBargain.id, selectedBargain.name);
+                    // Update UI to show bargain mode
+                    updateProfileInfo(true, selectedBargain);
+                    // Store in localStorage for navbar switcher
+                    localStorage.setItem('currentProfileMode', 'bargain');
+                    localStorage.setItem('currentBargainId', selectedBargain.id);
                 }
-            } else if (currentRegistrationMode === 'bargain' && currentBargainId && currentBargainName) {
-                const selectedBargain = bargainsData.find(b => b.id == currentBargainId);
+            } else if (storedProfileMode === 'bargain' && storedBargainId) {
+                // Use localStorage if available
+                console.log('Using localStorage preference');
+                const selectedBargain = bargainsData.find(b => b.id == storedBargainId);
                 if (selectedBargain) {
-                    switchToBargain(selectedBargain.id, selectedBargain.name);
+                    // Update UI to show bargain mode
+                    updateProfileInfo(true, selectedBargain);
+                    // Redirect to maintain consistency
+                    window.location.href = '{{ route('user.profile') }}?bargain_id=' + storedBargainId;
+                    return;
+                } else {
+                    // If bargain not found, fallback to user mode
+                    localStorage.setItem('currentProfileMode', 'user');
+                    localStorage.setItem('currentBargainId', null);
+                    updateProfileInfo(false, null);
+                }
+            } else if (activeBargain && activeBargain.id) {
+                // If we have an active bargain from the server, use it
+                console.log('Using activeBargain from server');
+                const selectedBargain = bargainsData.find(b => b.id == activeBargain.id);
+                if (selectedBargain) {
+                    // Update UI to show bargain mode
+                    updateProfileInfo(true, selectedBargain);
+                    // Store in localStorage for navbar switcher
+                    localStorage.setItem('currentProfileMode', 'bargain');
+                    localStorage.setItem('currentBargainId', selectedBargain.id);
                 }
             } else {
                 // Default to user profile
-                switchToProfile();
+                console.log('Defaulting to user profile');
+                updateProfileInfo(false, null);
+                // Store in localStorage for navbar switcher
+                localStorage.setItem('currentProfileMode', 'user');
+                localStorage.setItem('currentBargainId', null);
+            }
+
+            // Show success message if profile was switched
+            const urlParamsSwitch = new URLSearchParams(window.location.search);
+            if (urlParamsSwitch.get('switched') === 'true') {
+                Swal.fire({
+                    title: 'Profile Switched',
+                    text: 'Your profile mode has been successfully switched.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
             }
         });
 
@@ -1142,648 +1244,920 @@
 
         // Tab switching functionality
         document.querySelectorAll('.nav-link').forEach(link => {
-                    link.addEventListener('click', function(e) {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
 
-                                // Modern Tab switching functionality
-                                document.querySelectorAll('.modern-tab').forEach(tab => {
-                                    tab.addEventListener('click', function(e) {
-                                        e.preventDefault();
+                // Remove active class from all tabs
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove(
+                    'active'));
 
-                                        // Remove active class from all tabs
-                                        document.querySelectorAll('.modern-tab').forEach(t => t.classList
-                                            .remove('active'));
-                                        document.querySelectorAll('.tab-content').forEach(content => content
-                                            .classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
 
-                                        // Add active class to clicked tab
-                                        this.classList.add('active');
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId + '-tab').classList.add('active');
+            });
+        });
 
-                                        // Show corresponding content
-                                        const tabId = this.getAttribute('data-tab');
-                                        document.getElementById(tabId + '-tab').classList.add('active');
-                                    });
-                                });
+        // Modern Tab switching functionality
+        document.querySelectorAll('.modern-tab').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
 
-                                // Add hover effects to post items
-                                document.querySelectorAll('.post-item').forEach(item => {
-                                    item.addEventListener('mouseenter', function() {
-                                        this.style.transform = 'scale(1.02)';
-                                        this.style.transition = 'transform 0.2s ease';
-                                    });
+                // Remove active class from all tabs
+                document.querySelectorAll('.modern-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove(
+                    'active'));
 
-                                    item.addEventListener('mouseleave', function() {
-                                        this.style.transform = 'scale(1';
-                                    });
-                                });
+                // Add active class to clicked tab
+                this.classList.add('active');
 
-                                // Make entire notification card clickable
-                                document.querySelectorAll('.notification-card').forEach(card => {
-                                    card.addEventListener('click', function(e) {
-                                        // Prevent click if the user clicked on the "Mark as Read" button
-                                        if (e.target.classList.contains('mark-as-read-btn')) {
-                                            return;
-                                        }
+                // Show corresponding content
+                const tabId = this.getAttribute('data-tab');
+                document.getElementById(tabId + '-tab').classList.add('active');
+            });
+        });
 
-                                        // Get the car URL from the data attribute
-                                        const carUrl = this.getAttribute('data-car-url');
+        // Add hover effects to post items
+        document.querySelectorAll('.post-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.02)';
+                this.style.transition = 'transform 0.2s ease';
+            });
 
-                                        // Redirect to the car page
-                                        if (carUrl) {
-                                            window.location.href = carUrl;
-                                        }
-                                    });
-                                });
+            item.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1';
+            });
+        });
 
-                                // Mark notification as read
-                                document.querySelectorAll('.mark-as-read-btn').forEach(button => {
-                                    button.addEventListener('click', function(e) {
-                                        e.stopPropagation(); // Prevent triggering the card click event
+        // Make entire notification card clickable
+        document.querySelectorAll('.notification-card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                // Prevent click if the user clicked on the "Mark as Read" button
+                if (e.target.classList.contains('mark-as-read-btn')) {
+                    return;
+                }
 
-                                        const notificationId = this.getAttribute('data-notification-id');
-                                        const notificationElement = document.querySelector(
-                                            `[data-notification-id="${notificationId}"]`);
+                // Get the car URL from the data attribute
+                const carUrl = this.getAttribute('data-car-url');
 
-                                        fetch(`/mark-notification-as-read/${notificationId}`, {
-                                                method: 'POST',
-                                                headers: {
-                                                    'Content-Type': 'application/json',
-                                                    'X-CSRF-TOKEN': document.querySelector(
-                                                            'meta[name="csrf-token"]')
-                                                        .getAttribute('content')
-                                                }
-                                            })
-                                            .then(response => response.json())
-                                            .then(data => {
-                                                if (data.success) {
-                                                    // Remove the button
-                                                    this.closest('.notification-actions').remove();
+                // Redirect to the car page
+                if (carUrl) {
+                    window.location.href = carUrl;
+                }
+            });
+        });
 
-                                                    // Remove unread class and indicator
-                                                    notificationElement.classList.remove('unread');
-                                                    const indicator = notificationElement.querySelector(
-                                                        '.unread-indicator');
-                                                    if (indicator) {
-                                                        indicator.classList.remove('unread-indicator');
-                                                        indicator.classList.add('read-indicator');
-                                                        indicator.title = 'Read';
-                                                    }
+        // Mark notification as read
+        document.querySelectorAll('.mark-as-read-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent triggering the card click event
 
-                                                    // Update notification count
-                                                    const countElement = document
-                                                        .getElementById('notification-count');
-                                                    let count = parseInt(countElement.textContent);
-                                                    if (count > 0) {
-                                                        countElement.textContent = count - 1;
-                                                    }
-                                                }
-                                            })
-                                            .catch(error => {
-                                                console.error('Error:', error);
-                                            });
-                                    });
-                                });
+                const notificationId = this.getAttribute('data-notification-id');
+                const notificationElement = document.querySelector(
+                    `[data-notification-id="${notificationId}"]`);
 
+                fetch(`/mark-notification-as-read/${notificationId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove the button
+                            this.closest('.notification-actions').remove();
 
-                                // Profile/Bargain switching functions
-                                function switchToProfile() {
-                                    // Clear the bargain_id from session via AJAX first
-                                    fetch('/set-profile-mode', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                                .getAttribute('content')
-                                        },
-                                        body: JSON.stringify({
-                                            mode: 'user'
-                                        })
-                                    }).then(() => {
-                                        // After session is cleared, reload the page without bargain_id parameter
-                                        // Add explicit mode parameter to ensure we're in user mode
-                                        window.location.href = '{{ route('user.profile') }}?mode=user';
-                                    }).catch(error => {
-                                        console.error('Error setting profile mode:', error);
-                                        // Even if AJAX fails, still redirect to ensure we're in user mode
-                                        window.location.href = '{{ route('user.profile') }}?mode=user';
-                                    });
-                                }
-
-                                function switchToBargain(bargainId, bargainName) {
-                                    // Store the registration mode in localStorage
-                                    localStorage.setItem('registrationMode', 'user');
-                                    localStorage.removeItem('currentBargainId');
-                                    localStorage.removeItem('currentBargainName');
-                                    currentBargainData = null;
-
-                                    // Update URL to remove bargain_id parameter
-                                    const url = new URL(window.location);
-                                    url.searchParams.delete('bargain_id');
-                                    window.history.replaceState({}, '', url);
-                                }
-
-                                function switchToBargain(bargainId, bargainName) {
-                                    // Find the bargain data
-                                    const selectedBargain = bargainsData.find(b => b.id == bargainId);
-
-                                    if (selectedBargain) {
-                                        // Check if the bargain is blocked or restricted
-                                        if (selectedBargain.registration_status === 'blocked') {
-                                            alert('Your bargain is currently blocked. You cannot post cars at this time.');
-                                            return;
-                                        }
-
-                                        if (selectedBargain.registration_status === 'restricted' && selectedBargain
-                                            .restriction_ends_at) {
-                                            const restrictionEndDate = new Date(selectedBargain.restriction_ends_at);
-                                            const today = new Date();
-                                            if (restrictionEndDate > today) {
-                                                alert('Your bargain is currently restricted until ' + restrictionEndDate
-                                                    .toLocaleDateString() +
-                                                    '. You cannot post cars during this period.');
-                                                return;
-                                            }
-                                        }
-
-                                        // Update the new car link to point to bargain registration
-                                        document.getElementById('new-car-link').href =
-                                            "{{ route('car.create') }}?bargain_id=" + bargainId;
-
-                                        // Update dropdown button text
-                                        updateRegistrationModeButton('bargain', bargainName);
-
-                                        // Update profile information to show bargain details
-                                        document.getElementById('profile-title').textContent = selectedBargain.name;
-                                        document.getElementById('profile-name').textContent = selectedBargain.name;
-                                        document.getElementById('profile-email').textContent = selectedBargain.email ||
-                                            'N/A';
-                                        document.getElementById('profile-location').textContent = selectedBargain.address ||
-                                            'N/A';
-                                        document.getElementById('post-count').textContent = selectedBargain.cars_count || 0;
-                                        document.getElementById('offers-count').textContent = selectedBargain
-                                            .total_offers || 0;
-                                        // Hide bargains count for bargain profile
-                                        document.getElementById('bargains-count-container').style.display = 'none';
-                                        document.getElementById('cars-tab-count').textContent = selectedBargain
-                                            .cars_count || 0;
-                                        document.getElementById('bargains-tab-count').textContent = '0';
-
-                                        // Show bargain status display
-                                        updateBargainStatusDisplay(selectedBargain);
-
-                                        // Hide edit profile button for bargain view
-                                        document.getElementById('edit-profile-btn').style.display = 'none';
-
-                                        // Load and display bargain cars via AJAX
-                                        loadBargainCars(bargainId);
-
-                                        // Store the registration mode and bargain info in localStorage
-                                        localStorage.setItem('registrationMode', 'bargain');
-                                        localStorage.setItem('currentBargainId', bargainId.toString());
-                                        localStorage.setItem('currentBargainName', bargainName);
-                                        currentBargainData = selectedBargain;
-
-                                        // Update URL to include bargain_id parameter
-                                        const url = new URL(window.location);
-                                        url.searchParams.set('bargain_id', bargainId);
-                                        window.history.replaceState({}, '', url);
-                                    }
-                                }
-
-                                function updateRegistrationModeButton(mode, name) {
-                                    const button = document.getElementById('registration-mode-btn');
-                                    if (button) {
-                                        if (mode === 'user') {
-                                            button.innerHTML = '<i class="fas fa-user"></i> ' + name;
-                                        } else {
-                                            button.innerHTML = '<i class="fas fa-handshake"></i> ' + name;
-                                        }
-                                    }
-                                }
-
-                                function updateBargainStatusDisplay(bargain) {
-                                    const statusContainer = document.getElementById('bargain-status-container');
-                                    const statusBadge = document.getElementById('bargain-status-badge');
-                                    const restrictionInfo = document.getElementById('bargain-restriction-info');
-                                    const restrictionMessage = document.getElementById('restriction-message');
-                                    const restrictionMessageText = document.getElementById('restriction-message-text');
-
-                                    if (!statusContainer || !statusBadge) return;
-
-                                    // Show the status container
-                                    statusContainer.style.display = 'block';
-
-                                    // Update status badge
-                                    statusBadge.className = 'badge';
-                                    statusBadge.innerHTML = '';
-
-                                    let statusText = '';
-                                    let statusClass = '';
-                                    let statusIndicatorClass = '';
-
-                                    switch (bargain.registration_status) {
-                                        case 'approved':
-                                            statusText = 'Approved';
-                                            statusClass = 'bg-success';
-                                            statusIndicatorClass = 'status-approved';
-                                            break;
-                                        case 'blocked':
-                                            statusText = 'Blocked';
-                                            statusClass = 'bg-danger';
-                                            statusIndicatorClass = 'status-blocked';
-                                            break;
-                                        case 'restricted':
-                                            statusText = 'Restricted';
-                                            statusClass = 'bg-warning text-dark';
-                                            statusIndicatorClass = 'status-restricted';
-                                            break;
-                                        default: // pending
-                                            statusText = 'Pending';
-                                            statusClass = 'bg-secondary';
-                                            statusIndicatorClass = 'status-pending';
-                                    }
-
-                                    statusBadge.classList.add(statusClass);
-                                    statusBadge.innerHTML =
-                                        `<span class="status-indicator ${statusIndicatorClass}"></span> ${statusText}`;
-
-                                    // Handle restriction info
-                                    restrictionInfo.innerHTML = '';
-                                    if (bargain.registration_status === 'restricted' && bargain.restriction_ends_at) {
-                                        restrictionInfo.innerHTML =
-                                            `<small class="d-block">Ends: ${new Date(bargain.restriction_ends_at).toLocaleDateString()}</small>`;
-                                    }
-
-                                    // Handle restriction message
-                                    if (bargain.registration_status === 'restricted' || bargain.registration_status ===
-                                        'blocked') {
-                                        restrictionMessage.style.display = 'block';
-                                        if (bargain.registration_status === 'blocked') {
-                                            restrictionMessageText.textContent =
-                                                'Your bargain is currently blocked. You cannot post cars at this time.';
-                                        } else {
-                                            restrictionMessageText.textContent =
-                                                `Your bargain is currently restricted until ${new Date(bargain.restriction_ends_at).toLocaleDateString()}. You cannot post cars during this period.`;
-                                        }
-                                    } else {
-                                        restrictionMessage.style.display = 'none';
-                                    }
-                                }
-
-                                function loadBargainCars(bargainId) {
-                                    // Show bargain cars container and hide user cars
-                                    document.getElementById('user-cars-container').style.display = 'none';
-                                    document.getElementById('bargain-cars-container').style.display = 'flex';
-
-                                    // Clear existing content and show loading indicator
-                                    document.getElementById('bargain-cars-container').innerHTML =
-                                        '<div class="col-12"><div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div></div>';
-
-                                    // Fetch bargain cars via AJAX
-                                    fetch(`/user/profile/bargain/${bargainId}/cars`)
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            if (data.error) {
-                                                document.getElementById('bargain-cars-container').innerHTML = `
-                            <div class="col-12">
-                                <div class="alert alert-danger text-center">
-                                    <i class="fas fa-exclamation-triangle me-2"></i> Error loading cars: ${data.error}
-                                </div>
-                            </div>
-                        `;
-                                            } else {
-                                                displayBargainCars(data.cars);
-                                            }
-                                        })
-                                        .catch(error => {
-                                            console.error('Error loading bargain cars:', error);
-                                            document.getElementById('bargain-cars-container').innerHTML = `
-                        <div class="col-12">
-                            <div class="alert alert-danger text-center">
-                                <i class="fas fa-exclamation-triangle me-2"></i> Error loading cars. Please try again.
-                            </div>
-                        </div>
-                    `;
-                                        });
-                                }
-
-                                function displayBargainCars(cars) {
-                                    const container = document.getElementById('bargain-cars-container');
-                                    if (!cars || cars.length === 0) {
-                                        container.innerHTML = `
-                    <div class="col-12">
-                        <div class="alert alert-info text-center">
-                            <i class="fas fa-car me-2"></i> No cars registered by this bargain yet.
-                        </div>
-                    </div>
-                `;
-                                        return;
-                                    }
-
-                                    let carsHtml = '';
-                                    cars.forEach(car => {
-                                        // Format price with commas
-                                        const formattedPrice = car.regular_price ? Number(car.regular_price)
-                                            .toLocaleString() : 'N/A';
-
-                                        carsHtml += `
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="car-item gray-bg text-center promotion-card">
-                            ${car.is_promoted ? '<span class="badge bg-success badge-promotion">Promoted</span>' : ''}
-                            <div class="car-image">
-                                ${car.images && car.images.length > 0 ? 
-                                    `<img class="img-fluid" src="/storage/${car.images[0]}" alt="${car.title}">` :
-                                    `<img class="img-fluid" src="/images/car/01.jpg" alt="Default Car Image">`
-                                }
-                                <div class="car-overlay-banner">
-                                    <ul>
-                                        <li><a href="/car/show/${car.id}"><i class="fa fa-link"></i></a></li>
-                                        <li><a href="/car/show/${car.id}"><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="car-list">
-                                <ul class="list-inline">
-                                    <li><i class="fa fa-registered"></i> ${car.year || 'N/A'}</li>
-                                    <li><i class="fa fa-cog"></i> ${car.transmission_type || 'N/A'}</li>
-                                    <li><i class="fa fa-shopping-cart"></i> ${car.currency_type || 'USD'} ${formattedPrice}</li>
-                                </ul>
-                            </div>
-                            <div class="car-content">
-                                <div class="star">
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star orange-color"></i>
-                                    <i class="fa fa-star-o orange-color"></i>
-                                </div>
-                                <a href="/car/show/${car.id}">${car.make || 'N/A'} ${car.model || 'N/A'}</a>
-                                <div class="separator"></div>
-                                <div class="price">
-                                    <span class="new-price">${car.currency_type || 'USD'} ${formattedPrice}</span>
-                                </div>
-                                <div class="mt-2">
-                                    <span class="badge bg-primary">${car.offers_count || 0} Offers</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                                    });
-
-                                    container.innerHTML = carsHtml;
-                                }
-                                // Set the session to bargain mode via AJAX first
-                                fetch('/set-profile-mode', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                            .getAttribute('content')
-                                    },
-                                    body: JSON.stringify({
-                                        mode: 'bargain',
-                                        bargain_id: bargainId
-                                    })
-                                }).then(() => {
-                                    // After session is set, reload the page with bargain_id parameter
-                                    window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
-                                }).catch(error => {
-                                    console.error('Error setting profile mode:', error);
-                                    // Even if AJAX fails, still redirect to ensure we're in bargain mode
-                                    window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
-                                });
-
-                                // Store the current mode in localStorage
-                                localStorage.setItem('registrationMode', 'bargain_' + bargainId);
-                                localStorage.setItem('registrationModeName', bargainName);
+                            // Remove unread class and indicator
+                            notificationElement.classList.remove('unread');
+                            const indicator = notificationElement.querySelector(
+                                '.unread-indicator');
+                            if (indicator) {
+                                indicator.classList.remove('unread-indicator');
+                                indicator.classList.add('read-indicator');
+                                indicator.title = 'Read';
                             }
 
-                            // Set the registration mode button text based on current mode
-                            document.addEventListener('DOMContentLoaded', function() {
-                                // Add SweetAlert for bargain registration prevention
-                                const newCarLink = document.getElementById('new-car-link');
-                                if (newCarLink) {
-                                    newCarLink.addEventListener('click', function(e) {
-                                        // Check if we're in bargain mode
-                                        const urlParams = new URLSearchParams(window.location.search);
-                                        const bargainId = urlParams.get('bargain_id');
-
-                                        // If in bargain mode, show SweetAlert
-                                        if (bargainId) {
-                                            e.preventDefault();
-                                            Swal.fire({
-                                                title: 'Switch to User Profile?',
-                                                text: 'You are currently in bargain mode. To register a new bargain, please switch to user profile mode first.',
-                                                icon: 'info',
-                                                showCancelButton: true,
-                                                confirmButtonText: 'Switch to User Profile',
-                                                cancelButtonText: 'Cancel'
-                                            }).then((result) => {
-                                                if (result.isConfirmed) {
-                                                    switchToProfile();
-                                                }
-                                            });
-                                        }
-                                    });
-                                }
-
-                                const modeButton = document.getElementById('registration-mode-btn');
-                                const urlParams = new URLSearchParams(window.location.search);
-                                const bargainId = urlParams.get('bargain_id');
-
-                                if (bargainId) {
-                                    // We're in bargain mode, find the bargain name
-                                    const bargainLinks = document.querySelectorAll('.dropdown-content a');
-                                    for (let i = 0; i < bargainLinks.length; i++) {
-                                        const onclickAttr = bargainLinks[i].getAttribute('onclick');
-                                        if (onclickAttr && onclickAttr.includes(bargainId)) {
-                                            const bargainName = bargainLinks[i].textContent.trim();
-                                            modeButton.innerHTML = '<i class="fas fa-handshake"></i> ' + bargainName;
-                                            break;
-                                        }
-                                    }
-                                } else {
-                                    // We're in user profile mode
-                                    modeButton.innerHTML = '<i class="fas fa-user"></i> User Profile';
-                                }
-
-                                // Store bargains data in localStorage for navbar switcher
-                                const bargainsData = [
-                                    @foreach ($bargains as $bargain)
-                                        {
-                                            id: {{ $bargain->id }},
-                                            name: "{{ addslashes($bargain->name) }}"
-                                        },
-                                    @endforeach
-                                ];
-                                localStorage.setItem('bargainsData', JSON.stringify(bargainsData));
-
-                                // Also store current mode in localStorage for navbar
-                                if (bargainId) {
-                                    localStorage.setItem('currentProfileMode', 'bargain');
-                                    localStorage.setItem('currentBargainId', bargainId);
-
-                                    // Update the navbar switcher text to show current bargain name
-                                    const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
-                                    if (switcherButton) {
-                                        // Find the bargain name
-                                        const bargain = bargainsData.find(b => b.id == bargainId);
-                                        if (bargain) {
-                                            switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' + bargain
-                                                .name;
-                                        }
-                                    }
-                                } else {
-                                    localStorage.setItem('currentProfileMode', 'user');
-
-                                    // Update the navbar switcher text to show user profile
-                                    const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
-                                    if (switcherButton) {
-                                        switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> User Profile';
-                                    }
-                                }
-
-                                // Initialize navbar switcher
-                                initializeNavbarSwitcher();
-                            });
-
-                            // Profile/Bargain switcher for navbar (copied from layout)
-                            function initializeNavbarSwitcher() {
-                                const switcher = document.getElementById('navbar-switcher');
-                                const switcherContent = document.getElementById('navbar-switcher-content');
-
-                                if (!switcher || !switcherContent) {
-                                    return;
-                                }
-
-                                // Get bargains data from localStorage (set by profile page)
-                                try {
-                                    const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
-                                    const currentMode = localStorage.getItem('currentProfileMode') || 'user';
-                                    const currentBargainId = localStorage.getItem('currentBargainId') || null;
-
-                                    // Clear existing content
-                                    switcherContent.innerHTML = '';
-
-                                    // Add user profile option
-                                    const userItem = document.createElement('li');
-                                    userItem.innerHTML =
-                                        '<a class="dropdown-item" href="javascript:void(0)" onclick="switchToProfileFromNavbar()"><i class="fas fa-user"></i> User Profile</a>';
-                                    switcherContent.appendChild(userItem);
-
-                                    // Add bargain options
-                                    bargainsData.forEach(bargain => {
-                                        const item = document.createElement('li');
-                                        item.innerHTML =
-                                            `<a class="dropdown-item" href="javascript:void(0)" onclick="switchToBargainFromNavbar(${bargain.id}, '${bargain.name.replace(/'/g, "\\'")}')"><i class="fas fa-handshake"></i> ${bargain.name}</a>`;
-                                        switcherContent.appendChild(item);
-                                    });
-
-                                    // Show the switcher
-                                    switcher.style.display = 'block';
-
-                                    // Highlight the current mode
-                                    setTimeout(() => {
-                                        highlightCurrentModeInNavbar(currentMode, currentBargainId);
-                                    }, 100);
-                                } catch (e) {
-                                    console.error('Error initializing navbar switcher:', e);
-                                }
+                            // Update notification count
+                            const countElement = document
+                                .getElementById('notification-count');
+                            let count = parseInt(countElement.textContent);
+                            if (count > 0) {
+                                countElement.textContent = count - 1;
                             }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        });
 
-                            function switchToProfileFromNavbar() {
-                                // Clear the bargain_id from session via AJAX first
-                                fetch('/set-profile-mode', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                            .getAttribute('content')
-                                    },
-                                    body: JSON.stringify({
-                                        mode: 'user'
-                                    })
-                                }).then(() => {
-                                    // After session is cleared, reload the page without bargain_id parameter
-                                    // Add explicit mode parameter to ensure we're in user mode
-                                    window.location.href = '{{ route('user.profile') }}?mode=user';
-                                }).catch(error => {
-                                    console.error('Error setting profile mode:', error);
-                                    // Even if AJAX fails, still redirect to ensure we're in user mode
-                                    window.location.href = '{{ route('user.profile') }}?mode=user';
-                                });
+        // Profile/Bargain switching functions
+        function switchToProfile() {
+            console.log('Switching to profile mode');
+
+            // Update UI immediately for better user experience
+            updateProfileInfo(false, null);
+
+            // Get CSRF token
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            console.log('CSRF Token:', csrfToken);
+
+            // Clear the bargain_id from session via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken
+                },
+                body: JSON.stringify({
+                    mode: 'user'
+                })
+            }).then(response => {
+                console.log('Profile mode set response:', response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                console.log('Profile mode set success:', data);
+                // Update localStorage
+                localStorage.setItem('currentProfileMode', 'user');
+                localStorage.setItem('currentBargainId', null);
+                // After session is cleared, reload the page without any mode parameters
+                window.location.href = '{{ route('user.profile') }}?switched=true';
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Update localStorage even if AJAX fails
+                localStorage.setItem('currentProfileMode', 'user');
+                localStorage.setItem('currentBargainId', null);
+                // Even if AJAX fails, still redirect
+                window.location.href = '{{ route('user.profile') }}';
+            });
+        }
+
+        function switchToBargain(bargainId, bargainName) {
+            console.log('Switching to bargain mode:', bargainId, bargainName);
+
+            // Find the bargain data
+            const selectedBargain = bargainsData.find(b => b.id == bargainId);
+            console.log('Selected bargain data:', selectedBargain);
+
+            if (selectedBargain) {
+                // Update UI immediately for better user experience
+                updateProfileInfo(true, selectedBargain);
+
+                // Get CSRF token
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                console.log('CSRF Token:', csrfToken);
+
+                // Set the session to bargain mode via AJAX first
+                fetch('/set-profile-mode', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken
+                    },
+                    body: JSON.stringify({
+                        mode: 'bargain',
+                        bargain_id: bargainId
+                    })
+                }).then(response => {
+                    console.log('Bargain mode set response:', response);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                }).then(data => {
+                    console.log('Bargain mode set success:', data);
+                    // Update localStorage
+                    localStorage.setItem('currentProfileMode', 'bargain');
+                    localStorage.setItem('currentBargainId', bargainId);
+                    // After session is set, reload the page with bargain_id parameter
+                    window.location.href = '{{ route('user.profile') }}?bargain_id=' +
+                        bargainId + '&switched=true';
+                }).catch(error => {
+                    console.error('Error setting profile mode:', error);
+                    // Update localStorage even if AJAX fails
+                    localStorage.setItem('currentProfileMode', 'bargain');
+                    localStorage.setItem('currentBargainId', bargainId);
+                    // Even if AJAX fails, still redirect
+                    window.location.href = '{{ route('user.profile') }}?bargain_id=' +
+                        bargainId;
+                });
+            } else {
+                console.error('Bargain not found for ID:', bargainId);
+            }
+        }
+
+        function switchToProfileFromNavbar() {
+            // Clear the bargain_id from session via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'user'
+                })
+            }).then(() => {
+                // Update localStorage
+                localStorage.setItem('currentProfileMode', 'user');
+                localStorage.setItem('currentBargainId', null);
+                // After session is cleared, reload the page without any mode parameters
+                window.location.href = '{{ route('user.profile') }}?switched=true';
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Update localStorage even if AJAX fails
+                localStorage.setItem('currentProfileMode', 'user');
+                localStorage.setItem('currentBargainId', null);
+                // Even if AJAX fails, still redirect
+                window.location.href = '{{ route('user.profile') }}?switched=true';
+            });
+        }
+
+        function switchToBargainFromNavbar(bargainId, bargainName) {
+            // Set the session to bargain mode via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'bargain',
+                    bargain_id: bargainId
+                })
+            }).then(() => {
+                // Update localStorage
+                localStorage.setItem('currentProfileMode', 'bargain');
+                localStorage.setItem('currentBargainId', bargainId);
+                // After session is set, reload the page with bargain_id parameter
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' +
+                    bargainId + '&switched=true';
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Update localStorage even if AJAX fails
+                localStorage.setItem('currentProfileMode', 'bargain');
+                localStorage.setItem('currentBargainId', bargainId);
+                // Even if AJAX fails, still redirect
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' +
+                    bargainId + '&switched=true';
+            });
+        }
+
+        // Handle case where bargain is not found
+        function handleBargainNotFound(bargainId) {
+            console.error('Bargain not found:', bargainId);
+        }
+
+        // Update all profile information when switching modes
+        function updateProfileInfo(isBargain, bargainData) {
+            if (isBargain && bargainData) {
+                // Update profile title
+                document.getElementById('profile-title').textContent = bargainData.name;
+
+                // Update profile image
+                const profileImage = document.getElementById('profile-image');
+                if (bargainData.profile_image) {
+                    profileImage.src = '/storage/' + bargainData.profile_image;
+                } else {
+                    profileImage.src = '/images/02.png';
+                }
+
+                // Update profile name
+                document.getElementById('profile-name').textContent = bargainData.name;
+
+                // Update profile email
+                document.getElementById('profile-email').textContent = bargainData.email || 'N/A';
+
+                // Update profile location
+                document.getElementById('profile-location').textContent = bargainData.address ||
+                    'N/A';
+
+                // Update post count
+                document.getElementById('post-count').textContent = bargainData.cars_count || 0;
+
+                // Hide bargains count container when in bargain mode
+                const bargainsCountContainer = document.getElementById('bargains-count-container');
+                if (bargainsCountContainer) {
+                    bargainsCountContainer.style.display = 'none';
+                }
+
+                // Update cars tab count
+                document.getElementById('cars-tab-count').textContent = bargainData.cars_count || 0;
+
+                // Update registration mode button
+                const modeButton = document.getElementById('registration-mode-btn');
+                if (modeButton) {
+                    modeButton.innerHTML = '<i class="fas fa-handshake"></i> ' + bargainData.name;
+                }
+
+                // Hide edit profile button or change its link
+                const editButton = document.getElementById('edit-profile-btn');
+                if (editButton) {
+                    editButton.style.display = 'none';
+                }
+
+                // Show bargain status display
+                const bargainStatusContainer = document.getElementById('bargain-status-container');
+                if (bargainStatusContainer) {
+                    bargainStatusContainer.style.display = 'block';
+                }
+
+                // Hide bargains tab when in bargain mode
+                const bargainsModernTab = document.getElementById('bargains-modern-tab');
+                if (bargainsModernTab) {
+                    bargainsModernTab.style.display = 'none';
+                }
+
+                const bargainsTab = document.querySelector('[data-tab="bargains"]');
+                if (bargainsTab) {
+                    bargainsTab.closest('li').style.display = 'none';
+                }
+            } else {
+                // Update profile title
+                document.getElementById('profile-title').textContent = '{{ $user->name }}';
+
+                // Update profile image
+                const profileImage = document.getElementById('profile-image');
+                if (profileImage) {
+                    profileImage.src = '/images/02.png';
+                }
+
+                // Update profile name
+                document.getElementById('profile-name').textContent = '{{ $user->name }}';
+
+                // Update profile email
+                document.getElementById('profile-email').textContent = '{{ $user->email }}';
+
+                // Update profile location
+                document.getElementById('profile-location').textContent = 'San Francisco, CA';
+
+                // Update post count
+                document.getElementById('post-count').textContent = '{{ $user->cars->count() }}';
+
+                // Show bargains count container when in user mode
+                const bargainsCountContainer = document.getElementById('bargains-count-container');
+                if (bargainsCountContainer) {
+                    bargainsCountContainer.style.display = 'block';
+                }
+
+                // Update cars tab count
+                document.getElementById('cars-tab-count').textContent =
+                    '{{ $user->cars->count() }}';
+
+                // Update registration mode button
+                const modeButton = document.getElementById('registration-mode-btn');
+                if (modeButton) {
+                    modeButton.innerHTML = '<i class="fas fa-user"></i> User Profile';
+                }
+
+                // Show edit profile button
+                const editButton = document.getElementById('edit-profile-btn');
+                if (editButton) {
+                    editButton.style.display = 'inline-block';
+                    editButton.href = '{{ route('profile.edit') }}';
+                    editButton.innerHTML = '<i class="fas fa-edit"></i> Edit';
+                }
+
+                // Hide bargain status display when in user mode
+                const bargainStatusContainer = document.getElementById('bargain-status-container');
+                if (bargainStatusContainer) {
+                    bargainStatusContainer.style.display = 'none';
+                }
+
+                // Show bargains tab when in user mode
+                const bargainsModernTab = document.getElementById('bargains-modern-tab');
+                if (bargainsModernTab) {
+                    bargainsModernTab.style.display = 'block';
+                }
+
+                const bargainsTab = document.querySelector('[data-tab="bargains"]');
+                if (bargainsTab) {
+                    bargainsTab.closest('li').style.display = 'block';
+                }
+            }
+        }
+
+        function updateRegistrationModeButton(mode, name) {
+            const button = document.getElementById('registration-mode-btn');
+            if (button) {
+                if (mode === 'user') {
+                    button.innerHTML = '<i class="fas fa-user"></i> ' + name;
+                } else {
+                    button.innerHTML = '<i class="fas fa-handshake"></i> ' + name;
+                }
+            }
+        }
+
+        function updateBargainStatusDisplay(bargain) {
+            const statusContainer = document.getElementById('bargain-status-container');
+            const statusBadge = document.getElementById('bargain-status-badge');
+            const restrictionInfo = document.getElementById('bargain-restriction-info');
+            const restrictionMessage = document.getElementById('restriction-message');
+            const restrictionMessageText = document.getElementById('restriction-message-text');
+
+            if (!statusContainer || !statusBadge) return;
+
+            // Show the status container
+            statusContainer.style.display = 'block';
+
+            // Update status badge
+            statusBadge.className = 'badge';
+            statusBadge.innerHTML = '';
+
+            let statusText = '';
+            let statusClass = '';
+            let statusIndicatorClass = '';
+
+            switch (bargain.registration_status) {
+                case 'approved':
+                    statusText = 'Approved';
+                    statusClass = 'bg-success';
+                    statusIndicatorClass = 'status-approved';
+                    break;
+                case 'blocked':
+                    statusText = 'Blocked';
+                    statusClass = 'bg-danger';
+                    statusIndicatorClass = 'status-blocked';
+                    break;
+                case 'restricted':
+                    statusText = 'Restricted';
+                    statusClass = 'bg-warning text-dark';
+                    statusIndicatorClass = 'status-restricted';
+                    break;
+                default: // pending
+                    statusText = 'Pending';
+                    statusClass = 'bg-secondary';
+                    statusIndicatorClass = 'status-pending';
+            }
+
+            statusBadge.classList.add(statusClass);
+            statusBadge.innerHTML =
+                `<span class="status-indicator ${statusIndicatorClass}"></span> ${statusText}`;
+
+            // Handle restriction info
+            restrictionInfo.innerHTML = '';
+            if (bargain.registration_status === 'restricted' && bargain.restriction_ends_at) {
+                restrictionInfo.innerHTML =
+                    `<small class="d-block">Ends: ${new Date(bargain.restriction_ends_at).toLocaleDateString()}</small>`;
+            }
+
+            // Handle restriction message
+            if (bargain.registration_status === 'restricted' || bargain.registration_status ===
+                'blocked') {
+                restrictionMessage.style.display = 'block';
+                if (bargain.registration_status === 'blocked') {
+                    restrictionMessageText.textContent =
+                        'Your bargain is currently blocked. You cannot post cars at this time.';
+                } else {
+                    restrictionMessageText.textContent =
+                        `Your bargain is currently restricted until ${new Date(bargain.restriction_ends_at).toLocaleDateString()}. You cannot post cars during this period.`;
+                }
+            } else {
+                restrictionMessage.style.display = 'none';
+            }
+        }
+
+        function loadBargainCars(bargainId) {
+            // Show bargain cars container and hide user cars
+            document.getElementById('user-cars-container').style.display = 'none';
+            document.getElementById('bargain-cars-container').style.display = 'flex';
+
+            // Clear existing content and show loading indicator
+            document.getElementById('bargain-cars-container').innerHTML =
+                '<div class="col-12"><div class="text-center"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div></div></div>';
+
+            // Fetch bargain cars via AJAX
+            fetch(`/user/profile/bargain/${bargainId}/cars`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error) {
+                        document.getElementById('bargain-cars-container').innerHTML = `
+            <div class="col-12">
+                <div class="alert alert-danger text-center">
+                    <i class="fas fa-exclamation-triangle me-2"></i> Error loading cars: ${data.error}
+                </div>
+            </div>
+        `;
+                    } else {
+                        displayBargainCars(data.cars);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading bargain cars:', error);
+                    document.getElementById('bargain-cars-container').innerHTML = `
+        <div class="col-12">
+            <div class="alert alert-danger text-center">
+                <i class="fas fa-exclamation-triangle me-2"></i> Error loading cars. Please try again.
+            </div>
+        </div>
+    `;
+                });
+        }
+
+        function displayBargainCars(cars) {
+            const container = document.getElementById('bargain-cars-container');
+            if (!cars || cars.length === 0) {
+                container.innerHTML = `
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="fas fa-car me-2"></i> No cars registered by this bargain yet.
+        </div>
+    </div>
+`;
+                return;
+            }
+
+            let carsHtml = '';
+            cars.forEach(car => {
+                // Format price with commas
+                const formattedPrice = car.regular_price ? Number(car.regular_price)
+                    .toLocaleString() : 'N/A';
+
+                carsHtml += `
+    <div class="col-lg-4 col-md-6 mb-4">
+        <div class="car-item gray-bg text-center promotion-card">
+            ${car.is_promoted ? '<span class="badge bg-success badge-promotion">Promoted</span>' : ''}
+            <div class="car-image">
+                ${car.images && car.images.length > 0 ? 
+                    `<img class="img-fluid" src="/storage/${car.images[0]}" alt="${car.title}">` :
+                    `<img class="img-fluid" src="/images/car/01.jpg" alt="Default Car Image">`
+                }
+                <div class="car-overlay-banner">
+                    <ul>
+                        <li><a href="/car/show/${car.id}"><i class="fa fa-link"></i></a></li>
+                        <li><a href="/car/show/${car.id}"><i class="fa fa-shopping-cart"></i></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="car-list">
+                <ul class="list-inline">
+                    <li><i class="fa fa-registered"></i> ${car.year || 'N/A'}</li>
+                    <li><i class="fa fa-cog"></i> ${car.transmission_type || 'N/A'}</li>
+                    <li><i class="fa fa-shopping-cart"></i> ${car.currency_type || 'USD'} ${formattedPrice}</li>
+                </ul>
+            </div>
+            <div class="car-content">
+                <div class="star">
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star orange-color"></i>
+                    <i class="fa fa-star-o orange-color"></i>
+                </div>
+                <a href="/car/show/${car.id}">${car.make || 'N/A'} ${car.model || 'N/A'}</a>
+                <div class="separator"></div>
+                <div class="price">
+                    <span class="new-price">${car.currency_type || 'USD'} ${formattedPrice}</span>
+                </div>
+                <div class="mt-2">
+                    <span class="badge bg-primary">${car.offers_count || 0} Offers</span>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+            });
+
+            container.innerHTML = carsHtml;
+        }
+        // Set the registration mode button text based on current mode
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add SweetAlert for bargain registration prevention
+            const newCarLink = document.getElementById('new-car-link');
+            if (newCarLink) {
+                newCarLink.addEventListener('click', function(e) {
+                    // Check if we're in bargain mode
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const bargainId = urlParams.get('bargain_id');
+
+                    // If in bargain mode, show SweetAlert
+                    if (bargainId) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Switch to User Profile?',
+                            text: 'You are currently in bargain mode. To register a new bargain, please switch to user profile mode first.',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Switch to User Profile',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                switchToProfileAndRegisterBargain();
                             }
+                        });
+                    }
+                });
+            }
 
-                            function switchToBargainFromNavbar(bargainId, bargainName) {
-                                // Set the session to bargain mode via AJAX first
-                                fetch('/set-profile-mode', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                            .getAttribute('content')
-                                    },
-                                    body: JSON.stringify({
-                                        mode: 'bargain',
-                                        bargain_id: bargainId
-                                    })
-                                }).then(() => {
-                                    // After session is set, reload the page with bargain_id parameter
-                                    window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
-                                }).catch(error => {
-                                    console.error('Error setting profile mode:', error);
-                                    // Even if AJAX fails, still redirect to ensure we're in bargain mode
-                                    window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId;
-                                });
+            // Prevent bargain users from registering new bargains
+            // Check if we're in bargain mode and trying to access the bargains tab
+            const bargainsTab = document.querySelector('[data-tab="bargains"]');
+            if (bargainsTab) {
+                bargainsTab.addEventListener('click', function(e) {
+                    // Check if we're in bargain mode
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const bargainId = urlParams.get('bargain_id');
+
+                    // If in bargain mode, prevent access to bargains tab
+                    if (bargainId) {
+                        e.preventDefault();
+                        Swal.fire({
+                            title: 'Switch to User Profile?',
+                            text: 'You are currently in bargain mode. To register a new bargain, please switch to user profile mode first.',
+                            icon: 'info',
+                            showCancelButton: true,
+                            confirmButtonText: 'Switch to User Profile',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                switchToProfileAndRegisterBargain();
                             }
+                        });
+                    }
+                });
+            }
 
-                            function highlightCurrentModeInNavbar(currentMode, bargainId) {
-                                // Get all dropdown items
-                                const items = document.querySelectorAll('#navbar-switcher-content .dropdown-item');
+            const modeButton = document.getElementById('registration-mode-btn');
+            const urlParams = new URLSearchParams(window.location.search);
+            const bargainId = urlParams.get('bargain_id');
 
-                                // Remove any existing highlights
-                                items.forEach(item => {
-                                    item.classList.remove('bg-primary', 'text-white');
-                                });
+            if (bargainId) {
+                // We're in bargain mode, find the bargain name
+                const bargainLinks = document.querySelectorAll('.dropdown-content a');
+                for (let i = 0; i < bargainLinks.length; i++) {
+                    const onclickAttr = bargainLinks[i].getAttribute('onclick');
+                    if (onclickAttr && onclickAttr.includes(bargainId)) {
+                        const bargainName = bargainLinks[i].textContent.trim();
+                        modeButton.innerHTML = '<i class="fas fa-handshake"></i> ' +
+                            bargainName;
+                        break;
+                    }
+                }
 
-                                // Highlight the current mode
-                                if (currentMode === 'user') {
-                                    // Highlight user profile item (first item)
-                                    if (items.length > 0) {
-                                        items[0].classList.add('bg-primary', 'text-white');
-                                    }
-                                } else if (currentMode === 'bargain' && bargainId) {
-                                    // Find and highlight the matching bargain item
-                                    for (let i = 1; i < items.length; i++) { // Start from 1 to skip user profile item
-                                        const onclickAttr = items[i].getAttribute('onclick');
-                                        if (onclickAttr && onclickAttr.includes(bargainId)) {
-                                            items[i].classList.add('bg-primary', 'text-white');
-                                            break;
-                                        }
-                                    }
-                                }
+                // Hide bargains tab when in bargain mode
+                document.getElementById('bargains-modern-tab').style.display = 'none';
+                if (bargainsTab) {
+                    bargainsTab.closest('li').style.display = 'none';
+                }
+            } else {
+                // We're in user profile mode
+                modeButton.innerHTML = '<i class="fas fa-user"></i> User Profile';
 
-                                // Update the navbar switcher text to show current mode
-                                const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
-                                if (switcherButton) {
-                                    if (currentMode === 'user') {
-                                        switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> User Profile';
-                                    } else if (currentMode === 'bargain' && bargainId) {
-                                        // Find the bargain name from localStorage
-                                        try {
-                                            const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
-                                            const bargain = bargainsData.find(b => b.id == bargainId);
-                                            if (bargain) {
-                                                switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' + bargain
-                                                    .name;
-                                            }
-                                        } catch (e) {
-                                            console.error('Error updating navbar switcher text:', e);
-                                        }
-                                    }
-                                }
-                            } <
-                            /div>
+                // Show bargains tab when in user mode
+                document.getElementById('bargains-modern-tab').style.display = 'block';
+                if (bargainsTab) {
+                    bargainsTab.closest('li').style.display = 'block';
+                }
+            }
+
+            // Store bargains data in localStorage for navbar switcher
+            const bargainsData = [
+                @foreach ($bargains as $bargain)
+                    {
+                        id: {{ $bargain->id }},
+                        name: "{{ addslashes($bargain->name) }}",
+                        profile_image: "{{ addslashes($bargain->profile_image ?? '') }}",
+                        email: "{{ addslashes($bargain->email ?? '') }}",
+                        address: "{{ addslashes($bargain->address ?? '') }}",
+                        cars_count: {{ $bargain->cars->count() }},
+                        status: "{{ $bargain->status }}",
+                        registration_status: "{{ $bargain->registration_status }}",
+                        restriction_ends_at: "{{ $bargain->restriction_ends_at ? $bargain->restriction_ends_at->toISOString() : '' }}"
+                    },
+                @endforeach
+            ];
+            localStorage.setItem('bargainsData', JSON.stringify(bargainsData));
+
+            // Also store current mode in localStorage for navbar
+            if (bargainId) {
+                localStorage.setItem('currentProfileMode', 'bargain');
+                localStorage.setItem('currentBargainId', bargainId);
+
+                // Update the navbar switcher text to show current bargain name
+                const switcherButton = document.querySelector(
+                    '#navbar-switcher .dropdown-toggle');
+                if (switcherButton) {
+                    // Find the bargain name
+                    const bargain = bargainsData.find(b => b.id == bargainId);
+                    if (bargain) {
+                        switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' +
+                            bargain
+                            .name;
+                    }
+                }
+            } else {
+                localStorage.setItem('currentProfileMode', 'user');
+
+                // Update the navbar switcher text to show user profile
+                const switcherButton = document.querySelector(
+                    '#navbar-switcher .dropdown-toggle');
+                if (switcherButton) {
+                    switcherButton.innerHTML =
+                        '<i class="fas fa-exchange-alt"></i> User Profile';
+                }
+            }
+
+            // Initialize navbar switcher
+            initializeNavbarSwitcher();
+        });
+
+        // Profile/Bargain switcher for navbar (copied from layout)
+        function initializeNavbarSwitcher() {
+            const switcher = document.getElementById('navbar-switcher');
+            const switcherContent = document.getElementById('navbar-switcher-content');
+
+            if (!switcher || !switcherContent) {
+                return;
+            }
+
+            // Get bargains data from localStorage (set by profile page)
+            try {
+                const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
+                const currentMode = localStorage.getItem('currentProfileMode') || 'user';
+                const currentBargainId = localStorage.getItem('currentBargainId') || null;
+
+                // Clear existing content
+                switcherContent.innerHTML = '';
+
+                // Add user profile option
+                const userItem = document.createElement('li');
+                userItem.innerHTML =
+                    '<a class="dropdown-item" href="javascript:void(0)" onclick="switchToProfileFromNavbar()"><i class="fas fa-user"></i> User Profile</a>';
+                switcherContent.appendChild(userItem);
+
+                // Add bargain options
+                bargainsData.forEach(bargain => {
+                    const item = document.createElement('li');
+                    item.innerHTML =
+                        `<a class="dropdown-item" href="javascript:void(0)" onclick="switchToBargainFromNavbar(${bargain.id}, '${bargain.name.replace(/'/g, "\\'")}')"><i class="fas fa-handshake"></i> ${bargain.name}</a>`;
+                    switcherContent.appendChild(item);
+                });
+
+                // Show the switcher
+                switcher.style.display = 'block';
+
+                // Highlight the current mode
+                setTimeout(() => {
+                    highlightCurrentModeInNavbar(currentMode, currentBargainId);
+                }, 100);
+            } catch (e) {
+                console.error('Error initializing navbar switcher:', e);
+            }
+        }
+
+        function switchToProfileFromNavbar() {
+            // Clear the bargain_id from session via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'user'
+                })
+            }).then(() => {
+                // Update localStorage
+                localStorage.setItem('currentProfileMode', 'user');
+                localStorage.setItem('currentBargainId', null);
+                // After session is cleared, reload the page without any mode parameters
+                // This will allow the controller to properly check session data
+                window.location.href = '{{ route('user.profile') }}';
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Update localStorage even if AJAX fails
+                localStorage.setItem('currentProfileMode', 'user');
+                localStorage.setItem('currentBargainId', null);
+                // Even if AJAX fails, still redirect without mode parameters
+                window.location.href = '{{ route('user.profile') }}';
+            });
+        }
+
+        function switchToBargainFromNavbar(bargainId, bargainName) {
+            // Set the session to bargain mode via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'bargain',
+                    bargain_id: bargainId
+                })
+            }).then(() => {
+                // Update localStorage
+                localStorage.setItem('currentProfileMode', 'bargain');
+                localStorage.setItem('currentBargainId', bargainId);
+                // After session is set, reload the page with bargain_id parameter
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' +
+                    bargainId;
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Update localStorage even if AJAX fails
+                localStorage.setItem('currentProfileMode', 'bargain');
+                localStorage.setItem('currentBargainId', bargainId);
+                // Even if AJAX fails, still redirect to ensure we're in bargain mode
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' +
+                    bargainId;
+            });
+        }
+
+        function highlightCurrentModeInNavbar(currentMode, bargainId) {
+            // Get all dropdown items
+            const items = document.querySelectorAll('#navbar-switcher-content .dropdown-item');
+
+            // Remove any existing highlights
+            items.forEach(item => {
+                item.classList.remove('bg-primary', 'text-white');
+            });
+
+            // Highlight the current mode
+            if (currentMode === 'user') {
+                // Highlight user profile item (first item)
+                if (items.length > 0) {
+                    items[0].classList.add('bg-primary', 'text-white');
+                }
+            } else if (currentMode === 'bargain' && bargainId) {
+                // Find and highlight the matching bargain item
+                for (let i = 1; i < items.length; i++) { // Start from 1 to skip user profile item
+                    const onclickAttr = items[i].getAttribute('onclick');
+                    if (onclickAttr && onclickAttr.includes(bargainId)) {
+                        items[i].classList.add('bg-primary', 'text-white');
+                        break;
+                    }
+                }
+            }
+
+            // Update the navbar switcher text to show current mode
+            const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
+            if (switcherButton) {
+                if (currentMode === 'user') {
+                    switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> User Profile';
+                } else if (currentMode === 'bargain' && bargainId) {
+                    // Find the bargain name from localStorage
+                    try {
+                        const bargainsData = JSON.parse(localStorage.getItem('bargainsData') ||
+                            '[]');
+                        const bargain = bargainsData.find(b => b.id == bargainId);
+                        if (bargain) {
+                            switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' +
+                                bargain
+                                .name;
+                        }
+                    } catch (e) {
+                        console.error('Error updating navbar switcher text:', e);
+                    }
+                }
+            }
+        }
+
+        // New function to switch to profile and redirect to bargain registration page
+        function switchToProfileAndRegisterBargain() {
+            console.log('Switching to profile mode and redirecting to bargain registration');
+
+            // Clear the bargain_id from session via AJAX first
+            fetch('/set-profile-mode', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                        .getAttribute('content')
+                },
+                body: JSON.stringify({
+                    mode: 'user'
+                })
+            }).then(response => {
+                console.log('Profile mode set response:', response);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            }).then(data => {
+                console.log('Profile mode set success:', data);
+                // After session is cleared, redirect to bargain registration page
+                window.location.href = '{{ route('bargains.create') }}';
+            }).catch(error => {
+                console.error('Error setting profile mode:', error);
+                // Even if AJAX fails, still redirect to bargain registration page
+                window.location.href = '{{ route('bargains.create') }}';
+            });
+        }
     </script>
 
 @endsection
