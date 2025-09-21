@@ -60,6 +60,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
     Route::get('/user/profile/bargain/{id}/cars', [ProfileController::class, 'getBargainCars'])->name('user.profile.bargain.cars');
     Route::post('/set-profile-mode', [ProfileController::class, 'setProfileMode'])->name('profile.set-mode');
+    Route::get('/test-profile-switching', function () {
+        return view('test-profile-switching');
+    })->name('test.profile.switching');
+
+    Route::get('/test-profile-js', function () {
+        return view('test-profile-js');
+    })->name('test.profile.js');
 });
 
 // Language switch route
@@ -124,7 +131,7 @@ Route::get('/test-bargain-show/{id}', function ($id) {
 Route::prefix('bargains')->group(function () {
     Route::get('/', [BargainController::class, 'index'])->name('bargains.index');
     Route::get('/data', [BargainController::class, 'getData'])->name('bargains.data');
-    Route::get('/create', [BargainController::class, 'create'])->name('bargains.create');
+    Route::get('/create', [BargainController::class, 'create'])->name('bargains.create')->middleware('prevent.bargain.registration');
     Route::post('/store', [BargainController::class, 'store'])->name('bargains.store');
     Route::get('/edit/{id}', [BargainController::class, 'edit'])->name('bargains.edit');
     Route::put('/update/{id}', [BargainController::class, 'update'])->name('bargains.update');
@@ -184,7 +191,7 @@ Route::get('/test-auction-filter', function () {
             $q->where('status', 'active')->latest();
         }])
         ->get();
-    
+
     return response()->json([
         'count' => $cars->count(),
         'cars' => $cars->toArray()
