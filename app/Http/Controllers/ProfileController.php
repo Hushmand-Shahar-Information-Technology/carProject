@@ -47,8 +47,21 @@ class ProfileController extends Controller
                 session(['profile_mode' => 'user', 'active_bargain_id' => null]);
             }
         } else {
-            // Ensure we're in user mode if no bargain is selected
-            session(['profile_mode' => 'user', 'active_bargain_id' => null]);
+            // Check if we have a profile mode in session
+            $profileMode = session('profile_mode', 'user');
+            if ($profileMode === 'bargain') {
+                $bargainId = session('active_bargain_id');
+                if ($bargainId) {
+                    $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions'])->find($bargainId);
+                    if (!$activeBargain) {
+                        // If bargain not found, clear session data
+                        session(['profile_mode' => 'user', 'active_bargain_id' => null]);
+                    }
+                }
+            } else {
+                // Ensure we're in user mode if no bargain is selected
+                session(['profile_mode' => 'user', 'active_bargain_id' => null]);
+            }
         }
 
         return view('profile.profile', compact('user', 'bargains', 'activeBargain'));
