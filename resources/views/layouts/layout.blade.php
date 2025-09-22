@@ -297,7 +297,7 @@
                             cancelButtonText: 'Cancel'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                // Redirect to user profile mode with proper session handling
+                                // Switch to user profile mode with proper session handling and then redirect to bargain registration
                                 fetch('/set-profile-mode', {
                                     method: 'POST',
                                     headers: {
@@ -310,12 +310,14 @@
                                         mode: 'user'
                                     })
                                 }).then(() => {
+                                    // After successfully switching to user profile mode, redirect to bargain registration page
                                     window.location.href =
-                                        '{{ route('user.profile') }}?mode=user';
+                                    '{{ route('bargains.create') }}';
                                 }).catch(error => {
                                     console.error('Error setting profile mode:', error);
+                                    // Even if there's an error, still redirect to bargain registration page
                                     window.location.href =
-                                        '{{ route('user.profile') }}?mode=user';
+                                    '{{ route('bargains.create') }}';
                                 });
                             }
                         });
