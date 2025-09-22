@@ -388,6 +388,18 @@
                     // Still try to initialize the navbar switcher
                     setTimeout(initializeNavbarSwitcher, 100);
                 });
+
+            // Additional check to ensure bargains section is hidden when in bargain mode
+            // This is a fallback in case the profile page doesn't properly hide it
+            const urlParams = new URLSearchParams(window.location.search);
+            const bargainIdFromUrl = urlParams.get('bargain_id');
+            if (bargainIdFromUrl) {
+                // Hide bargains dropdown when in bargain mode
+                const bargainsDropdown = document.getElementById('bargains-dropdown');
+                if (bargainsDropdown) {
+                    bargainsDropdown.style.display = 'none';
+                }
+            }
         });
     </script>
 
