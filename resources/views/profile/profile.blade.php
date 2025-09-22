@@ -1194,6 +1194,33 @@
                     confirmButtonText: 'OK'
                 });
             }
+
+            // Additional check to ensure bargains section is hidden when in bargain mode
+            if ((bargainIdFromUrl || (activeBargain && activeBargain.id))) {
+                // Double-check that bargains section is hidden
+                const bargainsTabContent = document.getElementById('bargains-tab');
+                if (bargainsTabContent) {
+                    bargainsTabContent.style.display = 'none';
+                }
+
+                // Also hide the bargains tab in modern tabs
+                const bargainsModernTab = document.getElementById('bargains-modern-tab');
+                if (bargainsModernTab) {
+                    bargainsModernTab.style.display = 'none';
+                }
+
+                // Hide bargains count container
+                const bargainsCountContainer = document.getElementById('bargains-count-container');
+                if (bargainsCountContainer) {
+                    bargainsCountContainer.style.display = 'none';
+                }
+
+                // Also hide the bargains navigation tab
+                const bargainsNavTab = document.querySelector('[data-tab="bargains"]');
+                if (bargainsNavTab) {
+                    bargainsNavTab.closest('li').style.display = 'none';
+                }
+            }
         });
 
         function toggleOffers() {
@@ -1403,7 +1430,7 @@
                     updateNavbarBargainsVisibility(false);
                     // After session is set, reload the page with bargain_id parameter to reflect current mode in URL
                     window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId +
-                    '&switched=true';
+                        '&switched=true';
                 }).catch(error => {
                     console.error('Error setting profile mode:', error);
                     // Update localStorage even if AJAX fails
