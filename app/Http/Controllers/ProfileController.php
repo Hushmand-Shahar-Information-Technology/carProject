@@ -28,15 +28,15 @@ class ProfileController extends Controller
 
         // Check if we're viewing a specific bargain profile
         // First check query parameter, then check session
-        $bargainId = $request->query('bargain_id');
+        $bargainIdFromUrl = $request->query('bargain_id');
+        $bargainIdFromSession = session('active_bargain_id');
 
-        // If no bargain_id in query parameter, check session
-        if (!$bargainId) {
-            $bargainId = session('active_bargain_id');
-        }
+        // Determine which bargain ID to use
+        $bargainId = $bargainIdFromUrl ?: $bargainIdFromSession;
 
         $activeBargain = null;
 
+        // If we have a bargain_id, try to load that bargain
         if ($bargainId) {
             $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions'])->find($bargainId);
             if ($activeBargain) {
@@ -47,24 +47,25 @@ class ProfileController extends Controller
                 session(['profile_mode' => 'user', 'active_bargain_id' => null]);
             }
         } else {
-            // Check if we have a profile mode in session
-            $profileMode = session('profile_mode', 'user');
-            if ($profileMode === 'bargain') {
-                $bargainId = session('active_bargain_id');
-                if ($bargainId) {
-                    $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions'])->find($bargainId);
-                    if (!$activeBargain) {
-                        // If bargain not found, clear session data
-                        session(['profile_mode' => 'user', 'active_bargain_id' => null]);
-                    }
-                }
-            } else {
-                // Ensure we're in user mode if no bargain is selected
-                session(['profile_mode' => 'user', 'active_bargain_id' => null]);
-            }
+            // Ensure we're in user mode if no bargain is selected
+            session(['profile_mode' => 'user', 'active_bargain_id' => null]);
         }
 
         return view('profile.profile', compact('user', 'bargains', 'activeBargain'));
+    }
+
+    /**
+     * Get current profile mode (user or bargain) for API calls
+     */
+    public function getProfileMode(Request $request): JsonResponse
+    {
+        $profileMode = session('profile_mode', 'user');
+        $bargainId = session('active_bargain_id');
+
+        return response()->json([
+            'mode' => $profileMode,
+            'bargain_id' => $bargainId
+        ]);
     }
 
     /**
