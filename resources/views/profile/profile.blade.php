@@ -527,7 +527,7 @@
         .car-image {
             overflow: hidden;
             border-radius: 8px 8px 0 0;
-            height: 30px;
+            height: 220px;
             /* Further reduced height for shorter images */
             display: flex;
             align-items: center;
@@ -788,23 +788,6 @@
                 Bargains ({{ $bargains->count() }})
             </div>
         </div>
-        <!-- Tab Navigation -->
-        <ul class="nav nav-tabs mb-4">
-            <li class="nav-item">
-                <a class="nav-link active" data-tab="cars">Cars (<span
-                        id="cars-tab-count">{{ isset($activeBargain) ? $activeBargain->cars->count() : $user->cars->count() }}</span>)</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" data-tab="notifications">Notifications (<span
-                        id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>)</a>
-            </li>
-            <!-- Only show bargains tab when in user profile mode -->
-            @if (!isset($activeBargain))
-                <li class="nav-item">
-                    <a class="nav-link" data-tab="bargains">Bargains ({{ $bargains->count() }})</a>
-                </li>
-            @endif
-        </ul>
 
         <!-- Cars Tab Content - Consistent Image Dimensions -->
         <div id="cars-tab" class="tab-content active">
