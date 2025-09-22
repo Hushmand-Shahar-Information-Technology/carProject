@@ -15,7 +15,6 @@
         </script>
     @endif
 
-
     <style>
         .new-post {
             display: flex;
@@ -629,7 +628,6 @@
             </div>
         </div>
     </section>
-
 
     <div class="container">
 
@@ -1774,7 +1772,7 @@
         <div class="car-item gray-bg text-center promotion-card">
             ${car.is_promoted ? '<span class="badge bg-success badge-promotion">Promoted</span>' : ''}
             <div class="car-image">
-                ${car.images && car.images.length > 0 ? 
+                ${car.images && car.images.length > 0 ?
                     `<img class="img-fluid" src="/storage/${car.images[0]}" alt="${car.title}">` :
                     `<img class="img-fluid" src="/images/car/01.jpg" alt="Default Car Image">`
                 }
