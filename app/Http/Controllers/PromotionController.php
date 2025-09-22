@@ -97,7 +97,7 @@ class PromotionController extends Controller
         return response()->json([
             'status' => 'ok',
             'ends_at' => $endsAt->toDateTimeString(),
-            'ends_at_iso' => $endsAt->toIso8601String(),
+            'ends_at_iso' => $endsAt->toIso8601String(),  // ✅ fixed
         ]);
     }
 

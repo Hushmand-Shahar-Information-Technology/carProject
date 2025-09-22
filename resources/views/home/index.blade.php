@@ -303,7 +303,13 @@
 
     <!--=================================
                                                                                                      play-video -->
-
+    @php
+        $promotedBargains = $promotedBargains ?? [];
+        $latestBargains = $latestBargains ?? [];
+        // If we have promoted cars, use them; otherwise use latest cars
+        $hasPromotedBargains = count($promotedBargains) > 0;
+        $bargainsToShow = $hasPromotedBargains ? $promotedBargains : $latestBargains;
+    @endphp
      <section class="play-video popup-gallery">
         <div class="p-5 bg-3 bg-overlay-black-70">
             <div class="row justify-content-center">
@@ -315,181 +321,61 @@
                     <div class="col-md-12">
                         <div class="owl-carousel owl-theme" data-nav-arrow="true" data-items="4" data-md-items="4"
                             data-sm-items="2" data-xs-items="1" data-space="20">
-                            <div class="item">
-                                <div class="car-item text-center">
-                                    <div class="car-image">
-                                        <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}" alt="">
-                                        <div class="car-overlay-banner">
-                                            <ul>show
-                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                            </ul>
+                           @if(count($bargainsToShow) > 0)
+                                @foreach($bargainsToShow as $bargain)
+                                    <div class="item">
+                                        <div class="car-item text-center">
+                                            <div class="car-image">
+                                                @if(isset($bargain->profile_image))
+                                                    <img class="img-fluid fixed-img" 
+                                                        src="{{ asset('storage/' . $bargain->profile_image) }}" 
+                                                        alt="{{ $bargain->username }}">
+                                                @else
+                                                    <div class="car-overlay-banner">
+                                                        <ul>
+                                                            <li>
+                                                                <a href="{{ route('bargains.show', $bargain->id) }}">
+                                                                    <i class="fa fa-link"></i>
+                                                                </a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="{{ route('bargains.show', $bargain->id) }}">
+                                                                    <i class="fa fa-dashboard"></i>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                @endif
+                                            </div>
+
+                                            <div class="car-list">
+                                                <ul class="list-inline">
+                                                    <li><i class="fa fa-registered"></i> {{ $bargain->name }}</li>
+                                                    <li><i class="fa fa-cog"></i> {{ $bargain->address }}</li>
+                                                    <li><i class="fa fa-dashboard"></i> {{ $bargain->phone }}</li>
+                                                </ul>
+                                            </div>
+
+                                            <div class="car-content">
+                                                <a href="{{ route('bargains.show', $bargain->id) }}" style="font-size: 12px;">
+                                                    {{ $bargain->username }}
+                                                </a>
+                                                <div class="separator"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="car-list">
-                                        <ul class="list-inline">
-                                            <li><i class="fa fa-registered"></i> 2021</li>
-                                            <li><i class="fa fa-cog"></i> Manual </li>
-                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                        </ul>
-                                    </div>
-                                    <div class="car-content">
-                                        <div class="star">
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star-o orange-color"></i>
-                                        </div>
-                                        <a href="#" style="font-size: 12px;">Acura Rsx</a>
-                                        <div class="separator"></div>
-                                        <div class="price">
-                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
-                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="car-item text-center">
-                                    <div class="car-image">
-                                        <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
-                                        <div class="car-overlay-banner">
-                                            <ul>
-                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="car-list">
-                                        <ul class="list-inline">
-                                            <li><i class="fa fa-registered"></i> 2021</li>
-                                            <li><i class="fa fa-cog"></i> Manual </li>
-                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                        </ul>
-                                    </div>
-                                    <div class="car-content">
-                                        <div class="star">
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star-o orange-color"></i>
-                                        </div>
-                                        <a href="#" style="font-size: 12px;">Lexus GS 450h</a>
-                                        <div class="separator"></div>
-                                        <div class="price">
-                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
-                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
+                                @endforeach
+                            @else
+                                {{-- Fallback message when no bargains available --}}
+                                <div class="item">
+                                    <div class="car-item text-center">
+                                        <div class="car-content">
+                                            <p>No bargains available at the moment.</p>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="item">
-                                <div class="car-item text-center">
-                                    <div class="car-image">
-                                        <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
-                                        <div class="car-overlay-banner">
-                                            <ul>
-                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="car-list">
-                                        <ul class="list-inline">
-                                            <li><i class="fa fa-registered"></i> 2021</li>
-                                            <li><i class="fa fa-cog"></i> Manual </li>
-                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                        </ul>
-                                    </div>
-                                    <div class="car-content">
-                                        <div class="star">
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star-o orange-color"></i>
-                                        </div>
-                                        <a href="#" style="font-size: 12px;">GTA 5 Lowriders DLC</a>
-                                        <div class="separator"></div>
-                                        <div class="price">
-                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
-                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="car-item text-center">
-                                    <div class="car-image">
-                                        <img class="img-fluid" src="{{ asset('images/car/04.jpg') }}" alt="">
-                                        <div class="car-overlay-banner">
-                                            <ul>
-                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="car-list">
-                                        <ul class="list-inline">
-                                            <li><i class="fa fa-registered"></i> 2021</li>
-                                            <li><i class="fa fa-cog"></i> Manual </li>
-                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                        </ul>
-                                    </div>
-                                    <div class="car-content">
-                                        <div class="star">
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star-o orange-color"></i>
-                                        </div>
-                                        <a href="#" style="font-size: 12px;">Toyota avalon hybrid </a>
-                                        <div class="separator"></div>
-                                        <div class="price">
-                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
-                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="item">
-                                <div class="car-item text-center">
-                                    <div class="car-image">
-                                        <img class="img-fluid" src="{{ asset('images/car/05.jpg') }}" alt="">
-                                        <div class="car-overlay-banner">
-                                            <ul>
-                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
-                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="car-list">
-                                        <ul class="list-inline">
-                                            <li><i class="fa fa-registered"></i> 2021</li>
-                                            <li><i class="fa fa-cog"></i> Manual </li>
-                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
-                                        </ul>
-                                    </div>
-                                    <div class="car-content">
-                                        <div class="star">
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star orange-color"></i>
-                                            <i class="fa fa-star-o orange-color"></i>
-                                        </div>
-                                        <a href="#" style="font-size: 12px;">Hyundai santa fe sport </a>
-                                        <div class="separator"></div>
-                                        <div class="price">
-                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
-                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>
