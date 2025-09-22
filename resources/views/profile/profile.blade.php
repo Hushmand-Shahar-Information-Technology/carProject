@@ -1139,10 +1139,6 @@
 
         // Initialize the registration mode on page load
         document.addEventListener('DOMContentLoaded', function() {
-            // First check localStorage for the current profile mode
-            const storedProfileMode = localStorage.getItem('currentProfileMode');
-            const storedBargainId = localStorage.getItem('currentBargainId');
-
             // Check if we're currently in bargain mode by looking at the URL or server-provided data
             const urlParams = new URLSearchParams(window.location.search);
             const bargainIdFromUrl = urlParams.get('bargain_id');
@@ -1152,13 +1148,11 @@
 
             // Debug information
             console.log('Initialization debug info:');
-            console.log('storedProfileMode:', storedProfileMode);
-            console.log('storedBargainId:', storedBargainId);
             console.log('bargainIdFromUrl:', bargainIdFromUrl);
             console.log('activeBargain:', activeBargain);
             console.log('bargainsData:', bargainsData);
 
-            // Priority order: URL parameter > localStorage > server data > default to user
+            // Priority order: URL parameter > server data > default to user
             if (bargainIdFromUrl) {
                 // If there's a bargain_id in the URL, find the corresponding bargain
                 const selectedBargain = bargainsData.find(b => b.id == bargainIdFromUrl);
@@ -1169,22 +1163,6 @@
                     // Store in localStorage for navbar switcher
                     localStorage.setItem('currentProfileMode', 'bargain');
                     localStorage.setItem('currentBargainId', selectedBargain.id);
-                }
-            } else if (storedProfileMode === 'bargain' && storedBargainId) {
-                // Use localStorage if available
-                console.log('Using localStorage preference');
-                const selectedBargain = bargainsData.find(b => b.id == storedBargainId);
-                if (selectedBargain) {
-                    // Update UI to show bargain mode
-                    updateProfileInfo(true, selectedBargain);
-                    // Redirect to maintain consistency
-                    window.location.href = '{{ route('user.profile') }}?bargain_id=' + storedBargainId;
-                    return;
-                } else {
-                    // If bargain not found, fallback to user mode
-                    localStorage.setItem('currentProfileMode', 'user');
-                    localStorage.setItem('currentBargainId', null);
-                    updateProfileInfo(false, null);
                 }
             } else if (activeBargain && activeBargain.id) {
                 // If we have an active bargain from the server, use it
@@ -1344,9 +1322,6 @@
         function switchToProfile() {
             console.log('Switching to profile mode');
 
-            // Update UI immediately for better user experience
-            updateProfileInfo(false, null);
-
             // Get CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             console.log('CSRF Token:', csrfToken);
@@ -1372,6 +1347,8 @@
                 // Update localStorage
                 localStorage.setItem('currentProfileMode', 'user');
                 localStorage.setItem('currentBargainId', null);
+                // Update UI immediately for better user experience
+                updateProfileInfo(false, null);
                 // After session is cleared, reload the page without any mode parameters
                 window.location.href = '{{ route('user.profile') }}?switched=true';
             }).catch(error => {
@@ -1379,6 +1356,8 @@
                 // Update localStorage even if AJAX fails
                 localStorage.setItem('currentProfileMode', 'user');
                 localStorage.setItem('currentBargainId', null);
+                // Update UI immediately for better user experience
+                updateProfileInfo(false, null);
                 // Even if AJAX fails, still redirect
                 window.location.href = '{{ route('user.profile') }}';
             });
@@ -1392,9 +1371,6 @@
             console.log('Selected bargain data:', selectedBargain);
 
             if (selectedBargain) {
-                // Update UI immediately for better user experience
-                updateProfileInfo(true, selectedBargain);
-
                 // Get CSRF token
                 const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
                 console.log('CSRF Token:', csrfToken);
@@ -1421,6 +1397,8 @@
                     // Update localStorage
                     localStorage.setItem('currentProfileMode', 'bargain');
                     localStorage.setItem('currentBargainId', bargainId);
+                    // Update UI immediately for better user experience
+                    updateProfileInfo(true, selectedBargain);
                     // After session is set, reload the page with bargain_id parameter
                     window.location.href = '{{ route('user.profile') }}?bargain_id=' +
                         bargainId + '&switched=true';
@@ -1429,6 +1407,8 @@
                     // Update localStorage even if AJAX fails
                     localStorage.setItem('currentProfileMode', 'bargain');
                     localStorage.setItem('currentBargainId', bargainId);
+                    // Update UI immediately for better user experience
+                    updateProfileInfo(true, selectedBargain);
                     // Even if AJAX fails, still redirect
                     window.location.href = '{{ route('user.profile') }}?bargain_id=' +
                         bargainId;
@@ -1535,19 +1515,17 @@
                     bargainsCountContainer.style.display = 'none';
                 }
 
-                // Update cars tab count
-                document.getElementById('cars-tab-count').textContent = bargainData.cars_count || 0;
-
                 // Update registration mode button
                 const modeButton = document.getElementById('registration-mode-btn');
                 if (modeButton) {
                     modeButton.innerHTML = '<i class="fas fa-handshake"></i> ' + bargainData.name;
                 }
 
-                // Hide edit profile button or change its link
+                // Change edit profile button link to bargain edit
                 const editButton = document.getElementById('edit-profile-btn');
                 if (editButton) {
-                    editButton.style.display = 'none';
+                    editButton.href = '/bargains/edit/' + bargainData.id;
+                    editButton.innerHTML = '<i class="fas fa-edit"></i> Edit';
                 }
 
                 // Show bargain status display
@@ -1566,6 +1544,10 @@
                 if (bargainsTab) {
                     bargainsTab.closest('li').style.display = 'none';
                 }
+
+                // Show bargain cars container and hide user cars
+                document.getElementById('user-cars-container').style.display = 'none';
+                document.getElementById('bargain-cars-container').style.display = 'flex';
             } else {
                 // Update profile title
                 document.getElementById('profile-title').textContent = '{{ $user->name }}';
@@ -1594,10 +1576,6 @@
                     bargainsCountContainer.style.display = 'block';
                 }
 
-                // Update cars tab count
-                document.getElementById('cars-tab-count').textContent =
-                    '{{ $user->cars->count() }}';
-
                 // Update registration mode button
                 const modeButton = document.getElementById('registration-mode-btn');
                 if (modeButton) {
@@ -1607,7 +1585,6 @@
                 // Show edit profile button
                 const editButton = document.getElementById('edit-profile-btn');
                 if (editButton) {
-                    editButton.style.display = 'inline-block';
                     editButton.href = '{{ route('profile.edit') }}';
                     editButton.innerHTML = '<i class="fas fa-edit"></i> Edit';
                 }
@@ -1628,6 +1605,10 @@
                 if (bargainsTab) {
                     bargainsTab.closest('li').style.display = 'block';
                 }
+
+                // Show user cars container and hide bargain cars
+                document.getElementById('user-cars-container').style.display = 'flex';
+                document.getElementById('bargain-cars-container').style.display = 'none';
             }
         }
 
