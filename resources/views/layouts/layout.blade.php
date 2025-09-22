@@ -143,16 +143,7 @@
                                         </ul>
                                     </li>
 
-                                    <!-- Profile/Bargain Switcher -->
-                                    <li class="list-inline-item dropdown" id="navbar-switcher" style="display: none;">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <i class="fas fa-exchange-alt"></i> Switch
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end" id="navbar-switcher-content">
-                                            <!-- Will be populated by JavaScript -->
-                                        </ul>
-                                    </li>
+
                                 @endauth
                             </ul>
                         </div>
@@ -195,8 +186,8 @@
                                         </ul>
                                     </li>
                                     {{-- Dropdown for Bargains --}}
-                                    <li class="dropdown"><a href="javascript:void(0)"> Bargains <i
-                                                class="fa fa-angle-down"></i></a>
+                                    <li class="dropdown" id="bargains-dropdown"><a href="javascript:void(0)">
+                                            Bargains <i class="fa fa-angle-down"></i></a>
                                         <ul class="drop-down-multilevel" style="min-width: 280px;">
                                             <li><a href="{{ route('bargains.create') }}"
                                                     class="{{ request()->routeIs('bargains.create') ? 'active' : '' }}">
@@ -331,6 +322,72 @@
                     }
                 });
             }
+
+            // Hide bargains dropdown when in bargain mode
+            function updateNavbarForProfileMode() {
+                const bargainsDropdown = document.getElementById('bargains-dropdown');
+                if (!bargainsDropdown) return;
+
+                const currentProfileMode = localStorage.getItem('currentProfileMode');
+                const bargainId = localStorage.getItem('currentBargainId');
+
+                if (currentProfileMode === 'bargain' && bargainId) {
+                    // Hide bargains dropdown when in bargain mode
+                    bargainsDropdown.style.display = 'none';
+                } else {
+                    // Show bargains dropdown when in user mode
+                    bargainsDropdown.style.display = 'list-item';
+                }
+            }
+
+            // Update navbar on page load
+            updateNavbarForProfileMode();
+
+            // Listen for storage changes (when switching profiles in other tabs)
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'currentProfileMode' || e.key === 'currentBargainId') {
+                    updateNavbarForProfileMode();
+                }
+            });
+
+            // Also listen for custom events that might be dispatched when profile mode changes
+            window.addEventListener('profileModeChanged', function(e) {
+                setTimeout(updateNavbarForProfileMode, 100);
+            });
+
+            // Also check URL parameters on page load
+            const urlParams = new URLSearchParams(window.location.search);
+            const bargainIdFromUrl = urlParams.get('bargain_id');
+            if (bargainIdFromUrl) {
+                localStorage.setItem('currentProfileMode', 'bargain');
+                localStorage.setItem('currentBargainId', bargainIdFromUrl);
+                updateNavbarForProfileMode();
+            }
+
+            // Check session data from server on page load
+            // This handles cases where localStorage might be out of sync with server session
+            fetch('/api/profile-mode')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.mode === 'bargain' && data.bargain_id) {
+                        localStorage.setItem('currentProfileMode', 'bargain');
+                        localStorage.setItem('currentBargainId', data.bargain_id);
+                        updateNavbarForProfileMode();
+                        // Also update the navbar switcher
+                        setTimeout(initializeNavbarSwitcher, 100);
+                    } else if (data.mode === 'user') {
+                        localStorage.setItem('currentProfileMode', 'user');
+                        localStorage.setItem('currentBargainId', null);
+                        updateNavbarForProfileMode();
+                        // Also update the navbar switcher
+                        setTimeout(initializeNavbarSwitcher, 100);
+                    }
+                })
+                .catch(error => {
+                    console.log('Could not fetch profile mode from server, using localStorage');
+                    // Still try to initialize the navbar switcher
+                    setTimeout(initializeNavbarSwitcher, 100);
+                });
         });
     </script>
 
@@ -613,114 +670,6 @@
 
         // Update count every minute to check for expiration
         setInterval(updateNavbarCompareCount, 60000);
-
-        // Profile/Bargain switcher for navbar
-        function initializeNavbarSwitcher() {
-            const switcher = document.getElementById('navbar-switcher');
-            const switcherContent = document.getElementById('navbar-switcher-content');
-
-            if (!switcher || !switcherContent) {
-                return;
-            }
-
-            // Get bargains data from localStorage (set by profile page)
-            try {
-                const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
-                const currentMode = localStorage.getItem('currentProfileMode') || 'user';
-                const currentBargainId = localStorage.getItem('currentBargainId') || null;
-
-                // Clear existing content
-                switcherContent.innerHTML = '';
-
-                // Add user profile option
-                const userItem = document.createElement('li');
-                userItem.innerHTML =
-                    '<a class="dropdown-item" href="javascript:void(0)" onclick="switchToProfileFromNavbar()"><i class="fas fa-user"></i> User Profile</a>';
-                switcherContent.appendChild(userItem);
-
-                // Add bargain options
-                bargainsData.forEach(bargain => {
-                    const item = document.createElement('li');
-                    item.innerHTML =
-                        `<a class="dropdown-item" href="javascript:void(0)" onclick="switchToBargainFromNavbar(${bargain.id}, '${bargain.name.replace(/'/g, "\\'")}')"><i class="fas fa-handshake"></i> ${bargain.name}</a>`;
-                    switcherContent.appendChild(item);
-                });
-
-                // Show the switcher if we have data
-                if (bargainsData.length > 0) {
-                    switcher.style.display = 'block';
-                }
-
-                // Highlight the current mode
-                setTimeout(() => {
-                    highlightCurrentModeInNavbar(currentMode, currentBargainId);
-                }, 100);
-            } catch (e) {
-                console.error('Error initializing navbar switcher:', e);
-            }
-        }
-
-        function switchToProfileFromNavbar() {
-            // Redirect to profile page in user mode
-            window.location.href = '/user/profile';
-        }
-
-        function switchToBargainFromNavbar(bargainId, bargainName) {
-            // Redirect to profile page in bargain mode
-            window.location.href = `/user/profile?bargain_id=${bargainId}`;
-        }
-
-        function highlightCurrentModeInNavbar(currentMode, bargainId) {
-            // Get all dropdown items
-            const items = document.querySelectorAll('#navbar-switcher-content .dropdown-item');
-
-            // Remove any existing highlights
-            items.forEach(item => {
-                item.classList.remove('bg-primary', 'text-white');
-            });
-
-            // Highlight the current mode
-            if (currentMode === 'user') {
-                // Highlight user profile item (first item)
-                if (items.length > 0) {
-                    items[0].classList.add('bg-primary', 'text-white');
-                }
-            } else if (currentMode === 'bargain' && bargainId) {
-                // Find and highlight the matching bargain item
-                for (let i = 1; i < items.length; i++) { // Start from 1 to skip user profile item
-                    const onclickAttr = items[i].getAttribute('onclick');
-                    if (onclickAttr && onclickAttr.includes(bargainId)) {
-                        items[i].classList.add('bg-primary', 'text-white');
-                        break;
-                    }
-                }
-            }
-
-            // Update the navbar switcher text to show current mode
-            const switcherButton = document.querySelector('#navbar-switcher .dropdown-toggle');
-            if (switcherButton) {
-                if (currentMode === 'user') {
-                    switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> User Profile';
-                } else if (currentMode === 'bargain' && bargainId) {
-                    // Find the bargain name from localStorage
-                    try {
-                        const bargainsData = JSON.parse(localStorage.getItem('bargainsData') || '[]');
-                        const bargain = bargainsData.find(b => b.id == bargainId);
-                        if (bargain) {
-                            switcherButton.innerHTML = '<i class="fas fa-exchange-alt"></i> ' + bargain.name;
-                        }
-                    } catch (e) {
-                        console.error('Error updating navbar switcher text:', e);
-                    }
-                }
-            }
-        }
-
-        // Initialize navbar switcher when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Small delay to ensure localStorage is populated
-            setTimeout(initializeNavbarSwitcher, 100);
-        });
     </script>
 </body>
 
