@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
     Route::get('/user/profile/bargain/{id}/cars', [ProfileController::class, 'getBargainCars'])->name('user.profile.bargain.cars');
     Route::post('/set-profile-mode', [ProfileController::class, 'setProfileMode'])->name('profile.set-mode');
+    Route::get('/api/profile-mode', [ProfileController::class, 'getProfileMode'])->name('profile.get-mode');
     // Test routes removed
 });
 
