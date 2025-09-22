@@ -1399,9 +1399,11 @@
                     localStorage.setItem('currentBargainId', bargainId);
                     // Update UI immediately for better user experience
                     updateProfileInfo(true, selectedBargain);
-                    // After session is set, reload the page with bargain_id parameter
-                    window.location.href = '{{ route('user.profile') }}?bargain_id=' +
-                        bargainId + '&switched=true';
+                    // Update navbar to hide bargains dropdown
+                    updateNavbarBargainsVisibility(false);
+                    // After session is set, reload the page with bargain_id parameter to reflect current mode in URL
+                    window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId +
+                    '&switched=true';
                 }).catch(error => {
                     console.error('Error setting profile mode:', error);
                     // Update localStorage even if AJAX fails
@@ -1409,9 +1411,10 @@
                     localStorage.setItem('currentBargainId', bargainId);
                     // Update UI immediately for better user experience
                     updateProfileInfo(true, selectedBargain);
-                    // Even if AJAX fails, still redirect
-                    window.location.href = '{{ route('user.profile') }}?bargain_id=' +
-                        bargainId;
+                    // Update navbar to hide bargains dropdown
+                    updateNavbarBargainsVisibility(false);
+                    // Even if AJAX fails, still redirect to clean URL
+                    window.location.href = '{{ route('user.profile') }}';
                 });
             } else {
                 console.error('Bargain not found for ID:', bargainId);
@@ -1434,6 +1437,8 @@
                 // Update localStorage
                 localStorage.setItem('currentProfileMode', 'user');
                 localStorage.setItem('currentBargainId', null);
+                // Update navbar to show bargains dropdown
+                updateNavbarBargainsVisibility(true);
                 // After session is cleared, reload the page without any mode parameters
                 window.location.href = '{{ route('user.profile') }}?switched=true';
             }).catch(error => {
@@ -1441,6 +1446,8 @@
                 // Update localStorage even if AJAX fails
                 localStorage.setItem('currentProfileMode', 'user');
                 localStorage.setItem('currentBargainId', null);
+                // Update navbar to show bargains dropdown
+                updateNavbarBargainsVisibility(true);
                 // Even if AJAX fails, still redirect
                 window.location.href = '{{ route('user.profile') }}?switched=true';
             });
@@ -1463,17 +1470,19 @@
                 // Update localStorage
                 localStorage.setItem('currentProfileMode', 'bargain');
                 localStorage.setItem('currentBargainId', bargainId);
-                // After session is set, reload the page with bargain_id parameter
-                window.location.href = '{{ route('user.profile') }}?bargain_id=' +
-                    bargainId + '&switched=true';
+                // Update navbar to hide bargains dropdown
+                updateNavbarBargainsVisibility(false);
+                // After session is set, reload the page with bargain_id parameter to reflect current mode in URL
+                window.location.href = '{{ route('user.profile') }}?bargain_id=' + bargainId + '&switched=true';
             }).catch(error => {
                 console.error('Error setting profile mode:', error);
                 // Update localStorage even if AJAX fails
                 localStorage.setItem('currentProfileMode', 'bargain');
                 localStorage.setItem('currentBargainId', bargainId);
-                // Even if AJAX fails, still redirect
-                window.location.href = '{{ route('user.profile') }}?bargain_id=' +
-                    bargainId + '&switched=true';
+                // Update navbar to hide bargains dropdown
+                updateNavbarBargainsVisibility(false);
+                // Even if AJAX fails, still redirect to clean URL
+                window.location.href = '{{ route('user.profile') }}';
             });
         }
 
@@ -2087,6 +2096,21 @@
                     }
                 }
             }
+        }
+
+        function updateNavbarBargainsVisibility(show) {
+            // Update the main navbar bargains dropdown visibility
+            const bargainsDropdown = document.getElementById('bargains-dropdown');
+            if (bargainsDropdown) {
+                bargainsDropdown.style.display = show ? 'list-item' : 'none';
+            }
+
+            // Dispatch a custom event to notify other parts of the page
+            window.dispatchEvent(new CustomEvent('profileModeChanged', {
+                detail: {
+                    showBargains: show
+                }
+            }));
         }
 
         // New function to switch to profile and redirect to bargain registration page
