@@ -30,15 +30,9 @@ class ProfileController extends Controller
         // First check query parameter, then check session
         $bargainId = $request->query('bargain_id');
 
-        // If no bargain_id in query parameter, check if we should use session value
-        // But only if we're not explicitly in user mode
+        // If no bargain_id in query parameter, check session
         if (!$bargainId) {
-            // Check if we're explicitly in user mode via query parameter
-            $profileMode = $request->query('mode');
-            if ($profileMode !== 'user') {
-                // Only fall back to session if not explicitly in user mode
-                $bargainId = session('active_bargain_id');
-            }
+            $bargainId = session('active_bargain_id');
         }
 
         $activeBargain = null;
@@ -48,6 +42,9 @@ class ProfileController extends Controller
             if ($activeBargain) {
                 // Store in session to persist mode
                 session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
+            } else {
+                // If bargain not found, clear session data
+                session(['profile_mode' => 'user', 'active_bargain_id' => null]);
             }
         } else {
             // Ensure we're in user mode if no bargain is selected

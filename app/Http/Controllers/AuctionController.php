@@ -37,22 +37,6 @@ class AuctionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Auction $auction)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Auction $auction)
-    {
-        //
-    }
-
-    /**
      * End an auction early
      */
     public function endAuction(Request $request, $id)

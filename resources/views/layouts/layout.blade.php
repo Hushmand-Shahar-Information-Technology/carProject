@@ -88,7 +88,7 @@
                                     <i class="fa-solid fa-envelope"></i> support@motarsal.com
                                 </li>
                                 <li class="list-inline-item">
-                                    <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Friday CLOSED
+                                    <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
                                 </li>
                             </ul>
                         </div>
@@ -103,17 +103,17 @@
                                     <x-language-switcher />
                                 </li>
 
-                                <li class="list-inline-item">
-                                    <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
-                                </li>
-                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
-                                </li>
-                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
-                                </li>
-                                <li class="list-inline-item"><a href="#"><i
-                                            class="fa-brands fa-instagram"></i></a></li>
-                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-youtube"></i></a>
-                                </li>
+                                 <li class="list-inline-item">
+                                    
+                                    <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
+                                    </li>
+                                    <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
+                                    </li>
+                                    <li class="list-inline-item"><a href="#"><i
+                                    class="fa-brands fa-instagram"></i></a></li>
+                                    <li class="list-inline-item"><a href="#"><i class="fa-brands fa-youtube"></i></a>
+                                    </li>
+                                 </li>
 
                                 <!-- Authentication -->
                                 @guest
