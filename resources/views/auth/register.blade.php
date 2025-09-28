@@ -121,7 +121,7 @@
         }
 
         .image-section {
-            background: url('{{ asset('images/car/07.jpg') }}') center/cover;
+            background: url('/images/car/07.jpg') center/cover;
             min-height: 650px;
             display: flex;
             align-items: center;
@@ -145,6 +145,193 @@
             flex-direction: column;
             justify-content: center;
             min-height: 650px;
+        }
+
+        /* Wizard Styles */
+        .wizard-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .wizard-progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e5e7eb;
+            z-index: 1;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 4px;
+            background: #dc2626;
+            z-index: 2;
+            transition: width 0.3s ease;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 3;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #6b7280;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active {
+            background: #dc2626;
+            color: white;
+        }
+
+        .progress-step.completed {
+            background: #10b981;
+            color: white;
+        }
+
+        .progress-step-label {
+            position: absolute;
+            top: 45px;
+            left: 50%;
+            transform: translateX(-50%);
+            white-space: nowrap;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .wizard-step {
+            display: none;
+        }
+
+        .wizard-step.active {
+            display: block;
+        }
+
+        .role-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 100%;
+        }
+
+        .role-card:hover {
+            border-color: #dc2626;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .role-card.selected {
+            border-color: #dc2626;
+            background: rgba(220, 38, 38, 0.05);
+        }
+
+        .role-icon {
+            font-size: 2.5rem;
+            color: #dc2626;
+            margin-bottom: 1rem;
+        }
+
+        .role-card h4 {
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+
+        .role-card p {
+            color: #6b7280;
+            margin-bottom: 0;
+        }
+
+        .wizard-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn-wizard {
+            padding: 12px 30px;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-prev {
+            background: #f3f4f6;
+            color: #4b5563;
+            border: none;
+        }
+
+        .btn-prev:hover {
+            background: #e5e7eb;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+            color: white;
+            border: none;
+        }
+
+        .btn-next:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+            transform: translateY(-2px);
+        }
+
+        .review-section {
+            background: #f9fafb;
+            border-radius: 16px;
+            padding: 1.5rem;
+        }
+
+        .review-item {
+            padding: 0.5rem 0;
+        }
+
+        .review-item strong {
+            color: #2c3e50;
+        }
+
+        .image-preview {
+            position: relative;
+            padding-top: 100%;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .image-preview img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .file-preview {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f3f4f6;
+            border-radius: 8px;
+        }
+
+        .file-preview i {
+            font-size: 1.5rem;
+            color: #dc2626;
+            margin-right: 0.75rem;
         }
 
         @media (max-width: 768px) {
@@ -172,6 +359,15 @@
             .input-icon {
                 left: 18px;
             }
+
+            .wizard-progress {
+                margin-bottom: 1.5rem;
+            }
+
+            .progress-step-label {
+                font-size: 12px;
+                top: 40px;
+            }
         }
     </style>
 
@@ -181,85 +377,70 @@
                 <div class="col-12 col-xl-11">
                     <div class="auth-card">
                         <div class="row g-0 h-100">
-                            <div class="col-md-6 col-lg-6 d-none d-md-block">
+                            <div class="col-md-6 col-lg-4 d-none d-md-block">
                                 <div class="image-section"></div>
                             </div>
-                            <div class="col-md-6 col-lg-6">
+                            <div class="col-md-6 col-lg-8">
                                 <div class="form-section">
-                                    <form method="POST" action="{{ route('register') }}">
+                                    <div class="d-flex align-items-center mb-4">
+                                        <i class="fas fa-user-plus fa-2x me-3" style="color: #dc2626;"></i>
+                                        <h1 class="fw-bold mb-0" style="color: #2c3e50;">Register</h1>
+                                    </div>
+
+                                    <div id="wizard-alerts"></div>
+
+                                    <form id="registration-form" method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                                         @csrf
 
-                                        <div class="d-flex align-items-center mb-4">
-                                            <i class="fas fa-user-plus fa-2x me-3" style="color: #dc2626;"></i>
-                                            <h1 class="fw-bold mb-0" style="color: #2c3e50;">Register</h1>
-                                        </div>
-
-                                        <h5 class="fw-normal mb-4 text-muted">Create your account</h5>
-
-                                        <!-- Name -->
-                                        <div class="mb-4">
-                                            <div class="form-floating">
-                                                <i class="fas fa-user input-icon"></i>
-                                                <x-text-input id="name" class="form-control" type="text"
-                                                    name="name" :value="old('name')" required autofocus
-                                                    autocomplete="name" placeholder=" " />
-                                                <label for="name">{{ __('Full Name') }}</label>
+                                        <!-- Progress Bar -->
+                                        <div class="wizard-progress">
+                                            <div class="progress-bar" style="width: 33%"></div>
+                                            <div class="progress-step active" data-step="1">
+                                                1
+                                                <div class="progress-step-label">Role</div>
                                             </div>
-                                            <x-input-error :messages="$errors->get('name')" class="mb-3" />
-                                        </div>
-
-                                        <!-- Email -->
-                                        <div class="mb-4">
-                                            <div class="form-floating">
-                                                <i class="fas fa-envelope input-icon"></i>
-                                                <x-text-input id="email" class="form-control" type="email"
-                                                    name="email" :value="old('email')" required autocomplete="username"
-                                                    placeholder=" " />
-                                                <label for="email">{{ __('Email Address') }}</label>
+                                            <div class="progress-step" data-step="2">
+                                                2
+                                                <div class="progress-step-label">Details</div>
                                             </div>
-                                            <x-input-error :messages="$errors->get('email')" class="mb-3" />
-                                        </div>
-                                        <!-- Password -->
-                                        <div class="mb-4">
-                                            <div class="form-floating">
-                                                <i class="fas fa-lock input-icon"></i>
-                                                <x-text-input id="password" class="form-control" type="password"
-                                                    name="password" required autocomplete="new-password"
-                                                    placeholder=" " />
-                                                <label for="password">{{ __('Password') }}</label>
+                                            <div class="progress-step" data-step="3">
+                                                3
+                                                <div class="progress-step-label">Review</div>
                                             </div>
-                                            <x-input-error :messages="$errors->get('password')" />
                                         </div>
 
-                                        <!-- Confirm Password -->
-                                        <div class="mb-4">
-                                            <div class="form-floating">
-                                                <i class="fas fa-lock input-icon"></i>
-                                                <x-text-input id="password_confirmation" class="form-control"
-                                                    type="password" name="password_confirmation" required
-                                                    autocomplete="new-password" placeholder=" " />
-                                                <label for="password_confirmation">{{ __('Confirm Password') }}</label>
-                                            </div>
-                                            <x-input-error :messages="$errors->get('password_confirmation')" />
-                                        </div>
+                                        <!-- Wizard Steps -->
+                                        @include('auth.partials.role-select')
+                                        @include('auth.partials.seller-form')
+                                        @include('auth.partials.seeker-form')
+                                        @include('auth.partials.review-step')
 
-                                        <button class="btn red-btn w-100 mb-4" type="submit">
-                                            <i class="fas fa-user-plus me-2"></i>{{ __('Create Account') }}
-                                        </button>
-
-                                        <p class="text-center mb-3">
-                                            Already have an account?
-                                            <a href="{{ route('login') }}" class="red-link">Sign in here</a>
-                                        </p>
-
-                                        <div class="text-center">
-                                            <a href="#!" class="text-muted text-decoration-none me-3 small">Terms
-                                                of Service</a>
-                                            <span class="text-muted">•</span>
-                                            <a href="#!" class="text-muted text-decoration-none ms-3 small">Privacy
-                                                Policy</a>
+                                        <!-- Navigation -->
+                                        <div class="wizard-navigation">
+                                            <button type="button" id="prev-step" class="btn btn-prev btn-wizard d-none">
+                                                <i class="fas fa-arrow-left me-2"></i>Previous
+                                            </button>
+                                            <button type="button" id="next-step" class="btn btn-next btn-wizard">
+                                                Next<i class="fas fa-arrow-right ms-2"></i>
+                                            </button>
+                                            <button type="button" id="submit-registration" class="btn btn-next btn-wizard d-none">
+                                                <i class="fas fa-check-circle me-2"></i>Confirm Registration
+                                            </button>
                                         </div>
                                     </form>
+
+                                    <p class="text-center mb-3 mt-4">
+                                        Already have an account?
+                                        <a href="{{ route('login') }}" class="red-link">Sign in here</a>
+                                    </p>
+
+                                    <div class="text-center">
+                                        <a href="#!" class="text-muted text-decoration-none me-3 small">Terms
+                                            of Service</a>
+                                        <span class="text-muted">•</span>
+                                        <a href="#!" class="text-muted text-decoration-none ms-3 small">Privacy
+                                            Policy</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -268,4 +449,11 @@
             </div>
         </div>
     </div>
+
+    <!-- jQuery (required for the wizard) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Bootstrap JS (required for some components) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Registration Wizard JS -->
+    <script src="{{ asset('js/register-wizard.js') }}"></script>
 </x-guest-layout>
