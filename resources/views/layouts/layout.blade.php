@@ -312,12 +312,12 @@
                                 }).then(() => {
                                     // After successfully switching to user profile mode, redirect to bargain registration page
                                     window.location.href =
-                                    '{{ route('bargains.create') }}';
+                                        '{{ route('bargains.create') }}';
                                 }).catch(error => {
                                     console.error('Error setting profile mode:', error);
                                     // Even if there's an error, still redirect to bargain registration page
                                     window.location.href =
-                                    '{{ route('bargains.create') }}';
+                                        '{{ route('bargains.create') }}';
                                 });
                             }
                         });
@@ -429,7 +429,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row flex justify-content-between ">
                 <div class="col-lg-3 col-md-6">
                     <div class="about-content">
                         <img class="img-fluid" id="logo-footer" src="{{ asset('images/logo-light.png') }}"
@@ -445,7 +445,7 @@
                         </ul>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6">
+                {{-- <div class="col-lg-3 col-md-6">
                     <div class="usefull-link">
                         <h6 class="text-white">Useful Links</h6>
                         <ul>
@@ -461,7 +461,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> --}}
                 <div class="col-lg-3 col-md-6">
                     <div class="recent-post-block">
                         <h6 class="text-white">recent posts </h6>
@@ -516,9 +516,9 @@
                     </div>
                     <div class="col-lg-6 col-md-12">
                         <ul class="list-inline text-lg-end text-center">
-                            <li><a href="#">privacy policy </a> | </li>
-                            <li><a href="#">terms and conditions </a> |</li>
-                            <li><a href="#">contact us </a></li>
+                            <li><a href="{{ route('privacy.policy') }}">privacy policy </a> | </li>
+                            <li><a href="{{ route('terms.conditions') }}">terms and conditions </a> |</li>
+                            <li><a href="{{ route('contact.us') }}">contact us </a></li>
                         </ul>
                     </div>
                 </div>
