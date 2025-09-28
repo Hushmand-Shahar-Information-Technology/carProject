@@ -85,10 +85,10 @@
                         <div class="topbar-left text-lg-start text-center">
                             <ul class="list-inline mb-0">
                                 <li class="list-inline-item">
-                                    <i class="fa-solid fa-envelope"></i> support@motarsal.com
+                                    <i class="fa-solid fa-envelope"></i> topmotor@gmail.com
                                 </li>
                                 <li class="list-inline-item">
-                                    <i class="fa-solid fa-clock"></i> Mon - Sat 8.00 - 18.00. Friday CLOSED
+                                    <i class="fa-solid fa-clock"></i> 7/24 Openned
                                 </li>
                             </ul>
                         </div>
@@ -104,7 +104,7 @@
                                 </li>
 
                                 <li class="list-inline-item">
-                                    <i class="fa fa-phone"></i> 077 9600 2750 / 072 806 3532
+                                    <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
                                 </li>
                                 <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
                                 </li>
@@ -439,9 +439,10 @@
                     </div>
                     <div class="address">
                         <ul>
-                            <li> <i class="fa fa-map-marker"></i><span>220E Front St. Burlington NC 27215</span> </li>
-                            <li> <i class="fa fa-phone"></i><span>077 9600 2750 / 072 806 3532 </span> </li>
-                            <li> <i class="fa-solid fa-envelope"></i><span>support@motarsal.com</span> </li>
+                            <li> <i class="fa fa-map-marker"></i><span>Kart-e-Mamorin, Khushal khan Mena, Kabul,
+                                    Afghanistan</span> </li>
+                            <li> <i class="fa fa-phone"></i><span>0 780 480 980 / 072 806 3532 </span> </li>
+                            <li> <i class="fa-solid fa-envelope"></i><span>topmotor@gmail.com</span> </li>
                         </ul>
                     </div>
                 </div>
