@@ -2,9 +2,114 @@
 
 @section('title', 'Terms and Conditions')
 
+@section('styles')
+    <style>
+        .inner-intro {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{{ asset('images/bg/inner-bg.png') }}') no-repeat center center;
+            background-size: cover;
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .intro-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .intro-title h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #ff0000;
+        }
+
+        .page-breadcrumb {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .page-breadcrumb li {
+            display: inline-block;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .page-breadcrumb a {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .page-breadcrumb a:hover {
+            color: #ff0000;
+        }
+
+        .page-breadcrumb i {
+            margin: 0 10px;
+            color: #ccc;
+        }
+
+        .terms-conditions h4 {
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .terms-conditions h4:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: #ff0000;
+        }
+
+        .terms-conditions h5 {
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .terms-conditions h5:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: #ff0000;
+        }
+
+        .terms-conditions ul li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .terms-conditions ul li:before {
+            content: '\f00c';
+            font-family: 'Font Awesome 5 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: #ff0000;
+            font-size: 0.8rem;
+        }
+    </style>
+@endsection
+
 @section('content')
     <!--=================================
-                    inner banner -->
+                                inner banner -->
     <section class="inner-intro bg-1 bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
@@ -13,7 +118,8 @@
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
-                        <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i></li>
+                        <li><a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home</a> <i
+                                class="fa fa-angle-double-right"></i></li>
                         <li><span>Terms and Conditions</span></li>
                     </ul>
                 </div>
@@ -22,11 +128,11 @@
     </section>
 
     <!--=================================
-                    inner banner -->
+                                inner banner -->
 
     <!--=================================
-                    terms and conditions -->
-    <section class="space-ptb">
+                                terms and conditions -->
+    <section class="space-ptb mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -114,5 +220,5 @@
         </div>
     </section>
     <!--=================================
-                    terms and conditions -->
+                                terms and conditions -->
 @endsection
