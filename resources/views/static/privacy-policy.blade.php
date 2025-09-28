@@ -4,7 +4,7 @@
 
 @section('content')
     <!--=================================
-                                inner banner -->
+                                    inner banner -->
     <section class="inner-intro bg-1 bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
@@ -23,15 +23,15 @@
     </section>
 
     <!--=================================
-                                inner banner -->
+                                    inner banner -->
 
     <!--=================================
-                                privacy policy -->
+                                    privacy policy -->
     <section class="space-ptb mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
-                    <div class="privacy-policy">
+                    <div>
                         <h4 class="mb-4">Privacy Policy</h4>
                         <p class="mb-4">Last Updated: {{ date('F d, Y') }}</p>
 
@@ -107,5 +107,5 @@
         </div>
     </section>
     <!--=================================
-                                privacy policy -->
+                                    privacy policy -->
 @endsection
