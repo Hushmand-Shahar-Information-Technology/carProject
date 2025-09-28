@@ -113,17 +113,19 @@ class RegisterWizardController extends Controller
                 $registrationNumber = 'REG' . date('Ymd') . strtoupper(substr(uniqid(), -6));
 
                 try {
-                    $sellerProfile = Seller::create([
+                    $sellerProfile = SellerProfile::create([
                         'user_id' => $user->id,
-                        'seller_name' => $request->username,
+                        'username' => $request->username,
                         'phone' => $request->phone,
                         'address' => $request->address,
-                    ]);
-                   
+                        'profile_image' => $profileImagePath,
+                        'registration_number' => $registrationNumber,
+                    ]);      
                     Log::info('Seller profile created: ' . $sellerProfile->id);
                 } catch (QueryException $e) {
                     Log::error('Failed to create seller profile: ' . $e->getMessage());
                     // Return a more specific error message to the user
+                    dd($e->getMessage());
                     return response()->json([
                         'errors' => ['database' => ['Failed to create seller profile. Database connection issue.']]
                     ], 422);
