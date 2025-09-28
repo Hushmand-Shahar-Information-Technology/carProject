@@ -48,7 +48,7 @@ Route::view('/otp', 'auth.otp');
 Route::post('/auctions', [AuctionController::class, 'store'])->name('auctions.store');
 Route::post('/auctions/{id}/end', [AuctionController::class, 'endAuction'])->name('auctions.end');
 
-Route::view('/wizard', 'home.wizard');
+Route::get('/wizard', [HomeController::class, 'wizard'])->name('home.wizard');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
