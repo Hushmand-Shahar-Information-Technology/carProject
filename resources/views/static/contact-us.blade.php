@@ -2,9 +2,135 @@
 
 @section('title', 'Contact Us')
 
+@section('styles')
+    <style>
+        .inner-intro {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('{{ asset('images/bg/inner-bg.png') }}') no-repeat center center;
+            background-size: cover;
+            padding: 100px 0;
+            position: relative;
+        }
+
+        .intro-title h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .intro-title h1:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #ff0000;
+        }
+
+        .page-breadcrumb {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .page-breadcrumb li {
+            display: inline-block;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .page-breadcrumb a {
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .page-breadcrumb a:hover {
+            color: #ff0000;
+        }
+
+        .page-breadcrumb i {
+            margin: 0 10px;
+            color: #ccc;
+        }
+
+        .contact-info h4.position-relative.pb-2:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: #ff0000;
+        }
+
+        .contact-address .d-flex {
+            transition: all 0.3s ease;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .contact-address .d-flex:hover {
+            background: rgba(0, 0, 0, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .social-icons a {
+            width: 40px;
+            height: 40px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .contact-form .form-control {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-form .form-control:focus {
+            border-color: #ff0000;
+            box-shadow: 0 0 0 0.2rem rgba(255, 0, 0, 0.25);
+        }
+
+        .btn-primary {
+            background: #ff0000;
+            border: 1px solid #ff0000;
+            padding: 10px 25px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: #cc0000;
+            border-color: #cc0000;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .map {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+@endsection
+
 @section('content')
     <!--=================================
-            inner banner -->
+                        inner banner -->
     <section class="inner-intro bg-1 bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
@@ -13,7 +139,8 @@
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
-                        <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i></li>
+                        <li><a href="{{ route('home.index') }}"><i class="fa fa-home"></i> Home</a> <i
+                                class="fa fa-angle-double-right"></i></li>
                         <li><span>Get In Touch</span></li>
                     </ul>
                 </div>
@@ -22,16 +149,16 @@
     </section>
 
     <!--=================================
-            inner banner -->
+                        inner banner -->
 
     <!--=================================
-            contact us -->
-    <section class="space-ptb">
+                        contact us -->
+    <section class="space-ptb mt-3 mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 mb-5 mb-lg-0">
                     <div class="contact-info">
-                        <h4 class="mb-4">Get In Touch</h4>
+                        <h4 class="mb-4 position-relative pb-2">Get In Touch</h4>
                         <p class="mb-4">Have questions or feedback? We'd love to hear from you. Reach out to us using the
                             contact information below or send us a message.</p>
 
@@ -161,5 +288,5 @@
         </div>
     </section>
     <!--=================================
-            contact us -->
+                        contact us -->
 @endsection
