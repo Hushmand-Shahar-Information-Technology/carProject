@@ -11,25 +11,97 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <style>
-    /* Page Background */
+    /* Page Background - transparent */
     .body-div {
-        /* background: linear-gradient(135deg, #74ebd5 0%, #ACB6E5 100%); */
+        background: transparent;
+        /* No background */
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        min-height: 100vh;
+        min-height: 60vh;
         display: flex;
         align-items: center;
         justify-content: center;
-        padding: 30px 15px;
+        padding: 20px 10px;
+        /* Reduced padding */
     }
 
-    /*
-  .containerw {
-    max-width: 700px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
-    padding: 40px 35px;
-  } */
+    /* Wizard container - white background with border radius */
+    .containerw {
+        max-width: 700px;
+        background: white;
+        /* White background only */
+        border-radius: 20px;
+        /* Increased border radius */
+        box-shadow: none;
+        /* Remove box shadow */
+        padding: 25px 20px;
+        /* Reduced padding */
+    }
+
+    /* Selectable cards */
+    .card-selectable {
+        border: 2px solid #dee2e6;
+        transition: all 0.3s ease;
+        min-height: 120px;
+        /* Ensure consistent height */
+    }
+
+    .card-selectable.selected {
+        border-color: #3a9ecb;
+        background-color: rgba(58, 158, 203, 0.1);
+        box-shadow: 0 0 0 2px #3a9ecb;
+    }
+
+    .card-selectable.selected i {
+        color: #3a9ecb !important;
+    }
+
+    .card-selectable.selected span {
+        color: #3a9ecb;
+        font-weight: 600;
+    }
+
+    /* Center icons and text */
+    .card-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+
+    .form-check-label {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .card:hover {
+        border-color: #5bc0de;
+        box-shadow: 0 8px 16px rgba(91, 192, 222, 0.3);
+        transform: translateY(-5px);
+    }
+
+    .form-check-input:checked+.form-check-label .card {
+        border-color: #3a9ecb;
+        box-shadow: 0 8px 16px rgba(58, 158, 203, 0.4);
+    }
+
+    .form-check-input:checked+.form-check-label i {
+        color: #3a9ecb !important;
+    }
+
+    .form-check-input:checked+.form-check-label span {
+        color: #3a9ecb;
+        font-weight: 600 !important;
+    }
+
+    /* Larger checkboxes for better visibility */
+    .form-check-input.position-static {
+        transform: scale(1.5);
+        margin: 10px auto !important;
+    }
 
     /* Wizard Tabs Container */
     .wizard {
@@ -184,132 +256,202 @@
         }
     }
 </style>
-<div class="wizard">
-    <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
-        <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Step 1">
-            <a class="nav-link active rounded-circle mx-auto d-flex align-items-center justify-content-center"
-                href="#step1" id="step1-tab" data-bs-toggle="tab" role="tab" aria-controls="step1"
-                aria-selected="true">
-                <i class="fas fa-folder-open"></i>
-            </a>
-        </li>
-        <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Step 2">
-            <a class="nav-link rounded-circle mx-auto d-flex align-items-center justify-content-center" href="#step2"
-                id="step2-tab" data-bs-toggle="tab" role="tab" aria-controls="step2" aria-selected="false"
-                title="Step 2">
-                <i class="fas fa-briefcase"></i>
-            </a>
-        </li>
-        <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Step 3">
-            <a class="nav-link rounded-circle mx-auto d-flex align-items-center justify-content-center" href="#step3"
-                id="step3-tab" data-bs-toggle="tab" role="tab" aria-controls="step3" aria-selected="false"
-                title="Step 3">
-                <i class="fas fa-star"></i>
-            </a>
-        </li>
-        <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
-            title="Step 4">
-            <a class="nav-link rounded-circle mx-auto d-flex align-items-center justify-content-center" href="#step4"
-                id="step4-tab" data-bs-toggle="tab" role="tab" aria-controls="step4" aria-selected="false"
-                title="Step 4">
-                <i class="fas fa-flag-checkered"></i>
-            </a>
-        </li>
-    </ul>
-    <div class="tab-content" id="myTabContent">
-        <!-- Step 1 -->
-        <div class="tab-pane fade show active mt-3" role="tabpanel" id="step1" aria-labelledby="step1-tab">
-            <h3>What's your dream car model?</h3>
-            <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="model" value="Audi" id="car1" />
-                <label class="form-check-label" for="car1">Audi</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="model" value="BMW" id="car2" />
-                <label class="form-check-label" for="car2">BMW M3</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="model" value="Ford" id="car3" />
-                <label class="form-check-label" for="car3">Ford Mustang</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="model" value="Hunda" id="car4" />
-                <label class="form-check-label" for="car4">Hunda</label>
-            </div>
-            <div class="d-flex justify-content-between mt-4">
-                <span></span>
-                <a class="btn btn-info next">Next <i class="fas fa-angle-right"></i></a>
-            </div>
-        </div>
+<div class="body-div">
+    <div class="containerw">
+        <div class="wizard">
+            <ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+                <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Step 1">
+                    <a class="nav-link active rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                        href="#step1" id="step1-tab" data-bs-toggle="tab" role="tab" aria-controls="step1"
+                        aria-selected="true">
+                        <i class="fas fa-folder-open"></i>
+                    </a>
+                </li>
+                <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Step 2">
+                    <a class="nav-link rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                        href="#step2" id="step2-tab" data-bs-toggle="tab" role="tab" aria-controls="step2"
+                        aria-selected="false" title="Step 2">
+                        <i class="fas fa-briefcase"></i>
+                    </a>
+                </li>
+                <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Step 3">
+                    <a class="nav-link rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                        href="#step3" id="step3-tab" data-bs-toggle="tab" role="tab" aria-controls="step3"
+                        aria-selected="false" title="Step 3">
+                        <i class="fas fa-star"></i>
+                    </a>
+                </li>
+                <li class="nav-item flex-fill" role="presentation" data-bs-toggle="tooltip" data-bs-placement="top"
+                    title="Step 4">
+                    <a class="nav-link rounded-circle mx-auto d-flex align-items-center justify-content-center"
+                        href="#step4" id="step4-tab" data-bs-toggle="tab" role="tab" aria-controls="step4"
+                        aria-selected="false" title="Step 4">
+                        <i class="fas fa-flag-checkered"></i>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <!-- Step 1 -->
+                <div class="tab-pane fade show active mt-2" role="tabpanel" id="step1" aria-labelledby="step1-tab">
+                    <h3 class="mb-3">What's your dream car model?</h3>
 
-        <!-- Step 2 -->
-        <div class="tab-pane fade" role="tabpanel" id="step2" aria-labelledby="step2-tab">
-            <h3>You looking for which car conditions?</h3>
-            <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="car_condition" value="new" id="classic">
-                <label class="form-check-label" for="classic">New</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="car_condition" value="used" id="modern">
-                <label class="form-check-label" for="modern">Used</label>
-            </div>
-            <div class="d-flex justify-content-between mt-3">
-                <a class="btn btn-secondary previous"><i class="fas fa-angle-left"></i> Back</a>
-                <a class="btn btn-info next">Next <i class="fas fa-angle-right"></i></a>
-            </div>
-        </div>
+                    <div class="row">
+                        @php
+                            $models =
+                                $carModels ??
+                                collect([
+                                    'Audi',
+                                    'BMW',
+                                    'Ford',
+                                    'Honda',
+                                    'Mercedes-Benz',
+                                    'Nissan',
+                                    'Toyota',
+                                    'Volkswagen',
+                                    'Hyundai',
+                                    'Kia',
+                                ]);
+                            $columns = $models->split(3); // Split into 3 columns max
+                        @endphp
 
-        <!-- Step 3 -->
-        <div class="tab-pane fade" role="tabpanel" id="step3" aria-labelledby="step3-tab">
-            <h3>Which car color do you prefer?</h3>
-            <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="colors" value="white" id="daily1">
-                <label class="form-check-label" for="daily1">White</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="colors" value="black" id="daily2">
-                <label class="form-check-label" for="daily2">Black</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="colors" value="silver" id="daily3">
-                <label class="form-check-label" for="daily3">Silver</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="colors" value="Other" id="daily4">
-                <label class="form-check-label" for="daily4">Other</label>
-            </div>
-            <div class="d-flex justify-content-between mt-3">
-                <a class="btn btn-secondary previous"><i class="fas fa-angle-left"></i> Back</a>
-                <a class="btn btn-info next">Next <i class="fas fa-angle-right"></i></a>
-            </div>
-        </div>
+                        @foreach ($columns as $column)
+                            <div class="col-md-4">
+                                @foreach ($column as $model)
+                                    <div class="form-check mt-1">
+                                        <input class="form-check-input" type="checkbox" name="model[]"
+                                            value="{{ $model->make ?? $model }}"
+                                            id="car{{ $loop->parent->iteration * 100 + $loop->iteration }}" />
+                                        <label class="form-check-label"
+                                            for="car{{ $loop->parent->iteration * 100 + $loop->iteration }}">{{ $model->make ?? $model }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
 
-        <!-- Step 4 -->
-        <div class="tab-pane fade" role="tabpanel" id="step4" aria-labelledby="step4-tab">
-            <h3>Which car body style do you like most?</h3>
-            <div class="form-check mt-2">
-                <input class="form-check-input" type="checkbox" name="body_type" value="SUV" id="style1" />
-                <label class="form-check-label" for="style1">SUV</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="body_type" value="Sedan" id="style2" />
-                <label class="form-check-label" for="style2">Sedan</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="body_type" value="Coupe" id="style3" />
-                <label class="form-check-label" for="style3">Coupe</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" name="body_type" value="Convertible"
-                    id="style4" />
-                <label class="form-check-label" for="style4">Convertible</label>
-            </div>
-            <div class="d-flex justify-content-between mt-4">
-                <a class="btn btn-secondary previous"><i class="fas fa-angle-left"></i> Back</a>
-                <a class="btn btn-info next">Submit <i class="fas fa-angle-right"></i></a>
+                    <div class="d-flex justify-content-between mt-3">
+                        <span></span>
+                        <a class="btn btn-info next btn-sm">Next <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="tab-pane fade mt-2" role="tabpanel" id="step2" aria-labelledby="step2-tab">
+                    <h3 class="mb-3">You looking for which car conditions?</h3>
+
+                    <div class="row">
+                        @php
+                            $conditions = $carConditions ?? collect(['New', 'Used']);
+                            $conditionColumns = $conditions->split(ceil($conditions->count() / 5));
+                        @endphp
+
+                        @foreach ($conditionColumns as $column)
+                            <div class="col-md-6">
+                                @foreach ($column as $condition)
+                                    <div class="form-check mt-1">
+                                        <input class="form-check-input" type="checkbox" name="car_condition[]"
+                                            value="{{ $condition->car_condition ?? $condition }}"
+                                            id="condition{{ $loop->parent->iteration * 100 + $loop->iteration }}" />
+                                        <label class="form-check-label"
+                                            for="condition{{ $loop->parent->iteration * 100 + $loop->iteration }}">{{ $condition->car_condition ?? $condition }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <a class="btn btn-secondary previous btn-sm"><i class="fas fa-angle-left"></i> Back</a>
+                        <a class="btn btn-info next btn-sm">Next <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="tab-pane fade mt-2" role="tabpanel" id="step3" aria-labelledby="step3-tab">
+                    <h3 class="mb-3">Which car color do you prefer?</h3>
+
+                    <div class="row">
+                        @php
+                            $colors = $carColors ?? collect(['White', 'Black', 'Silver', 'Other']);
+                            $colorColumns = $colors->split(ceil($colors->count() / 5));
+                        @endphp
+
+                        @foreach ($colorColumns as $column)
+                            <div class="col-md-6">
+                                @foreach ($column as $color)
+                                    <div class="form-check mt-1">
+                                        <input class="form-check-input" type="checkbox" name="colors[]"
+                                            value="{{ $color->car_color ?? $color }}"
+                                            id="color{{ $loop->parent->iteration * 100 + $loop->iteration }}" />
+                                        <label class="form-check-label"
+                                            for="color{{ $loop->parent->iteration * 100 + $loop->iteration }}">{{ $color->car_color ?? $color }}</label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-2">
+                        <a class="btn btn-secondary previous"><i class="fas fa-angle-left"></i> Back</a>
+                        <a class="btn btn-info next">Next <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="tab-pane fade mt-2" role="tabpanel" id="step4" aria-labelledby="step4-tab">
+                    <h3 class="mb-3 text-center">Which car body style do you like most?</h3>
+
+                    <div class="row justify-content-center">
+                        @php
+                            $types = $bodyTypes ?? collect(['Sedan', 'SUV', 'Coupe', 'Convertible', 'Hatchback']);
+
+                            // Map body types to appropriate icons
+                            $iconMap = [
+                                'Sedan' => 'fas fa-car-side',
+                                'SUV' => 'fas fa-truck-monster',
+                                'Coupe' => 'fas fa-car',
+                                'Convertible' => 'fas fa-car-crash',
+                                'Hatchback' => 'fas fa-shuttle-van',
+                                'Truck' => 'fas fa-truck-pickup',
+                                'Van' => 'fas fa-shuttle-van',
+                                'Wagon' => 'fas fa-caravan',
+                            ];
+                        @endphp
+
+                        @foreach ($types as $type)
+                            <div class="col-md-4 col-sm-6 mb-2">
+                                <div class="card h-100 text-center card-selectable"
+                                    style="cursor: pointer; border-radius: 15px;"
+                                    data-value="{{ $type->body_type ?? $type }}">
+                                    <div class="card-body p-2">
+                                        <div class="form-check" style="display: block;">
+                                            <input type="hidden" name="body_type[]"
+                                                value="{{ $type->body_type ?? $type }}"
+                                                id="type{{ $loop->index + 1 }}" />
+                                            <label class="form-check-label" for="type{{ $loop->index + 1 }}"
+                                                style="display: block; cursor: pointer; text-align: center;">
+                                                <i class="{{ $iconMap[$type->body_type ?? $type] ?? 'fas fa-car' }}"
+                                                    style="font-size: 2rem; margin: 5px auto; display: block; color: #5bc0de; text-align: center;"></i>
+                                                <span
+                                                    style="display: block; margin-top: 5px; font-weight: 500; font-size: 0.9rem; text-align: center;">
+                                                    {{ $type->body_type ?? $type }}
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <a class="btn btn-secondary previous btn-sm"><i class="fas fa-angle-left"></i> Back</a>
+                        <a class="btn btn-info next btn-sm">Submit <i class="fas fa-angle-right"></i></a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -342,6 +484,28 @@
     $(document).ready(function() {
         updateIconIndicator();
 
+        // Handle card selection for Step 4 (without checkboxes)
+        $('.card-selectable').on('click', function(e) {
+            var card = $(this);
+            var hiddenInput = card.find('input[type="hidden"]');
+            var isSelected = card.hasClass('selected');
+
+            // Toggle selection state
+            if (isSelected) {
+                card.removeClass('selected');
+                // Remove the value from the hidden input
+                hiddenInput.remove();
+            } else {
+                card.addClass('selected');
+                // Add hidden input if not already present
+                if (hiddenInput.length === 0) {
+                    var value = card.data('value');
+                    var name = 'body_type[]';
+                    card.append('<input type="hidden" name="' + name + '" value="' + value + '">');
+                }
+            }
+        });
+
         // Handle next button clicks
         $('.next').on('click', function(e) {
             e.preventDefault();
@@ -363,7 +527,9 @@
                     nextTabId = 'step4';
                     break;
                 case 'step4':
-                    return; // Already at the last step
+                    // Handle form submission here if needed
+                    console.log('Wizard completed'); // For debugging only
+                    return;
             }
 
             // Hide current tab and show next tab
