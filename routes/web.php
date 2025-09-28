@@ -194,3 +194,8 @@ Route::get('/test-auction-filter', function () {
 });
 
 require __DIR__ . '/auth.php';
+
+// Static pages
+Route::view('/privacy-policy', 'static.privacy-policy')->name('privacy.policy');
+Route::view('/terms-conditions', 'static.terms-conditions')->name('terms.conditions');
+Route::view('/contact-us', 'static.contact-us')->name('contact.us');
