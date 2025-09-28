@@ -4,7 +4,7 @@
 
 @section('content')
     <!--=================================
-                            inner banner -->
+                                    inner banner -->
     <section class="inner-intro bg-1 bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
@@ -23,11 +23,11 @@
     </section>
 
     <!--=================================
-                            inner banner -->
+                                    inner banner -->
 
     <!--=================================
-                            contact us -->
-    <section class="space-ptb">
+                                    contact us -->
+    <section class="space-ptb mt-5">
         <div class="container">
             <div class="row">
                 <div class="col-lg-6 mb-5 mb-lg-0">
@@ -162,5 +162,5 @@
         </div>
     </section>
     <!--=================================
-                            contact us -->
+                                    contact us -->
 @endsection
