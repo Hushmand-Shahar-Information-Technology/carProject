@@ -9,19 +9,11 @@ return new class extends Migration {
     {
         Schema::create('bargains', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->nullable(); // Add user_id column
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade'); // Add foreign key
-            $table->string('name')->unique();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('username')->unique();
             $table->string('profile_image')->nullable();
-            $table->string('website')->nullable();
-            $table->string('email')->nullable();
             $table->string('registration_number')->unique();
-            $table->string('phone')->nullable();
-            $table->string('whatsapp')->nullable();
             $table->text('address')->nullable();
-            $table->date('contract_start_date')->nullable();
-            $table->date('contract_end_date')->nullable();
             $table->integer('edit_frequent')->default(0);
             $table->enum('status', ['one-time', 'more-time'])->default('one-time');
 
