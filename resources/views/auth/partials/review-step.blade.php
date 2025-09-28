@@ -30,6 +30,11 @@
                     <strong>Phone:</strong> <span id="review-phone"></span>
                 </div>
             </div>
+            <div class="col-md-6 mb-3" id="review-seller-phone">
+                <div class="review-item">
+                    <strong>Phone:</strong> <span id="review-phone-seller"></span>
+                </div>
+            </div>
             <div class="col-md-6 mb-3" id="review-seller-address">
                 <div class="review-item">
                     <strong>Address:</strong> <span id="review-address"></span>

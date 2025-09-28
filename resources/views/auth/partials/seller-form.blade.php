@@ -13,6 +13,15 @@
         
         <div class="col-md-6 mb-4 form-group">
             <div class="form-floating">
+                <i class="fas fa-phone input-icon"></i>
+                <input id="seller-phone" class="form-control" type="text" name="phone" value="{{ old('phone') }}" required placeholder=" " />
+                <label for="seller-phone">Phone Number</label>
+                <div class="invalid-feedback"></div>
+            </div>
+        </div>
+        
+        <div class="col-md-6 mb-4 form-group">
+            <div class="form-floating">
                 <i class="fas fa-envelope input-icon"></i>
                 <input id="seller-email" class="form-control" type="email" name="email" value="{{ old('email') }}" required placeholder=" " />
                 <label for="seller-email">Email Address</label>

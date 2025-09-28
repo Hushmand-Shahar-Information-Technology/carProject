@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\SellerProfile;
 use App\Models\Bargain;
+use App\Models\Seller;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
 
 class RegisterWizardController extends Controller
 {
@@ -42,7 +44,12 @@ class RegisterWizardController extends Controller
         // Determine role from request
         $role = $request->input('role');
         
+        // Log the role for debugging
+        Log::info('Registration attempt with role: ' . $role);
+        Log::info('Request data: ' . json_encode($request->all()));
+        
         if (!in_array($role, ['car_seller', 'car_seeker'])) {
+            Log::error('Invalid role selected: ' . $role);
             return response()->json([
                 'errors' => ['role' => ['Invalid role selected.']]
             ], 422);
@@ -52,6 +59,7 @@ class RegisterWizardController extends Controller
         if ($role === 'car_seller') {
             $validator = Validator::make($request->all(), [
                 'username' => ['required', 'string', 'max:255'],
+                'phone' => ['required', 'string', 'max:20'],
                 'address' => ['required', 'string'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
                 'password' => ['required', 'confirmed', Password::defaults()],
@@ -70,11 +78,11 @@ class RegisterWizardController extends Controller
         }
 
         if ($validator->fails()) {
+            Log::error('Validation failed: ' . json_encode($validator->errors()));
             return response()->json([
                 'errors' => $validator->errors()
             ], 422);
         }
-
         try {
             // Create user
             $userData = [
@@ -82,42 +90,65 @@ class RegisterWizardController extends Controller
                 'password' => Hash::make($request->password),
                 'role' => $role,
             ];
-
+            
+           
             // Add name based on role
             if ($role === 'car_seller') {
                 $userData['name'] = $request->username;
             } else {
                 $userData['name'] = $request->full_name;
             }
-
+ 
             $user = User::create($userData);
-            Log::info('User created: ' . $user->id);
-
+            Log::info('User created: ' . $user->id . ' with role: ' . $user->role);
             // Create profile based on role
             if ($role === 'car_seller') {
+               
+                Log::info('Creating seller profile for user: ' . $user->id);
                 $profileImagePath = null;
                 if ($request->hasFile('profile_image')) {
                     $profileImagePath = $request->file('profile_image')->store('profile_images', 'public');
                 }
-
                 // Auto-generate registration number
                 $registrationNumber = 'REG' . date('Ymd') . strtoupper(substr(uniqid(), -6));
 
-                $sellerProfile = SellerProfile::create([
-                    'user_id' => $user->id,
-                    'username' => $request->username,
-                    'profile_image' => $profileImagePath,
-                    'address' => $request->address,
-                    'registration_number' => $registrationNumber,
-                ]);
-                Log::info('Seller profile created: ' . $sellerProfile->id);
+                try {
+                    $sellerProfile = Seller::create([
+                        'user_id' => $user->id,
+                        'seller_name' => $request->username,
+                        'phone' => $request->phone,
+                        'address' => $request->address,
+                    ]);
+                   
+                    Log::info('Seller profile created: ' . $sellerProfile->id);
+                } catch (QueryException $e) {
+                    Log::error('Failed to create seller profile: ' . $e->getMessage());
+                    // Return a more specific error message to the user
+                    return response()->json([
+                        'errors' => ['database' => ['Failed to create seller profile. Database connection issue.']]
+                    ], 422);
+                } catch (\Exception $e) {
+                    Log::error('Failed to create seller profile: ' . $e->getMessage());
+                    // Return a more specific error message to the user
+                    return response()->json([
+                        'errors' => ['database' => ['Failed to create seller profile. Please try again.']]
+                    ], 422);
+                }
 
-                // Create initial bargain record for the seller
-                $bargain = Bargain::create([
-                    'seller_id' => $user->id,
-                    'status' => 'open',
-                ]);
-                Log::info('Bargain created: ' . $bargain->id);
+                try {
+                    // Create initial bargain record for the seller
+                    $bargain = Bargain::create([
+                        'seller_id' => $user->id,
+                        'status' => 'open',
+                    ]);
+                    Log::info('Bargain created: ' . $bargain->id);
+                } catch (QueryException $e) {
+                    Log::error('Failed to create bargain: ' . $e->getMessage());
+                    // Continue with registration even if bargain creation fails
+                } catch (\Exception $e) {
+                    Log::error('Failed to create bargain: ' . $e->getMessage());
+                    // Continue with registration even if bargain creation fails
+                }
             }
 
             // Fire registered event
@@ -128,9 +159,17 @@ class RegisterWizardController extends Controller
 
             return response()->json([
                 'success' => true,
-                'redirect' => route('dashboard'),
+                'redirect' => route('home.index'),
                 'message' => 'Registration successful! Welcome to our platform.'
             ]);
+        } catch (QueryException $e) {
+            // Log database errors specifically
+            Log::error('Database error during registration: ' . $e->getMessage());
+            Log::error('Database error trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'errors' => ['database' => ['A database error occurred during registration. Please check your database connection.']]
+            ], 422);
         } catch (\Exception $e) {
             // Log the error for debugging
             Log::error('Registration error: ' . $e->getMessage());

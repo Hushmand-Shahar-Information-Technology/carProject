@@ -11,7 +11,6 @@ return new class extends Migration
      */
     public function up(): void
     {
-        if (!Schema::hasTable('seller_profiles')) {
             Schema::create('seller_profiles', function (Blueprint $table) {
                 $table->id();
                 $table->unsignedBigInteger('user_id')->unique();
@@ -22,7 +21,6 @@ return new class extends Migration
                 $table->timestamps();
                 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
-        }
     }
 
     /**

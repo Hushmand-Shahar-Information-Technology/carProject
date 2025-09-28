@@ -22,6 +22,7 @@ $(document).ready(function() {
             selectedRole = urlType === 'seller' ? 'car_seller' : 'car_seeker';
             $(`[data-role="${selectedRole}"]`).addClass('selected');
             $roleAutoSelected.show().find('.role-name').text(urlType === 'seller' ? 'Car Seller' : 'Car Seeker');
+            formData.role = selectedRole; // Also store in formData
             setTimeout(() => goToStep(2), 100); // Small delay to ensure DOM is ready
         }
         
@@ -30,6 +31,13 @@ $(document).ready(function() {
             $roleCards.removeClass('selected');
             $(this).addClass('selected');
             selectedRole = $(this).data('role');
+            formData.role = selectedRole; // Store role in formData immediately
+            
+            // Update URL immediately when role is selected
+            const url = new URL(window.location);
+            const roleType = selectedRole === 'car_seller' ? 'seller' : 'seeker';
+            url.searchParams.set('type', roleType);
+            window.history.pushState({}, '', url);
         });
         
         // Navigation - using event delegation
@@ -58,6 +66,8 @@ $(document).ready(function() {
             
             if (fileName === 'profile_image') {
                 handleProfileImagePreview(files[0]);
+                // Store the file in formData
+                formData.profile_image = files[0];
             }
             captureFormData();
         });
@@ -157,6 +167,16 @@ $(document).ready(function() {
                     $('#seller-address').closest('.form-group').find('.error-message').remove();
                 }
                 
+                if (!$('#seller-phone').val()) {
+                    isValid = false;
+                    $('#seller-phone').addClass('is-invalid');
+                    $('#seller-phone').closest('.form-group').find('.error-message').remove();
+                    $('#seller-phone').closest('.form-group').append('<div class="error-message">Phone is required</div>');
+                } else {
+                    $('#seller-phone').removeClass('is-invalid');
+                    $('#seller-phone').closest('.form-group').find('.error-message').remove();
+                }
+                
                 // Validate password confirmation
                 const password = $('#seller-password').val();
                 const passwordConfirmation = $('#seller-password-confirmation').val();
@@ -235,6 +255,10 @@ $(document).ready(function() {
                     $('#seeker-password-confirmation').removeClass('is-invalid');
                     $('#seeker-password-confirmation').closest('.form-group').find('.error-message').remove();
                 }
+            } else {
+                // If no role is selected, show error
+                isValid = false;
+                showError('Please select a role first');
             }
         }
         
@@ -246,11 +270,12 @@ $(document).ready(function() {
         // Capture data based on selected role
         if (selectedRole === 'car_seller') {
             formData.username = $('#seller-username').val();
+            formData.phone = $('#seller-phone').val();
             formData.email = $('#seller-email').val();
             formData.password = $('#seller-password').val();
             formData.password_confirmation = $('#seller-password-confirmation').val();
             formData.address = $('#seller-address').val();
-            // profile_image is handled separately
+            // profile_image is handled separately in file input change event
         } else if (selectedRole === 'car_seeker') {
             formData.full_name = $('#seeker-full-name').val();
             formData.phone = $('#seeker-phone').val();
@@ -327,11 +352,13 @@ $(document).ready(function() {
         if (selectedRole === 'car_seller') {
             $('#review-name').text(formData.username || '');
             $('#review-address').text(formData.address || '');
+            $('#review-phone-seller').text(formData.phone || '');
             
             // Show seller section, hide seeker section
             $('#review-seller-details').show();
             $('#review-seeker-details').hide();
             $('#review-seller-address').show();
+            $('#review-seller-phone').show();
             $('#review-seeker-phone').hide();
         } else {
             $('#review-name').text(formData.full_name || '');
@@ -343,6 +370,7 @@ $(document).ready(function() {
             $('#review-seeker-details').show();
             $('#review-seller-address').hide();
             $('#review-seeker-phone').show();
+            $('#review-seller-phone').hide();
         }
         
         // Update profile image preview
@@ -365,13 +393,24 @@ $(document).ready(function() {
         // Add all form data to FormData object
         $.each(formData, function(key, value) {
             if (value !== undefined && value !== null) {
-                submitData.append(key, value);
+                // Handle file inputs specially
+                if (key === 'profile_image' && value instanceof File) {
+                    submitData.append(key, value);
+                } else if (key !== 'profile_image') {
+                    submitData.append(key, value);
+                }
             }
         });
         
-        // Add role to form data if not already present
-        if (!submitData.get('role') && selectedRole) {
+        // Ensure role is always included
+        if (selectedRole) {
             submitData.append('role', selectedRole);
+        }
+        
+        // Debug: Log form data
+        console.log('Form data to be submitted:');
+        for (let pair of submitData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
         }
         
         // Disable submit button and show spinner
@@ -394,8 +433,10 @@ $(document).ready(function() {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             },
             success: function(response) {
+                console.log('Registration response:', response);
                 if (response.success) {
-                    window.location.href = response.redirect;
+                    // Redirect to the home page
+                    window.location.href = response.redirect || '/';
                 } else {
                     showError(response.message || 'Registration failed');
                     // Re-enable submit button
@@ -404,6 +445,7 @@ $(document).ready(function() {
                 }
             },
             error: function(xhr) {
+                console.log('Registration error:', xhr);
                 // Re-enable submit button
                 $submitBtn.prop('disabled', false);
                 $submitBtn.html(originalText);
@@ -428,7 +470,7 @@ $(document).ready(function() {
             'password_confirmation': selectedRole === 'car_seller' ? 'seller-password-confirmation' : 'seeker-password-confirmation',
             'address': 'seller-address',
             'full_name': 'seeker-full-name',
-            'phone': 'seeker-phone'
+            'phone': selectedRole === 'car_seller' ? 'seller-phone' : 'seeker-phone'
         };
         
         $.each(errors, function(field, messages) {

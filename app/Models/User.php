@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role', // Add role to fillable attributes
     ];
 
     /**
@@ -60,5 +61,10 @@ class User extends Authenticatable
     {
         return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')
             ->orderBy('created_at', 'desc');
+    }
+
+    public function seller()
+    {
+        return $this->hasOne(Seller::class);
     }
 }
