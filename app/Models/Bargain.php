@@ -2,48 +2,41 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
-class Bargain extends BaseModel
+class Bargain extends Model
 {
     use HasFactory;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
-        'name',
-        'username',
-        'profile_image',
-        'website',
-        'email',
-        'registration_number',
-        'phone',
-        'whatsapp',
-        'address',
-        'edit_frequent',
+        'seller_id',
+        'seeker_id',
+        'details',
+        'price',
         'status',
-        'contract_start_date',
-        'contract_end_date',
-        'registration_status',
-        'restriction_count',
-        'status_reason',
-        'status_updated_at',
-        'restriction_starts_at',
-        'restriction_ends_at',
-        'restriction_duration_days',
-        'user_id', // Add user_id to fillable attributes
     ];
 
-    protected $dates = ['contract_start_date', 'contract_end_date', 'status_updated_at', 'restriction_starts_at', 'restriction_ends_at'];
+    /**
+     * Get the seller (user) for the bargain.
+     */
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'seller_id');
+    }
 
-    protected $casts = [
-        'contract_start_date' => 'date:Y-m-d',
-        'contract_end_date' => 'date:Y-m-d',
-        'status_updated_at' => 'datetime',
-        'restriction_starts_at' => 'datetime',
-        'restriction_ends_at' => 'datetime',
-        'restriction_count' => 'integer',
-        'restriction_duration_days' => 'integer',
-    ];
+    /**
+     * Get the seeker (user) for the bargain.
+     */
+    public function seeker()
+    {
+        return $this->belongsTo(User::class, 'seeker_id');
+    }
 
     public function user()
     {
