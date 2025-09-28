@@ -4,7 +4,7 @@
 
 @section('content')
     <!--=================================
-                                    inner banner -->
+                                        inner banner -->
     <section class="inner-intro bg-1 bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
@@ -23,10 +23,10 @@
     </section>
 
     <!--=================================
-                                    inner banner -->
+                                        inner banner -->
 
     <!--=================================
-                                    contact us -->
+                                        contact us -->
     <section class="space-ptb mt-5">
         <div class="container">
             <div class="row">
@@ -45,7 +45,7 @@
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">Our Address</h6>
-                                            <p class="mb-0">220E Front St. Burlington NC 27215</p>
+                                            <p class="mb-0">Kart-e-Mamorin, Khushal khan Mena, Kabul, Afghanistan</p>
                                         </div>
                                     </div>
                                 </li>
@@ -57,7 +57,7 @@
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">Phone Number</h6>
-                                            <p class="mb-0">077 9600 2750 / 072 806 3532</p>
+                                            <p class="mb-0">0 780 480 980 / 072 806 3532</p>
                                         </div>
                                     </div>
                                 </li>
@@ -69,7 +69,7 @@
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">Email Address</h6>
-                                            <p class="mb-0">support@motarsal.com</p>
+                                            <p class="mb-0">topmotor@gmail.com</p>
                                         </div>
                                     </div>
                                 </li>
@@ -81,7 +81,7 @@
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">Working Hours</h6>
-                                            <p class="mb-0">Mon - Sat 8.00 - 18.00. Friday CLOSED</p>
+                                            <p class="mb-0">7/24</p>
                                         </div>
                                     </div>
                                 </li>
@@ -162,5 +162,5 @@
         </div>
     </section>
     <!--=================================
-                                    contact us -->
+                                        contact us -->
 @endsection
