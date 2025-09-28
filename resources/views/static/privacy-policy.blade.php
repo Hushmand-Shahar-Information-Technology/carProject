@@ -4,17 +4,17 @@
 
 @section('content')
     <!--=================================
-            inner banner -->
+                inner banner -->
     <section class="inner-intro bg-1 bg-overlay-black-70">
         <div class="container">
             <div class="row text-center intro-title">
                 <div class="col-md-6 text-md-start d-inline-block">
-                    <h1 class="text-white">Bargain List</h1>
+                    <h1 class="text-white">Privacy Policy</h1>
                 </div>
                 <div class="col-md-6 text-md-end float-end">
                     <ul class="page-breadcrumb">
                         <li><a href="#"><i class="fa fa-home"></i> Home</a> <i class="fa fa-angle-double-right"></i></li>
-                        <li><span>Bargain List</span></li>
+                        <li><span>Privacy Policy</span></li>
                     </ul>
                 </div>
             </div>
@@ -22,10 +22,10 @@
     </section>
 
     <!--=================================
-            inner banner -->
+                inner banner -->
 
     <!--=================================
-            privacy policy -->
+                privacy policy -->
     <section class="space-ptb">
         <div class="container">
             <div class="row">
@@ -106,5 +106,5 @@
         </div>
     </section>
     <!--=================================
-            privacy policy -->
+                privacy policy -->
 @endsection
