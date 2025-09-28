@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             DefaultUserSeeder::class,
             ShieldSeeder::class,
             CarSeeder::class,
-            BargainSeeder::class,
+            // BargainSeeder::class,
             // AuctionSeeder::class,
         ]);
     }
