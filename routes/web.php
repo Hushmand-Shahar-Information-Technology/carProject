@@ -48,7 +48,7 @@ Route::view('/otp', 'auth.otp');
 Route::post('/auctions', [AuctionController::class, 'store'])->name('auctions.store');
 Route::post('/auctions/{id}/end', [AuctionController::class, 'endAuction'])->name('auctions.end');
 
-Route::view('/wizard', 'home.wizard');
+Route::get('/wizard', [HomeController::class, 'wizard'])->name('home.wizard');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -60,6 +60,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [ProfileController::class, 'show'])->name('user.profile');
     Route::get('/user/profile/bargain/{id}/cars', [ProfileController::class, 'getBargainCars'])->name('user.profile.bargain.cars');
     Route::post('/set-profile-mode', [ProfileController::class, 'setProfileMode'])->name('profile.set-mode');
+    Route::get('/api/profile-mode', [ProfileController::class, 'getProfileMode'])->name('profile.get-mode');
+    // Test routes removed
 });
 
 // Language switch route
@@ -124,7 +126,7 @@ Route::get('/test-bargain-show/{id}', function ($id) {
 Route::prefix('bargains')->group(function () {
     Route::get('/', [BargainController::class, 'index'])->name('bargains.index');
     Route::get('/data', [BargainController::class, 'getData'])->name('bargains.data');
-    Route::get('/create', [BargainController::class, 'create'])->name('bargains.create');
+    Route::get('/create', [BargainController::class, 'create'])->name('bargains.create')->middleware('prevent.bargain.registration');
     Route::post('/store', [BargainController::class, 'store'])->name('bargains.store');
     Route::get('/edit/{id}', [BargainController::class, 'edit'])->name('bargains.edit');
     Route::put('/update/{id}', [BargainController::class, 'update'])->name('bargains.update');
@@ -184,7 +186,7 @@ Route::get('/test-auction-filter', function () {
             $q->where('status', 'active')->latest();
         }])
         ->get();
-    
+
     return response()->json([
         'count' => $cars->count(),
         'cars' => $cars->toArray()
@@ -192,3 +194,8 @@ Route::get('/test-auction-filter', function () {
 });
 
 require __DIR__ . '/auth.php';
+
+// Static pages
+Route::view('/privacy-policy', 'static.privacy-policy')->name('privacy.policy');
+Route::view('/terms-conditions', 'static.terms-conditions')->name('terms.conditions');
+Route::view('/contact-us', 'static.contact-us')->name('contact.us');

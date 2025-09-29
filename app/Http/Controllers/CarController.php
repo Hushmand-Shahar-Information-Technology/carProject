@@ -116,7 +116,7 @@ class CarController extends Controller
 
         return response()->json($cars);
     }
- /**
+    /**
      * Display the rent car index.
      */
     public function rentIndex()
@@ -202,7 +202,7 @@ class CarController extends Controller
     public function filterAuction(Request $request)
     {
         $cars = Car::query()
-            ->with(['bargain', 'auctions' => function($query) {
+            ->with(['bargain', 'auctions' => function ($query) {
                 $query->where('status', 'active')->latest();
             }])
             // Show ONLY cars that have active auctions
@@ -310,6 +310,18 @@ class CarController extends Controller
                 if ($bargain->registration_status === 'restricted' && $bargain->hasActiveRestriction()) {
                     return redirect()->back()->with('error', 'Your bargain is currently restricted until ' . $bargain->restriction_ends_at->format('M d, Y') . '. You cannot register cars during this period.');
                 }
+            }
+        }
+
+        // Check if user is currently in bargain mode (trying to register a new bargain)
+        if (session('profile_mode') === 'bargain' && session('active_bargain_id')) {
+            // Get the active bargain
+            $activeBargain = Auth::user()->bargains()->find(session('active_bargain_id'));
+
+            // If user is in bargain mode, redirect them to profile with SweetAlert message
+            if ($activeBargain) {
+                return redirect()->route('user.profile', ['bargain_id' => $activeBargain->id])
+                    ->with('error', 'You are currently in bargain mode. To register a new bargain, please switch to user profile mode first.');
             }
         }
 

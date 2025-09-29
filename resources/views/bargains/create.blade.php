@@ -145,7 +145,7 @@
                                     <label class="text-dark">Contract Start Date</label>
                                     <input type="date" name="contract_start_date"
                                         class="form-control @error('contract_start_date') is-invalid @enderror"
-                                        value="{{ old('contract_start_date', optional($bargain->contract_start_date)->format('Y-m-d')) }}">
+                                        value="{{ old('contract_start_date', $bargain->contract_start_date ? $bargain->contract_start_date->format('Y-m-d') : '') }}">
                                     @error('contract_start_date')
                                         <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
@@ -155,7 +155,7 @@
                                     <label class="text-dark">Contract End Date</label>
                                     <input type="date" name="contract_end_date"
                                         class="form-control @error('contract_end_date') is-invalid @enderror"
-                                        value="{{ old('contract_end_date', optional($bargain->contract_end_date)->format('Y-m-d')) }}">
+                                        value="{{ old('contract_end_date', $bargain->contract_end_date ? $bargain->contract_end_date->format('Y-m-d') : '') }}">
                                     @error('contract_end_date')
                                         <div class="invalid-feedback text-danger">{{ $message }}</div>
                                     @enderror
