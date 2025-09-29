@@ -1,4 +1,4 @@
-<div class="wizard-step" id="step-2">
+<div class="wizard-step"  id="step-2-seller">
     <h2 class="fw-bold mb-4 text-center">Seller Information</h2>
     
     <div class="row">
@@ -47,7 +47,7 @@
             </div>
         </div>
         
-        <div class="col-md-12 mb-4 form-group">
+        <div class="col-md-6 mb-4 form-group">
             <div class="form-floating">
                 <i class="fas fa-map-marker-alt input-icon"></i>
                 <input id="seller-address" class="form-control" type="text" name="address" value="{{ old('address') }}" required placeholder=" " />
@@ -56,7 +56,7 @@
             </div>
         </div>
         
-        <div class="col-md-6 mb-4 form-group">
+        <div class="col-md-3 mb-4 form-group">
             <label class="form-label">Profile Image (Optional)</label>
             <input type="file" class="form-control file-input" name="profile_image" accept="image/*" />
             <div class="form-text">Upload your profile image (max 5MB)</div>
