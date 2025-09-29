@@ -1,4 +1,4 @@
-<div class="wizard-step" id="step-2">
+<div class="wizard-step" id="step-2-seeker">
     <h2 class="fw-bold mb-4 text-center">Seeker Information</h2>
     
     <div class="row">
@@ -7,15 +7,6 @@
                 <i class="fas fa-user input-icon"></i>
                 <input id="seeker-full-name" class="form-control" type="text" name="full_name" value="{{ old('full_name') }}" required placeholder=" " />
                 <label for="seeker-full-name">Full Name</label>
-                <div class="invalid-feedback"></div>
-            </div>
-        </div>
-        
-        <div class="col-md-6 mb-4 form-group">
-            <div class="form-floating">
-                <i class="fas fa-phone input-icon"></i>
-                <input id="seeker-phone" class="form-control" type="text" name="phone" value="{{ old('phone') }}" required placeholder=" " />
-                <label for="seeker-phone">Phone Number</label>
                 <div class="invalid-feedback"></div>
             </div>
         </div>
