@@ -62,6 +62,81 @@
     <!-- Additional styles will be added here by pages -->
     @stack('styles')
 
+    <!-- Custom styles for navigation -->
+    <style>
+        .menu-links {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .menu-links li {
+            list-style: none;
+            margin: 0 10px;
+        }
+
+        .menu-links a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            padding: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .menu-links a:hover,
+        .menu-links .active a {
+            color: #db2d2e;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            padding: 10px 0 !important;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #db2d2e !important;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .menu-list-items .row {
+                flex-direction: column;
+            }
+
+            .menu-logo {
+                margin-bottom: 15px;
+            }
+
+            .menu-links {
+                justify-content: center;
+            }
+
+            .menu-links li {
+                margin: 5px 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-links {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .menu-links li {
+                margin: 8px 0;
+                width: 100%;
+            }
+
+            .menu-links a {
+                display: block;
+                padding: 8px 0;
+            }
+        }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         // Axios CSRF setup
@@ -164,52 +239,53 @@
             <nav id="menu" class="mega-menu">
                 <!-- menu list items container -->
                 <section class="menu-list-items">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 position-relative">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-md-12 position-relative d-flex justify-content-between align-items-center">
                                 <!-- menu logo -->
-                                <ul class="menu-logo">
+                                <ul class="menu-logo mb-0">
                                     <li>
                                         <a href="/"><img id="logo_img"
-                                                src="{{ asset('images/logo-light.png') }}" alt="logo"> </a>
+                                                src="{{ asset('images/logo-light.png') }}" alt="logo"
+                                                style="height: 50px;"> </a>
                                     </li>
                                 </ul>
-                                <ul class="menu-links">
-                                    <li class="{{ request()->routeIs('home.index') ? 'active' : '' }}">
-                                        <a href="/home">Home</a>
-                                    </li>
-                                    <li class="dropdown"><a href="javascript:void(0)"> Car <i
-                                                class="fa fa-angle-down"></i></a>
-                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
-                                            <li><a href="{{ route('car.create') }}">Car Register</a></li>
-                                            <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
-                                            <li><a href="{{ route('car.index') }}">Car Listing</a></li>
-                                            <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
-                                            <li><a href="{{ route('car.auction') }}">Car Auction</a></li>
-                                        </ul>
-                                    </li>
-                                    {{-- Dropdown for Bargains --}}
-                                    <li class="dropdown" id="bargains-dropdown"><a href="javascript:void(0)">
-                                            Bargains <i class="fa fa-angle-down"></i></a>
-                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
-                                            <li><a href="{{ route('bargains.create') }}"
-                                                    class="{{ request()->routeIs('bargains.create') ? 'active' : '' }}">
-                                                    Bargain Register</a></li>
-                                            <li><a href="{{ route('bargains.index') }}"
-                                                    class="{{ request()->routeIs('bargains.index') ? 'active' : '' }}">Bargain
-                                                    List</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
-                                        <a href="{{ route('promotions.index') }}">Promoted</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
-                                        <a href="{{ route('user.profile') }}">Profile</a>
-                                    </li>
 
-                                    <li class="{{ request()->routeIs('car.compare') ? 'active' : '' }}">
+                                <!-- Main menu -->
+                                <ul class="menu-links d-flex flex-wrap mb-0" style="list-style: none;">
+                                    <li class="{{ request()->routeIs('home.index') ? 'active' : '' }} mx-2">
+                                        <a href="/home" class="nav-link">Home</a>
+                                    </li>
+                                    <!-- Car menu items -->
+                                    <li class="{{ request()->routeIs('car.create') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.create') }}" class="nav-link">Car Register</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.index') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.index') }}" class="nav-link">Car Listing</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.rent') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.rent') }}" class="nav-link">Rent a Car</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.auction') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.auction') }}" class="nav-link">Car Auction</a>
+                                    </li>
+                                    <!-- Bargain menu items -->
+                                    <li class="{{ request()->routeIs('bargains.create') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('bargains.create') }}" class="nav-link">Bargain
+                                            Register</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('bargains.index') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('bargains.index') }}" class="nav-link">Bargain List</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('promotions.index') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('promotions.index') }}" class="nav-link">Promoted</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('user.profile') }}" class="nav-link">Profile</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.compare') ? 'active' : '' }} mx-2">
                                         <a href="{{ route('car.compare') }}"
-                                            class="position-relative text-decoration-none">
+                                            class="nav-link position-relative text-decoration-none">
                                             <i class="fa fa-exchange-alt fa-lg"></i>
                                             <span id="compare-count"
                                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
@@ -218,48 +294,13 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <div class="search-top">
-                                            <a class="search-btn not_click d-none d-lg-block"
-                                                href="javascript:void(0);">
-                                                <i class="fa-solid fa-search"></i>
-                                            </a>
-                                            <div class="search-box not-click">
-                                                <form id="searchForm"
-                                                    action="/&quot; method=&quot;GET&quot;&gt;
-                                                    <form id=&quot;searchForm&quot; action=&quot;/&quot; method=&quot;GET&quot;&gt;
-                                                        <div class="row">
-                                                    @php
-                                                        $years = range(1990, now()->year);
-                                                    @endphp
-                                                    <x-search-option name="Make[]" label="Make"
-                                                        :options="$distinctValues['make']" />
-                                                    <x-search-option name="Model[]" label="Models"
-                                                        :options="$distinctValues['models']" />
-                                                    <x-search-option name="Year[]" label="Years"
-                                                        :options="$years" />
-                                                    <x-search-option name="Body[]" label="Body Styles"
-                                                        :options="$distinctValues['body_type']" />
-                                                    <x-search-option name="Color[]" label="Color"
-                                                        :options="$distinctValues['colors']" />
-
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="text-center">
-                                                            <button class="button red" type="submit">Search</button>
-                                                        </div>
-                                                    </div>
-                                            </div>
-                                            </form>
-                                        </div>
+                                </ul>
                             </div>
-                            </li>
-
                         </div>
                     </div>
-        </div>
-        </section>
-        </nav>
-        <!-- menu end -->
+                </section>
+            </nav>
+            <!-- menu end -->
         </div>
     </header>
 
