@@ -19,6 +19,23 @@ class HomeController extends Controller
         return view('home.index', compact('latestBargains', 'promotedCars', 'latestCars', 'promotedBargains'));
     }
 
+    public function wizard()
+    {
+        // Get distinct car models from the database
+        $carModels = Car::select('make')->distinct()->orderBy('make')->get();
+
+        // Get distinct car conditions from the database
+        $carConditions = Car::select('car_condition')->distinct()->orderBy('car_condition')->get();
+
+        // Get distinct car colors from the database
+        $carColors = Car::select('car_color')->distinct()->orderBy('car_color')->get();
+
+        // Get distinct body types from the database
+        $bodyTypes = Car::select('body_type')->distinct()->orderBy('body_type')->get();
+
+        return view('home.wizard', compact('carModels', 'carConditions', 'carColors', 'bodyTypes'));
+    }
+
     public function filter(Request $request)
     {
         $filters = $request->input('filters', []);
@@ -66,14 +83,14 @@ class HomeController extends Controller
                 $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
             });
         })
-        ->with(['promotions' => function ($query) {
-            $query->where(function ($q) {
-                $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
-            })->latest('ends_at');
-        }])
-        ->orderByDesc('id')
-        ->take(6)
-        ->get();
+            ->with(['promotions' => function ($query) {
+                $query->where(function ($q) {
+                    $q->whereNull('ends_at')->orWhere('ends_at', '>', now());
+                })->latest('ends_at');
+            }])
+            ->orderByDesc('id')
+            ->take(6)
+            ->get();
 
         return $promotedCars;
     }
