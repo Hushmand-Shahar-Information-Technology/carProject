@@ -116,176 +116,348 @@
                 margin-bottom: 25px;
             }
         }
+
+        /* Hero section styles */
+        .hero-section {
+            min-height: 900px;
+        }
+
+        .service-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+        }
+
+        .card-img-container {
+            transition: all 0.3s ease;
+        }
+
+        .card-img-container:hover {
+            transform: scale(1.05);
+        }
+
+        .card-img-container:hover .hover-overlay {
+            opacity: 1 !important;
+        }
+
+        .transition-opacity {
+            transition: opacity 0.3s ease;
+        }
+
+        .hero-content h1 {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content p {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Hero background slider */
+        .hero-background-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-background-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-background-slide.active {
+            opacity: 1;
+        }
+
+        .hero-background-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-background-slide .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Slider indicators */
+        .hero-slider-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+
+        .hero-slider-indicators .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero-slider-indicators .indicator.active {
+            background-color: #fff;
+        }
     </style>
     <!--=================================
-                                                                                                                                         rev slider -->
-    <section class="slider">
-        <div id="rev_slider_2_1_wrapper" class="rev_slider_wrapper fullwidthbanner-container" data-alias="car-dealer-03"
-            style="margin:0px auto;background-color:transparent;padding:0px;margin-top:0px;margin-bottom:0px;">
-            <!-- START REVOLUTION SLIDER 5.2.6 fullwidth mode -->
-            <div id="rev_slider_2_1" class="rev_slider fullwidthabanner" style="display:none;" data-version="5.2.6">
-                <ul> <!-- SLIDE  -->
-                    <li data-index="rs-5" data-transition="fade" data-slotamount="default" data-hideafterloop="0"
-                        data-hideslideonmobile="off" data-easein="default" data-easeout="default" data-masterspeed="default"
-                        data-thumb="{{ asset('revolution/assets/100x50_3176d-road-bg.jpg') }}" data-rotate="0"
-                        data-saveperformance="off" data-title="Slide" data-param1="" data-param2="" data-param3=""
-                        data-param4="" data-param5="" data-param6="" data-param7="" data-param8="" data-param9=""
-                        data-param10="" data-description="">
-                        <!-- MAIN IMAGE -->
-                        <img src="{{ asset('revolution/assets/3176d-road-bg.jpg') }}" alt=""
-                            data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat" class="rev-slidebg"
-                            data-no-retina>
-                        <!-- LAYERS -->
+                                                                hero section -->
+    <section class="hero-section position-relative overflow-hidden " style="min-height: 900px; padding-top: 8rem;">
+        <div class="hero-background-slider">
+            <div class="hero-background-slide active">
+                <img src="{{ asset('images/bg/01.jpg') }}" alt="TopMotor Hero 1">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/02.jpg') }}" alt="TopMotor Hero 2">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/03.jpg') }}" alt="TopMotor Hero 3">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/04.jpg') }}" alt="TopMotor Hero 4">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/05.jpg') }}" alt="TopMotor Hero 5">
+                <div class="overlay"></div>
+            </div>
+        </div>
 
-                        <!-- LAYER NR. 1 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-5-layer-6" data-x="center" data-hoffset=""
-                            data-y="270" data-width="['auto']" data-height="['auto']" data-transform_idle="o:1;"
-                            data-transform_in="y:[-100%];z:0;rZ:35deg;sX:1;sY:1;skX:0;skY:0;s:800;e:Power4.easeInOut;"
-                            data-transform_out="opacity:0;s:300;" data-mask_in="x:0px;y:0px;" data-start="1400"
-                            data-splitin="chars" data-splitout="none" data-responsive_offset="on" data-elementdelay="0.05"
-                            style="z-index: 5; white-space: nowrap; font-size: 30px; line-height: 30px; font-weight: 400; color: rgba(255, 255, 255, 1.00);font-family:Roboto;text-align:center;text-transform:uppercase;">
-                            Welcome to the most stunning </div>
+        <div class="hero-slider-indicators">
+            <div class="indicator active" data-slide="0"></div>
+            <div class="indicator" data-slide="1"></div>
+            <div class="indicator" data-slide="2"></div>
+            <div class="indicator" data-slide="3"></div>
+            <div class="indicator" data-slide="4"></div>
+        </div>
 
-                        <!-- LAYER NR. 2 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-5-layer-7" data-x="center" data-hoffset=""
-                            data-y="center" data-voffset="-140" data-width="['auto']" data-height="['auto']"
-                            data-transform_idle="o:1;"
-                            data-transform_in="y:[-100%];z:0;rZ:35deg;sX:1;sY:1;skX:0;skY:0;s:800;e:Power4.easeInOut;"
-                            data-transform_out="opacity:0;s:300;" data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
-                            data-start="1700" data-splitin="chars" data-splitout="none" data-responsive_offset="on"
-                            data-elementdelay="0.05"
-                            style="z-index: 6; white-space: nowrap; font-size: 70px; line-height: 70px; font-weight: 700; color: rgba(255, 255, 255, 1.00);font-family:Roboto;text-align:center;text-transform:uppercase;">
-                            Car dealer website</div>
+        <div class="container position-relative h-100 d-flex align-items-center" style="z-index: 2;">
+            <div class="row w-100 align-items-center">
+                <!-- Hero Text - Left Side -->
+                <div class="col-lg-6">
+                    <div class="hero-content text-white py-5 animate__animated animate__fadeInLeft">
+                        <h1 class="display-2 fw-bold mb-4">TOP<span class="text-danger">MOTOR</span></h1>
+                        <p class="lead fs-3 mb-4">Your Ultimate Destination for Premium Vehicles</p>
+                        <p class="fs-5 mb-5">Discover the finest selection of cars, from luxury sedans to rugged SUVs.
+                            Experience unmatched quality and service at TopMotor.</p>
+                        <div class="d-flex gap-3">
+                            <a href="{{ route('car.index') }}" class="btn btn-danger btn-lg px-5 py-3 rounded-pill">Explore
+                                Cars</a>
+                            <a href="{{ route('car.create') }}"
+                                class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill">Sell Your Car</a>
+                        </div>
+                    </div>
+                </div>
 
-                        <!-- LAYER NR. 3 -->
-                        <div class="tp-caption button red tp-resizeme" id="slide-5-layer-10" data-x="center" data-hoffset=""
-                            data-y="bottom" data-voffset="130" data-width="['auto']" data-height="['auto']"
-                            data-transform_idle="o:1;" data-transform_hover="o:1;rX:0;rY:0;rZ:0;z:0;s:300;e:Power0.easeIn;"
-                            data-style_hover="c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);"
-                            data-transform_in="y:bottom;s:600;e:Power2.easeInOut;" data-transform_out="opacity:0;s:300;"
-                            data-start="3300" data-splitin="none" data-splitout="none" data-responsive_offset="on"
-                            style="z-index: 7; white-space: nowrap; font-size: 14px; line-height: 18px; font-weight: 400; color: rgba(255, 255, 255, 1.00);font-family:Open Sans;text-align:center;text-transform:uppercase;background-color:rgba(219, 45, 46, 1.00);padding:12px 20px 12px 20px;border-color:rgba(0, 0, 0, 1.00);outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                            learn more </div>
+                <!-- Quick Links Cards - Right Side -->
+                <div class="col-lg-6">
+                    <div class="quick-links-section py-4">
+                        <div class="row g-3">
+                            <!-- Card 1 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/01.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Rent Car">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('car.rent') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Rent Car</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 4 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-5-layer-12" data-x="right" data-hoffset="70"
-                            data-y="center" data-voffset="135" data-width="['none','none','none','none']"
-                            data-height="['none','none','none','none']" data-transform_idle="o:1;"
-                            data-transform_in="x:-50px;opacity:0;s:800;e:Power2.easeInOut;"
-                            data-transform_out="opacity:0;s:300;" data-start="620" data-responsive_offset="on"
-                            style="z-index: 8;"><img src="{{ asset('revolution/assets/4f45e-07-bmw-s2.png') }}"
-                                alt="" data-ww="auto" data-hh="auto" data-no-retina> </div>
+                            <!-- Card 2 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-1s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/02.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Auction">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('car.auction') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Auction</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 5 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-5-layer-11" data-x="120" data-y="center"
-                            data-voffset="130" data-width="['none','none','none','none']"
-                            data-height="['none','none','none','none']" data-transform_idle="o:1;"
-                            data-transform_in="x:50px;opacity:0;s:800;e:Power2.easeInOut;"
-                            data-transform_out="opacity:0;s:300;" data-start="200" data-responsive_offset="on"
-                            style="z-index: 9;"><img src="{{ asset('revolution/assets/e13ec-06-audi-s2.png') }}"
-                                alt="" data-ww="auto" data-hh="auto" data-no-retina> </div>
-                    </li>
-                    <!-- SLIDE  -->
-                    <li data-index="rs-6" data-transition="fade" data-slotamount="default" data-hideafterloop="0"
-                        data-hideslideonmobile="off" data-easein="default" data-easeout="default"
-                        data-masterspeed="default" data-thumb="{{ asset('revolution/assets/100x50_3176d-road-bg.jpg') }}"
-                        data-rotate="0" data-saveperformance="off" data-title="Slide" data-param1="" data-param2=""
-                        data-param3="" data-param4="" data-param5="" data-param6="" data-param7="" data-param8=""
-                        data-param9="" data-param10="" data-description="">
-                        <!-- MAIN IMAGE -->
-                        <img src="{{ asset('revolution/assets/3176d-road-bg.jpg') }}" alt=""
-                            data-bgposition="center center" data-bgfit="cover" data-bgrepeat="no-repeat"
-                            class="rev-slidebg" data-no-retina>
-                        <!-- LAYERS -->
+                            <!-- Card 3 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-2s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/03.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Bargain List">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('bargains.index') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Bargain List</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 1 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-6-layer-4" data-x="3" data-y="center"
-                            data-voffset="50" data-width="['none','none','none','none']"
-                            data-height="['none','none','none','none']" data-transform_idle="o:1;"
-                            data-transform_in="x:50px;opacity:0;s:1500;e:Power3.easeOut;"
-                            data-transform_out="opacity:0;s:300;" data-start="2060" data-responsive_offset="on"
-                            style="z-index: 5;"><img src="{{ asset('revolution/assets/74231-04-audi.png') }}"
-                                alt="" data-ww="auto" data-hh="auto" data-no-retina> </div>
+                            <!-- Card 4 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-3s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/04.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Promote">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('promotions.index') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Promote</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 2 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-6-layer-5" data-x="right" data-hoffset="-10"
-                            data-y="center" data-voffset="60" data-width="['none','none','none','none']"
-                            data-height="['none','none','none','none']" data-transform_idle="o:1;"
-                            data-transform_in="x:-50px;opacity:0;s:1500;e:Power3.easeOut;"
-                            data-transform_out="opacity:0;s:300;" data-start="2060" data-responsive_offset="on"
-                            style="z-index: 6;"><img src="{{ asset('revolution/assets/35261-05-honda.png') }}"
-                                alt="" data-ww="auto" data-hh="auto" data-no-retina> </div>
+                            <!-- Card 5 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-4s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/05.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Directory">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('car.directory') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Directory</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 3 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-6-layer-6" data-x="center" data-hoffset=""
-                            data-y="270" data-width="['auto']" data-height="['auto']" data-transform_idle="o:1;"
-                            data-transform_in="y:[-100%];z:0;rZ:35deg;sX:1;sY:1;skX:0;skY:0;s:300;e:Power4.easeInOut;"
-                            data-transform_out="opacity:0;s:300;" data-mask_in="x:0px;y:0px;" data-start="3260"
-                            data-splitin="chars" data-splitout="none" data-responsive_offset="on"
-                            data-elementdelay="0.05"
-                            style="z-index: 7; white-space: nowrap; font-size: 30px; line-height: 30px; font-weight: 400; color: rgba(255, 255, 255, 1.00);font-family:Roboto;text-align:center;text-transform:uppercase;">
-                            We have everything </div>
+                            <!-- Card 6 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-5s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/06.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Listing">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('car.index') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Listing</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 4 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-6-layer-7" data-x="center" data-hoffset=""
-                            data-y="center" data-voffset="-140" data-width="['auto']" data-height="['auto']"
-                            data-transform_idle="o:1;"
-                            data-transform_in="y:[-100%];z:0;rZ:35deg;sX:1;sY:1;skX:0;skY:0;s:300;e:Power4.easeInOut;"
-                            data-transform_out="opacity:0;s:300;" data-mask_in="x:0px;y:0px;s:inherit;e:inherit;"
-                            data-start="4290" data-splitin="chars" data-splitout="none" data-responsive_offset="on"
-                            data-elementdelay="0.05"
-                            style="z-index: 8; white-space: nowrap; font-size: 70px; line-height: 70px; font-weight: 700; color: rgba(255, 255, 255, 1.00);font-family:Roboto;text-align:center;text-transform:uppercase;">
-                            Your car needs! </div>
+                            <!-- Card 7 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-6s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/07.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Register">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('car.create') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Register</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 5 -->
-                        <div class="tp-caption button red  tp-resizeme" id="slide-6-layer-10" data-x="center"
-                            data-hoffset="" data-y="bottom" data-voffset="140" data-width="['auto']"
-                            data-height="['auto']" data-transform_idle="o:1;"
-                            data-transform_hover="o:1;rX:0;rY:0;rZ:0;z:0;s:300;e:Power0.easeIn;"
-                            data-style_hover="c:rgba(0, 0, 0, 1.00);bg:rgba(255, 255, 255, 1.00);"
-                            data-transform_in="y:bottom;s:600;e:Power2.easeInOut;" data-transform_out="opacity:0;s:300;"
-                            data-start="5329.8614501953" data-splitin="none" data-splitout="none"
-                            data-responsive_offset="on" data-end="8999.8614501953"
-                            style="z-index: 9; white-space: nowrap; font-size: 14px; line-height: 18px; font-weight: 400; color: rgba(255, 255, 255, 1.00);font-family:Open Sans;text-align:center;text-transform:uppercase;background-color:rgba(219, 45, 46, 1.00);padding:12px 20px 12px 20px;border-color:rgba(0, 0, 0, 1.00);outline:none;box-shadow:none;box-sizing:border-box;-moz-box-sizing:border-box;-webkit-box-sizing:border-box;cursor:pointer;">
-                            learn more </div>
+                            <!-- Card 8 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-7s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/08.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Profile">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('user.profile') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Profile</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        <!-- LAYER NR. 6 -->
-                        <div class="tp-caption   tp-resizeme" id="slide-6-layer-3" data-x="right" data-hoffset="159"
-                            data-y="center" data-voffset="81" data-width="['none','none','none','none']"
-                            data-height="['none','none','none','none']" data-transform_idle="o:1;"
-                            data-transform_in="x:-50px;opacity:0;s:1500;e:Power3.easeOut;"
-                            data-transform_out="opacity:0;s:300;" data-start="1220" data-responsive_offset="on"
-                            style="z-index: 10;"><img src="{{ asset('revolution/assets/ec416-03-huydai.png') }}"
-                                alt="" data-ww="auto" data-hh="auto" data-no-retina> </div>
-                        <>
-
-                            <!-- LAYER NR. 7 -->
-                            <div class="tp-caption   tp-resizeme" id="slide-6-layer-2" data-x="202" data-y="center"
-                                data-voffset="80" data-width="['none','none','none','none']"
-                                data-height="['none','none','none','none']" data-transform_idle="o:1;"
-                                data-transform_in="x:50px;opacity:0;s:1500;e:Power3.easeOut;"
-                                data-transform_out="opacity:0;s:300;" data-start="1200" data-responsive_offset="on"
-                                style="z-index: 11;"><img src="{{ asset('revolution/assets/1fa45-02-bmw.png') }}"
-                                    alt="" data-ww="auto" data-hh="auto" data-no-retina> </div>
-
-                            <!-- LAYER NR. 8 -->
-                            <div class="tp-caption   tp-resizeme" id="slide-6-layer-1" data-x="center" data-hoffset=""
-                                data-y="center" data-voffset="100" data-width="['none','none','none','none']"
-                                data-height="['none','none','none','none']" data-transform_idle="o:1;"
-                                data-transform_in="z:0;rX:0;rY:0;rZ:0;sX:0.9;sY:0.9;skX:0;skY:0;opacity:0;s:670;e:Power3.easeInOut;"
-                                data-transform_out="opacity:0;s:300;" data-start="500" data-responsive_offset="on"
-                                style="z-index: 12;"><img src="{{ asset('revolution/assets/95515-o1-kia.png') }}"
-                                    alt="" data-ww="auto" data-hh="auto" data-no-retina> </div>
-                    </li>
-                </ul>
-                <div class="tp-bannertimer tp-bottom" style="visibility: hidden !important;"></div>
+                            <!-- Card 9 -->
+                            <div class="col-lg-4 col-md-6 animate__animated animate__fadeInUp animate__delay-8s">
+                                <div class="card h-100 border-0 service-card">
+                                    <div class="card-img-container position-relative overflow-hidden"
+                                        style="height: 150px;">
+                                        <img src="{{ asset('images/car/09.jpg') }}"
+                                            class="card-img w-100 h-100 object-fit-cover" alt="Compare">
+                                        <div
+                                            class="card-img-overlay d-flex align-items-center justify-content-center bg-dark bg-opacity-75 opacity-0 hover-overlay transition-opacity">
+                                            <a href="{{ route('car.compare') }}"
+                                                class="text-white text-decoration-none stretched-link">
+                                                <h5 class="mb-0 fw-bold">Compare</h5>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!--=================================
-                                                                                                                                            rev slider -->
-    @include('components.feature-car', ['promotedCars' => $promotedCars ?? [], 'latestCars' => $latestCars ?? []]))
+                                                                hero section -->
+    @include('components.feature-car', [
+        'promotedCars' => $promotedCars ?? [],
+        'latestCars' => $latestCars ?? [],
+    ])
 
     <!--================================= -->
     {{-- Car list cart --}}
@@ -302,15 +474,9 @@
 
 
     <!--=================================
-                                                                                                     play-video -->
-    @php
-        $promotedBargains = $promotedBargains ?? [];
-        $latestBargains = $latestBargains ?? [];
-        // If we have promoted cars, use them; otherwise use latest cars
-        $hasPromotedBargains = count($promotedBargains) > 0;
-        $bargainsToShow = $hasPromotedBargains ? $promotedBargains : $latestBargains;
-    @endphp
-     <section class="play-video popup-gallery">
+                                                                                                                                                                     play-video -->
+
+    <section class="play-video popup-gallery">
         <div class="p-5 bg-3 bg-overlay-black-70">
             <div class="row justify-content-center">
                 <h3 class="text-white text-center mt-0 mb-5">Bargains Section Features</h3>
@@ -321,61 +487,181 @@
                     <div class="col-md-12">
                         <div class="owl-carousel owl-theme" data-nav-arrow="true" data-items="4" data-md-items="4"
                             data-sm-items="2" data-xs-items="1" data-space="20">
-                           @if(count($bargainsToShow) > 0)
-                                @foreach($bargainsToShow as $bargain)
-                                    <div class="item">
-                                        <div class="car-item text-center">
-                                            <div class="car-image">
-                                                @if(isset($bargain->profile_image))
-                                                    <img class="img-fluid fixed-img" 
-                                                        src="{{ asset('storage/' . $bargain->profile_image) }}" 
-                                                        alt="{{ $bargain->username }}">
-                                                @else
-                                                    <div class="car-overlay-banner">
-                                                        <ul>
-                                                            <li>
-                                                                <a href="{{ route('bargains.show', $bargain->id) }}">
-                                                                    <i class="fa fa-link"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="{{ route('bargains.show', $bargain->id) }}">
-                                                                    <i class="fa fa-dashboard"></i>
-                                                                </a>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                @endif
-                                            </div>
-
-                                            <div class="car-list">
-                                                <ul class="list-inline">
-                                                    <li><i class="fa fa-registered"></i> {{ $bargain->name }}</li>
-                                                    <li><i class="fa fa-cog"></i> {{ $bargain->address }}</li>
-                                                    <li><i class="fa fa-dashboard"></i> {{ $bargain->phone }}</li>
-                                                </ul>
-                                            </div>
-
-                                            <div class="car-content">
-                                                <a href="{{ route('bargains.show', $bargain->id) }}" style="font-size: 12px;">
-                                                    {{ $bargain->username }}
-                                                </a>
-                                                <div class="separator"></div>
-                                            </div>
+                            <div class="item">
+                                <div class="car-item text-center">
+                                    <div class="car-image">
+                                        <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}" alt="">
+                                        <div class="car-overlay-banner">
+                                            <ul>show
+                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                                            </ul>
                                         </div>
                                     </div>
-                                @endforeach
-                            @else
-                                {{-- Fallback message when no bargains available --}}
-                                <div class="item">
-                                    <div class="car-item text-center">
-                                        <div class="car-content">
-                                            <p>No bargains available at the moment.</p>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-registered"></i> 2021</li>
+                                            <li><i class="fa fa-cog"></i> Manual </li>
+                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="#" style="font-size: 12px;">Acura Rsx</a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
                                         </div>
                                     </div>
                                 </div>
-                            @endif
-
+                            </div>
+                            <div class="item">
+                                <div class="car-item text-center">
+                                    <div class="car-image">
+                                        <img class="img-fluid" src="{{ asset('images/car/02.jpg') }}" alt="">
+                                        <div class="car-overlay-banner">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-registered"></i> 2021</li>
+                                            <li><i class="fa fa-cog"></i> Manual </li>
+                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="#" style="font-size: 12px;">Lexus GS 450h</a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="car-item text-center">
+                                    <div class="car-image">
+                                        <img class="img-fluid" src="{{ asset('images/car/03.jpg') }}" alt="">
+                                        <div class="car-overlay-banner">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-registered"></i> 2021</li>
+                                            <li><i class="fa fa-cog"></i> Manual </li>
+                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="#" style="font-size: 12px;">GTA 5 Lowriders DLC</a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="car-item text-center">
+                                    <div class="car-image">
+                                        <img class="img-fluid" src="{{ asset('images/car/04.jpg') }}" alt="">
+                                        <div class="car-overlay-banner">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-registered"></i> 2021</li>
+                                            <li><i class="fa fa-cog"></i> Manual </li>
+                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="#" style="font-size: 12px;">Toyota avalon hybrid </a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item">
+                                <div class="car-item text-center">
+                                    <div class="car-image">
+                                        <img class="img-fluid" src="{{ asset('images/car/05.jpg') }}" alt="">
+                                        <div class="car-overlay-banner">
+                                            <ul>
+                                                <li><a href="#"><i class="fa fa-link"></i></a></li>
+                                                <li><a href="#"><i class="fa fa-dashboard"></i></a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <div class="car-list">
+                                        <ul class="list-inline">
+                                            <li><i class="fa fa-registered"></i> 2021</li>
+                                            <li><i class="fa fa-cog"></i> Manual </li>
+                                            <li><i class="fa fa-dashboard"></i> 6,000 mi</li>
+                                        </ul>
+                                    </div>
+                                    <div class="car-content">
+                                        <div class="star">
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star orange-color"></i>
+                                            <i class="fa fa-star-o orange-color"></i>
+                                        </div>
+                                        <a href="#" style="font-size: 12px;">Hyundai santa fe sport </a>
+                                        <div class="separator"></div>
+                                        <div class="price">
+                                            <span class="old-price" style="font-size: 10px;">$35,568</span>
+                                            <span class="new-price" style="font-size: 10px;">$32,698 </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -385,11 +671,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                         play-video -->
+                                                                                                                                                                                                     play-video -->
 
 
     <!-- =================================
-                                                                                                                                                                                              welcome -->
+                                                                                                                                                                                                          welcome -->
 
     {{-- <section class="welcome-block objects-car page-section-ptb white-bg" style="padding-top: 0px ;">
         <div class="objects-left left"><img class="img-fluid objects-1" src="{{ asset('images/objects/01.jpg') }}"
@@ -470,20 +756,20 @@
     </section> --}}
 
     <!--=================================
-                                                                                                                                                                                             welcome -->
+                                                                                                                                                                                                         welcome -->
 
 
     <!-- ==================================
-                                                                                                                                                                                             {{-- feature car -->
+                                                                                                                                                                                                         {{-- feature car -->
 <!-- @include('components.feature-car') --}} -->
 
     <!--=================================
-                                                                                                                                                                                             feature car -->
+                                                                                                                                                                                                         feature car -->
 
 
 
     <!--=================================
-                                                                                                                                                                                             custom block -->
+                                                                                                                                                                                                         custom block -->
 
     <section class="bg-7">
         <div class="container-fluid p-0">
@@ -505,11 +791,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             custom block -->
+                                                                                                                                                                                                         custom block -->
 
 
     <!--=================================
-                                                                                                                                                                                             latest news -->
+                                                                                                                                                                                                         latest news -->
 
     <section class="latest-blog objects-car white-bg page page-section-ptb">
         <div class="objects-left"><img class="img-fluid objects-1" src="{{ asset('images/objects/03.jpg') }}"
@@ -550,11 +836,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             latest news -->
+                                                                                                                                                                                                         latest news -->
 
 
     <!--=================================
-                                                                                                                                                                                             play-video -->
+                                                                                                                                                                                                         play-video -->
 
     <section class="play-video popup-gallery">
         <div class="play-video-bg bg-3 bg-overlay-black-70">
@@ -580,11 +866,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             play-video -->
+                                                                                                                                                                                                         play-video -->
 
 
     <!--=================================
-                                                                                                                                                                                             Counter -->
+                                                                                                                                                                                                         Counter -->
 
     <section class="counter counter-style-1 light page-section-ptb">
         <div class="container">
@@ -622,16 +908,16 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             Counter -->
+                                                                                                                                                                                                         Counter -->
 
     <hr class="gray">
 
     <!--=================================
-                                                                                                                                                                                             testimonial -->
+                                                                                                                                                                                                         testimonial -->
 
     @include('components.testimonial')
     <!--=================================
-                                                                                                                                                                                             testimonial -->
+                                                                                                                                                                                                         testimonial -->
 
 
     <!-- Modal code goes here -->
@@ -831,6 +1117,43 @@
                     }
                 });
             }
+
+            // Hero background slider functionality
+            let currentSlide = 0;
+            const slides = $('.hero-background-slide');
+            const indicators = $('.hero-slider-indicators .indicator');
+            const totalSlides = slides.length;
+
+            // Function to show a specific slide
+            function showSlide(index) {
+                // Remove active class from all slides and indicators
+                slides.removeClass('active');
+                indicators.removeClass('active');
+
+                // Add active class to current slide and indicator
+                $(slides[index]).addClass('active');
+                $(indicators[index]).addClass('active');
+
+                currentSlide = index;
+            }
+
+            // Function to go to next slide
+            function nextSlide() {
+                let nextSlide = currentSlide + 1;
+                if (nextSlide >= totalSlides) {
+                    nextSlide = 0;
+                }
+                showSlide(nextSlide);
+            }
+
+            // Auto slide every 3 seconds
+            setInterval(nextSlide, 3000);
+
+            // Manual slide selection via indicators
+            indicators.on('click', function() {
+                const slideIndex = parseInt($(this).data('slide'));
+                showSlide(slideIndex);
+            });
 
         });
     </script>
