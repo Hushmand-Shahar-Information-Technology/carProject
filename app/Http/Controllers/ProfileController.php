@@ -19,39 +19,22 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $user = Auth::user();
+
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
         // Load cars with all necessary relationships for proper display
-        $user->load(['cars.auctions']);
+        $user->load([
+            'cars.auctions',
+            'cars.bargain',
+            'bargains' // Load the bargains relationship
+        ]);
 
-        // Get bargains associated with the user via the direct relationship
-        // Also load the cars relationship for each bargain with all necessary relationships
-        $bargains = $user->bargains()->with(['promotions', 'cars.auctions'])->get();
+        // Get the first active bargain if exists
+        $activeBargain = $user->bargains->first();
 
-        // Check if we're viewing a specific bargain profile
-        // First check query parameter, then check session
-        $bargainId = $request->query('bargain_id');
-
-        // If no bargain_id in query parameter, check session
-        if (!$bargainId) {
-            $bargainId = session('active_bargain_id');
-        }
-
-        $activeBargain = null;
-
-        if ($bargainId) {
-            $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions'])->find($bargainId);
-            if ($activeBargain) {
-                // Store in session to persist mode
-                session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
-            } else {
-                // If bargain not found, clear session data
-                session(['profile_mode' => 'user', 'active_bargain_id' => null]);
-            }
-        } else {
-            // Ensure we're in user mode if no bargain is selected
-            session(['profile_mode' => 'user', 'active_bargain_id' => null]);
-        }
-
-        return view('profile.profile', compact('user', 'bargains', 'activeBargain'));
+        return view('profile.profile', compact('user', 'activeBargain'));
     }
 
     /**
