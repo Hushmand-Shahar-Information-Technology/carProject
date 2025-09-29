@@ -339,41 +339,6 @@ class CarController extends Controller
             Log::info('Car store method started');
             Log::info('Validated data:', $data);
 
-            // Check if registering as a bargain
-            // First check form data, then check session for active bargain
-            $bargainId = $data['bargain_id'] ?? session('active_bargain_id');
-            $bargain = null;
-
-            if ($bargainId && Auth::check()) {
-                // Get the bargain and verify it belongs to the user
-                $bargain = Auth::user()->bargains()->find($bargainId);
-
-                // Check if bargain has restrictions
-                if ($bargain) {
-                    // If bargain is blocked, return error
-                    if ($bargain->registration_status === 'blocked') {
-                        if (request()->wantsJson()) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => 'Your bargain is currently blocked. You cannot register cars at this time.'
-                            ], 403);
-                        }
-                        return back()->with('error', 'Your bargain is currently blocked. You cannot register cars at this time.');
-                    }
-
-                    // If bargain is restricted, check if restriction period is still active
-                    if ($bargain->registration_status === 'restricted' && $bargain->hasActiveRestriction()) {
-                        $restrictionMessage = 'Your bargain is currently restricted until ' . $bargain->restriction_ends_at->format('M d, Y') . '. You cannot register cars during this period.';
-                        if (request()->wantsJson()) {
-                            return response()->json([
-                                'success' => false,
-                                'message' => $restrictionMessage
-                            ], 403);
-                        }
-                        return back()->with('error', $restrictionMessage);
-                    }
-                }
-            }
 
             // Handle image uploads
             $images = [];
@@ -405,7 +370,6 @@ class CarController extends Controller
 
             $carData = [
                 'user_id' => Auth::check() ? Auth::id() : 1, // Use authenticated user or default to 1
-                'bargain_id' => $bargainId ?? null, // Set bargain_id if provided
                 'title' => $data['title'],
                 'year' => $data['year'],
                 'make' => $data['make'],

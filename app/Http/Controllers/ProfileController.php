@@ -19,53 +19,22 @@ class ProfileController extends Controller
     public function show(Request $request)
     {
         $user = Auth::user();
-        // Load cars with all necessary relationships for proper display
-        $user->load(['cars.auctions']);
 
-        // Get bargains associated with the user via the direct relationship
-        // Also load the cars relationship for each bargain with all necessary relationships
-        $bargains = $user->bargains()->with(['promotions', 'cars.auctions'])->get();
-
-        // Check if we're viewing a specific bargain profile
-        // First check query parameter, then check session
-        $bargainIdFromUrl = $request->query('bargain_id');
-        $bargainIdFromSession = session('active_bargain_id');
-
-        // Determine which bargain ID to use
-        $bargainId = $bargainIdFromUrl ?: $bargainIdFromSession;
-
-        $activeBargain = null;
-
-        // If we have a bargain_id, try to load that bargain
-        if ($bargainId) {
-            $activeBargain = $user->bargains()->with(['promotions', 'cars.auctions'])->find($bargainId);
-            if ($activeBargain) {
-                // Store in session to persist mode
-                session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
-            } else {
-                // If bargain not found, clear session data
-                session(['profile_mode' => 'user', 'active_bargain_id' => null]);
-            }
-        } else {
-            // Ensure we're in user mode if no bargain is selected
-            session(['profile_mode' => 'user', 'active_bargain_id' => null]);
+        if (!$user) {
+            return redirect()->route('login');
         }
 
-        return view('profile.profile', compact('user', 'bargains', 'activeBargain'));
-    }
-
-    /**
-     * Get current profile mode (user or bargain) for API calls
-     */
-    public function getProfileMode(Request $request): JsonResponse
-    {
-        $profileMode = session('profile_mode', 'user');
-        $bargainId = session('active_bargain_id');
-
-        return response()->json([
-            'mode' => $profileMode,
-            'bargain_id' => $bargainId
+        // Load cars with all necessary relationships for proper display
+        $user->load([
+            'cars.auctions',
+            'cars.bargain',
+            'bargains' // Load the bargains relationship
         ]);
+
+        // Get the first active bargain if exists
+        $activeBargain = $user->bargains->first();
+
+        return view('profile.profile', compact('user', 'activeBargain'));
     }
 
     /**
@@ -150,3 +119,4 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 }
+

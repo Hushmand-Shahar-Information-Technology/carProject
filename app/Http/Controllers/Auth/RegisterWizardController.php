@@ -1,0 +1,167 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Models\Bargain;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\QueryException;
+
+class RegisterWizardController extends Controller
+{
+    /**
+     * Display the registration wizard view.
+     */
+    public function show(Request $request)
+    {
+        $type = $request->query('type');
+        
+        // Validate type parameter
+        if ($type && !in_array($type, ['seller', 'seeker'])) {
+            $type = null;
+        }
+        
+        return view('auth.register', compact('type'));
+    }
+
+    /**
+     * Handle an incoming registration request.
+     *
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function register(Request $request)
+    {
+        // Determine role from request
+        $role = $request->input('role');
+        // Log the role for debugging
+        Log::info('Registration attempt with role: ' . $role);
+        Log::info('Request data: ' . json_encode($request->all()));
+        
+        if (!in_array($role, ['car_seller', 'car_seeker'])) {
+            Log::error('Invalid role selected: ' . $role);
+            return response()->json([
+                'errors' => ['role' => ['Invalid role selected.']]
+            ], 422);
+        }
+
+        // Validate based on role
+        if ($role === 'car_seller') {
+            $validator = Validator::make($request->all(), [
+                'username' => ['required', 'string', 'max:255'],
+                'phone' => ['required', 'string', 'max:20'],
+                'address' => ['required', 'string'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+                'password' => ['required', 'confirmed', Password::defaults()],
+                'profile_image' => ['nullable', 'image', 'max:5120'], // 5MB
+            ], [
+                'profile_image.max' => 'The profile image must not exceed 5MB.',
+                'profile_image.image' => 'The profile image must be an image file.',
+            ]);
+        } else {
+            $validator = Validator::make($request->all(), [
+                'full_name' => ['required', 'string', 'max:255'],
+                'phone' => ['nullable', 'string', 'max:20'],
+                'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
+                'password' => ['required', 'confirmed', Password::defaults()],
+            ]);
+        }
+
+        if ($validator->fails()) {
+            Log::error('Validation failed: ' . json_encode($validator->errors()));
+            return response()->json([
+                'errors' => $validator->errors()
+            ], 422);
+        }
+        try {
+            // Create user
+            $userData = [
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'role' => $role,
+                'phone' => $request->phone ?? null,
+            ];
+            
+           
+            // Add name based on role
+            if ($role === 'car_seller') {
+                $userData['name'] = $request->username;
+            } else {
+                $userData['name'] = $request->full_name;
+            }
+ 
+            $user = User::create($userData);
+            Log::info('User created: ' . $user->id . ' with role: ' . $user->role);
+            // Create profile based on role
+            if ($role === 'car_seller') {
+               
+                Log::info('Creating seller profile for user: ' . $user->id);
+                $profileImagePath = null;
+                if ($request->hasFile('profile_image')) {
+                    $profileImagePath = $request->file('profile_image')->store('profile_images', 'public');
+                }
+                // Auto-generate registration number
+                $registrationNumber = 'REG' . date('Ymd') . strtoupper(substr(uniqid(), -6));
+
+                try {
+                    $sellerProfile = Bargain::create([
+                        'user_id' => $user->id,
+                        'username' => $request->username,
+                        'address' => $request->address,
+                        'profile_image' => $profileImagePath,
+                        'registration_number' => $registrationNumber,
+                    ]);      
+                    Log::info('Bargain profile created: ' . $sellerProfile->id);
+                } catch (QueryException $e) {
+                    Log::error('Failed to create Bargain profile: ' . $e->getMessage());
+                    // Return a more specific error message to the user
+                    return response()->json([
+                        'errors' => ['database' => ['Failed to create Bargain profile. Database connection issue.']]
+                    ], 422);
+                } catch (\Exception $e) {
+                    Log::error('Failed to create Bargain profile: ' . $e->getMessage());
+                    // Return a more specific error message to the user
+                    return response()->json([
+                        'errors' => ['database' => ['Failed to create Bargain profile. Please try again.']]
+                    ], 422);
+                }
+
+            }
+
+            // Fire registered event
+            event(new Registered($user));
+
+            // Log the user in
+            Auth::login($user);
+
+            return response()->json([
+                'success' => true,
+                'redirect' => route('home.index'),
+                'message' => 'Registration successful! Welcome to our platform.'
+            ]);
+        } catch (QueryException $e) {
+            // Log database errors specifically
+            Log::error('Database error during registration: ' . $e->getMessage());
+            Log::error('Database error trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'errors' => ['database' => ['A database error occurred during registration. Please check your database connection.']]
+            ], 422);
+        } catch (\Exception $e) {
+            // Log the error for debugging
+            Log::error('Registration error: ' . $e->getMessage());
+            Log::error('Registration error trace: ' . $e->getTraceAsString());
+            
+            return response()->json([
+                'errors' => ['general' => ['An error occurred during registration. Please try again.']]
+            ], 422);
+        }
+    }
+}

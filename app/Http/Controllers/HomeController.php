@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bargain;
 use Illuminate\Http\Request;
 use App\Models\Car;
 use App\Models\Promotion;
@@ -10,9 +11,12 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $promotedCars = $this->getPromotedCars();
         $latestCars = $this->getLatestCars();
-        return view('home.index', compact('promotedCars', 'latestCars'));
+        $latestBargains = $this->getLatestBargains();
+        $promotedCars = $this->getPromotedItems('car');
+        $promotedBargains = $this->getPromotedItems('bargain');
+        // dd($promotedBargains);
+        return view('home.index', compact('latestBargains', 'promotedCars', 'latestCars', 'promotedBargains'));
     }
 
     public function wizard()
@@ -91,10 +95,33 @@ class HomeController extends Controller
         return $promotedCars;
     }
 
+    public function getPromotedItems($type)
+    {
+        $model = match(strtolower($type)) {
+            'car' => Car::class,
+            'bargain' => \App\Models\Bargain::class,
+            default => throw new \InvalidArgumentException("Invalid type: $type")
+        };
+
+        return $model::whereHas('promotions', fn($q) => $q->where(fn($q) => $q->whereNull('ends_at')->orWhere('ends_at', '>', now())))
+            ->with(['promotions' => fn($q) => $q->where(fn($q) => $q->whereNull('ends_at')->orWhere('ends_at', '>', now()))->latest('ends_at')])
+            ->latest('id')
+            ->take(15)
+            ->get();
+    }
+    public function getLatestBargains()
+        {
+            $latestbargains = Bargain::orderByDesc('id')
+                ->take(10)
+                ->get();
+
+            return $latestbargains;
+        }
+
     public function getLatestCars()
     {
         $latestCars = Car::orderByDesc('id')
-            ->take(6)
+            ->take(10)
             ->get();
 
         return $latestCars;
