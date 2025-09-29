@@ -19,7 +19,7 @@ $(document).ready(function () {
     function initWizard() {
         console.log('Initializing wizard');
         console.log('URL type:', urlType);
-        
+
         // Auto-select role if provided in URL
         if (urlType === 'seller' || urlType === 'seeker') {
             selectedRole = urlType === 'seller' ? 'car_seller' : 'car_seeker';
@@ -27,7 +27,7 @@ $(document).ready(function () {
             $roleAutoSelected.show().find('.role-name').text(urlType === 'seller' ? 'Car Seller' : 'Car Seeker');
             formData.role = selectedRole;
             console.log('Auto-selected role:', selectedRole);
-            
+
             // If we're on step 1, go to step 2 with the correct form
             if (currentStep === 1) {
                 setTimeout(() => {
@@ -485,44 +485,47 @@ $(document).ready(function () {
         window.history.pushState({}, '', url);
     }
 
+
+    // Update review step with current form data
     // Update review step with current form data
     function updateReviewStep() {
         console.log('Updating review step with data:', formData);
         console.log('Selected role:', selectedRole);
+
         // Update account information
         $('#review-email').text(formData.email || '');
         $('#review-role').text(selectedRole === 'car_seller' ? 'Car Seller' : 'Car Seeker');
 
-        // Update personal information
+        // Update personal information and show/hide sections based on role
         if (selectedRole === 'car_seller') {
+            // Seller information
             $('#review-name').text(formData.username || '');
             $('#review-address').text(formData.address || '');
             $('#review-phone-seller').text(formData.phone || '');
 
-            // Show seller section, hide seeker section
+            // Show seller sections
             $('#review-seller-details').show();
-            $('#review-seeker-details').hide();
             $('#review-seller-address').show();
             $('#review-seller-phone').show();
-            $('#review-seeker-phone').hide();
+
+            // Update profile image preview
+            const $imageContainer = $('#review-profile-image');
+            $imageContainer.empty();
+            if (formData.profile_image) {
+                $imageContainer.html('<em>Profile image will be uploaded</em>');
+            }
+
         } else {
+            // Car Seeker information
             $('#review-name').text(formData.full_name || '');
-            $('#review-phone-seeker').text(formData.phone || 'Not provided');
 
-            // Show seeker section, hide seller section
+            // Hide seller sections for seeker
             $('#review-seller-details').hide();
-            $('#review-seeker-details').show();
             $('#review-seller-address').hide();
-            $('#review-seeker-phone').show();
             $('#review-seller-phone').hide();
-        }
 
-        // Update profile image preview
-        const $imageContainer = $('#review-profile-image');
-        $imageContainer.empty();
-
-        if (formData.profile_image) {
-            $imageContainer.html('<em>Profile image will be uploaded</em>');
+            // Clear profile image for seeker
+            $('#review-profile-image').empty();
         }
     }
 
