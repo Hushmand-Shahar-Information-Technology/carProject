@@ -28,15 +28,8 @@ use App\Http\Controllers\PromotionController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/', [CarController::class, 'index'])->name('car.index');
+Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 Route::post('/home/filter-cars', [HomeController::class, 'filter']);
 Route::get('/default-cars', [HomeController::class, 'default']);
 Route::view('/otp', 'auth.otp');
