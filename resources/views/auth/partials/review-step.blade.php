@@ -17,6 +17,7 @@
         </div>
     </div>
     
+    <!-- Personal Information - Common for both roles -->
     <div class="review-section mb-4">
         <h4 class="mb-3">Personal Information</h4>
         <div class="row">
@@ -25,17 +26,13 @@
                     <strong>Name:</strong> <span id="review-name"></span>
                 </div>
             </div>
-            <div class="col-md-6 mb-3" id="review-seeker-phone">
-                <div class="review-item">
-                    <strong>Phone:</strong> <span id="review-phone"></span>
-                </div>
-            </div>
-            <div class="col-md-6 mb-3" id="review-seller-phone">
+            <!-- Seller-specific fields -->
+            <div class="col-md-6 mb-3" id="review-seller-phone" style="display: none;">
                 <div class="review-item">
                     <strong>Phone:</strong> <span id="review-phone-seller"></span>
                 </div>
             </div>
-            <div class="col-md-6 mb-3" id="review-seller-address">
+            <div class="col-md-6 mb-3" id="review-seller-address" style="display: none;">
                 <div class="review-item">
                     <strong>Address:</strong> <span id="review-address"></span>
                 </div>
@@ -43,8 +40,9 @@
         </div>
     </div>
     
-    <div class="review-section mb-4" id="review-seller-details">
-        <h4 class="mb-3">Profile Image</h4>
+    <!-- Seller details section -->
+    <div class="review-section mb-4" id="review-seller-details" style="display: none;">
+        <h4 class="mb-3">Additional Seller Information</h4>
         <div class="row">
             <div class="col-12">
                 <div class="review-item">
@@ -55,19 +53,5 @@
         </div>
     </div>
     
-    <div class="review-section mb-4" id="review-seeker-details">
-        <h4 class="mb-3">Contact Information</h4>
-        <div class="row">
-            <div class="col-12">
-                <div class="review-item">
-                    <strong>Phone:</strong> <span id="review-phone-seeker"></span>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="alert alert-info">
-        <i class="fas fa-info-circle me-2"></i>
-        By clicking "Confirm Registration", you agree to our Terms of Service and Privacy Policy.
-    </div>
+    <!-- Seeker details section - REMOVED since email is already shown above -->
 </div>
