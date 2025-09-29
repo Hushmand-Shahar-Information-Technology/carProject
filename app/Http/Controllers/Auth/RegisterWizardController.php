@@ -4,9 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use App\Models\SellerProfile;
 use App\Models\Bargain;
-use App\Models\Seller;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +41,6 @@ class RegisterWizardController extends Controller
     {
         // Determine role from request
         $role = $request->input('role');
-        
         // Log the role for debugging
         Log::info('Registration attempt with role: ' . $role);
         Log::info('Request data: ' . json_encode($request->all()));
@@ -71,7 +68,7 @@ class RegisterWizardController extends Controller
         } else {
             $validator = Validator::make($request->all(), [
                 'full_name' => ['required', 'string', 'max:255'],
-                'phone' => ['required', 'string', 'max:20'],
+                'phone' => ['nullable', 'string', 'max:20'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
                 'password' => ['required', 'confirmed', Password::defaults()],
             ]);
@@ -89,6 +86,7 @@ class RegisterWizardController extends Controller
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'role' => $role,
+                'phone' => $request->phone ?? null,
             ];
             
            
@@ -113,44 +111,28 @@ class RegisterWizardController extends Controller
                 $registrationNumber = 'REG' . date('Ymd') . strtoupper(substr(uniqid(), -6));
 
                 try {
-                    $sellerProfile = SellerProfile::create([
+                    $sellerProfile = Bargain::create([
                         'user_id' => $user->id,
                         'username' => $request->username,
-                        'phone' => $request->phone,
                         'address' => $request->address,
                         'profile_image' => $profileImagePath,
                         'registration_number' => $registrationNumber,
                     ]);      
-                    Log::info('Seller profile created: ' . $sellerProfile->id);
+                    Log::info('Bargain profile created: ' . $sellerProfile->id);
                 } catch (QueryException $e) {
-                    Log::error('Failed to create seller profile: ' . $e->getMessage());
+                    Log::error('Failed to create Bargain profile: ' . $e->getMessage());
                     // Return a more specific error message to the user
-                    dd($e->getMessage());
                     return response()->json([
-                        'errors' => ['database' => ['Failed to create seller profile. Database connection issue.']]
+                        'errors' => ['database' => ['Failed to create Bargain profile. Database connection issue.']]
                     ], 422);
                 } catch (\Exception $e) {
-                    Log::error('Failed to create seller profile: ' . $e->getMessage());
+                    Log::error('Failed to create Bargain profile: ' . $e->getMessage());
                     // Return a more specific error message to the user
                     return response()->json([
-                        'errors' => ['database' => ['Failed to create seller profile. Please try again.']]
+                        'errors' => ['database' => ['Failed to create Bargain profile. Please try again.']]
                     ], 422);
                 }
 
-                try {
-                    // Create initial bargain record for the seller
-                    $bargain = Bargain::create([
-                        'seller_id' => $user->id,
-                        'status' => 'open',
-                    ]);
-                    Log::info('Bargain created: ' . $bargain->id);
-                } catch (QueryException $e) {
-                    Log::error('Failed to create bargain: ' . $e->getMessage());
-                    // Continue with registration even if bargain creation fails
-                } catch (\Exception $e) {
-                    Log::error('Failed to create bargain: ' . $e->getMessage());
-                    // Continue with registration even if bargain creation fails
-                }
             }
 
             // Fire registered event
