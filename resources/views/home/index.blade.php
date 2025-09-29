@@ -164,15 +164,104 @@
             transform: translateY(-3px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
         }
+
+        /* Hero background slider */
+        .hero-background-slider {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .hero-background-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .hero-background-slide.active {
+            opacity: 1;
+        }
+
+        .hero-background-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-background-slide .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        /* Slider indicators */
+        .hero-slider-indicators {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 3;
+        }
+
+        .hero-slider-indicators .indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .hero-slider-indicators .indicator.active {
+            background-color: #fff;
+        }
     </style>
     <!--=================================
-                                                    hero section -->
+                                                                hero section -->
     <section class="hero-section position-relative overflow-hidden " style="min-height: 900px; padding-top: 8rem;">
-        <div class="hero-background position-absolute top-0 start-0 w-100 h-100">
-            <img src="{{ asset('images/bg/01.jpg') }}" alt="TopMotor Hero" class="w-100 h-100 object-fit-cover">
-            <div class="overlay position-absolute top-0 start-0 w-100 h-100" style="background: rgba(0, 0, 0, 0.6);">
+        <div class="hero-background-slider">
+            <div class="hero-background-slide active">
+                <img src="{{ asset('images/bg/01.jpg') }}" alt="TopMotor Hero 1">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/02.jpg') }}" alt="TopMotor Hero 2">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/03.jpg') }}" alt="TopMotor Hero 3">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/04.jpg') }}" alt="TopMotor Hero 4">
+                <div class="overlay"></div>
+            </div>
+            <div class="hero-background-slide">
+                <img src="{{ asset('images/bg/05.jpg') }}" alt="TopMotor Hero 5">
+                <div class="overlay"></div>
             </div>
         </div>
+
+        <div class="hero-slider-indicators">
+            <div class="indicator active" data-slide="0"></div>
+            <div class="indicator" data-slide="1"></div>
+            <div class="indicator" data-slide="2"></div>
+            <div class="indicator" data-slide="3"></div>
+            <div class="indicator" data-slide="4"></div>
+        </div>
+
         <div class="container position-relative h-100 d-flex align-items-center" style="z-index: 2;">
             <div class="row w-100 align-items-center">
                 <!-- Hero Text - Left Side -->
@@ -364,11 +453,11 @@
     </section>
 
     <!--=================================
-                                                    hero section -->
+                                                                hero section -->
     @include('components.feature-car', [
         'promotedCars' => $promotedCars ?? [],
         'latestCars' => $latestCars ?? [],
-    ]))
+    ])
 
     <!--================================= -->
     {{-- Car list cart --}}
@@ -385,7 +474,7 @@
 
 
     <!--=================================
-                                                                                                                                                         play-video -->
+                                                                                                                                                                     play-video -->
 
     <section class="play-video popup-gallery">
         <div class="p-5 bg-3 bg-overlay-black-70">
@@ -582,11 +671,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                         play-video -->
+                                                                                                                                                                                                     play-video -->
 
 
     <!-- =================================
-                                                                                                                                                                                              welcome -->
+                                                                                                                                                                                                          welcome -->
 
     {{-- <section class="welcome-block objects-car page-section-ptb white-bg" style="padding-top: 0px ;">
         <div class="objects-left left"><img class="img-fluid objects-1" src="{{ asset('images/objects/01.jpg') }}"
@@ -667,20 +756,20 @@
     </section> --}}
 
     <!--=================================
-                                                                                                                                                                                             welcome -->
+                                                                                                                                                                                                         welcome -->
 
 
     <!-- ==================================
-                                                                                                                                                                                             {{-- feature car -->
+                                                                                                                                                                                                         {{-- feature car -->
 <!-- @include('components.feature-car') --}} -->
 
     <!--=================================
-                                                                                                                                                                                             feature car -->
+                                                                                                                                                                                                         feature car -->
 
 
 
     <!--=================================
-                                                                                                                                                                                             custom block -->
+                                                                                                                                                                                                         custom block -->
 
     <section class="bg-7">
         <div class="container-fluid p-0">
@@ -702,11 +791,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             custom block -->
+                                                                                                                                                                                                         custom block -->
 
 
     <!--=================================
-                                                                                                                                                                                             latest news -->
+                                                                                                                                                                                                         latest news -->
 
     <section class="latest-blog objects-car white-bg page page-section-ptb">
         <div class="objects-left"><img class="img-fluid objects-1" src="{{ asset('images/objects/03.jpg') }}"
@@ -747,11 +836,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             latest news -->
+                                                                                                                                                                                                         latest news -->
 
 
     <!--=================================
-                                                                                                                                                                                             play-video -->
+                                                                                                                                                                                                         play-video -->
 
     <section class="play-video popup-gallery">
         <div class="play-video-bg bg-3 bg-overlay-black-70">
@@ -777,11 +866,11 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             play-video -->
+                                                                                                                                                                                                         play-video -->
 
 
     <!--=================================
-                                                                                                                                                                                             Counter -->
+                                                                                                                                                                                                         Counter -->
 
     <section class="counter counter-style-1 light page-section-ptb">
         <div class="container">
@@ -819,16 +908,16 @@
     </section>
 
     <!--=================================
-                                                                                                                                                                                             Counter -->
+                                                                                                                                                                                                         Counter -->
 
     <hr class="gray">
 
     <!--=================================
-                                                                                                                                                                                             testimonial -->
+                                                                                                                                                                                                         testimonial -->
 
     @include('components.testimonial')
     <!--=================================
-                                                                                                                                                                                             testimonial -->
+                                                                                                                                                                                                         testimonial -->
 
 
     <!-- Modal code goes here -->
@@ -1028,6 +1117,43 @@
                     }
                 });
             }
+
+            // Hero background slider functionality
+            let currentSlide = 0;
+            const slides = $('.hero-background-slide');
+            const indicators = $('.hero-slider-indicators .indicator');
+            const totalSlides = slides.length;
+
+            // Function to show a specific slide
+            function showSlide(index) {
+                // Remove active class from all slides and indicators
+                slides.removeClass('active');
+                indicators.removeClass('active');
+
+                // Add active class to current slide and indicator
+                $(slides[index]).addClass('active');
+                $(indicators[index]).addClass('active');
+
+                currentSlide = index;
+            }
+
+            // Function to go to next slide
+            function nextSlide() {
+                let nextSlide = currentSlide + 1;
+                if (nextSlide >= totalSlides) {
+                    nextSlide = 0;
+                }
+                showSlide(nextSlide);
+            }
+
+            // Auto slide every 3 seconds
+            setInterval(nextSlide, 3000);
+
+            // Manual slide selection via indicators
+            indicators.on('click', function() {
+                const slideIndex = parseInt($(this).data('slide'));
+                showSlide(slideIndex);
+            });
 
         });
     </script>
