@@ -11,43 +11,29 @@ class BargainSeeder extends Seeder
 {
     public function run()
     {
-        // Get the first user or create one if none exists
-        $user = User::first();
-        if (!$user) {
-            $user = User::create([
-                'name' => 'Default User',
-                'email' => 'default@example.com',
-                'password' => bcrypt('password'),
-                'email_verified_at' => now(),
-            ]);
-        }
+        // Create a seller user for the bargain
+        $sellerUser = User::factory()->create([
+            'name' => 'Seller User',
+            'email' => 'seller@example.com',
+            'password' => bcrypt('password'),
+            'role' => 'car_seller',
+            'email_verified_at' => now(),
+        ]);
 
-        $names = ['AutoHub', 'CarPoint', 'DriveNow', 'Wheels4U', 'MotorLand'];
-        $usernames = ['autohub', 'carpoint', 'drivenow', 'wheels4u', 'motorland'];
-        $websites = [
-            'https://autohub.test',
-            'https://carpoint.test',
-            'https://drivenow.test',
-            'https://wheels4u.test',
-            'https://motorland.test',
-        ];
+        // Create some seeker users
+        $seekerUsers = User::factory()->count(3)->create([
+            'role' => 'car_seeker',
+            'email_verified_at' => now(),
+        ]);
 
-        foreach ($names as $index => $name) {
+        // Create some bargain records
+        for ($i = 1; $i <= 5; $i++) {
             Bargain::create([
-                'user_id' => $user->id, // Associate with user
-                'name' => $name,
-                'username' => $usernames[$index],
-                'profile_image' => null, // or some seeded image path
-                'website' => $websites[$index],
-                'email' => $usernames[$index] . '@example.com',
-                'registration_number' => strtoupper(Str::random(10)),
-                'phone' => '+1-555-' . rand(1000, 9999),
-                'whatsapp' => '+1-555-' . rand(1000, 9999),
-                'address' => '123 ' . $name . ' Street, City, Country',
-                'contract_start_date' => now()->subMonths(rand(1, 12))->toDateString(),
-                'contract_end_date' => now()->addMonths(rand(1, 12))->toDateString(),
-                'edit_frequent' => rand(0, 5),
-                'status' => rand(0, 1) ? 'one-time' : 'more-time',
+                'seller_id' => $sellerUser->id,
+                'seeker_id' => $i <= 3 ? $seekerUsers[$i-1]->id : null,
+                'details' => 'Sample bargain details ' . $i,
+                'price' => rand(10000, 50000),
+                'status' => ['open', 'negotiation', 'closed'][rand(0, 2)],
             ]);
         }
     }

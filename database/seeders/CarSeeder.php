@@ -34,18 +34,6 @@ class CarSeeder extends Seeder
             $userIds = [$defaultUser->id];
         }
 
-        // ✅ Ensure there are bargains (from BargainSeeder)
-        $bargainIds = Bargain::pluck('id')->toArray();
-        if (empty($bargainIds)) {
-            // If BargainSeeder wasn’t run, create one fallback
-            $defaultBargain = Bargain::create([
-                'name' => 'Default Bargain',
-                'username' => 'defaultbargain',
-                'registration_number' => strtoupper(uniqid('REG')),
-                'status' => 'one-time',
-            ]);
-            $bargainIds = [$defaultBargain->id];
-        }
 
         $imagesList = [
             ['images/car/01.jpg', 'images/car/02.jpg'],
@@ -77,7 +65,6 @@ class CarSeeder extends Seeder
             Car::create([
                 'title' => $titles[array_rand($titles)],
                 'user_id' => $userIds[array_rand($userIds)],
-                'bargain_id' => $bargainIds[array_rand($bargainIds)], // ✅ never null
                 'year' => $years[array_rand($years)],
                 'make' => $makes[array_rand($makes)],
                 'body_type' => $bodyTypes[array_rand($bodyTypes)],

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('cars', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->onDelete('cascade');
-            $table->unsignedBigInteger('bargain_id')->nullable()->index();
             $table->string('title')->nullable();
             $table->string('year')->nullable();
             $table->string('make')->nullable();
