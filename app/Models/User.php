@@ -63,9 +63,4 @@ class User extends Authenticatable
         return $this->morphMany(\Illuminate\Notifications\DatabaseNotification::class, 'notifiable')
             ->orderBy('created_at', 'desc');
     }
-
-    public function seller()
-    {
-        return $this->hasOne(Seller::class);
-    }
 }
