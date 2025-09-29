@@ -170,13 +170,13 @@
                                 <!-- menu logo -->
                                 <ul class="menu-logo">
                                     <li>
-                                        <a href="{{ route('home.index') }}"><img id="logo_img"
+                                        <a href="/"><img id="logo_img"
                                                 src="{{ asset('images/logo-light.png') }}" alt="logo"> </a>
                                     </li>
                                 </ul>
                                 <ul class="menu-links">
                                     <li class="{{ request()->routeIs('home.index') ? 'active' : '' }}">
-                                        <a href="{{ route('home.index') }}">Home</a>
+                                        <a href="/home">Home</a>
                                     </li>
                                     <li class="dropdown"><a href="javascript:void(0)"> Car <i
                                                 class="fa fa-angle-down"></i></a>
@@ -225,43 +225,41 @@
                                                 <i class="fa-solid fa-search"></i>
                                             </a>
                                             <div class="search-box not-click">
-                                                <form id="searchForm" action="{{ route('car.index') }}"
-                                                    method="GET">
-                                                    <form id="searchForm" action="{{ route('car.index') }}"
-                                                        method="GET">
+                                                <form id="searchForm"
+                                                    action="/&quot; method=&quot;GET&quot;&gt;
+                                                    <form id=&quot;searchForm&quot; action=&quot;/&quot; method=&quot;GET&quot;&gt;
                                                         <div class="row">
-                                                            @php
-                                                                $years = range(1990, now()->year);
-                                                            @endphp
-                                                            <x-search-option name="Make[]" label="Make"
-                                                                :options="$distinctValues['make']" />
-                                                            <x-search-option name="Model[]" label="Models"
-                                                                :options="$distinctValues['models']" />
-                                                            <x-search-option name="Year[]" label="Years"
-                                                                :options="$years" />
-                                                            <x-search-option name="Body[]" label="Body Styles"
-                                                                :options="$distinctValues['body_type']" />
-                                                            <x-search-option name="Color[]" label="Color"
-                                                                :options="$distinctValues['colors']" />
+                                                    @php
+                                                        $years = range(1990, now()->year);
+                                                    @endphp
+                                                    <x-search-option name="Make[]" label="Make"
+                                                        :options="$distinctValues['make']" />
+                                                    <x-search-option name="Model[]" label="Models"
+                                                        :options="$distinctValues['models']" />
+                                                    <x-search-option name="Year[]" label="Years"
+                                                        :options="$years" />
+                                                    <x-search-option name="Body[]" label="Body Styles"
+                                                        :options="$distinctValues['body_type']" />
+                                                    <x-search-option name="Color[]" label="Color"
+                                                        :options="$distinctValues['colors']" />
 
-                                                            <div class="col-xl-2 col-md-4 col-sm-6">
-                                                                <div class="text-center">
-                                                                    <button class="button red"
-                                                                        type="submit">Search</button>
-                                                                </div>
-                                                            </div>
+                                                    <div class="col-xl-2 col-md-4 col-sm-6">
+                                                        <div class="text-center">
+                                                            <button class="button red" type="submit">Search</button>
                                                         </div>
-                                                    </form>
+                                                    </div>
                                             </div>
+                                            </form>
                                         </div>
-                                    </li>
-
                             </div>
+                            </li>
+
                         </div>
                     </div>
-                </section>
-            </nav>
-            <!-- menu end -->
+        </div>
+        </section>
+        </nav>
+        <!-- menu end -->
         </div>
     </header>
 
