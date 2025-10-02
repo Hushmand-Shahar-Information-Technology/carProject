@@ -91,7 +91,7 @@
                                     <i class="fa-solid fa-envelope"></i> topmotor@gmail.com
                                 </li>
                                 <li class="list-inline-item">
-                                    <i class="fa-solid fa-clock"></i> 7/24 Openned
+                                    <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
                                 </li>
                             </ul>
                         </div>
@@ -106,15 +106,13 @@
                                     <x-language-switcher />
                                 </li>
 
-                                <li class="list-inline-item">
-                                    <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
-                                </li>
+                               
                                 <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
                                 </li>
-                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
+                                <!-- <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
                                 </li>
                                 <li class="list-inline-item"><a href="#"><i
-                                            class="fa-brands fa-instagram"></i></a></li>
+                                            class="fa-brands fa-instagram"></i></a></li> -->
                                 <li class="list-inline-item"><a href="#"><i class="fa-brands fa-youtube"></i></a>
                                 </li>
 
@@ -496,13 +494,13 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="news-letter">
+                    <div class="news-letter text-white">
                         <h6 class="text-white">subscribe Our Newsletter </h6>
                         <p>Keep up on our always evolving products features and technology. Enter your e-mail and
                             subscribe to our newsletter.</p>
-                        <form class="news-letter">
-                            <input type="email" placeholder="Enter your Email" class="form-control placeholder">
-                            <a class="button red" href="#">Subscribe</a>
+                        <form action="{{ route('email.store') }}"  id="email_form" class="news-letter">
+                            <input type="email"  id="email"  placeholder="Enter your Email" style="background-color: aliceblue;" class="form-control placeholder">
+                            <button class="button red mt-2" type="butotn" id="make_an_email_submit">Subscribe</button>
                         </form>
                     </div>
                 </div>
@@ -512,8 +510,8 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-12">
                         <div class="text-lg-start text-center">
-                            <p>©Copyright 2021 Car Dealer Developed by <a href="http://www.motorsaal.com/"
-                                    target="_blank">Motor Saal</a></p>
+                            <p style="color: aliceblue;">©Copyright 2021 Car Dealer Developed by <a href="http://www.motorsaal.com/"
+                                    target="_blank">Top Motor</a></p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
@@ -686,6 +684,61 @@
 
         // Update count every minute to check for expiration
         setInterval(updateNavbarCompareCount, 60000);
+
+       $(document).ready(function() {
+            $('#make_an_email_submit').on('click', function(e) {
+                e.preventDefault();
+
+                var formData = {
+                    email: $('#email').val(),
+                };
+
+                console.log('Form data:', formData);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/email',
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        console.log('Sending AJAX request...');
+                    },
+                    success: function(response) {
+                        console.log('Success response received:', response);
+                        
+                        // Check if the response indicates success
+                        if (response && response.success === true) {
+                            console.log('Email submitted successfully');
+                            $('#email_form')[0].reset();
+
+                            Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response.message || 'Email submitted successfully!',
+                                    timer: 3000,
+                                    showConfirmButton: false,
+                                    heightAuto: false,
+                                });
+                                
+                        } else {
+                            console.log('Server returned success=false');
+                            // Handle case where response.success is false
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message || 'Something went wrong. Please try again.',
+                                heightAuto: false
+                            });
+                        }
+                    },
+                });
+            });
+        });
+
+        // Initialize Fancybox for video playback
     </script>
 </body>
 

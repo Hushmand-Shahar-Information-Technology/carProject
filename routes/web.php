@@ -15,6 +15,7 @@ use App\Http\Controllers\BargainController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PromotionController;
 
 /*
@@ -192,3 +193,6 @@ require __DIR__ . '/auth.php';
 Route::view('/privacy-policy', 'static.privacy-policy')->name('privacy.policy');
 Route::view('/terms-conditions', 'static.terms-conditions')->name('terms.conditions');
 Route::view('/contact-us', 'static.contact-us')->name('contact.us');
+
+// API route for car comparison
+Route::post('/email', [EmailController::class, 'store'])->name('email.store');
