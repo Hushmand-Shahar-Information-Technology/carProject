@@ -516,7 +516,7 @@
                                         <div class="item">
                                             <div class="car-item gray-bg text-center">
                                                 <div class="car-image">
-                                                    <img class="img-fluid" src="/storage/{{ $car_i->images[0] }}"
+                                                    <img class="img-fluid" src="{{ asset($car_i->getFirstImageOrDefault()) }}"
                                                         alt="">
                                                     <div class="car-overlay-banner">
                                                         <ul>

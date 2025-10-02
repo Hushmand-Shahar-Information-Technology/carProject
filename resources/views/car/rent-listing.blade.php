@@ -676,7 +676,7 @@
 
                     cars.forEach(car => {
                         let images = Array.isArray(car.images) ? car.images : (car.images ? [car.images] : []);
-                        const imageSrc = images.length ? `/storage/${images[0]}` : '/images/no-image.png';
+                        const imageSrc = images.length ? `/storage/${images[0]}` : '/images/demo.jpg';
                         const url = car_show.replace('__ID__', car.id);
                         const bargain_url = car.bargain ?
                             bargain_show.replace('__ID__', car.bargain.id) :
