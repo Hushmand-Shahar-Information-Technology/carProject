@@ -97,7 +97,7 @@
                 const isCar = type === 'cars';
                 const title = isCar ? (p?.title || p?.model || 'Car') : (p?.name || p?.username || 'Bargain');
                 const image = isCar ? (Array.isArray(p?.images) && p.images.length ? `/storage/${p.images[0]}` :
-                    '{{ asset('images/car/01.jpg') }}') : (p?.profile_image ?
+                    '{{ asset('images/demo.jpg') }}') : (p?.profile_image ?
                     `{{ asset('storage') }}/${p.profile_image}` :
                     'https://via.placeholder.com/400x250?text=No+Image');
                 const showUrl = isCar ? `${showUrlBaseCar}/${p.id}` : `${showUrlBaseBargain}/${p.id}`;

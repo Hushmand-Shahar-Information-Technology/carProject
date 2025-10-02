@@ -507,10 +507,10 @@
                                 <div class="recent-post">
                                     <div class="recent-post-image">
                                         @if (!empty($car->images) && is_array($car->images) && isset($car->images[0]))
-                                            <img class="img-fluid" src="{{ asset($car->images[0]) }}"
+                                            <img class="img-fluid" src="{{ asset('storage/' . $car->images[0]) }}"
                                                 alt="{{ $car->title }}">
                                         @else
-                                            <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
+                                            <img class="img-fluid" src="{{ asset('images/demo.jpg') }}"
                                                 alt="Default car image">
                                         @endif
                                     </div>
