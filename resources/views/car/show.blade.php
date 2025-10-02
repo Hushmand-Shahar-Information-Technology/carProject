@@ -507,7 +507,7 @@
                         </div>
                     </div>
                     <div class="feature-car">
-                        <h6>Recently Vehicle</h6>
+                        <h6>Related Vehicle</h6>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="owl-carousel" data-nav-arrow="true" data-nav-dots="true" data-items="3"
