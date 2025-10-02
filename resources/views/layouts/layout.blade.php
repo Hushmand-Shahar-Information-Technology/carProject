@@ -151,16 +151,20 @@
         .menu-mobile-collapse-trigger:after {
             background: #fff !important;
         }
-
-        /* Ensure mobile menu is hidden by default */
+        
+        /* Override responsive.css to ensure menu is hidden by default on mobile */
         @media (max-width: 991px) {
-            .menu-links {
+            .mega-menu .menu-links {
                 display: none !important;
+                border: 1px solid #e3e3e3;
+                position: absolute;
+                top: 100%;
+                background: #fff;
+                width: 100%;
             }
             
-            .menu-links.show {
-                display: flex !important;
-                flex-direction: column !important;
+            .mega-menu .menu-links.active {
+                display: block !important;
             }
         }
     </style>
@@ -457,17 +461,6 @@
                 if (bargainsDropdown) {
                     bargainsDropdown.style.display = 'none';
                 }
-            }
-            
-            // Mobile menu toggle functionality
-            const mobileTrigger = document.querySelector('.menu-mobile-collapse-trigger');
-            const menuLinks = document.querySelector('.menu-links');
-            
-            if (mobileTrigger && menuLinks) {
-                mobileTrigger.addEventListener('click', function() {
-                    menuLinks.classList.toggle('show');
-                    this.classList.toggle('active');
-                });
             }
         });
     </script>
