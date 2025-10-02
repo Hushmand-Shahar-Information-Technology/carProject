@@ -88,4 +88,19 @@ class Car extends BaseModel
     {
         return $this->hasMany(Auction::class);
     }
+
+    /**
+     * Get the first image URL or a default image if no images exist
+     *
+     * @param string $defaultImage
+     * @return string
+     */
+    public function getFirstImageOrDefault($defaultImage = 'images/demo.jpg')
+    {
+        if (!empty($this->images) && is_array($this->images) && isset($this->images[0])) {
+            return 'storage/' . $this->images[0];
+        }
+        
+        return $defaultImage;
+    }
 }
