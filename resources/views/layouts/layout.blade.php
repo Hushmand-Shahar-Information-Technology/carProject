@@ -116,6 +116,10 @@
             .menu-links {
                 flex-direction: column;
                 align-items: flex-start;
+                background-color: #323232 !important; /* Dark background for mobile menu */
+                padding: 15px !important;
+                border-radius: 5px;
+                margin-top: 10px;
             }
 
             .menu-links li {
@@ -125,7 +129,38 @@
 
             .menu-links a {
                 display: block;
-                padding: 8px 0;
+                padding: 12px 15px !important;
+                color: #fff !important; /* Ensure text is visible on dark background */
+                border-radius: 3px;
+            }
+
+            .menu-links a:hover,
+            .menu-links .active a {
+                background-color: #db2d2e;
+                color: #fff !important;
+            }
+        }
+
+        /* Fix for mobile menu toggle */
+        .menu-mobile-collapse-trigger {
+            background: #323232 !important;
+        }
+
+        .menu-mobile-collapse-trigger span,
+        .menu-mobile-collapse-trigger:before,
+        .menu-mobile-collapse-trigger:after {
+            background: #fff !important;
+        }
+
+        /* Ensure mobile menu is hidden by default */
+        @media (max-width: 991px) {
+            .menu-links {
+                display: none !important;
+            }
+            
+            .menu-links.show {
+                display: flex !important;
+                flex-direction: column !important;
             }
         }
     </style>
@@ -286,7 +321,6 @@
         </div>
     </header>
 
-
     <!--=================================
  header -->
 
@@ -300,7 +334,7 @@
         // Function to check if we're in bargain mode and show alert for bargain registration
         document.addEventListener('DOMContentLoaded', function() {
             // Check if we're on the bargain registration page link
-            const bargainRegisterLink = document.querySelector('a[href="{{ route('bargains.create') }}"]');
+            const bargainRegisterLink = document.querySelector('a[href*="bargains/create"]');
 
             if (bargainRegisterLink) {
                 bargainRegisterLink.addEventListener('click', function(e) {
@@ -335,13 +369,11 @@
                                     })
                                 }).then(() => {
                                     // After successfully switching to user profile mode, redirect to bargain registration page
-                                    window.location.href =
-                                        '{{ route('bargains.create') }}';
+                                    window.location.href = '/bargains/create';
                                 }).catch(error => {
                                     console.error('Error setting profile mode:', error);
                                     // Even if there's an error, still redirect to bargain registration page
-                                    window.location.href =
-                                        '{{ route('bargains.create') }}';
+                                    window.location.href = '/bargains/create';
                                 });
                             }
                         });
@@ -382,11 +414,11 @@
             });
 
             // Also check URL parameters on page load
-            const urlParams = new URLSearchParams(window.location.search);
-            const bargainIdFromUrl = urlParams.get('bargain_id');
-            if (bargainIdFromUrl) {
+            const urlParams1 = new URLSearchParams(window.location.search);
+            const bargainIdFromUrl1 = urlParams1.get('bargain_id');
+            if (bargainIdFromUrl1) {
                 localStorage.setItem('currentProfileMode', 'bargain');
-                localStorage.setItem('currentBargainId', bargainIdFromUrl);
+                localStorage.setItem('currentBargainId', bargainIdFromUrl1);
                 updateNavbarForProfileMode();
             }
 
@@ -417,14 +449,25 @@
 
             // Additional check to ensure bargains section is hidden when in bargain mode
             // This is a fallback in case the profile page doesn't properly hide it
-            const urlParams = new URLSearchParams(window.location.search);
-            const bargainIdFromUrl = urlParams.get('bargain_id');
-            if (bargainIdFromUrl) {
+            const urlParams2 = new URLSearchParams(window.location.search);
+            const bargainIdFromUrl2 = urlParams2.get('bargain_id');
+            if (bargainIdFromUrl2) {
                 // Hide bargains dropdown when in bargain mode
                 const bargainsDropdown = document.getElementById('bargains-dropdown');
                 if (bargainsDropdown) {
                     bargainsDropdown.style.display = 'none';
                 }
+            }
+            
+            // Mobile menu toggle functionality
+            const mobileTrigger = document.querySelector('.menu-mobile-collapse-trigger');
+            const menuLinks = document.querySelector('.menu-links');
+            
+            if (mobileTrigger && menuLinks) {
+                mobileTrigger.addEventListener('click', function() {
+                    menuLinks.classList.toggle('show');
+                    this.classList.toggle('active');
+                });
             }
         });
     </script>
