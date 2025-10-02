@@ -93,11 +93,6 @@
         }
 
         /* Logo sizing */
-        .logo {
-            width: 180px; /* Increased width */
-            height: 180px; /* Maintain aspect ratio */
-        }
-
         /* Responsive styles */
         @media (max-width: 992px) {
             .menu-list-items .row {
