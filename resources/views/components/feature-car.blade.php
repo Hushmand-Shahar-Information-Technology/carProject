@@ -1,8 +1,10 @@
 <style>
     .container-width {
         width: 65% !important;
-         z-index: 333333333 !important;
+        position: relative; /* or absolute/fixed/sticky */
+        z-index: 333333333 !important;
     }
+
 
     @media (max-width: 790px) {
         .container-width {
