@@ -64,14 +64,6 @@
 
     <!-- Custom styles for navigation -->
     <style>
-        .menu-links {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            margin: 0;
-            padding: 0;
-        }
-
         .menu-links li {
             list-style: none;
             margin: 0 10px;
@@ -98,6 +90,12 @@
         .nav-link:hover,
         .nav-link.active {
             color: #db2d2e !important;
+        }
+
+        /* Logo sizing */
+        .logo {
+            width: 180px; /* Increased width */
+            height: 180px; /* Maintain aspect ratio */
         }
 
         /* Responsive styles */
@@ -243,9 +241,8 @@
                                 <!-- menu logo -->
                                 <ul class="menu-logo mb-0">
                                     <li>
-                                        <a href="/"><img id="logo_img"
-                                                src="{{ asset('images/logo-light.png') }}" alt="logo"
-                                                style="height: 50px;"> </a>
+                                        <a href="/"><img id="logo_img" class="logo"
+                                                src="{{ asset('images/logo-light.png') }}" alt="logo"> </a>
                                     </li>
                                 </ul>
 
