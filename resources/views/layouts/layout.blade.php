@@ -267,14 +267,6 @@
                                     <li class="{{ request()->routeIs('car.auction') ? 'active' : '' }} mx-2">
                                         <a href="{{ route('car.auction') }}" class="nav-link">Car Auction</a>
                                     </li>
-                                    <!-- Bargain menu items -->
-                                    <li class="{{ request()->routeIs('bargains.create') ? 'active' : '' }} mx-2">
-                                        <a href="{{ route('bargains.create') }}" class="nav-link">Bargain
-                                            Register</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('bargains.index') ? 'active' : '' }} mx-2">
-                                        <a href="{{ route('bargains.index') }}" class="nav-link">Bargain List</a>
-                                    </li>
                                     <li class="{{ request()->routeIs('promotions.index') ? 'active' : '' }} mx-2">
                                         <a href="{{ route('promotions.index') }}" class="nav-link">Promoted</a>
                                     </li>
