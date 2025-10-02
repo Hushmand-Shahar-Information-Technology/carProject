@@ -1,69 +1,46 @@
-name: Deploy to Hostinger
+name: Build, test and deploy
+
 on:
   push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-  workflow_dispatch:
+    branches: [ main ]
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: mbstring,intl,gd,xml,dom,json,fileinfo,curl,zip,pdo,pdo_mysql
-          coverage: none
-      - name: Check PHP version
-        run: php -v
-      - name: Check Composer installation
-        run: composer --version
-      - name: Install dependencies
+          php-version: 8.2
+ 
+      - name: Create database
+        run: touch ./database/database.sqlite
+  
+      - name: Copy .env
+        run: cp .env.test .env
+
+      - name: Install app
         run: composer install
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
-      - name: Install lftp
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y lftp
-      - name: Deploy via lftp
-        run: |
-          echo "Deploying files to Hostinger via lftp"
-          lftp -c "
-          set ssl:verify-certificate no;
-          set net:timeout 30;
-          set net:max-retries 5;
-          set net:reconnect-interval-base 5;
-          open -p ${{ secrets.HOSTINGER_PORT }} -u ${{ secrets.HOSTINGER_USER }},${{ secrets.HOSTINGER_PASSWORD }} ${{ secrets.HOSTINGER_HOST }};
-          mirror -R --verbose --only-newer --parallel=10 --exclude=.git/ --exclude=.github/ --exclude=tests/ --exclude=storage/logs/ . /home/u285585646/domains/topmotar.com/public_html/beta;
-          bye;
-          "
-        env:
-          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
-          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
-          HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
-          HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
-      - name: Run Laravel post-deployment commands via SSH
-        run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.HOSTINGER_PORT }} ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'ENDSSH'
-            cd /home/u285585646/domains/topmotar.com/public_html/beta
-            php artisan config:clear
-            composer install --no-dev --optimize-autoloader
-            php artisan config:cache
-            php artisan route:cache
-            php artisan view:cache
-            php artisan migrate --force
-            php artisan shield:generate --all
-            php artisan shield:super-admin --user=1
-            echo "Deployment completed successfully"
-          ENDSSH
-        env:
-          HOSTINGER_PORT: ${{ secrets.HOSTINGER_PORT }}
-          HOSTINGER_HOST: ${{ secrets.HOSTINGER_HOST }}
-          HOSTINGER_USER: ${{ secrets.HOSTINGER_USER }}
-          HOSTINGER_PASSWORD: ${{ secrets.HOSTINGER_PASSWORD }}
+ 
+      - name: Run migrations
+        run: php artisan migrate
+ 
+      - name: Test PHPStan
+        run: ./vendor/bin/phpstan analyse
+
+      - name: Test PHPUnit
+        run: ./vendor/bin/phpunit
+
+      - name: Deploy using ssh
+        uses: appleboy/ssh-action@v1.1.0
+        with:
+          host: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USER  }}
+          # key: ${{ secrets.SSH_PRIVATE_KEY }}
+          password: ${{ secrets.HOSTINGER_PASSWORD }}
+          script: |
+            cd ${{ secrets.APP_PATH }}
+            ./build.sh
