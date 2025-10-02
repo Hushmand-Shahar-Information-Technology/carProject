@@ -2,11 +2,9 @@ name: Deploy to Hostinger
 on:
   push:
     branches:
-      - production
       - main
   pull_request:
     branches:
-      - production
       - main
   workflow_dispatch:
 jobs:
@@ -26,7 +24,7 @@ jobs:
       - name: Check Composer installation
         run: composer --version
       - name: Install dependencies
-        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+        run: composer install
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
       - name: Install lftp
