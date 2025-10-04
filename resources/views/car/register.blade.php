@@ -94,23 +94,45 @@
                 <h1 class="text-2xl font-bold mb-6">🚗 Car Registration Form</h1>
 
                 <!-- Purpose Selection - Always Visible -->
-                <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 mb-6">
+               <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 mb-6">
                     <h3 class="text-lg font-semibold mb-4 text-blue-800">Select Car Purpose</h3>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- For Sale -->
                         <label class="inline-flex items-center gap-2">
-                            <input type="checkbox" name="is_for_sale" x-model="form.is_for_sale" value="1"
+                            <input type="checkbox"
+                                name="is_for_sale"
+                                x-model="form.is_for_sale"
+                                value="1"
                                 class="h-4 w-4"
-                                @change="form.is_for_sale = $event.target.checked; step = 1; watchProgress(); $nextTick(() => { $dispatch('form-changed'); })" />
+                                @change="
+                                    form.is_for_sale = $event.target.checked;
+                                    if (form.is_for_sale) form.is_for_rent = false;
+                                    step = 1;
+                                    watchProgress();
+                                    $nextTick(() => { $dispatch('form-changed'); })
+                                " />
                             <span class="font-medium">For Sale</span>
                         </label>
+
+                        <!-- For Rent -->
                         <label class="inline-flex items-center gap-2">
-                            <input type="checkbox" name="is_for_rent" x-model="form.is_for_rent" value="1"
+                            <input type="checkbox"
+                                name="is_for_rent"
+                                x-model="form.is_for_rent"
+                                value="1"
                                 class="h-4 w-4"
-                                @change="form.is_for_rent = $event.target.checked; step = 1; watchProgress(); $nextTick(() => { $dispatch('form-changed'); })" />
+                                @change="
+                                    form.is_for_rent = $event.target.checked;
+                                    if (form.is_for_rent) form.is_for_sale = false;
+                                    step = 1;
+                                    watchProgress();
+                                    $nextTick(() => { $dispatch('form-changed'); })
+                                " />
                             <span class="font-medium">For Rent</span>
                         </label>
                     </div>
                 </div>
+
 
                 <!-- Progress Bar (Only show when purpose is selected) -->
                 <div x-show="form.is_for_sale || form.is_for_rent" class="w-full bg-gray-300 h-4 rounded mb-6 relative">
@@ -255,11 +277,11 @@
 
                         {{-- نوع بادی --}}
                         <div>
-                            <label class="block font-medium">نوع یادی</label>
+                            <label class="block font-medium">Body Type</label>
                             <select x-model="form.body_type"
                                 class="w-full border rounded p-2 select2 @error('body_type') border-red-500 @enderror"
                                 name="body_type">
-                                <option value="">نوع بادی موتر</option>
+                                <option value="">Select Body Type</option>
                                 <option value="convertible" {{ old('body_type') == 'convertible' ? 'selected' : '' }}>
                                     Convertible</option>
                                 <option value="coupe" {{ old('body_type') == 'coupe' ? 'selected' : '' }}>Coupe</option>
@@ -278,23 +300,23 @@
                             @enderror
                         </div>
 
-                        {{-- وضعیت ټکر --}}
+                        {{-- Accident Condition --}}
                         <div>
-                            <label class="block font-medium">وضعیت ټکر</label>
+                            <label class="block font-medium">Accident Condition</label>
                             <select x-model="form.car_condition"
                                 class="w-full border rounded p-2 select2 text-right @error('car_condition') border-red-500 @enderror"
                                 name="car_condition">
-                                <option value="">وضعیت موتر</option>
-                                <option value="تصادفی" {{ old('car_condition') == 'تصادفی' ? 'selected' : '' }}>تصادفی
+                                <option value="">Select Accident Condition</option>
+                                <option value="تصادفی" {{ old('car_condition') == 'تصادفی' ? 'selected' : '' }}>Crashed
                                 </option>
-                                <option value="سالم" {{ old('car_condition') == 'سالم' ? 'selected' : '' }}>سالم
+                                <option value="سالم" {{ old('car_condition') == 'سالم' ? 'selected' : '' }}> UnDamaged
                                 </option>
                                 <option value="تصادفی اما تعمیر شده"
-                                    {{ old('car_condition') == 'تصادفی اما تعمیر شده' ? 'selected' : '' }}>تصادفی اما تعمیر
-                                    شده</option>
+                                    {{ old('car_condition') == 'تصادفی اما تعمیر شده' ? 'selected' : '' }}>Repaired
+                                    </option>
                             </select>
                             @error('car_condition')
-                                <p class="car_condition-error text-red-500 text-sm mt-1">وضعیت موتر را انتخاب کنید</p>
+                                <p class="car_condition-error text-red-500 text-sm mt-1">Select Accident Condition</p>
                             @enderror
                         </div>
 
