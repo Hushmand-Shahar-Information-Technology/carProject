@@ -678,8 +678,22 @@
             <div class="card shadow-sm" style="margin: 0 auto;">
                 <div class="row g-0">
                     <div class="col-md-4 p-3 text-center">
-                        <img src="{{ $activeBargain && $activeBargain->profile_image ? asset('storage/' . $activeBargain->profile_image) : asset('images/demo.jpg') }}"
-                            class="rounded-circle img-thumbnail profile-img" alt="Profile Picture" id="profile-image">
+                        <div class="position-relative d-inline-block">
+                            <img src="{{ $user->avatar && $user->avatar !== 'avatar.png' ? asset('storage/' . $user->avatar) : asset('images/demo.jpg') }}"
+                                class="rounded-circle img-thumbnail profile-img" alt="Profile Picture" id="profile-image"
+                                style="width: 150px; height: 150px; object-fit: cover;">
+                            @if (auth()->check() && $user->id === auth()->id())
+                                <div class="position-absolute bottom-0 end-0">
+                                    <button type="button" class="btn btn-primary rounded-circle p-2 shadow"
+                                        id="edit-profile-image-btn" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                    <!-- Hidden file input for direct upload -->
+                                    <input type="file" id="avatar-input" name="avatar" accept="image/*"
+                                        style="display: none;">
+                                </div>
+                            @endif
+                        </div>
                         <div class="mt-2">
                             <!-- <span class="badge bg-success">Online</span> -->
                         </div>
@@ -699,6 +713,11 @@
                             <p class="card-text text-muted">
                                 <i class="fas fa-briefcase"></i> <span id="profile-email">{{ $user->email }}</span>
                             </p>
+                            @if ($user->phone)
+                                <p class="card-text text-muted">
+                                    <i class="fas fa-phone"></i> <span id="profile-phone">{{ $user->phone }}</span>
+                                </p>
+                            @endif
                             <p class="card-text">
                                 <small class="text-muted">
                                     <i class="fas fa-map-marker-alt"></i> <span
@@ -924,7 +943,7 @@
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" class="form-control"
-                            value="{{ $user->name }}" required>
+                            value="{{ $user->name }}" required autocomplete="name" autocapitalize="off">
                     </div>
 
                     <div class="form-group">
@@ -936,7 +955,7 @@
                     <div class="form-group">
                         <label for="phone">Phone</label>
                         <input type="text" id="phone" name="phone" class="form-control"
-                            value="{{ $user->phone ?? '' }}">
+                            value="{{ $user->phone }}" placeholder="Enter phone number">
                     </div>
 
                     <div class="form-group">
@@ -975,6 +994,90 @@
             const closeBtn = document.querySelector('.close');
             const cancelBtn = document.getElementById('cancelEdit');
             const editForm = document.getElementById('editProfileForm');
+
+            // Profile Image Direct Upload Functionality
+            const editImageBtn = document.getElementById('edit-profile-image-btn');
+            const avatarInput = document.getElementById('avatar-input');
+            const profileImage = document.getElementById('profile-image');
+
+            // Trigger file input when camera button is clicked
+            if (editImageBtn && avatarInput) {
+                editImageBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    avatarInput.click();
+                });
+
+                // Handle file selection
+                avatarInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Show loading indicator
+                        editImageBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                        editImageBtn.disabled = true;
+
+                        // Create FormData object
+                        const formData = new FormData();
+                        formData.append('avatar', file);
+                        formData.append('_method', 'PATCH');
+                        formData.append('_token', document.querySelector('meta[name="csrf-token"]')
+                            .getAttribute('content'));
+
+                        // Submit via AJAX
+                        fetch("{{ route('profile.update') }}", {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Update profile image on page
+                                    const reader = new FileReader();
+                                    reader.onload = function(e) {
+                                        profileImage.src = e.target.result;
+                                    }
+                                    reader.readAsDataURL(file);
+
+                                    // Show success message
+                                    Swal.fire({
+                                        title: 'Success!',
+                                        text: data.message ||
+                                            'Profile image updated successfully!',
+                                        icon: 'success',
+                                        confirmButtonText: 'OK'
+                                    });
+                                } else {
+                                    // Show error message
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: data.message ||
+                                            'Failed to update profile image. Please try again.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    title: 'Error!',
+                                    text: 'Failed to update profile image. Please try again.',
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            })
+                            .finally(() => {
+                                // Reset button
+                                editImageBtn.innerHTML = '<i class="fas fa-camera"></i>';
+                                editImageBtn.disabled = false;
+                                // Clear file input
+                                avatarInput.value = '';
+                            });
+                    }
+                });
+            }
 
             // Open modal when edit button is clicked
             if (editBtn) {
@@ -1027,10 +1130,38 @@
                         .then(data => {
                             if (data.success) {
                                 // Update profile information on page
-                                document.getElementById('profile-name').textContent = document
-                                    .getElementById('name').value;
+                                const newName = document.getElementById('name').value;
+                                document.getElementById('profile-name').textContent = newName;
                                 document.getElementById('profile-email').textContent = document
                                     .getElementById('email').value;
+
+                                // Update phone if provided
+                                const phoneInput = document.getElementById('phone');
+                                if (phoneInput) {
+                                    const phoneElement = document.getElementById('profile-phone');
+                                    if (phoneElement) {
+                                        phoneElement.textContent = phoneInput.value;
+                                    } else if (phoneInput.value) {
+                                        // Create phone element if it doesn't exist but has a value
+                                        const phoneContainer = document.createElement('p');
+                                        phoneContainer.className = 'card-text text-muted';
+                                        phoneContainer.innerHTML =
+                                            '<i class="fas fa-phone"></i> <span id="profile-phone">' +
+                                            phoneInput.value + '</span>';
+                                        document.querySelector('.card-body').insertBefore(
+                                            phoneContainer, document.querySelector('.card-text')
+                                            .nextSibling);
+                                    }
+                                }
+
+                                // Update profile title as well
+                                const profileTitle = document.getElementById('profile-title');
+                                const bargainPart = profileTitle.textContent.split(' - ')[1];
+                                if (bargainPart) {
+                                    profileTitle.textContent = newName + ' - ' + bargainPart;
+                                } else {
+                                    profileTitle.textContent = newName;
+                                }
 
                                 // Close modal
                                 modal.style.display = 'none';
@@ -1154,6 +1285,7 @@
                     .then(data => {
                         if (data.success) {
                             this.closest('.notification-actions').remove();
+                            notificationElement.classList.remove('unread');
                             notificationElement.classList.remove('unread');
                             const indicator = notificationElement.querySelector('.unread-indicator');
                             if (indicator) {
