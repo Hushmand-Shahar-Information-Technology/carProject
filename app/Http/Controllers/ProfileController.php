@@ -37,6 +37,25 @@ class ProfileController extends Controller
         return view('profile.profile', compact('user', 'activeBargain'));
     }
 
+     /**
+     * Display the user's profile form.
+     */
+    public function showUser($id)
+    {
+        $user = User::findOrFail($id);
+
+        // Load cars with all necessary relationships for proper display
+        $user->load([
+            'cars.auctions',
+            'cars.bargain',
+            'bargains' // Load the bargains relationship
+        ]);
+
+        // Get the first active bargain if exists
+        $activeBargain = $user->bargains->first();
+
+        return view('profile.profile', compact('user', 'activeBargain'));
+    }
     /**
      * Set the profile mode (user or bargain) via AJAX
      */

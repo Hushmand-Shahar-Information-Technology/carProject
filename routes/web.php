@@ -56,6 +56,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/set-profile-mode', [ProfileController::class, 'setProfileMode'])->name('profile.set-mode');
     Route::get('/api/profile-mode', [ProfileController::class, 'getProfileMode'])->name('profile.get-mode');
     // Test routes removed
+    Route::get("/profile/{id}", [ProfileController::class, "showUser"])->name('profile.showUser');
 });
 
 // Language switch route
