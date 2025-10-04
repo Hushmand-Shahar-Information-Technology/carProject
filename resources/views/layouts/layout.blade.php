@@ -64,6 +64,107 @@
 
     <!-- Custom styles for navigation -->
     <style>
+        /* ====== Topbar Styles ====== */
+    .topbar {
+        background: transparent !important;
+        border-bottom: 1px solid #e5e7eb !important; /* light border for separation */
+        color:rgb(255, 255, 255) !important;
+        font-size: 14px !important;
+        padding: 8px 0 !important;
+        width: 100% !important;
+    }
+
+    .topbar .container {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: wrap !important;
+    }
+
+    /* ===== Left and Right Sections ===== */
+    .topbar-left ul,
+    .topbar-right ul {
+        list-style: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .topbar-left li,
+    .topbar-right li {
+        display: inline-flex !important;
+        align-items: center !important;
+        margin-right: 20px !important;
+        color:rgb(254, 254, 254) !important;
+        transition: color 0.3s ease !important;
+    }
+
+    .topbar-left li:last-child,
+    .topbar-right li:last-child {
+        margin-right: 0 !important;
+    }
+
+    /* ===== Icons ===== */
+    .topbar i {
+        color:rgb(246, 59, 59) !important;
+        margin-right: 6px !important;
+    }
+
+    /* ===== Links ===== */
+    .topbar a {
+        color:rgb(255, 255, 255) !important;
+        text-decoration: none !important;
+        transition: color 0.3s ease !important;
+    }
+
+    .topbar a:hover {
+        color:rgb(255, 104, 104) !important;
+    }
+
+    /* ===== Dropdown ===== */
+    .topbar .dropdown-menu {
+        background: #ffffff !important;
+        border: 1px solid #e5e7eb !important;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .topbar .dropdown-item {
+        color: #374151 !important;
+        font-size: 14px !important;
+    }
+
+    .topbar .dropdown-item:hover {
+        background: #f3f4f6 !important;
+        color:rgb(246, 59, 59) !important;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 991px) {
+        .topbar {
+            text-align: center !important;
+            padding: 10px 0 !important;
+        }
+
+        .topbar .container {
+            flex-direction: column !important;
+            gap: 5px !important;
+        }
+
+        .topbar-left li,
+        .topbar-right li {
+            margin-right: 10px !important;
+            font-size: 13px !important;
+        }
+    }
+        @media (max-width: 768px) {
+            .media .fa-brands {
+                display: none !important;
+            }
+        }
+        @media (max-width: 576px) {
+            .media.fa-brands {
+                display: none !important;
+            }
+        }
         .menu-links li {
             list-style: none;
             margin: 0 10px;
@@ -188,12 +289,11 @@
 
     <header id="header" class="defualt mb-5">
         <div class="topbar">
-            <div class="container">
-                <div class="row">
+                <div class="container" style="display: flex; align-items: center; justify-content: space-between !important;">
                     <!-- Left side -->
-                    <div class="col-lg-6 col-md-12">
+                    <div>
                         <div class="topbar-left text-lg-start text-center">
-                            <ul class="list-inline mb-0">
+                            <ul class="list-inline mb-0" style="display: flex; align-items: center;">
                                 <li class="list-inline-item">
                                     <i class="fa-solid fa-envelope"></i> topmotor@gmail.com
                                 </li>
@@ -205,22 +305,22 @@
                     </div>
 
                     <!-- Right side -->
-                    <div class="col-lg-6 col-md-12">
+                    <div>
                         <div class="topbar-right text-lg-end text-center">
-                            <ul class="list-inline mb-0">
+                            <ul class="list-inline mb-0" style="display: flex; align-items: center;">
                                 <!-- Language Switcher -->
                                 <li class="list-inline-item">
                                     <x-language-switcher />
                                 </li>
 
                                
-                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
+                                <li class="list-inline-item media"><a href="#"><i class="fa-brands fa-facebook"></i></a>
                                 </li>
                                 <!-- <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
                                 </li>
                                 <li class="list-inline-item"><a href="#"><i
                                             class="fa-brands fa-instagram"></i></a></li> -->
-                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-youtube"></i></a>
+                                <li class="list-inline-item media"><a href="#"><i class="fa-brands fa-youtube"></i></a>
                                 </li>
 
                                 <!-- Authentication -->
@@ -257,7 +357,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
 
 
