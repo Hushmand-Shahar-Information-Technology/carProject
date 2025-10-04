@@ -564,7 +564,7 @@
                         <div class="details-block details-weight mb-4">
                             <h5>CAR OWNER</h5>
                             <div class="owner-info bg-light p-3 rounded">
-                                <a href="{{ route('user.profile') }}">
+                                <a href="{{ route('profile.showUser', $car->user->id) }}">
                                 <div class="d-flex align-items-center mb-2">
                                     <i class="fa fa-user-circle fa-2x text-primary me-3"></i>
                                     <div>
