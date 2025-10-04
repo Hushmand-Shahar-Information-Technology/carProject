@@ -1,7 +1,10 @@
 <style>
     .container-width {
         width: 65% !important;
+        position: relative; /* or absolute/fixed/sticky */
+        z-index: 333333333 !important;
     }
+
 
     @media (max-width: 790px) {
         .container-width {
@@ -50,11 +53,7 @@
                         <div class="item">
                             <div class="car-item text-center">
                                 <div class="car-image">
-                                    @if(isset($car->images[0]))
-                                        <img class="img-fluid fixed-img" src="{{ asset('storage/' . $car->images[0]) }}" alt="{{ $car->title }}">
-                                    @else
-                                        <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="Default Car">
-                                    @endif
+                                    <img class="img-fluid fixed-img" src="{{ asset($car->getFirstImageOrDefault()) }}" alt="{{ $car->title }}">
                                     <div class="car-overlay-banner">
                                         <ul>
                                             <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a></li>

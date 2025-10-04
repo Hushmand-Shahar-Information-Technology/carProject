@@ -62,6 +62,113 @@
     <!-- Additional styles will be added here by pages -->
     @stack('styles')
 
+    <!-- Custom styles for navigation -->
+    <style>
+        .menu-links li {
+            list-style: none;
+            margin: 0 10px;
+        }
+
+        .menu-links a {
+            text-decoration: none;
+            color: #fff;
+            font-weight: 500;
+            padding: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .menu-links a:hover,
+        .menu-links .active a {
+            color: #db2d2e;
+        }
+
+        .nav-link {
+            color: #fff !important;
+            padding: 10px 0 !important;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: #db2d2e !important;
+        }
+
+        /* Logo sizing */
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .menu-list-items .row {
+                flex-direction: column;
+            }
+
+            .menu-logo {
+                margin-bottom: 15px;
+            }
+
+            .menu-links {
+                justify-content: center;
+            }
+
+            .menu-links li {
+                margin: 5px 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .menu-links {
+                flex-direction: column;
+                align-items: flex-start;
+                background-color: #323232 !important; /* Dark background for mobile menu */
+                padding: 15px !important;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
+
+            .menu-links li {
+                margin: 8px 0;
+                width: 100%;
+            }
+
+            .menu-links a {
+                display: block;
+                padding: 12px 15px !important;
+                color: #fff !important; /* Ensure text is visible on dark background */
+                border-radius: 3px;
+            }
+
+            .menu-links a:hover,
+            .menu-links .active a {
+                background-color: #db2d2e;
+                color: #fff !important;
+            }
+        }
+
+        /* Fix for mobile menu toggle */
+        .menu-mobile-collapse-trigger {
+            background: #323232 !important;
+        }
+
+        .menu-mobile-collapse-trigger span,
+        .menu-mobile-collapse-trigger:before,
+        .menu-mobile-collapse-trigger:after {
+            background: #fff !important;
+        }
+        
+        /* Override responsive.css to ensure menu is hidden by default on mobile */
+        @media (max-width: 991px) {
+            .mega-menu .menu-links {
+                display: none !important;
+                border: 1px solid #e3e3e3;
+                position: absolute;
+                top: 100%;
+                background: #fff;
+                width: 100%;
+            }
+            
+            .mega-menu .menu-links.active {
+                display: block !important;
+            }
+        }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
         // Axios CSRF setup
@@ -91,7 +198,7 @@
                                     <i class="fa-solid fa-envelope"></i> topmotor@gmail.com
                                 </li>
                                 <li class="list-inline-item">
-                                    <i class="fa-solid fa-clock"></i> 7/24 Openned
+                                    <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
                                 </li>
                             </ul>
                         </div>
@@ -106,15 +213,13 @@
                                     <x-language-switcher />
                                 </li>
 
-                                <li class="list-inline-item">
-                                    <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
-                                </li>
+                               
                                 <li class="list-inline-item"><a href="#"><i class="fa-brands fa-facebook"></i></a>
                                 </li>
-                                <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
+                                <!-- <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
                                 </li>
                                 <li class="list-inline-item"><a href="#"><i
-                                            class="fa-brands fa-instagram"></i></a></li>
+                                            class="fa-brands fa-instagram"></i></a></li> -->
                                 <li class="list-inline-item"><a href="#"><i class="fa-brands fa-youtube"></i></a>
                                 </li>
 
@@ -164,52 +269,44 @@
             <nav id="menu" class="mega-menu">
                 <!-- menu list items container -->
                 <section class="menu-list-items">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 position-relative">
+                    <div class="container-fluid">
+                        <div class="row align-items-center">
+                            <div class="col-md-12 position-relative d-flex justify-content-between align-items-center">
                                 <!-- menu logo -->
-                                <ul class="menu-logo">
+                                <ul class="menu-logo mb-0">
                                     <li>
-                                        <a href="/"><img id="logo_img"
+                                        <a href="/"><img id="logo_img" class="logo"
                                                 src="{{ asset('images/logo-light.png') }}" alt="logo"> </a>
                                     </li>
                                 </ul>
-                                <ul class="menu-links">
-                                    <li class="{{ request()->routeIs('home.index') ? 'active' : '' }}">
-                                        <a href="/home">Home</a>
-                                    </li>
-                                    <li class="dropdown"><a href="javascript:void(0)"> Car <i
-                                                class="fa fa-angle-down"></i></a>
-                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
-                                            <li><a href="{{ route('car.create') }}">Car Register</a></li>
-                                            <li><a href="{{ route('car.directory') }}">Car Directory</a></li>
-                                            <li><a href="{{ route('car.index') }}">Car Listing</a></li>
-                                            <li><a href="{{ route('car.rent') }}">Rent a car </a></li>
-                                            <li><a href="{{ route('car.auction') }}">Car Auction</a></li>
-                                        </ul>
-                                    </li>
-                                    {{-- Dropdown for Bargains --}}
-                                    <li class="dropdown" id="bargains-dropdown"><a href="javascript:void(0)">
-                                            Bargains <i class="fa fa-angle-down"></i></a>
-                                        <ul class="drop-down-multilevel" style="min-width: 280px;">
-                                            <li><a href="{{ route('bargains.create') }}"
-                                                    class="{{ request()->routeIs('bargains.create') ? 'active' : '' }}">
-                                                    Bargain Register</a></li>
-                                            <li><a href="{{ route('bargains.index') }}"
-                                                    class="{{ request()->routeIs('bargains.index') ? 'active' : '' }}">Bargain
-                                                    List</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
-                                        <a href="{{ route('promotions.index') }}">Promoted</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }}">
-                                        <a href="{{ route('user.profile') }}">Profile</a>
-                                    </li>
 
-                                    <li class="{{ request()->routeIs('car.compare') ? 'active' : '' }}">
+                                <!-- Main menu -->
+                                <ul class="menu-links d-flex flex-wrap mb-0" style="list-style: none;">
+                                    <li class="{{ request()->routeIs('home.index') ? 'active' : '' }} mx-2">
+                                        <a href="/home" class="nav-link">Home</a>
+                                    </li>
+                                    <!-- Car menu items -->
+                                    <li class="{{ request()->routeIs('car.create') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.create') }}" class="nav-link">Car Register</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.index') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.index') }}" class="nav-link">Car Listing</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.rent') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.rent') }}" class="nav-link">Rent a Car</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.auction') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('car.auction') }}" class="nav-link">Car Auction</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('promotions.index') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('promotions.index') }}" class="nav-link">Promoted</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }} mx-2">
+                                        <a href="{{ route('user.profile') }}" class="nav-link">Profile</a>
+                                    </li>
+                                    <li class="{{ request()->routeIs('car.compare') ? 'active' : '' }} mx-2">
                                         <a href="{{ route('car.compare') }}"
-                                            class="position-relative text-decoration-none">
+                                            class="nav-link position-relative text-decoration-none">
                                             <i class="fa fa-exchange-alt fa-lg"></i>
                                             <span id="compare-count"
                                                 class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
@@ -218,51 +315,15 @@
                                             </span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <div class="search-top">
-                                            <a class="search-btn not_click d-none d-lg-block"
-                                                href="javascript:void(0);">
-                                                <i class="fa-solid fa-search"></i>
-                                            </a>
-                                            <div class="search-box not-click">
-                                                <form id="searchForm"
-                                                    action="/&quot; method=&quot;GET&quot;&gt;
-                                                    <form id=&quot;searchForm&quot; action=&quot;/&quot; method=&quot;GET&quot;&gt;
-                                                        <div class="row">
-                                                    @php
-                                                        $years = range(1990, now()->year);
-                                                    @endphp
-                                                    <x-search-option name="Make[]" label="Make"
-                                                        :options="$distinctValues['make']" />
-                                                    <x-search-option name="Model[]" label="Models"
-                                                        :options="$distinctValues['models']" />
-                                                    <x-search-option name="Year[]" label="Years"
-                                                        :options="$years" />
-                                                    <x-search-option name="Body[]" label="Body Styles"
-                                                        :options="$distinctValues['body_type']" />
-                                                    <x-search-option name="Color[]" label="Color"
-                                                        :options="$distinctValues['colors']" />
-
-                                                    <div class="col-xl-2 col-md-4 col-sm-6">
-                                                        <div class="text-center">
-                                                            <button class="button red" type="submit">Search</button>
-                                                        </div>
-                                                    </div>
-                                            </div>
-                                            </form>
-                                        </div>
+                                </ul>
                             </div>
-                            </li>
-
                         </div>
                     </div>
-        </div>
-        </section>
-        </nav>
-        <!-- menu end -->
+                </section>
+            </nav>
+            <!-- menu end -->
         </div>
     </header>
-
 
     <!--=================================
  header -->
@@ -277,7 +338,7 @@
         // Function to check if we're in bargain mode and show alert for bargain registration
         document.addEventListener('DOMContentLoaded', function() {
             // Check if we're on the bargain registration page link
-            const bargainRegisterLink = document.querySelector('a[href="{{ route('bargains.create') }}"]');
+            const bargainRegisterLink = document.querySelector('a[href*="bargains/create"]');
 
             if (bargainRegisterLink) {
                 bargainRegisterLink.addEventListener('click', function(e) {
@@ -312,13 +373,11 @@
                                     })
                                 }).then(() => {
                                     // After successfully switching to user profile mode, redirect to bargain registration page
-                                    window.location.href =
-                                        '{{ route('bargains.create') }}';
+                                    window.location.href = '/bargains/create';
                                 }).catch(error => {
                                     console.error('Error setting profile mode:', error);
                                     // Even if there's an error, still redirect to bargain registration page
-                                    window.location.href =
-                                        '{{ route('bargains.create') }}';
+                                    window.location.href = '/bargains/create';
                                 });
                             }
                         });
@@ -359,11 +418,11 @@
             });
 
             // Also check URL parameters on page load
-            const urlParams = new URLSearchParams(window.location.search);
-            const bargainIdFromUrl = urlParams.get('bargain_id');
-            if (bargainIdFromUrl) {
+            const urlParams1 = new URLSearchParams(window.location.search);
+            const bargainIdFromUrl1 = urlParams1.get('bargain_id');
+            if (bargainIdFromUrl1) {
                 localStorage.setItem('currentProfileMode', 'bargain');
-                localStorage.setItem('currentBargainId', bargainIdFromUrl);
+                localStorage.setItem('currentBargainId', bargainIdFromUrl1);
                 updateNavbarForProfileMode();
             }
 
@@ -394,9 +453,9 @@
 
             // Additional check to ensure bargains section is hidden when in bargain mode
             // This is a fallback in case the profile page doesn't properly hide it
-            const urlParams = new URLSearchParams(window.location.search);
-            const bargainIdFromUrl = urlParams.get('bargain_id');
-            if (bargainIdFromUrl) {
+            const urlParams2 = new URLSearchParams(window.location.search);
+            const bargainIdFromUrl2 = urlParams2.get('bargain_id');
+            if (bargainIdFromUrl2) {
                 // Hide bargains dropdown when in bargain mode
                 const bargainsDropdown = document.getElementById('bargains-dropdown');
                 if (bargainsDropdown) {
@@ -476,10 +535,10 @@
                                 <div class="recent-post">
                                     <div class="recent-post-image">
                                         @if (!empty($car->images) && is_array($car->images) && isset($car->images[0]))
-                                            <img class="img-fluid" src="{{ asset($car->images[0]) }}"
+                                            <img class="img-fluid" src="{{ asset('storage/' . $car->images[0]) }}"
                                                 alt="{{ $car->title }}">
                                         @else
-                                            <img class="img-fluid" src="{{ asset('images/car/01.jpg') }}"
+                                            <img class="img-fluid" src="{{ asset('images/demo.jpg') }}"
                                                 alt="Default car image">
                                         @endif
                                     </div>
@@ -496,13 +555,13 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6">
-                    <div class="news-letter">
+                    <div class="news-letter text-white">
                         <h6 class="text-white">subscribe Our Newsletter </h6>
                         <p>Keep up on our always evolving products features and technology. Enter your e-mail and
                             subscribe to our newsletter.</p>
-                        <form class="news-letter">
-                            <input type="email" placeholder="Enter your Email" class="form-control placeholder">
-                            <a class="button red" href="#">Subscribe</a>
+                        <form action="{{ route('email.store') }}"  id="email_form" class="news-letter">
+                            <input type="email"  id="email"  placeholder="Enter your Email" style="background-color: aliceblue;" class="form-control placeholder">
+                            <button class="button red mt-2" type="butotn" id="make_an_email_submit">Subscribe</button>
                         </form>
                     </div>
                 </div>
@@ -512,8 +571,8 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-12">
                         <div class="text-lg-start text-center">
-                            <p>©Copyright 2021 Car Dealer Developed by <a href="http://www.motorsaal.com/"
-                                    target="_blank">Motor Saal</a></p>
+                            <p style="color: aliceblue;">©Copyright 2021 Car Dealer Developed by <a href="http://www.motorsaal.com/"
+                                    target="_blank">Top Motor</a></p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
@@ -686,6 +745,61 @@
 
         // Update count every minute to check for expiration
         setInterval(updateNavbarCompareCount, 60000);
+
+       $(document).ready(function() {
+            $('#make_an_email_submit').on('click', function(e) {
+                e.preventDefault();
+
+                var formData = {
+                    email: $('#email').val(),
+                };
+
+                console.log('Form data:', formData);
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/email',
+                    data: formData,
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    beforeSend: function() {
+                        console.log('Sending AJAX request...');
+                    },
+                    success: function(response) {
+                        console.log('Success response received:', response);
+                        
+                        // Check if the response indicates success
+                        if (response && response.success === true) {
+                            console.log('Email submitted successfully');
+                            $('#email_form')[0].reset();
+
+                            Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: response.message || 'Email submitted successfully!',
+                                    timer: 3000,
+                                    showConfirmButton: false,
+                                    heightAuto: false,
+                                });
+                                
+                        } else {
+                            console.log('Server returned success=false');
+                            // Handle case where response.success is false
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error!',
+                                text: response.message || 'Something went wrong. Please try again.',
+                                heightAuto: false
+                            });
+                        }
+                    },
+                });
+            });
+        });
+
+        // Initialize Fancybox for video playback
     </script>
 </body>
 

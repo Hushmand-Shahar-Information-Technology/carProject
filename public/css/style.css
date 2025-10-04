@@ -2084,7 +2084,7 @@ margin-left: -17px; line-height: 50px; }
 /*************************************
         car-single
 **************************************/
-.bg-17 { background-image: url(../images/bg/17.jpg); background-clip: initial; background-color: #f6f6f6; background-origin: initial; background-position: center center; background-repeat: no-repeat; position: relative; z-index: 0; background-size: cover !important;  }
+.bg-17 { background-image: url(../images/car/15.jpg); background-clip: initial; background-color: #f6f6f6; background-origin: initial; background-position: center center; background-repeat: no-repeat; position: relative; z-index: 0; background-size: cover !important;  }
 
  #header.fancy .topbar { border-bottom: 0 }
 .search-page  { position: relative; margin-top: 20px; }

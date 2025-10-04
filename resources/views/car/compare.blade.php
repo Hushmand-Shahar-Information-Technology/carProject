@@ -239,7 +239,7 @@
                 if (compareList[i]) {
                     const car = compareList[i];
                     const imageSrc = car.images && car.images.length > 0 ?
-                        `/storage/${car.images[0]}` : '/images/no-image.png';
+                        `/storage/${car.images[0]}` : '/images/demo.jpg';
 
                     slot.innerHTML = `
                         <img src="${imageSrc}" alt="${car.title}" class="car-image">

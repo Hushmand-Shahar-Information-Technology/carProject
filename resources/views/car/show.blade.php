@@ -507,7 +507,7 @@
                         </div>
                     </div>
                     <div class="feature-car">
-                        <h6>Recently Vehicle</h6>
+                        <h6>Related Vehicle</h6>
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="owl-carousel" data-nav-arrow="true" data-nav-dots="true" data-items="3"
@@ -516,7 +516,7 @@
                                         <div class="item">
                                             <div class="car-item gray-bg text-center">
                                                 <div class="car-image">
-                                                    <img class="img-fluid" src="/storage/{{ $car_i->images[0] }}"
+                                                    <img class="img-fluid" src="{{ asset($car_i->getFirstImageOrDefault()) }}"
                                                         alt="">
                                                     <div class="car-overlay-banner">
                                                         <ul>

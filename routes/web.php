@@ -15,6 +15,7 @@ use App\Http\Controllers\BargainController;
 use App\Http\Controllers\OfferController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\AuctionController;
+use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PromotionController;
 
 /*
@@ -28,15 +29,8 @@ use App\Http\Controllers\PromotionController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('/', [HomeController::class, 'index'])->name('home.index');
+Route::get('/', [CarController::class, 'index'])->name('car.index');
+Route::get('/home', [HomeController::class, 'index'])->name('home.index');
 Route::post('/home/filter-cars', [HomeController::class, 'filter']);
 Route::get('/default-cars', [HomeController::class, 'default']);
 Route::view('/otp', 'auth.otp');
@@ -199,3 +193,6 @@ require __DIR__ . '/auth.php';
 Route::view('/privacy-policy', 'static.privacy-policy')->name('privacy.policy');
 Route::view('/terms-conditions', 'static.terms-conditions')->name('terms.conditions');
 Route::view('/contact-us', 'static.contact-us')->name('contact.us');
+
+// API route for car comparison
+Route::post('/email', [EmailController::class, 'store'])->name('email.store');

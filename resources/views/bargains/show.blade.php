@@ -383,11 +383,7 @@
                                                 <span class="badge bg-warning position-absolute" style="top: 10px; left: 10px; z-index: 10;">Auction</span>
                                             @endif
                                             <div class="car-image">
-                                                @if (isset($car->images[0]))
-                                                    <img class="img-fluid fixed-img" src="{{ asset('storage/' . $car->images[0]) }}" alt="{{ $car->title }}">
-                                                @else
-                                                    <img class="img-fluid fixed-img" src="{{ asset('images/car/01.jpg') }}" alt="Default Car Image">
-                                                @endif
+                                                <img class="img-fluid fixed-img" src="{{ asset($car->getFirstImageOrDefault()) }}" alt="{{ $car->title }}">
                                                 <div class="car-overlay-banner">
                                                     <ul style="display: flex; justify-content: center; align-items: center;">
                                                         <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a></li>

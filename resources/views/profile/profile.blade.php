@@ -571,7 +571,7 @@
         <div class="card shadow-sm" style="margin: 0 auto;">
             <div class="row g-0">
                 <div class="col-md-4 p-3 text-center">
-                    <img src="{{ $activeBargain && $activeBargain->profile_image ? asset('storage/' . $activeBargain->profile_image) : asset('images/02.png') }}"
+                    <img src="{{ $activeBargain && $activeBargain->profile_image ? asset('storage/' . $activeBargain->profile_image) : asset('images/demo.jpg') }}"
                         class="rounded-circle img-thumbnail profile-img" alt="Profile Picture" id="profile-image">
                     <div class="mt-2">
                         <!-- <span class="badge bg-success">Online</span> -->
@@ -652,13 +652,8 @@
                         <span class="badge bg-success badge-promotion">Promoted</span>
                         @endif
                         <div class="car-image">
-                            @if ($car->images && count($car->images) > 0)
-                            <img class="fixed-img" src="{{ asset('storage/' . $car->images[0]) }}"
+                            <img class="fixed-img" src="{{ asset($car->getFirstImageOrDefault()) }}"
                                 alt="{{ $car->title }}">
-                            @else
-                            <img class="fixed-img" src="{{ asset('images/car/01.jpg') }}"
-                                alt="Default Car Image">
-                            @endif
                             <div class="car-overlay-banner">
                                 <ul>
                                     <li><a href="{{ route('car.show', $car->id) }}"><i
