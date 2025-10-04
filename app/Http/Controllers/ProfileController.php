@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -101,14 +102,65 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request)
+    public function update(Request $request)
     {
         /** @var User $user */
         $user = Auth::user();
-        $user->fill($request->validated());
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
+        // Check if we're only updating the avatar
+        $avatarOnly = $request->hasFile('avatar') && !$request->has('name') && !$request->has('email');
+
+        // Validate the request
+        $rules = [
+            'phone' => ['nullable', 'string', 'max:255'], // Phone is always optional
+            'avatar' => ['nullable', 'image', 'max:2048'], // Avatar is always optional
+        ];
+
+        // Add name and email validation only if they are being updated
+        if ($request->has('name') || !$avatarOnly) {
+            $rules['name'] = ['required', 'string', 'max:255'];
+        }
+
+        if ($request->has('email') || !$avatarOnly) {
+            $rules['email'] = [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:users,email,' . $user->id,
+            ];
+        }
+
+        $validated = $request->validate($rules);
+
+        // Handle avatar upload if present
+        if ($request->hasFile('avatar')) {
+            // Delete old avatar if it exists and is not the default
+            if ($user->avatar && $user->avatar !== 'avatar.png') {
+                Storage::disk('public')->delete($user->avatar);
+            }
+
+            // Store the new avatar
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+        }
+
+        // Update other fields if they are present
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->has('email')) {
+            $user->email = $request->email;
+
+            if ($user->isDirty('email')) {
+                $user->email_verified_at = null;
+            }
+        }
+
+        if ($request->has('phone')) {
+            $user->phone = $request->phone;
         }
 
         $user->save();
