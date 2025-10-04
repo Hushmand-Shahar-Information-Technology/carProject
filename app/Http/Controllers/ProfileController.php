@@ -37,7 +37,7 @@ class ProfileController extends Controller
         return view('profile.profile', compact('user', 'activeBargain'));
     }
 
-     /**
+    /**
      * Display the user's profile form.
      */
     public function showUser($id)
@@ -101,7 +101,7 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(ProfileUpdateRequest $request)
     {
         /** @var User $user */
         $user = Auth::user();
@@ -113,7 +113,8 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        // Always return JSON response for our modal implementation
+        return response()->json(['success' => true, 'message' => 'Profile updated successfully']);
     }
 
     /**
@@ -138,4 +139,3 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 }
-
