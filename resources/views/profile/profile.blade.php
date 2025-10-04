@@ -581,12 +581,14 @@
                     <div class="card-body">
                         <h5 class="card-title d-flex justify-content-between align-items-center">
                             <span id="profile-name">{{ $activeBargain ? $activeBargain->username : $user->name }}</span>
-                            <div>
-                                <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary"
-                                    id="edit-profile-btn">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                            </div>
+                            @if(auth()->check() && $user->id === auth()->id())
+                                <div>
+                                    <a href="{{ route('profile.edit') }}" class="btn btn-sm btn-outline-primary"
+                                        id="edit-profile-btn">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
+                                </div>
+                            @endif    
                         </h5>
                         <p class="card-text text-muted">
                             <i class="fas fa-briefcase"></i> <span id="profile-email">{{ $user->email }}</span>
@@ -621,24 +623,28 @@
     </div>
 
     <!-- New Post Section -->
-    <a href="{{ route('car.create')}}" id="new-car-link">
-        <div class="new-post">
-            <div class="new-post-circle">
-                <i class="fas fa-plus"></i>
+    @if(auth()->check() && $user->id === auth()->id())
+        <a href="{{ route('car.create')}}" id="new-car-link">
+            <div class="new-post">
+                <div class="new-post-circle">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="new-post-label">New Car</div>
             </div>
-            <div class="new-post-label">New Car</div>
-        </div>
-    </a>
+        </a>
+    @endif
 
     <!-- Modern Tab Navigation -->
     <div class="modern-tabs">
         <div class="modern-tab active" data-tab="cars">
             Cars ({{ $user->cars->count() }})
         </div>
-        <div class="modern-tab" data-tab="notifications">
-            Notifications <span class="notification-count-badge"
-                id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
-        </div>
+        @if(auth()->check() && $user->id === auth()->id())
+            <div class="modern-tab" data-tab="notifications">
+                Notifications <span class="notification-count-badge"
+                    id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
+            </div>
+        @endif
     </div>
 
     <!-- Cars Tab Content - Only show user cars -->
