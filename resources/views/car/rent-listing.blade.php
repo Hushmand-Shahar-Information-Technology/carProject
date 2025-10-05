@@ -157,9 +157,11 @@
             .price-container {
                 padding: 12px;
             }
+
             .price-value {
                 font-size: 14px;
             }
+
             .price-label {
                 font-size: 11px;
             }
@@ -190,7 +192,8 @@
             padding: 4px 8px;
         }
 
-        #year-range-slider, #price-range-slider {
+        #year-range-slider,
+        #price-range-slider {
             margin: 15px 0;
             height: 6px;
             border-radius: 3px;
@@ -220,7 +223,8 @@
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .noUi-handle:before, .noUi-handle:after {
+        .noUi-handle:before,
+        .noUi-handle:after {
             display: none;
         }
 
@@ -248,33 +252,34 @@
         }
 
         /* .filter-header {
-            padding: 12px 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            color: #333;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            border: 1px solid #eef0f3;
-        } */
+                padding: 12px 15px;
+                background: #f8f9fa;
+                border-radius: 8px;
+                color: #333;
+                font-weight: 600;
+                text-decoration: none;
+                transition: all 0.3s ease;
+                border: 1px solid #eef0f3;
+            } */
 
         /* .filter-header:hover {
-            background: #e9ecef;
-        } */
+                background: #e9ecef;
+            } */
 
         /* .filter-header.active {
-            background: #db2d2e;
-            color: #fff;
-            border-color: #db2d2e;
-        } */
+                background: #db2d2e;
+                color: #fff;
+                border-color: #db2d2e;
+            } */
 
         .filter-arrow {
             transition: transform 0.3s ease;
         }
-/* 
-        .filter-header.active .filter-arrow {
-            transform: rotate(180deg);
-        } */
+
+        /*
+            .filter-header.active .filter-arrow {
+                transform: rotate(180deg);
+            } */
 
         .filter-options {
             padding: 15px 10px;
@@ -297,7 +302,6 @@
             font-size: 14px;
             color: #495057;
         }
-
     </style>
 
     <section class="slider-parallax bg-overlay-black-50 bg-17">
@@ -413,7 +417,7 @@
                         </nav>
                     </div>
                 </div>
-                 <div class="pagination-link" style="display: flex; justify-content: center; margin: 2rem 0 3rem 0;">
+                <div class="pagination-link" style="display: flex; justify-content: center; margin: 2rem 0 3rem 0;">
                 </div>
             </div>
         </div>
@@ -485,135 +489,6 @@
                 applyFilters(1);
             });
         });
-        function renderPagination(meta) {
-            let pagContainer = document.querySelector('.pagination-link');
-            if (!pagContainer) return;
-
-            if (!meta) {
-                pagContainer.innerHTML = '';
-                return;
-            }
-
-            const current = meta.current_page || 1;
-            const last = meta.last_page || 1;
-            const maxButtons = 5; // how many page numbers to display around current
-            const parts = [];
-
-            const makeBtn = (label, page, disabled = false, active = false, isEllipsis = false) => {
-                if (isEllipsis) {
-                    return `<span class="mx-1">...</span>`;
-                }
-                const cls = ['btn', 'btn-sm', 'mx-1', 'mb-2', 'px-3', 'py-1'];
-                if (active) cls.push('btn-danger');
-                else cls.push('btn-light');
-                const disabledAttr = disabled ? 'disabled' : '';
-                return `<button type="button" class="${cls.join(' ')} pagination" data-page="${page}" ${disabledAttr}>${label}</button>`;
-            };
-
-            // Prev button
-            parts.push(makeBtn('Prev', current - 1, current === 1));
-
-            // Always show the first page
-            parts.push(makeBtn(1, 1, false, current === 1));
-
-            // Show second page only if current is close
-            if (current > 3) {
-                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
-            }
-
-            // Pages around current
-            let start = Math.max(2, current - 2);
-            let end = Math.min(last - 1, current + 2);
-
-            for (let p = start; p <= end; p++) {
-                parts.push(makeBtn(p, p, false, p === current));
-            }
-
-            // Show ellipsis before last page
-            if (current < last - 2) {
-                parts.push(makeBtn('...', null, true, false, true)); // ellipsis
-            }
-
-            // Always show last page if > 1
-            if (last > 1) {
-                parts.push(makeBtn(last, last, false, current === last));
-            }
-
-            // Next button
-            parts.push(makeBtn('Next', current + 1, current === last));
-
-            // Render
-            pagContainer.innerHTML = parts.join('');
-
-            // Attach events
-            pagContainer.querySelectorAll('button[data-page]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const page = parseInt(e.currentTarget.getAttribute('data-page'));
-                    if (isNaN(page)) return;
-                    const q = setQueryParam(lastQuery, 'page', page);
-                    fetchFilteredCars(q);
-                    pagContainer.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'nearest'
-                    });
-                });
-            });
-        }
-        function setView(view) {
-            currentView = view;
-            document.getElementById('grid-view').classList.toggle('active', view === 'grid');
-            document.getElementById('list-view').classList.toggle('active', view === 'list');
-            applyFilters(1);
-        }
-
-        function buildQuery(page = 1) {
-            const formData = new FormData();
-            
-            // Add checkbox filters
-            document.querySelectorAll('.filter-option:checked').forEach(input => {
-                if (input.value !== '*') {
-                    const name = input.name.replace('[]', '');
-                    formData.append(name + '[]', input.value);
-                }
-            });
-
-            // Add search keyword
-            const keyword = document.getElementById('car-search').value.trim();
-            if (keyword) formData.append('keyword', keyword);
-
-            // Add sort option
-            const sortValue = document.getElementById('sort-select').value;
-            if (sortValue) formData.append('sort', sortValue);
-
-            // Add price range
-            const priceSlider = document.getElementById('price-range-slider');
-            if (priceSlider && priceSlider.noUiSlider) {
-                const priceValues = priceSlider.noUiSlider.get();
-                const minPrice = Math.round(priceValues[0]);
-                const maxPrice = Math.round(priceValues[1]);
-                formData.append('price_min', minPrice);
-                formData.append('price_max', maxPrice);
-            }
-
-            // Add year range
-            const yearSlider = document.getElementById('year-range-slider');
-            if (yearSlider && yearSlider.noUiSlider) {
-                const yearValues = yearSlider.noUiSlider.get();
-                const minYear = Math.round(yearValues[0]);
-                const maxYear = Math.round(yearValues[1]);
-                
-                // Push all years in range to 'Year[]'
-                const years = [];
-                for (let y = minYear; y <= maxYear; y++) {
-                    years.push(y);
-                }
-                years.forEach(y => formData.append('Year[]', y));
-            }
-
-            formData.append('page', page);
-            formData.append('per_page', perPage);
-            return new URLSearchParams(formData).toString();
-        }
 
         function renderPagination(meta) {
             paginationEl.innerHTML = '';
@@ -647,7 +522,76 @@
             paginationEl.appendChild(createItem('»', current_page + 1, current_page === last_page));
         }
 
+        function setView(view) {
+            currentView = view;
+            document.getElementById('grid-view').classList.toggle('active', view === 'grid');
+            document.getElementById('list-view').classList.toggle('active', view === 'list');
+            applyFilters(1);
+        }
+
+        function buildQuery(page = 1) {
+            const formData = new FormData();
+
+            // Add checkbox filters
+            document.querySelectorAll('.filter-option:checked').forEach(input => {
+                if (input.value !== '*') {
+                    const name = input.name.replace('[]', '');
+                    formData.append(name + '[]', input.value);
+                }
+            });
+
+            // Add search keyword
+            const keyword = document.getElementById('car-search').value.trim();
+            if (keyword) formData.append('keyword', keyword);
+
+            // Add sort option
+            const sortValue = document.getElementById('sort-select').value;
+            if (sortValue) formData.append('sort', sortValue);
+
+            // Add price range
+            const priceSlider = document.getElementById('price-range-slider');
+            if (priceSlider && priceSlider.noUiSlider) {
+                const priceValues = priceSlider.noUiSlider.get();
+                const minPrice = Math.round(priceValues[0]);
+                const maxPrice = Math.round(priceValues[1]);
+                formData.append('price_min', minPrice);
+                formData.append('price_max', maxPrice);
+            }
+
+            // Add year range
+            const yearSlider = document.getElementById('year-range-slider');
+            if (yearSlider && yearSlider.noUiSlider) {
+                const yearValues = yearSlider.noUiSlider.get();
+                const minYear = Math.round(yearValues[0]);
+                const maxYear = Math.round(yearValues[1]);
+
+                // Push all years in range to 'Year[]'
+                const years = [];
+                for (let y = minYear; y <= maxYear; y++) {
+                    years.push(y);
+                }
+                years.forEach(y => formData.append('Year[]', y));
+            }
+
+            formData.append('page', page);
+            formData.append('per_page', perPage);
+            return new URLSearchParams(formData).toString();
+        }
+
         function fetchFilteredCars(query) {
+            // Ensure container is available
+            if (!container) {
+                container = document.getElementById('car-results');
+                if (!container) {
+                    console.error('Car results container not found');
+                    return;
+                }
+            }
+
+            // Show loading indicator
+            container.innerHTML =
+                '<div class="text-center py-5"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading rental cars...</p></div>';
+
             axios.get(API_URL + '?' + query)
                 .then(response => {
                     const res = response.data;
@@ -676,9 +620,9 @@
 
                     cars.forEach(car => {
                         let images = Array.isArray(car.images) ? car.images : (car.images ? [car.images] : []);
-                         const imageSrc = images.length 
-                            ? "{{ asset('storage') }}/" + images[0] 
-                            : '/images/demo.jpg';
+                        const imageSrc = images.length ?
+                            "{{ asset('storage') }}/" + images[0] :
+                            '/images/demo.jpg';
                         const url = car_show.replace('__ID__', car.id);
                         const bargain_url = car.bargain ?
                             bargain_show.replace('__ID__', car.bargain.id) :
@@ -748,7 +692,22 @@
                 })
                 .catch(error => {
                     console.error('Error fetching cars:', error);
-                    container.innerHTML = '<p>Failed to load cars.</p>';
+                    // Ensure container is available
+                    if (!container) {
+                        container = document.getElementById('car-results');
+                    }
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="alert alert-danger text-center">
+                                <h4>Error Loading Rental Cars</h4>
+                                <p>Failed to load rental cars. Please try again later.</p>
+                                <button class="btn btn-danger" onclick="applyFilters(1)">Retry</button>
+                            </div>`;
+                    }
+                    renderPagination({
+                        current_page: 1,
+                        last_page: 1
+                    });
                 });
         }
 
@@ -761,20 +720,20 @@
             // Initialize view toggle buttons
             document.getElementById('grid-view').addEventListener('click', () => setView('grid'));
             document.getElementById('list-view').addEventListener('click', () => setView('list'));
-            
+
             // Initialize filter event listeners
             document.querySelectorAll('.filter-option').forEach(el => el.addEventListener('change', () =>
                 applyFilters(1)));
             document.getElementById('car-search').addEventListener('input', () => applyFilters(1));
             document.getElementById('sort-select').addEventListener('change', () => applyFilters(1));
-            
+
             // Collapsible filters
             document.querySelectorAll('.filter-header').forEach(header => {
                 header.addEventListener('click', function(e) {
                     e.preventDefault();
                     const submenu = this.nextElementSibling;
                     this.classList.toggle('active');
-                    
+
                     // Simple toggle without animation
                     if (submenu.style.display === 'block') {
                         submenu.style.display = 'none';
@@ -783,7 +742,7 @@
                     }
                 });
             });
-            
+
             // Initial load
             applyFilters(1);
         });
