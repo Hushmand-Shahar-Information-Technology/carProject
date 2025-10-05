@@ -21,9 +21,10 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'phone',
+        'phone', // Phone field is already here
         'password',
         'role', // Add role to fillable attributes
+        'avatar', // Add avatar to fillable attributes
     ];
 
     /**

@@ -283,14 +283,14 @@
         }
 
         .btn-details {
-            background:rgb(220, 22, 22);
+            background: rgb(220, 22, 22);
             color: white;
             border: 1px solid rgb(184, 23, 23);
         }
 
         .btn-details:hover {
-            background:rgb(219, 51, 51);
-            border-color:rgb(201, 51, 51);
+            background: rgb(219, 51, 51);
+            border-color: rgb(201, 51, 51);
         }
 
         .btn-bargain {
@@ -309,12 +309,15 @@
             .price-container {
                 padding: 12px;
             }
+
             .price-value {
                 font-size: 14px;
             }
+
             .price-label {
                 font-size: 11px;
             }
+
             .action-buttons {
                 flex-direction: column;
             }
@@ -343,7 +346,8 @@
             padding: 4px 8px;
         }
 
-        #year-range-slider, #price-range-slider {
+        #year-range-slider,
+        #price-range-slider {
             margin: 15px 0;
             height: 6px;
             border-radius: 3px;
@@ -373,7 +377,8 @@
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
         }
 
-        .noUi-handle:before, .noUi-handle:after {
+        .noUi-handle:before,
+        .noUi-handle:after {
             display: none;
         }
 
@@ -1060,11 +1065,10 @@
                     $(`input[name="${filter}[]"][value="${val}"]`).prop('checked', true);
                 });
             });
-            // 🔥 This is the missing part:
+
+            // Fetch cars when page loads
             fetchFilteredCars(urlParams.toString());
         });
-
-
 
         // Hide results when pressing ESC
         $(document).keyup(function(e) {
@@ -1076,9 +1080,18 @@
         const API_URL = "{{ route('cars.filter') }}"; // Laravel route
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
         const bargain_show = "{{ route('bargains.show', ['id' => '__ID__']) }}";
-        const container = document.getElementById('car-results');
+        let container = null;
         let currentView = 'grid'; // Default view
         let lastQuery = '';
+
+        // Initialize container after DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            container = document.getElementById('car-results');
+            if (!container) {
+                console.error('Car results container not found');
+                return;
+            }
+        });
 
         function setQueryParam(query, key, value) {
             const params = new URLSearchParams(query || '');
@@ -1169,8 +1182,22 @@
         }
 
         function fetchFilteredCars(query = '') {
+            // Ensure container is available
+            if (!container) {
+                container = document.getElementById('car-results');
+                if (!container) {
+                    console.error('Car results container not found');
+                    return;
+                }
+            }
+
             lastQuery = query || '';
             const url = query ? (API_URL + '?' + query) : API_URL;
+
+            // Show loading indicator
+            container.innerHTML =
+                '<div class="text-center py-5"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading cars...</p></div>';
+
             axios.get(url)
                 .then(response => {
                     const payload = response.data;
@@ -1213,61 +1240,61 @@
 
                     $.each(cars, function(index, car) {
                         let images;
-                        // try {
-                        //     images = JSON.parse(car.images || '[]');
-                        // } catch (e) {
-                        //     console.log('second')
-                        //     // If parsing fails, treat it as a single string
-                        //     images = car.images ? [car.images] : [];
-                        // }
-                        // if images are json
-                        if (typeof car.images === 'object') {
+                        // Handle both array and string image formats
+                        if (Array.isArray(car.images)) {
                             images = car.images;
-
+                        } else if (typeof car.images === 'string') {
+                            try {
+                                // Try to parse as JSON array
+                                images = JSON.parse(car.images);
+                            } catch (e) {
+                                // If parsing fails, treat as single string
+                                images = [car.images];
+                            }
                         } else {
                             images = car.images ? [car.images] : [];
                         }
-                        const imageSrc = images.length 
-                            ? "{{ asset('storage') }}/" + images[0] 
-                            : '/images/demo.jpg';
+
+                        // Ensure we have a valid image path
+                        const imageSrc = images && images.length > 0 ?
+                            (images[0].startsWith('http') ? images[0] : "{{ asset('storage') }}/" + images[0]) :
+                            '/images/demo.jpg';
 
                         const url = car_show.replace('__ID__', car.id);
-                        const bargain_url = car.bargain ?
+                        const bargain_url = car.bargain && car.bargain.id ?
                             bargain_show.replace('__ID__', car.bargain.id) :
                             null;
+
                         const carDiv = $(`<div style="color: #a0a0a0">`);
-                        const title = `<h4>${car.title}</h4>`;
-                        const details_button = `
-                         <div">
-                             <a class="button red float-end py-2 px-4 ml-2" style="font-size: 1rem;" href="${url}">Details</a>
-                             <a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${bargain_url}">Bargain</a>
-                         </div>`;
-                        const description =
-                            `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
+                        const title = `<h4>${car.make} ${car.model}</h4>`;
+                        const description = car.description ||
+                            "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>";
+
                         const details = `
-                                 <div class="row" style="margin-bottom: 6px;">
-                             <div class="col-lg-2 col-sm-4">
-                                 <ul class="list-style-1">
-                                     <li><i class="fa fa-check"></i> ${car.make}</li>
-                                     <li><i class="fa fa-check"></i> ${car.model}</li>
-                                 </ul>
-                             </div>
-                             <div class="col-lg-4 col-sm-4">
-                                 <ul class="list-style-1">
-                                     <li><i class="fa fa-check"></i> ${car.car_condition}</li>
-                                     <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
-                                 </ul>
-                             </div>
-                             <div class="col-lg-4 col-sm-4">
-                                 <ul class="list-style-1">
-                                     <li><i class="fa fa-check"></i> ${car.currency_type} </li>
-                                      <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
-                                 </ul>
-                             </div>
-                         </div>`
+                            <div class="row" style="margin-bottom: 6px;">
+                                <div class="col-lg-2 col-sm-4">
+                                    <ul class="list-style-1">
+                                        <li><i class="fa fa-check"></i> ${car.make}</li>
+                                        <li><i class="fa fa-check"></i> ${car.model}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-4 col-sm-4">
+                                    <ul class="list-style-1">
+                                        <li><i class="fa fa-check"></i> ${car.car_condition || 'N/A'}</li>
+                                        <li><i class="fa fa-check"></i> ${car.VIN_number || 'N/A'}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-4 col-sm-4">
+                                    <ul class="list-style-1">
+                                        <li><i class="fa fa-check"></i> ${car.currency_type || '$'} </li>
+                                        <li><i class="fa fa-check"></i> Inside color - ${car.car_inside_color || 'N/A'}</li>
+                                    </ul>
+                                </div>
+                            </div>`;
 
                         // Set dynamic class based on view
                         carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1');
+
                         // Build HTML dynamically
                         let html = `
                     ${currentView === 'list' ? '<div class="row p-2">' : ''}
@@ -1277,15 +1304,14 @@
                             <div class="car-item gray-bg text-center">
                                 <div class="car-image">
                                     ${car.auction ? '<div class="auction-badge">AUCTION</div>' : ''}
-                                    <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
+                                    <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.make} ${car.model}" onerror="this.src='/images/demo.jpg'">
                                     <div class="car-overlay-banner">
                                         <ul>
-                                            <li><a href="${bargain_url}"><i class="fa fa-link"></i></a></li>
+                                            <li><a href="${bargain_url || url}"><i class="fa fa-link"></i></a></li>
                                             <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
-                                              <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer; z-index: 100; position: relative;">
-    <i class="fa fa-exchange-alt" style="font-size: 1rem;"></i>
-</li>
-
+                                            <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer; z-index: 100; position: relative;">
+                                                <i class="fa fa-exchange-alt" style="font-size: 1rem;"></i>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
@@ -1295,12 +1321,9 @@
 
                         <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
-                                ${currentView === 'list'
-                                ? `</div>`
-                                : ``
-                            }
-                                ${currentView == 'list' ? title: ""}
-                                ${currentView == 'list' ? description  : ""}
+                                ${currentView === 'list' ? '</div>' : ''}
+                                ${currentView == 'list' ? title : ""}
+                                ${currentView == 'list' ? description : ""}
                                 ${currentView == 'list' ? details : ""}
                                 <div class="price-container">
                                     <div class="price-item">
@@ -1309,41 +1332,36 @@
                                             ${car.auction ? 'Starting Price' : 'Price'}
                                         </div>
                                         <div class="price-value">
-                                            <span class="price-currency">$</span>${car.regular_price ?? ''}
+                                            <span class="price-currency">${car.currency_type || '$'}</span>${car.regular_price || '0'}
                                             ${currentView === 'list' ? '<span class="price-badge">Total</span>' : ''}
                                         </div>
                                     </div>
                                     ${car.auction ? `
-                                    <div class="price-item">
-                                        <div class="price-label">
-                                            ${currentView === 'list' ? '<span class="price-icon">🔨</span>' : ''}
-                                            Auction Price
+                                        <div class="price-item">
+                                            <div class="price-label">
+                                                ${currentView === 'list' ? '<span class="price-icon">🔨</span>' : ''}
+                                                Auction Price
+                                            </div>
+                                            <div class="price-value">
+                                                <span class="price-currency">${car.currency_type || '$'}</span>${car.auction.current_bid || car.auction.starting_bid || '0'}
+                                                ${currentView === 'list' ? '<span class="auction-price">Current Bid</span>' : ''}
+                                            </div>
                                         </div>
-                                        <div class="price-value">
-                                            <span class="price-currency">$</span>${car.auction.current_bid ?? car.auction.starting_bid ?? '0'}
-                                            ${currentView === 'list' ? '<span class="auction-price">Current Bid</span>' : ''}
-                                        </div>
-                                    </div>
-                                    ` : ''}
-                                    ${currentView === 'list' && car.bargain ? `
-                                    ` : ''}
+                                        ` : ''}
                                 </div>
                                 ${currentView === 'list' ? `
-                                <div class="action-buttons">
-                                    <a href="${url}" class="btn btn-details">Details</a>
-                                    ${bargain_url ? `<a href="${bargain_url}" class="btn btn-bargain">Bargain</a>` : ''}
-                                    
-                                </div>
-                                ` : ''}
-                                <div class="car-list" >
+                                    <div class="action-buttons">
+                                        <a href="${url}" class="btn btn-details">Details</a>
+                                        ${bargain_url ? `<a href="${bargain_url}" class="btn btn-bargain">Bargain</a>` : ''}
+                                    </div>
+                                    ` : ''}
+                                <div class="car-list">
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
-                                         ${currentView == 'list' ? `<li style="font-size: 8px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>` : ""}
-                                        <li style="font-size: 8px;"><i class="fa fa-shopping-cart"></i>${car.model}</li>
-                                        <li style="font-size: 8px;"><i class="fa fa-registered"></i> ${car.year}</li>
+                                         ${currentView == 'list' ? `<li style="font-size: 8px;"><i class="fa fa-cog"></i> ${car.transmission_type || 'N/A'}</li>` : ""}
+                                        <li style="font-size: 8px;"><i class="fa fa-shopping-cart"></i> ${car.model || 'N/A'}</li>
+                                        <li style="font-size: 8px;"><i class="fa fa-registered"></i> ${car.year || 'N/A'}</li>
                                     </ul>
-                               <div class="compare-btn">
-</div>
-
+                                    <div class="compare-btn"></div>
                                 </div>
                             </div>
                         </div>
@@ -1368,7 +1386,18 @@
                 })
                 .catch(error => {
                     console.error('Error fetching cars:', error);
-                    container.innerHTML = '<p>Failed to load cars.</p>';
+                    // Ensure container is available
+                    if (!container) {
+                        container = document.getElementById('car-results');
+                    }
+                    if (container) {
+                        container.innerHTML = `
+                            <div class="alert alert-danger text-center">
+                                <h4>Error Loading Cars</h4>
+                                <p>Failed to load cars. Please try again later.</p>
+                                <button class="btn btn-danger" onclick="fetchFilteredCars()">Retry</button>
+                            </div>`;
+                    }
                     renderPagination(null);
                 });
         }
@@ -1420,24 +1449,19 @@
             });
 
             // Search handler
-            // document.getElementById('car-search').addEventListener('input', () => applyFilters());
             $("#car-search").on('input', () => applyFilters());
 
             // Collapsible filters
-            // document.querySelectorAll(".list-group-item > a").forEach(item => {
-            //     item.addEventListener("click", function(e) {
-            //         e.preventDefault();
-            //         const submenu = this.nextElementSibling;
-            //         submenu.style.display = submenu.style.display === "block" ? "none" : "block";
-            //     });
-            // });
             $(".list-group-item > a").on('click', function(e) {
                 e.preventDefault();
                 const submenu = $(this).next();
                 submenu.toggle();
             });
-            // Initial load
-            fetchFilteredCars();
+
+            // Initial load - make sure this is called
+            if (typeof fetchFilteredCars === 'function') {
+                fetchFilteredCars();
+            }
         });
 
 

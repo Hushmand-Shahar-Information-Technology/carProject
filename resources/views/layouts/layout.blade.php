@@ -65,106 +65,110 @@
     <!-- Custom styles for navigation -->
     <style>
         /* ====== Topbar Styles ====== */
-    .topbar {
-        background: transparent !important;
-        border-bottom: 1px solid #e5e7eb !important; /* light border for separation */
-        color:rgb(255, 255, 255) !important;
-        font-size: 14px !important;
-        padding: 8px 0 !important;
-        width: 100% !important;
-    }
-
-    .topbar .container {
-        display: flex !important;
-        align-items: center !important;
-        justify-content: space-between !important;
-        flex-wrap: wrap !important;
-    }
-
-    /* ===== Left and Right Sections ===== */
-    .topbar-left ul,
-    .topbar-right ul {
-        list-style: none !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    .topbar-left li,
-    .topbar-right li {
-        display: inline-flex !important;
-        align-items: center !important;
-        margin-right: 20px !important;
-        color:rgb(254, 254, 254) !important;
-        transition: color 0.3s ease !important;
-    }
-
-    .topbar-left li:last-child,
-    .topbar-right li:last-child {
-        margin-right: 0 !important;
-    }
-
-    /* ===== Icons ===== */
-    .topbar i {
-        color:rgb(246, 59, 59) !important;
-        margin-right: 6px !important;
-    }
-
-    /* ===== Links ===== */
-    .topbar a {
-        color:rgb(255, 255, 255) !important;
-        text-decoration: none !important;
-        transition: color 0.3s ease !important;
-    }
-
-    .topbar a:hover {
-        color:rgb(255, 104, 104) !important;
-    }
-
-    /* ===== Dropdown ===== */
-    .topbar .dropdown-menu {
-        background: #ffffff !important;
-        border: 1px solid #e5e7eb !important;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
-    }
-
-    .topbar .dropdown-item {
-        color: #374151 !important;
-        font-size: 14px !important;
-    }
-
-    .topbar .dropdown-item:hover {
-        background: #f3f4f6 !important;
-        color:rgb(246, 59, 59) !important;
-    }
-
-    /* ===== Responsive ===== */
-    @media (max-width: 991px) {
         .topbar {
-            text-align: center !important;
-            padding: 10px 0 !important;
+            background: transparent !important;
+            border-bottom: 1px solid #e5e7eb !important;
+            /* light border for separation */
+            color: rgb(255, 255, 255) !important;
+            font-size: 14px !important;
+            padding: 8px 0 !important;
+            width: 100% !important;
         }
 
         .topbar .container {
-            flex-direction: column !important;
-            gap: 5px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            flex-wrap: wrap !important;
+        }
+
+        /* ===== Left and Right Sections ===== */
+        .topbar-left ul,
+        .topbar-right ul {
+            list-style: none !important;
+            margin: 0 !important;
+            padding: 0 !important;
         }
 
         .topbar-left li,
         .topbar-right li {
-            margin-right: 10px !important;
-            font-size: 13px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            margin-right: 20px !important;
+            color: rgb(254, 254, 254) !important;
+            transition: color 0.3s ease !important;
         }
-    }
+
+        .topbar-left li:last-child,
+        .topbar-right li:last-child {
+            margin-right: 0 !important;
+        }
+
+        /* ===== Icons ===== */
+        .topbar i {
+            color: rgb(246, 59, 59) !important;
+            margin-right: 6px !important;
+        }
+
+        /* ===== Links ===== */
+        .topbar a {
+            color: rgb(255, 255, 255) !important;
+            text-decoration: none !important;
+            transition: color 0.3s ease !important;
+        }
+
+        .topbar a:hover {
+            color: rgb(255, 104, 104) !important;
+        }
+
+        /* ===== Dropdown ===== */
+        .topbar .dropdown-menu {
+            background: #ffffff !important;
+            border: 1px solid #e5e7eb !important;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        .topbar .dropdown-item {
+            color: #374151 !important;
+            font-size: 14px !important;
+        }
+
+        .topbar .dropdown-item:hover {
+            background: #f3f4f6 !important;
+            color: rgb(246, 59, 59) !important;
+        }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 991px) {
+            .topbar {
+                text-align: center !important;
+                padding: 10px 0 !important;
+            }
+
+            .topbar .container {
+                flex-direction: column !important;
+                gap: 5px !important;
+            }
+
+            .topbar-left li,
+            .topbar-right li {
+                margin-right: 10px !important;
+                font-size: 13px !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .media .fa-brands {
                 display: none !important;
             }
         }
+
         @media (max-width: 576px) {
             .media.fa-brands {
                 display: none !important;
             }
         }
+
         .menu-links li {
             list-style: none;
             margin: 0 10px;
@@ -217,7 +221,8 @@
             .menu-links {
                 flex-direction: column;
                 align-items: flex-start;
-                background-color: #323232 !important; /* Dark background for mobile menu */
+                background-color: #323232 !important;
+                /* Dark background for mobile menu */
                 padding: 15px !important;
                 border-radius: 5px;
                 margin-top: 10px;
@@ -231,7 +236,8 @@
             .menu-links a {
                 display: block;
                 padding: 12px 15px !important;
-                color: #fff !important; /* Ensure text is visible on dark background */
+                color: #fff !important;
+                /* Ensure text is visible on dark background */
                 border-radius: 3px;
             }
 
@@ -245,27 +251,115 @@
         /* Fix for mobile menu toggle */
         .menu-mobile-collapse-trigger {
             background: #323232 !important;
+            display: none;
+            /* Hidden by default on desktop */
+            width: 30px;
+            height: 30px;
+            position: relative;
+            cursor: pointer;
+            margin-left: 15px;
+            z-index: 1001;
+            /* Ensure it's above other elements */
         }
 
         .menu-mobile-collapse-trigger span,
         .menu-mobile-collapse-trigger:before,
         .menu-mobile-collapse-trigger:after {
             background: #fff !important;
+            height: 2px;
+            width: 100%;
+            display: block;
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease;
         }
-        
-        /* Override responsive.css to ensure menu is hidden by default on mobile */
+
+        .menu-mobile-collapse-trigger span {
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .menu-mobile-collapse-trigger:before {
+            content: '';
+            top: 8px;
+        }
+
+        .menu-mobile-collapse-trigger:after {
+            content: '';
+            bottom: 8px;
+        }
+
+        .menu-mobile-collapse-trigger.active span {
+            opacity: 0;
+        }
+
+        .menu-mobile-collapse-trigger.active:before {
+            transform: rotate(45deg);
+            top: 50%;
+        }
+
+        .menu-mobile-collapse-trigger.active:after {
+            transform: rotate(-45deg);
+            bottom: 50%;
+        }
+
+        .menu {
+            position: relative;
+        }
+
+        /* Mobile menu styles */
         @media (max-width: 991px) {
-            .mega-menu .menu-links {
-                display: none !important;
-                border: 1px solid #e3e3e3;
-                position: absolute;
-                top: 100%;
-                background: #fff;
-                width: 100%;
-            }
-            
-            .mega-menu .menu-links.active {
+            .menu-mobile-collapse-trigger {
                 display: block !important;
+            }
+
+            .menu-links {
+                display: none !important;
+                background: #323232 !important;
+                width: 100% !important;
+                position: absolute !important;
+                top: 100% !important;
+                left: 0 !important;
+                right: 0 !important;
+                z-index: 1000 !important;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1) !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+
+            .menu-links.active {
+                display: block !important;
+            }
+
+            .menu-links li {
+                display: block !important;
+                width: 100% !important;
+                border-bottom: 1px solid #555 !important;
+                margin: 0 !important;
+                list-style: none !important;
+            }
+
+            .menu-links li:last-child {
+                border-bottom: none !important;
+            }
+
+            .menu-links a {
+                display: block !important;
+                padding: 12px 15px !important;
+                color: #fff !important;
+                text-decoration: none !important;
+                border-radius: 0 !important;
+            }
+
+            .menu-links a:hover,
+            .menu-links .active a {
+                background-color: #db2d2e !important;
+                color: #fff !important;
+            }
+
+            /* Hide compare count badge on mobile menu items */
+            .menu-links .badge {
+                display: none !important;
             }
         }
     </style>
@@ -289,74 +383,77 @@
 
     <header id="header" class="defualt mb-5">
         <div class="topbar">
-                <div class="container" style="display: flex; align-items: center; justify-content: space-between !important;">
-                    <!-- Left side -->
-                    <div>
-                        <div class="topbar-left text-lg-start text-center">
-                            <ul class="list-inline mb-0" style="display: flex; align-items: center;">
-                                <li class="list-inline-item">
-                                    <i class="fa-solid fa-envelope"></i> topmotor@gmail.com
-                                </li>
-                                <li class="list-inline-item">
-                                    <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
-                                </li>
-                            </ul>
-                        </div>
+            <div class="container"
+                style="display: flex; align-items: center; justify-content: space-between !important;">
+                <!-- Left side -->
+                <div>
+                    <div class="topbar-left text-lg-start text-center">
+                        <ul class="list-inline mb-0" style="display: flex; align-items: center;">
+                            <li class="list-inline-item">
+                                <i class="fa-solid fa-envelope"></i> topmotor@gmail.com
+                            </li>
+                            <li class="list-inline-item">
+                                <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
+                            </li>
+                        </ul>
                     </div>
+                </div>
 
-                    <!-- Right side -->
-                    <div>
-                        <div class="topbar-right text-lg-end text-center">
-                            <ul class="list-inline mb-0" style="display: flex; align-items: center;">
-                                <!-- Language Switcher -->
-                                <li class="list-inline-item">
-                                    <x-language-switcher />
-                                </li>
+                <!-- Right side -->
+                <div>
+                    <div class="topbar-right text-lg-end text-center">
+                        <ul class="list-inline mb-0" style="display: flex; align-items: center;">
+                            <!-- Language Switcher -->
+                            <li class="list-inline-item">
+                                <x-language-switcher />
+                            </li>
 
-                               
-                                <li class="list-inline-item media"><a href="#"><i class="fa-brands fa-facebook"></i></a>
-                                </li>
-                                <!-- <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
+
+                            <li class="list-inline-item media"><a href="#"><i
+                                        class="fa-brands fa-facebook"></i></a>
+                            </li>
+                            <!-- <li class="list-inline-item"><a href="#"><i class="fa-brands fa-twitter"></i></a>
                                 </li>
                                 <li class="list-inline-item"><a href="#"><i
                                             class="fa-brands fa-instagram"></i></a></li> -->
-                                <li class="list-inline-item media"><a href="#"><i class="fa-brands fa-youtube"></i></a>
+                            <li class="list-inline-item media"><a href="#"><i
+                                        class="fa-brands fa-youtube"></i></a>
+                            </li>
+
+                            <!-- Authentication -->
+                            @guest
+                                <li class="list-inline-item">
+                                    <a href="{{ route('login') }}"><i class="fa fa-sign-in-alt"></i> Login</a>
+                                </li>
+                                <li class="list-inline-item">
+                                    <a href="{{ route('register') }}"><i class="fa fa-user-plus"></i> Register</a>
+                                </li>
+                            @endguest
+
+                            @auth
+                                <li class="list-inline-item dropdown">
+                                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+                                        aria-expanded="false">
+                                        <i class="fa fa-user-circle"></i> {{ Auth::user()->name }}
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <form method="POST" action="{{ route('logout') }}">
+                                                @csrf
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="fa fa-sign-out-alt"></i> Logout
+                                                </button>
+                                            </form>
+                                        </li>
+                                    </ul>
                                 </li>
 
-                                <!-- Authentication -->
-                                @guest
-                                    <li class="list-inline-item">
-                                        <a href="{{ route('login') }}"><i class="fa fa-sign-in-alt"></i> Login</a>
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <a href="{{ route('register') }}"><i class="fa fa-user-plus"></i> Register</a>
-                                    </li>
-                                @endguest
 
-                                @auth
-                                    <li class="list-inline-item dropdown">
-                                        <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
-                                            aria-expanded="false">
-                                            <i class="fa fa-user-circle"></i> {{ Auth::user()->name }}
-                                        </a>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li>
-                                                <form method="POST" action="{{ route('logout') }}">
-                                                    @csrf
-                                                    <button type="submit" class="dropdown-item">
-                                                        <i class="fa fa-sign-out-alt"></i> Logout
-                                                    </button>
-                                                </form>
-                                            </li>
-                                        </ul>
-                                    </li>
-
-
-                                @endauth
-                            </ul>
-                        </div>
+                            @endauth
+                        </ul>
                     </div>
                 </div>
+            </div>
         </div>
 
 
@@ -379,7 +476,12 @@
                                     </li>
                                 </ul>
 
-                                <!-- Main menu -->
+                                <!-- Mobile menu toggle button -->
+                                <div class="menu-mobile-collapse-trigger">
+                                    <span></span>
+                                </div>
+
+                                <!-- Main menu for desktop -->
                                 <ul class="menu-links d-flex flex-wrap mb-0" style="list-style: none;">
                                     <li class="{{ request()->routeIs('home.index') ? 'active' : '' }} mx-2">
                                         <a href="/home" class="nav-link">Home</a>
@@ -658,9 +760,11 @@
                         <h6 class="text-white">subscribe Our Newsletter </h6>
                         <p>Keep up on our always evolving products features and technology. Enter your e-mail and
                             subscribe to our newsletter.</p>
-                        <form action="{{ route('email.store') }}"  id="email_form" class="news-letter">
-                            <input type="email"  id="email"  placeholder="Enter your Email" style="background-color: aliceblue;" class="form-control placeholder">
-                            <button class="button red mt-2" type="butotn" id="make_an_email_submit">Subscribe</button>
+                        <form action="{{ route('email.store') }}" id="email_form" class="news-letter">
+                            <input type="email" id="email" placeholder="Enter your Email"
+                                style="background-color: aliceblue;" class="form-control placeholder">
+                            <button class="button red mt-2" type="butotn"
+                                id="make_an_email_submit">Subscribe</button>
                         </form>
                     </div>
                 </div>
@@ -670,8 +774,8 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-12">
                         <div class="text-lg-start text-center">
-                            <p style="color: aliceblue;">©Copyright 2021 Car Dealer Developed by <a href="http://www.motorsaal.com/"
-                                    target="_blank">Top Motor</a></p>
+                            <p style="color: aliceblue;">©Copyright 2021 Car Dealer Developed by <a
+                                    href="http://www.motorsaal.com/" target="_blank">Top Motor</a></p>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-12">
@@ -750,7 +854,6 @@
 
     <!-- Slick JS (Add this!) -->
     <script src="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
-
 
     <script type="text/javascript">
         (function($) {
@@ -845,7 +948,7 @@
         // Update count every minute to check for expiration
         setInterval(updateNavbarCompareCount, 60000);
 
-       $(document).ready(function() {
+        $(document).ready(function() {
             $('#make_an_email_submit').on('click', function(e) {
                 e.preventDefault();
 
@@ -868,34 +971,116 @@
                     },
                     success: function(response) {
                         console.log('Success response received:', response);
-                        
+
                         // Check if the response indicates success
                         if (response && response.success === true) {
                             console.log('Email submitted successfully');
                             $('#email_form')[0].reset();
 
                             Swal.fire({
-                                    icon: 'success',
-                                    title: 'Success!',
-                                    text: response.message || 'Email submitted successfully!',
-                                    timer: 3000,
-                                    showConfirmButton: false,
-                                    heightAuto: false,
-                                });
-                                
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message ||
+                                    'Email submitted successfully!',
+                                timer: 3000,
+                                showConfirmButton: false,
+                                heightAuto: false,
+                            });
+
                         } else {
                             console.log('Server returned success=false');
                             // Handle case where response.success is false
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Error!',
-                                text: response.message || 'Something went wrong. Please try again.',
+                                text: response.message ||
+                                    'Something went wrong. Please try again.',
                                 heightAuto: false
                             });
                         }
                     },
                 });
             });
+
+            // Remove mega menu initialization to prevent conflicts
+            /*
+            try {
+                $('#menu').megaMenu({
+                    mobile_settings: {
+                        collapse: true,
+                        sibling: true,
+                        scrollBar: true,
+                        scrollBar_height: 400,
+                        top_fixed: false,
+                        sticky_header: false,
+                        sticky_header_height: 200
+                    }
+                });
+            } catch (e) {
+                console.log('Mega menu initialization failed:', e);
+            }
+            */
+
+            // Completely rewrite mobile menu functionality - simple and reliable
+            function initMobileMenu() {
+                console.log('Initializing mobile menu');
+
+                // Ensure only one mobile trigger exists
+                if ($('.menu-mobile-collapse-trigger').length > 1) {
+                    $('.menu-mobile-collapse-trigger').not(':first').remove();
+                    console.log('Removed duplicate triggers');
+                }
+
+                // Simple click handler without event delegation issues
+                $('.menu-mobile-collapse-trigger').off('click').on('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Mobile menu trigger clicked');
+
+                    // Toggle classes
+                    $(this).toggleClass('active');
+
+                    // Show/hide menu with explicit display control
+                    if ($(this).hasClass('active')) {
+                        $('.menu-links').addClass('active').css('display', 'block');
+                        console.log('Menu shown');
+                    } else {
+                        $('.menu-links').removeClass('active').css('display', 'none');
+                        console.log('Menu hidden');
+                    }
+                });
+
+                // Close menu when clicking outside
+                $(document).off('click.mobileMenuClose').on('click.mobileMenuClose', function(e) {
+                    if (!$(e.target).closest('.menu-mobile-collapse-trigger').length &&
+                        !$(e.target).closest('.menu-links').length &&
+                        $('.menu-mobile-collapse-trigger').hasClass('active')) {
+                        $('.menu-mobile-collapse-trigger').removeClass('active');
+                        $('.menu-links').removeClass('active').css('display', 'none');
+                        console.log('Menu closed by clicking outside');
+                    }
+                });
+
+                // Handle window resize
+                $(window).off('resize.mobileMenu').on('resize.mobileMenu', function() {
+                    if ($(window).width() > 991) {
+                        // Desktop view - always show menu
+                        $('.menu-mobile-collapse-trigger').removeClass('active');
+                        $('.menu-links').removeClass('active').css('display', 'flex');
+                    } else {
+                        // Mobile view - hide menu by default
+                        $('.menu-links').css('display', 'none');
+                    }
+                });
+
+                console.log('Mobile menu initialization complete');
+            }
+
+            // Initialize on document ready
+            initMobileMenu();
+
+            // Also initialize after a small delay to ensure DOM is fully loaded
+            setTimeout(initMobileMenu, 100);
         });
 
         // Initialize Fancybox for video playback
