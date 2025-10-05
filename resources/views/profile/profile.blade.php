@@ -959,6 +959,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address" class="form-control"
+                            value="{{ $activeBargain ? $activeBargain->address : '' }}" placeholder="Enter address">
+                    </div>
+
+                    <div class="form-group">
                         <button type="submit" class="btn-save">Save Changes</button>
                         <button type="button" class="btn-cancel" id="cancelEdit">Cancel</button>
                     </div>
@@ -1151,6 +1157,16 @@
                                         document.querySelector('.card-body').insertBefore(
                                             phoneContainer, document.querySelector('.card-text')
                                             .nextSibling);
+                                    }
+                                }
+
+                                // Update address if provided
+                                const addressInput = document.getElementById('address');
+                                if (addressInput) {
+                                    const addressElement = document.getElementById('profile-location');
+                                    if (addressElement) {
+                                        addressElement.textContent = addressInput.value ||
+                                            'Location not set';
                                     }
                                 }
 
