@@ -31,6 +31,7 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'phone' => ['nullable', 'string', 'max:255'],
             'avatar' => ['nullable', 'image', 'max:2048'],
+            'address' => ['nullable', 'string', 'max:255'], // Add address validation
         ];
     }
 }
