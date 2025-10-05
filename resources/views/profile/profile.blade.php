@@ -605,6 +605,42 @@
             background-color: #545b62;
         }
 
+        /* Share Modal Styles */
+        .share-buttons .col-3 {
+            padding: 5px;
+        }
+
+        .share-btn {
+            display: block;
+            text-decoration: none;
+            color: #333;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .share-btn i {
+            margin-bottom: 5px;
+        }
+
+        .share-btn div {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        #share-link {
+            border-radius: 4px 0 0 4px;
+        }
+
+        #copy-link-btn {
+            border-radius: 0 4px 4px 0;
+        }
+
         @media (max-width: 768px) {
             .notification-header {
                 flex-direction: column;
@@ -973,8 +1009,81 @@
         </div>
     </div>
 
+    <!-- Share Profile Modal -->
+    <div id="shareProfileModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <span class="close-share">&times;</span>
+            <div class="modal-header">
+                <h2>Share Profile</h2>
+            </div>
+            <div class="modal-body">
+                <p>Share {{ $user->name }}'s profile on:</p>
+                <div class="share-buttons">
+                    <div class="row">
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="facebook">
+                                <i class="fab fa-facebook-f fa-2x" style="color: #3b5998;"></i>
+                                <div>Facebook</div>
+                            </a>
+                        </div>
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="twitter">
+                                <i class="fab fa-twitter fa-2x" style="color: #1da1f2;"></i>
+                                <div>Twitter</div>
+                            </a>
+                        </div>
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="linkedin">
+                                <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5;"></i>
+                                <div>LinkedIn</div>
+                            </a>
+                        </div>
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="whatsapp">
+                                <i class="fab fa-whatsapp fa-2x" style="color: #25d366;"></i>
+                                <div>WhatsApp</div>
+                            </a>
+                        </div>
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="telegram">
+                                <i class="fab fa-telegram-plane fa-2x" style="color: #0088cc;"></i>
+                                <div>Telegram</div>
+                            </a>
+                        </div>
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="email">
+                                <i class="fas fa-envelope fa-2x" style="color: #ea4335;"></i>
+                                <div>Email</div>
+                            </a>
+                        </div>
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="copy">
+                                <i class="fas fa-copy fa-2x" style="color: #34a853;"></i>
+                                <div>Copy Link</div>
+                            </a>
+                        </div>
+                        <div class="col-3 text-center mb-3">
+                            <a href="#" class="share-btn" data-platform="sms">
+                                <i class="fas fa-sms fa-2x" style="color: #4285f4;"></i>
+                                <div>SMS</div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <label for="share-link">Or copy the link:</label>
+                    <div class="input-group">
+                        <input type="text" id="share-link" class="form-control"
+                            value="{{ route('profile.showUser', $user->id) }}" readonly>
+                        <button class="btn btn-outline-secondary" type="button" id="copy-link-btn">Copy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM loaded');
@@ -1005,6 +1114,120 @@
             const editImageBtn = document.getElementById('edit-profile-image-btn');
             const avatarInput = document.getElementById('avatar-input');
             const profileImage = document.getElementById('profile-image');
+
+            // Share Profile Functionality
+            const shareBtn = document.querySelector('.btn-link.text-decoration-none .fa-share').closest(
+            '.btn-link');
+            const shareModal = document.getElementById('shareProfileModal');
+            const closeShareBtn = document.querySelector('.close-share');
+            const cancelShareBtn = document.getElementById('cancelShare');
+            const shareButtons = document.querySelectorAll('.share-btn');
+            const copyLinkBtn = document.getElementById('copy-link-btn');
+            const shareLinkInput = document.getElementById('share-link');
+
+            // Open share modal when share button is clicked
+            if (shareBtn) {
+                shareBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    shareModal.style.display = 'block';
+                });
+            }
+
+            // Close share modal when X is clicked
+            if (closeShareBtn) {
+                closeShareBtn.addEventListener('click', function() {
+                    shareModal.style.display = 'none';
+                });
+            }
+
+            // Close share modal when cancel button is clicked
+            if (cancelShareBtn) {
+                cancelShareBtn.addEventListener('click', function() {
+                    shareModal.style.display = 'none';
+                });
+            }
+
+            // Close share modal when clicking outside of modal content
+            window.addEventListener('click', function(event) {
+                if (event.target === shareModal) {
+                    shareModal.style.display = 'none';
+                }
+            });
+
+            // Handle share button clicks
+            shareButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const platform = this.getAttribute('data-platform');
+                    const profileUrl = shareLinkInput.value;
+                    const profileName = document.getElementById('profile-name').textContent;
+
+                    let shareUrl = '';
+
+                    switch (platform) {
+                        case 'facebook':
+                            shareUrl =
+                                `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(profileUrl)}`;
+                            break;
+                        case 'twitter':
+                            shareUrl =
+                                `https://twitter.com/intent/tweet?url=${encodeURIComponent(profileUrl)}&text=Check out ${encodeURIComponent(profileName)}'s profile`;
+                            break;
+                        case 'linkedin':
+                            shareUrl =
+                                `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(profileUrl)}`;
+                            break;
+                        case 'whatsapp':
+                            shareUrl =
+                                `https://wa.me/?text=Check out this profile: ${encodeURIComponent(profileUrl)}`;
+                            break;
+                        case 'telegram':
+                            shareUrl =
+                                `https://t.me/share/url?url=${encodeURIComponent(profileUrl)}&text=Check out this profile`;
+                            break;
+                        case 'email':
+                            shareUrl =
+                                `mailto:?subject=Check out this profile&body=I thought you might be interested in this profile: ${encodeURIComponent(profileUrl)}`;
+                            break;
+                        case 'sms':
+                            shareUrl =
+                                `sms:?body=Check out this profile: ${encodeURIComponent(profileUrl)}`;
+                            break;
+                        case 'copy':
+                            // Copy to clipboard functionality
+                            shareLinkInput.select();
+                            document.execCommand('copy');
+
+                            // Show feedback
+                            const originalText = copyLinkBtn.textContent;
+                            copyLinkBtn.textContent = 'Copied!';
+                            setTimeout(() => {
+                                copyLinkBtn.textContent = originalText;
+                            }, 2000);
+                            return;
+                    }
+
+                    // Open the share URL in a new window
+                    if (shareUrl) {
+                        window.open(shareUrl, '_blank', 'width=600,height=400');
+                    }
+                });
+            });
+
+            // Copy link button functionality
+            if (copyLinkBtn) {
+                copyLinkBtn.addEventListener('click', function() {
+                    shareLinkInput.select();
+                    document.execCommand('copy');
+
+                    // Show feedback
+                    const originalText = this.textContent;
+                    this.textContent = 'Copied!';
+                    setTimeout(() => {
+                        this.textContent = originalText;
+                    }, 2000);
+                });
+            }
 
             // Trigger file input when camera button is clicked
             if (editImageBtn && avatarInput) {
