@@ -473,7 +473,7 @@
             box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
             animation: pulse 2s infinite;
         }
-        
+
         .auction-badge.ended {
             background: linear-gradient(45deg, #6c757d, #495057);
             animation: none;
@@ -481,9 +481,17 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3); }
-            50% { box-shadow: 0 4px 16px rgba(255, 107, 107, 0.6); }
-            100% { box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3); }
+            0% {
+                box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 4px 16px rgba(255, 107, 107, 0.6);
+            }
+
+            100% {
+                box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            }
         }
 
         .auction-timer {
@@ -506,8 +514,16 @@
         }
 
         @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.7; }
+
+            0%,
+            50% {
+                opacity: 1;
+            }
+
+            51%,
+            100% {
+                opacity: 0.7;
+            }
         }
 
         .auction-starting-price {
@@ -841,7 +857,7 @@
             }
         });
 
-        const API_URL = "{{ route('cars.filter-auction') }}"; // Laravel route
+        const API_URL = "{{ route('cars.filter-auction') }}"; // Laravel route for filtering auction cars
         const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
         const bargain_show = "{{ route('bargains.show', ['id' => '__ID__']) }}";
         const container = document.getElementById('car-results');
@@ -939,6 +955,11 @@
         function fetchFilteredCars(query = '') {
             lastQuery = query || '';
             const url = query ? (API_URL + '?' + query) : API_URL;
+
+            // Show loading indicator
+            container.innerHTML =
+                '<div class="text-center py-5"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading auction cars...</p></div>';
+
             axios.get(url)
                 .then(response => {
                     const payload = response.data;
@@ -961,96 +982,113 @@
 
                     if (!cars.length) {
                         container.innerHTML = `
-                                         <section class="error-page page-section-ptb">
-                                             <div class="container">
-                                                 <div class="row">
-                                                     <div class="col-md-12">
-                                                         <div class="error-content text-center">
-                                                             <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
-                                                             <h3 class="text-red">Ooopps:( </h3>
-                                                             <strong class="text-black"> The Car you were looking for, couldn't be found</strong>
-                                                             <p>Can't find what you looking for? Take a moment and do a search again!</p>
-                                                         </div>
-                                                     </div>
-                                                 </div>
-                                             </div>
-                                         </section>`;
+                            <div class="col-12">
+                                <div class="alert alert-info text-center">
+                                    <h4>No Auction Cars Found</h4>
+                                    <p>There are currently no cars available for auction.</p>
+                                    <a href="{{ route('car.index') }}" class="btn btn-primary">View All Cars</a>
+                                </div>
+                            </div>`;
                         renderPagination(meta);
                         return;
                     }
 
                     $.each(cars, function(index, car) {
                         let images;
-                        // if images are json
-                        if (typeof car.images === 'object') {
+                        // Handle both array and string image formats
+                        if (Array.isArray(car.images)) {
                             images = car.images;
-
+                        } else if (typeof car.images === 'string') {
+                            try {
+                                // Try to parse as JSON array
+                                images = JSON.parse(car.images);
+                            } catch (e) {
+                                // If parsing fails, treat as single string
+                                images = [car.images];
+                            }
                         } else {
                             images = car.images ? [car.images] : [];
                         }
-                         const imageSrc = images.length 
-                            ? "{{ asset('storage') }}/" + images[0] 
-                            : '/images/demo.jpg';
+
+                        // Ensure we have a valid image path
+                        const imageSrc = images && images.length > 0 ?
+                            (images[0].startsWith('http') ? images[0] : "{{ asset('storage') }}/" + images[0]) :
+                            '/images/demo.jpg';
+
                         const url = car_show.replace('__ID__', car.id);
-                        const bargain_url = car.bargain ?
+                        const bargain_url = car.bargain && car.bargain.id ?
                             bargain_show.replace('__ID__', car.bargain.id) :
                             null;
-                        
+
                         // Get auction information
                         const auction = car.auctions && car.auctions.length > 0 ? car.auctions[0] : null;
                         let auctionBadge = '';
-                        let auctionStartingPrice = auction ? auction.starting_price : car.regular_price;
-                        
+                        let auctionStartingPrice = auction ? (auction.starting_price || car.regular_price) : (
+                            car.regular_price || '0');
+
                         if (auction) {
                             if (auction.status === 'active') {
-                                auctionBadge = '<div class="auction-badge"><i class="fa fa-gavel"></i> AUCTION</div>';
+                                auctionBadge =
+                                    '<div class="auction-badge"><i class="fa fa-gavel"></i> AUCTION</div>';
                             } else if (auction.status === 'ended') {
-                                auctionBadge = '<div class="auction-badge ended"><i class="fa fa-flag-checkered"></i> ENDED</div>';
+                                auctionBadge =
+                                    '<div class="auction-badge ended"><i class="fa fa-flag-checkered"></i> ENDED</div>';
+                            } else {
+                                auctionBadge =
+                                    '<div class="auction-badge"><i class="fa fa-clock"></i> PENDING</div>';
                             }
+                        } else {
+                            auctionBadge =
+                                '<div class="auction-badge ended"><i class="fa fa-ban"></i> NO AUCTION</div>';
                         }
-                        
+
                         // Create auction timer
                         let auctionTimer = '';
                         if (auction) {
                             if (auction.status === 'ended') {
                                 auctionTimer = '<div class="auction-timer expired">Auction Ended</div>';
                             } else if (auction.end_at) {
-                                auctionTimer = `<div class="auction-timer" data-end-time="${auction.end_at}">Loading...</div>`;
+                                auctionTimer =
+                                    `<div class="auction-timer" data-end-time="${auction.end_at}">Loading...</div>`;
                             } else if (auction.auction_type === 'open') {
                                 auctionTimer = '<div class="auction-timer">Open Auction - No End Time</div>';
+                            } else {
+                                auctionTimer = '<div class="auction-timer">Scheduled Auction</div>';
                             }
+                        } else {
+                            auctionTimer = '<div class="auction-timer">No Auction Scheduled</div>';
                         }
-                        
+
                         const carDiv = $(`<div style="color: #a0a0a0">`);
-                        const title = `<h4>${car.title}</h4>`;
+                        const title = `<h4>${car.make || 'Unknown Make'} ${car.model || 'Unknown Model'}</h4>`;
                         const details_button = `
                          <div>
                              <a class="button red float-end py-2 px-4 ml-2" style="font-size: 1rem;" href="${url}">Details</a>
-                             <a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${bargain_url}">Bargain</a>
+                             ${bargain_url ? `<a class="button red float-end py-2 px-4" style="font-size: 1rem;" href="${bargain_url}">Bargain</a>` : ''}
                          </div>`;
                         const description =
-                            `${ car.description == null ? "<p style='line-height: 1.3'>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quia itaque modi aperiam sequi ea expedita eius minus!</p>" : car.description}`
+                            `${ car.description || "<p style='line-height: 1.3'>No description available for this vehicle.</p>"}`
                         const details = `
-                                 <div class="row" style="margin-bottom: 6px;">
-                             <div class="col-lg-2 col-sm-4">
-                                 <ul class="list-style-1">
-                                     <li><i class="fa fa-check"></i> ${car.make}</li>
-                                     <li><i class="fa fa-check"></i> ${car.model}</li>
-                                 </ul>
-                             </div>
-                             <div class="col-lg-4 col-sm-4">
-                                 <ul class="list-style-1">
-                                     <li><i class="fa fa-check"></i> ${car.car_condition}</li>
-                                     <li><i class="fa fa-check"></i> ${car.VIN_number}</li>
-                                 </ul>
-                             </div>
-                             <div class="col-lg-4 col-sm-4">
-                                 <ul class="list-style-1">
-                                     <li><i class="fa fa-check"></i> ${car.currency_type} </li>
-                                      <li><i class="fa fa-check"></i>inside color - ${car.car_inside_color}</li>
-                                 </ul>
-                             </div>
-                         </div>`
+                            <div class="row" style="margin-bottom: 6px;">
+                                <div class="col-lg-2 col-sm-4">
+                                    <ul class="list-style-1">
+                                        <li><i class="fa fa-check"></i> ${car.make || 'N/A'}</li>
+                                        <li><i class="fa fa-check"></i> ${car.model || 'N/A'}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-4 col-sm-4">
+                                    <ul class="list-style-1">
+                                        <li><i class="fa fa-check"></i> ${car.car_condition || 'N/A'}</li>
+                                        <li><i class="fa fa-check"></i> ${car.VIN_number || 'N/A'}</li>
+                                    </ul>
+                                </div>
+                                <div class="col-lg-4 col-sm-4">
+                                    <ul class="list-style-1">
+                                        <li><i class="fa fa-check"></i> ${car.currency_type || '$'} </li>
+                                        <li><i class="fa fa-check"></i> Inside color - ${car.car_inside_color || 'N/A'}</li>
+                                    </ul>
+                                </div>
+                            </div>`
 
                         // Set dynamic class based on view
                         carDiv.addClass(currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1');
@@ -1063,50 +1101,42 @@
                             <div class="car-item gray-bg text-center position-relative">
                                 ${auctionBadge}
                                 <div class="car-image">
-                                    <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
+                                    <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.make || 'Car'} ${car.model || 'Image'}" onerror="this.src='/images/demo.jpg'">
                                     <div class="car-overlay-banner">
                                         <ul>
                                             <li><a href="${url}"><i class="fa fa-link"></i></a></li>
                                             <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
-                                              <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer; z-index: 100; position: relative;">
-    <i class="fa fa-exchange-alt" style="font-size: 1rem;"></i>
-</li>
-
+                                            <li class="add-to-compare btn btn-danger rounded-circle p-2 shadow-sm" data-car-id="${car.id}" style="list-style: none; cursor: pointer; z-index: 100; position: relative;">
+                                                <i class="fa fa-exchange-alt" style="font-size: 1rem;"></i>
+                                            </li>
                                         </ul>
                                     </div>
                                 </div>
-                                ${auctionTimer ? auctionTimer : "Not Started" }
+                                ${auctionTimer}
                             </div>
 
                         </div>
 
                         <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
                             <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
-                                ${currentView === 'list'
-                                ? `                                                                                                                                                                                                                                                                                                </div>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    `
-                                : `                                                                                                                                                                                                                                                                                  `
-                            }
-                                ${currentView == 'list' ? title: ""}
-                                ${currentView == 'list' ? description  : ""}
+                                ${currentView === 'list' ? '</div>' : ''}
+                                ${currentView == 'list' ? title : ""}
+                                ${currentView == 'list' ? description : ""}
                                 ${currentView == 'list' ? details : ""}
-                                <div class="price d-flex justify-content-between gap-2 ${currentView == 'list' ? 'my-3': ''}">
+                                <div class="price d-flex justify-content-between gap-2 ${currentView == 'list' ? 'my-3' : ''}">
                                     <div>
-                                        <span class="old-price">$${car.regular_price}</span>
-                                        <span class="new-price">$${auctionStartingPrice}</span>
-                                        
+                                        <span class="old-price">$${car.regular_price || '0'}</span>
+                                        <span class="new-price">$${auctionStartingPrice || '0'}</span>
                                     </div>    
                                     ${currentView === 'list' ? details_button : ''}
                                 </div>
-                                <div class="car-list" >
+                                <div class="car-list">
                                     <ul class="${currentView != 'list' ? 'list-inline' : 'list-inline2'}">
-                                        <li style="font-size: 10px;"><i class="fa fa-registered"></i> ${car.year}</li>
-                                        <li style="font-size: 10px;"><i class="fa fa-cog"></i> ${car.transmission_type}</li>
-                                        <li style="font-size: 10px;"><i class="fa fa-shopping-cart"></i>${car.currency_type}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-registered"></i> ${car.year || 'N/A'}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-cog"></i> ${car.transmission_type || 'N/A'}</li>
+                                        <li style="font-size: 10px;"><i class="fa fa-shopping-cart"></i> ${car.currency_type || '$'}</li>
                                     </ul>
-                               <div class="compare-btn">
-</div>
-
+                                    <div class="compare-btn"></div>
                                 </div>
                             </div>
                         </div>
@@ -1128,13 +1158,18 @@
                     });
 
                     renderPagination(meta);
-                    
+
                     // Initialize countdown timers for auctions
                     initializeAuctionTimers();
                 })
                 .catch(error => {
                     console.error('Error fetching cars:', error);
-                    container.innerHTML = '<p>Failed to load cars.</p>';
+                    container.innerHTML = `
+                        <div class="alert alert-danger text-center">
+                            <h4>Error Loading Auction Cars</h4>
+                            <p>Failed to load auction cars. Please try again later.</p>
+                            <button class="btn btn-danger" onclick="fetchFilteredCars()">Retry</button>
+                        </div>`;
                     renderPagination(null);
                 });
         }
@@ -1144,22 +1179,22 @@
             $('.auction-timer').each(function() {
                 const $timer = $(this);
                 const endTimeString = $timer.data('end-time');
-                
+
                 // Skip if no end time or invalid
                 if (!endTimeString) {
                     $timer.text('No End Time');
                     return;
                 }
-                
+
                 // Try to parse the date
                 const endTime = new Date(endTimeString).getTime();
-                
+
                 // Check if date is valid
                 if (isNaN(endTime)) {
                     $timer.text('Invalid End Time');
                     return;
                 }
-                
+
                 const $timerText = $timer;
 
                 function updateTimer() {
@@ -1205,11 +1240,11 @@
             e.stopPropagation();
             const auctionId = $(this).data('auction-id');
             const button = $(this);
-            
+
             if (confirm('Are you sure you want to end this auction early?')) {
                 // Disable button and show loading state
                 button.prop('disabled', true).text('Ending...');
-                
+
                 // Make AJAX request to end auction
                 $.ajax({
                     url: `/auctions/${auctionId}/end`,
@@ -1257,7 +1292,7 @@
                         if (xhr.responseJSON && xhr.responseJSON.message) {
                             errorMessage = xhr.responseJSON.message;
                         }
-                        
+
                         if (typeof Swal !== 'undefined') {
                             Swal.fire({
                                 icon: 'error',
