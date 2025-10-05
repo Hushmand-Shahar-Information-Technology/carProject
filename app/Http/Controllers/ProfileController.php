@@ -114,6 +114,7 @@ class ProfileController extends Controller
         $rules = [
             'phone' => ['nullable', 'string', 'max:255'], // Phone is always optional
             'avatar' => ['nullable', 'image', 'max:2048'], // Avatar is always optional
+            'address' => ['nullable', 'string', 'max:255'], // Address is optional
         ];
 
         // Add name and email validation only if they are being updated
@@ -161,6 +162,25 @@ class ProfileController extends Controller
 
         if ($request->has('phone')) {
             $user->phone = $request->phone;
+        }
+
+        // Update bargain address if present
+        if ($request->has('address')) {
+            // Get the first active bargain or create one if it doesn't exist
+            $bargain = $user->bargains()->first();
+            if ($bargain) {
+                $bargain->address = $request->address;
+                $bargain->save();
+            } else {
+                // Create a new bargain if none exists
+                $user->bargains()->create([
+                    'username' => $user->name,
+                    'address' => $request->address,
+                    'registration_number' => 'N/A', // Default value
+                    'profile_image' => null,
+                    'status' => 'open'
+                ]);
+            }
         }
 
         $user->save();
