@@ -613,15 +613,17 @@
         .share-btn {
             display: block;
             text-decoration: none;
-            color: #333;
+            color: #363636;
             padding: 10px;
             border-radius: 8px;
             transition: all 0.3s ease;
+            border: 1px solid #e9ecef;
         }
 
         .share-btn:hover {
             background-color: #f8f9fa;
             transform: translateY(-2px);
+            border-color: #363636;
         }
 
         .share-btn i {
@@ -635,10 +637,25 @@
 
         #share-link {
             border-radius: 4px 0 0 4px;
+            border: 1px solid #363636;
         }
 
         #copy-link-btn {
             border-radius: 0 4px 4px 0;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border: 1px solid #363636;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #e9ecef;
+            color: #363636;
+        }
+
+        .close-share {
+            color: #363636;
         }
 
         @media (max-width: 768px) {
@@ -1022,49 +1039,49 @@
                     <div class="row">
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="facebook">
-                                <i class="fab fa-facebook-f fa-2x" style="color: #3b5998;"></i>
+                                <i class="fab fa-facebook-f fa-2x" style="color: #363636;"></i>
                                 <div>Facebook</div>
                             </a>
                         </div>
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="twitter">
-                                <i class="fab fa-twitter fa-2x" style="color: #1da1f2;"></i>
+                                <i class="fab fa-twitter fa-2x" style="color: #363636;"></i>
                                 <div>Twitter</div>
                             </a>
                         </div>
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="linkedin">
-                                <i class="fab fa-linkedin-in fa-2x" style="color: #0077b5;"></i>
+                                <i class="fab fa-linkedin-in fa-2x" style="color: #363636;"></i>
                                 <div>LinkedIn</div>
                             </a>
                         </div>
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="whatsapp">
-                                <i class="fab fa-whatsapp fa-2x" style="color: #25d366;"></i>
+                                <i class="fab fa-whatsapp fa-2x" style="color: #28a745;"></i>
                                 <div>WhatsApp</div>
                             </a>
                         </div>
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="telegram">
-                                <i class="fab fa-telegram-plane fa-2x" style="color: #0088cc;"></i>
+                                <i class="fab fa-telegram-plane fa-2x" style="color: #007bff;"></i>
                                 <div>Telegram</div>
                             </a>
                         </div>
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="email">
-                                <i class="fas fa-envelope fa-2x" style="color: #ea4335;"></i>
+                                <i class="fas fa-envelope fa-2x" style="color: #dc3545;"></i>
                                 <div>Email</div>
                             </a>
                         </div>
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="copy">
-                                <i class="fas fa-copy fa-2x" style="color: #34a853;"></i>
+                                <i class="fas fa-copy fa-2x" style="color: #363636;"></i>
                                 <div>Copy Link</div>
                             </a>
                         </div>
                         <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="sms">
-                                <i class="fas fa-sms fa-2x" style="color: #4285f4;"></i>
+                                <i class="fas fa-sms fa-2x" style="color: #ffc107;"></i>
                                 <div>SMS</div>
                             </a>
                         </div>
@@ -1075,7 +1092,8 @@
                     <div class="input-group">
                         <input type="text" id="share-link" class="form-control"
                             value="{{ route('profile.showUser', $user->id) }}" readonly>
-                        <button class="btn btn-outline-secondary" type="button" id="copy-link-btn">Copy</button>
+                        <button class="btn btn-outline-secondary" type="button" id="copy-link-btn"
+                            style="background-color: #363636; color: white; border-color: #363636;">Copy</button>
                     </div>
                 </div>
             </div>
@@ -1117,7 +1135,7 @@
 
             // Share Profile Functionality
             const shareBtn = document.querySelector('.btn-link.text-decoration-none .fa-share').closest(
-            '.btn-link');
+                '.btn-link');
             const shareModal = document.getElementById('shareProfileModal');
             const closeShareBtn = document.querySelector('.close-share');
             const cancelShareBtn = document.getElementById('cancelShare');
@@ -1222,9 +1240,12 @@
 
                     // Show feedback
                     const originalText = this.textContent;
+                    const originalBgColor = this.style.backgroundColor;
                     this.textContent = 'Copied!';
+                    this.style.backgroundColor = '#28a745'; // Success color from system
                     setTimeout(() => {
                         this.textContent = originalText;
+                        this.style.backgroundColor = originalBgColor;
                     }, 2000);
                 });
             }
