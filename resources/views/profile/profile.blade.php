@@ -519,10 +519,10 @@
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: #fff;
             margin: 5% auto;
             padding: 20px;
-            border: 1px solid #888;
+            border: 1px solid #363636;
             width: 90%;
             max-width: 600px;
             border-radius: 8px;
@@ -532,7 +532,7 @@
         }
 
         .close {
-            color: #aaa;
+            color: #363636;
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -544,14 +544,15 @@
 
         .close:hover,
         .close:focus {
-            color: black;
+            color: #000;
             text-decoration: none;
         }
 
         .modal-header {
             padding: 10px 0;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #e9ecef;
             margin-bottom: 20px;
+            color: #363636;
         }
 
         .modal-body {
@@ -566,18 +567,24 @@
             display: block;
             margin-bottom: 5px;
             font-weight: 600;
+            color: #363636;
         }
 
         .form-control {
             width: 100%;
             padding: 10px;
-            border: 1px solid #ddd;
+            border: 1px solid #363636;
             border-radius: 4px;
             font-size: 14px;
         }
 
+        .form-control:focus {
+            border-color: #363636;
+            box-shadow: 0 0 0 0.2rem rgba(54, 54, 54, 0.25);
+        }
+
         .btn-save {
-            background-color: #007bff;
+            background-color: #363636;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -587,14 +594,14 @@
         }
 
         .btn-save:hover {
-            background-color: #0056b3;
+            background-color: #555;
         }
 
         .btn-cancel {
             background-color: #6c757d;
             color: white;
             padding: 10px 20px;
-            border: none;
+            border: 1px solid #363636;
             border-radius: 4px;
             cursor: pointer;
             font-size: 14px;
@@ -642,16 +649,6 @@
 
         #copy-link-btn {
             border-radius: 0 4px 4px 0;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            border: 1px solid #363636;
-        }
-
-        .modal-header {
-            border-bottom: 1px solid #e9ecef;
-            color: #363636;
         }
 
         .close-share {
