@@ -47,6 +47,12 @@ class CarPolicy
      */
     public function delete(User $user, Car $car): bool
     {
+        // Allow users to delete their own cars
+        if ($car->user_id === $user->id) {
+            return true;
+        }
+
+        // Otherwise check for delete_car permission
         return $user->can('delete_car');
     }
 
