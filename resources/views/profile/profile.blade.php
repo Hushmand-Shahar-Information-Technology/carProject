@@ -1646,13 +1646,25 @@
                             fetch(`/car/delete/${carId}`, {
                                     method: 'DELETE',
                                     headers: {
-                                        'Content-Type': 'application/json',
                                         'X-CSRF-TOKEN': document.querySelector(
                                             'meta[name="csrf-token"]').getAttribute(
                                             'content')
                                     }
                                 })
-                                .then(response => response.json())
+                                .then(response => {
+                                    // Check if the response is HTML (error page) or JSON
+                                    const contentType = response.headers.get(
+                                        'content-type');
+                                    if (contentType && contentType.indexOf(
+                                            'application/json') !== -1) {
+                                        return response.json();
+                                    } else {
+                                        // If it's not JSON, it's probably an error page
+                                        throw new Error(
+                                            'Server returned an error page instead of JSON response'
+                                            );
+                                    }
+                                })
                                 .then(data => {
                                     if (data.success) {
                                         Swal.fire({
@@ -1661,24 +1673,46 @@
                                             icon: 'success',
                                             confirmButtonText: 'OK'
                                         }).then(() => {
-                                            // Reload the page to reflect changes
-                                            location.reload();
+                                            // Remove the car element from the DOM instead of reloading
+                                            const carElement = this.closest(
+                                                '.col-lg-4');
+                                            if (carElement) {
+                                                carElement.remove();
+                                            }
+                                            // Update car count
+                                            const carCountElement = document
+                                                .querySelector(
+                                                    '.modern-tab.active');
+                                            if (carCountElement) {
+                                                const countText =
+                                                    carCountElement.textContent;
+                                                const countMatch = countText
+                                                    .match(/\((\d+)\)/);
+                                                if (countMatch) {
+                                                    const currentCount =
+                                                        parseInt(countMatch[1]);
+                                                    if (currentCount > 0) {
+                                                        carCountElement
+                                                            .innerHTML =
+                                                            carCountElement
+                                                            .innerHTML.replace(
+                                                                `(${currentCount})`,
+                                                                `(${currentCount - 1})`
+                                                                );
+                                                    }
+                                                }
+                                            }
                                         });
                                     } else {
-                                        Swal.fire({
-                                            title: 'Error!',
-                                            text: data.message ||
-                                                'Failed to delete the car. Please try again.',
-                                            icon: 'error',
-                                            confirmButtonText: 'OK'
-                                        });
+                                        throw new Error(data.message ||
+                                            'Failed to delete car');
                                     }
                                 })
                                 .catch(error => {
                                     console.error('Error:', error);
                                     Swal.fire({
                                         title: 'Error!',
-                                        text: 'Failed to delete the car. Please try again.',
+                                        text: 'Failed to delete the car. Please try again. (Server Error)',
                                         icon: 'error',
                                         confirmButtonText: 'OK'
                                     });
