@@ -112,6 +112,55 @@
             font-size: 12px;
         }
 
+        /* Car overlay banner styles */
+        .car-overlay-banner {
+            position: absolute;
+            top: 10px;
+            right: 0px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            padding: 5px;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            justify-content: center;
+            align-items: center;
+            width: fit-content;
+            height: fit-content;
+        }
+
+        .car-overlay-banner ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .car-overlay-banner li {
+            margin: 0;
+        }
+
+        .car-overlay-banner a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px;
+        }
+
+        .car-overlay-banner a:hover {
+            color: #ff6b6b;
+        }
+
+        .car-image:hover .car-overlay-banner {
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             .profile-img {
                 width: 40%;
@@ -842,6 +891,14 @@
                                             </li>
                                             <li><a href="{{ route('car.show', $car->id) }}"><i
                                                         class="fa fa-shopping-cart"></i></a></li>
+                                            @can('delete', $car)
+                                                <li>
+                                                    <a href="#" class="delete-car-btn" data-car-id="{{ $car->id }}"
+                                                        data-car-title="{{ $car->make }} {{ $car->model }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </li>
+                                            @endcan
                                         </ul>
                                     </div>
                                 </div>
@@ -1561,6 +1618,74 @@
                     .catch(error => {
                         console.error('Error:', error);
                     });
+            });
+        });
+
+        // Add delete functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle delete button clicks
+            document.querySelectorAll('.delete-car-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const carId = this.getAttribute('data-car-id');
+                    const carTitle = this.getAttribute('data-car-title');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: `Do you really want to delete "${carTitle}"? This action cannot be undone.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit delete request via AJAX
+                            fetch(`/car/delete/${carId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Deleted!',
+                                            text: 'The car has been deleted successfully.',
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        }).then(() => {
+                                            // Reload the page to reflect changes
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error!',
+                                            text: data.message ||
+                                                'Failed to delete the car. Please try again.',
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'Failed to delete the car. Please try again.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                });
+                        }
+                    });
+                });
             });
         });
     </script>
