@@ -576,7 +576,8 @@ class CarController extends Controller
         try {
             $car->delete();
 
-            if (request()->wantsJson()) {
+            // For AJAX requests or API calls, always return JSON
+            if (request()->wantsJson() || request()->isXmlHttpRequest() || request()->method() === 'DELETE') {
                 return response()->json([
                     'success' => true,
                     'message' => 'Car deleted successfully.'
@@ -587,7 +588,8 @@ class CarController extends Controller
         } catch (\Throwable $th) {
             Log::error('Error deleting car: ' . $th->getMessage());
 
-            if (request()->wantsJson()) {
+            // For AJAX requests or API calls, always return JSON
+            if (request()->wantsJson() || request()->isXmlHttpRequest() || request()->method() === 'DELETE') {
                 return response()->json([
                     'success' => false,
                     'message' => 'Something went wrong while deleting the car: ' . $th->getMessage()
