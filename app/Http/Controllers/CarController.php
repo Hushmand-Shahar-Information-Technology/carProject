@@ -411,6 +411,7 @@ class CarController extends Controller
             }
 
             // Redirect back to the correct profile page
+            $bargainId = $data['bargain_id'] ?? session('active_bargain_id') ?? null;
             if ($bargainId) {
                 // Store the bargain mode in session to persist after redirect
                 session(['profile_mode' => 'bargain', 'active_bargain_id' => $bargainId]);
@@ -562,5 +563,38 @@ class CarController extends Controller
         $make = $request->input('make'); // or $request->make
         $cars = Car::where('make', $make)->limit(10)->get();
         return response()->json(['cars' => $cars]);
+    }
+
+    /**
+     * Remove the specified car from storage.
+     */
+    public function destroy(Car $car)
+    {
+        // Check if user is authorized to delete this car
+        $this->authorize('delete', $car);
+
+        try {
+            $car->delete();
+
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Car deleted successfully.'
+                ]);
+            }
+
+            return redirect()->route('user.profile')->with('success', 'Car deleted successfully.');
+        } catch (\Throwable $th) {
+            Log::error('Error deleting car: ' . $th->getMessage());
+
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Something went wrong while deleting the car: ' . $th->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->withErrors(['error' => 'Something went wrong while deleting the car: ' . $th->getMessage()]);
+        }
     }
 }
