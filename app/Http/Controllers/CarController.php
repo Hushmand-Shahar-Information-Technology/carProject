@@ -574,6 +574,30 @@ class CarController extends Controller
         $this->authorize('delete', $car);
 
         try {
+            // Delete associated images from storage
+            if (!empty($car->images) && is_array($car->images)) {
+                foreach ($car->images as $imagePath) {
+                    // Remove 'storage/' prefix if it exists
+                    $cleanPath = str_replace('storage/', '', $imagePath);
+                    $fullPath = storage_path('app/public/' . $cleanPath);
+                    if (file_exists($fullPath)) {
+                        unlink($fullPath);
+                    }
+                }
+            }
+
+            // Delete associated videos from storage
+            if (!empty($car->videos) && is_array($car->videos)) {
+                foreach ($car->videos as $videoPath) {
+                    // Remove 'storage/' prefix if it exists
+                    $cleanPath = str_replace('storage/', '', $videoPath);
+                    $fullPath = storage_path('app/public/' . $cleanPath);
+                    if (file_exists($fullPath)) {
+                        unlink($fullPath);
+                    }
+                }
+            }
+
             $car->delete();
 
             // For AJAX requests or API calls, always return JSON
