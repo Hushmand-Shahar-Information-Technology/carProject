@@ -1349,40 +1349,46 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_regular_price">Regular Price</label>
-                                <input type="number" id="edit_regular_price" name="regular_price" class="form-control"
-                                    min="0" step="0.01">
+                    <!-- Sale-related fields (show only when For Sale is checked) -->
+                    <div id="sale-fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_regular_price">Regular Price</label>
+                                    <input type="number" id="edit_regular_price" name="regular_price"
+                                        class="form-control" min="0" step="0.01">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_car_documents">Car Documents</label>
-                                <select id="edit_car_documents" name="car_documents" class="form-control">
-                                    <option value="">Select Document Status</option>
-                                    <option value="complete">Complete</option>
-                                    <option value="incomplete">Incomplete</option>
-                                    <option value="pending">Pending</option>
-                                </select>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_car_documents">Car Documents</label>
+                                    <select id="edit_car_documents" name="car_documents" class="form-control">
+                                        <option value="">Select Document Status</option>
+                                        <option value="complete">Complete</option>
+                                        <option value="incomplete">Incomplete</option>
+                                        <option value="pending">Pending</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_rent_price_per_day">Rent Price Per Day</label>
-                                <input type="number" id="edit_rent_price_per_day" name="rent_price_per_day"
-                                    class="form-control" min="0" step="0.01">
+                    <!-- Rent-related fields (show only when For Rent is checked) -->
+                    <div id="rent-fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_rent_price_per_day">Rent Price Per Day</label>
+                                    <input type="number" id="edit_rent_price_per_day" name="rent_price_per_day"
+                                        class="form-control" min="0" step="0.01">
+                                </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_rent_price_per_month">Rent Price Per Month</label>
-                                <input type="number" id="edit_rent_price_per_month" name="rent_price_per_month"
-                                    class="form-control" min="0" step="0.01">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_rent_price_per_month">Rent Price Per Month</label>
+                                    <input type="number" id="edit_rent_price_per_month" name="rent_price_per_month"
+                                        class="form-control" min="0" step="0.01">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -2037,6 +2043,21 @@
                 document.getElementById('edit_is_for_sale').checked = carData.is_for_sale || false;
                 document.getElementById('edit_is_for_rent').checked = carData.is_for_rent || false;
 
+                // Set initial field visibility based on car purpose
+                const saleFields = document.getElementById('sale-fields');
+                const rentFields = document.getElementById('rent-fields');
+
+                if (carData.is_for_sale) {
+                    if (saleFields) saleFields.style.display = 'block';
+                    if (rentFields) rentFields.style.display = 'none';
+                } else if (carData.is_for_rent) {
+                    if (rentFields) rentFields.style.display = 'block';
+                    if (saleFields) saleFields.style.display = 'none';
+                } else {
+                    if (saleFields) saleFields.style.display = 'none';
+                    if (rentFields) rentFields.style.display = 'none';
+                }
+
 
                 // Set form action URL
                 editCarForm.action = `/car/update/${carData.id}`;
@@ -2046,24 +2067,56 @@
             });
         });
 
-        // Handle checkbox changes for car purpose (mutual exclusivity)
+        // Handle checkbox changes for car purpose (mutual exclusivity and field visibility)
         document.addEventListener('DOMContentLoaded', function() {
             const saleCheckbox = document.getElementById('edit_is_for_sale');
             const rentCheckbox = document.getElementById('edit_is_for_rent');
+            const saleFields = document.getElementById('sale-fields');
+            const rentFields = document.getElementById('rent-fields');
 
             if (saleCheckbox && rentCheckbox) {
-                // Add event listeners for mutual exclusivity
+                // Function to toggle field visibility and clear fields
+                function toggleFields() {
+                    if (saleCheckbox.checked) {
+                        // Show sale fields, hide rent fields
+                        if (saleFields) saleFields.style.display = 'block';
+                        if (rentFields) rentFields.style.display = 'none';
+
+                        // Clear rent fields
+                        document.getElementById('edit_rent_price_per_day').value = '';
+                        document.getElementById('edit_rent_price_per_month').value = '';
+                    } else if (rentCheckbox.checked) {
+                        // Show rent fields, hide sale fields
+                        if (rentFields) rentFields.style.display = 'block';
+                        if (saleFields) saleFields.style.display = 'none';
+
+                        // Clear sale fields
+                        document.getElementById('edit_regular_price').value = '';
+                        document.getElementById('edit_car_documents').selectedIndex = 0;
+                    } else {
+                        // Hide both field groups
+                        if (saleFields) saleFields.style.display = 'none';
+                        if (rentFields) rentFields.style.display = 'none';
+                    }
+                }
+
+                // Add event listeners for mutual exclusivity and field visibility
                 saleCheckbox.addEventListener('change', function() {
                     if (this.checked && rentCheckbox.checked) {
                         rentCheckbox.checked = false;
                     }
+                    toggleFields();
                 });
 
                 rentCheckbox.addEventListener('change', function() {
                     if (this.checked && saleCheckbox.checked) {
                         saleCheckbox.checked = false;
                     }
+                    toggleFields();
                 });
+
+                // Initialize field visibility based on current state
+                toggleFields();
             }
         });
 
