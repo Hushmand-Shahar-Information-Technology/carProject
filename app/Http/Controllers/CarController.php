@@ -566,6 +566,99 @@ class CarController extends Controller
     }
 
     /**
+     * Show the form for editing the specified car.
+     */
+    public function edit(Car $car)
+    {
+        // Check if user is authorized to edit this car
+        $this->authorize('update', $car);
+
+        return view('car.edit', compact('car'));
+    }
+
+    /**
+     * Update the specified car in storage.
+     */
+    public function update(Request $request, Car $car)
+    {
+        // Check if user is authorized to update this car
+        $this->authorize('update', $car);
+
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'year' => 'required|integer|min:1990|max:' . now()->year,
+            'make' => 'required|string',
+            'model' => 'nullable|string',
+            'car_color' => 'required|string',
+            'body_type' => 'nullable|string',
+            'car_condition' => 'nullable|string',
+            'VIN_number' => 'nullable|string',
+            'location' => 'nullable|string',
+            'car_inside_color' => 'nullable|string',
+            'car_documents' => 'nullable|string',
+            'transmission_type' => 'nullable|string',
+            'currency_type' => 'nullable|string',
+            'regular_price' => 'nullable|numeric|min:0',
+            'description' => 'nullable|string',
+            'is_for_sale' => 'sometimes|boolean',
+            'is_for_rent' => 'sometimes|boolean',
+            'is_promoted' => 'sometimes|boolean',
+            'rent_price_per_day' => 'nullable|numeric|min:0',
+            'rent_price_per_month' => 'nullable|numeric|min:0',
+            'request_price_status' => 'sometimes|boolean',
+            'request_price' => 'nullable|numeric|min:0',
+        ]);
+
+        try {
+            $car->update([
+                'title' => $request->title,
+                'year' => $request->year,
+                'make' => $request->make,
+                'model' => $request->model,
+                'car_color' => $request->car_color,
+                'body_type' => $request->body_type,
+                'car_condition' => $request->car_condition,
+                'VIN_number' => $request->VIN_number,
+                'location' => $request->location,
+                'car_inside_color' => $request->car_inside_color,
+                'car_documents' => $request->car_documents,
+                'transmission_type' => $request->transmission_type,
+                'currency_type' => $request->currency_type,
+                'regular_price' => $request->regular_price,
+                'description' => $request->description,
+                'is_for_sale' => (bool) ($request->is_for_sale ?? false),
+                'is_for_rent' => (bool) ($request->is_for_rent ?? false),
+                'is_promoted' => (bool) ($request->is_promoted ?? false),
+                'rent_price_per_day' => $request->rent_price_per_day,
+                'rent_price_per_month' => $request->rent_price_per_month,
+                'request_price_status' => (bool) ($request->request_price_status ?? false),
+                'request_price' => $request->request_price,
+            ]);
+
+            if (request()->wantsJson() || request()->isXmlHttpRequest()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Car updated successfully.',
+                    'car' => $car
+                ]);
+            }
+
+            return redirect()->route('user.profile')->with('success', 'Car updated successfully.');
+        } catch (\Throwable $th) {
+            Log::error('Error updating car: ' . $th->getMessage());
+
+            if (request()->wantsJson() || request()->isXmlHttpRequest()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Something went wrong while updating the car: ' . $th->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()->withInput()->withErrors(['error' => 'Something went wrong while updating the car: ' . $th->getMessage()]);
+        }
+    }
+
+    /**
      * Remove the specified car from storage.
      */
     public function destroy(Car $car)
