@@ -1409,42 +1409,29 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-check">
-                                    <input type="checkbox" id="edit_is_for_sale" name="is_for_sale"
-                                        class="form-check-input" value="1">
+                                    <input type="radio" id="edit_is_for_sale" name="car_purpose"
+                                        class="form-check-input" value="sale">
                                     <label for="edit_is_for_sale" class="form-check-label">For Sale</label>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-check">
-                                    <input type="checkbox" id="edit_is_for_rent" name="is_for_rent"
-                                        class="form-check-input" value="1">
+                                    <input type="radio" id="edit_is_for_rent" name="car_purpose"
+                                        class="form-check-input" value="rent">
                                     <label for="edit_is_for_rent" class="form-check-label">For Rent</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input type="checkbox" id="edit_is_promoted" name="is_promoted"
-                                        class="form-check-input" value="1">
-                                    <label for="edit_is_promoted" class="form-check-label">Promoted</label>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" id="edit_request_price_status" name="request_price_status"
-                                class="form-check-input" value="1">
-                            <label for="edit_request_price_status" class="form-check-label">Request Price Status</label>
-                        </div>
-                    </div>
+                    <!-- Hidden inputs to ensure backend receives correct boolean values -->
+                    <input type="hidden" id="edit_is_for_sale_hidden" name="is_for_sale" value="0">
+                    <input type="hidden" id="edit_is_for_rent_hidden" name="is_for_rent" value="0">
 
                     <div class="form-group">
                         <button type="submit" class="btn-save">Update Car</button>
@@ -1958,12 +1945,19 @@
                 document.getElementById('edit_request_price').value = carData.request_price || '';
                 document.getElementById('edit_description').value = carData.description || '';
 
-                // Set checkboxes
-                document.getElementById('edit_is_for_sale').checked = carData.is_for_sale || false;
-                document.getElementById('edit_is_for_rent').checked = carData.is_for_rent || false;
-                document.getElementById('edit_is_promoted').checked = carData.is_promoted || false;
-                document.getElementById('edit_request_price_status').checked = carData
-                    .request_price_status || false;
+                // Set radio buttons for car purpose
+                if (carData.is_for_sale) {
+                    document.getElementById('edit_is_for_sale').checked = true;
+                    document.getElementById('edit_is_for_sale_hidden').value = '1';
+                    document.getElementById('edit_is_for_rent_hidden').value = '0';
+                } else if (carData.is_for_rent) {
+                    document.getElementById('edit_is_for_rent').checked = true;
+                    document.getElementById('edit_is_for_sale_hidden').value = '0';
+                    document.getElementById('edit_is_for_rent_hidden').value = '1';
+                } else {
+                    document.getElementById('edit_is_for_sale_hidden').value = '0';
+                    document.getElementById('edit_is_for_rent_hidden').value = '0';
+                }
 
 
                 // Set form action URL
@@ -1974,6 +1968,36 @@
             });
         });
 
+        // Handle radio button changes for car purpose
+        document.addEventListener('DOMContentLoaded', function() {
+            const saleRadio = document.getElementById('edit_is_for_sale');
+            const rentRadio = document.getElementById('edit_is_for_rent');
+            const saleHidden = document.getElementById('edit_is_for_sale_hidden');
+            const rentHidden = document.getElementById('edit_is_for_rent_hidden');
+
+            if (saleRadio && rentRadio && saleHidden && rentHidden) {
+                // Function to update hidden inputs based on radio selection
+                function updateHiddenInputs() {
+                    if (saleRadio.checked) {
+                        saleHidden.value = '1';
+                        rentHidden.value = '0';
+                    } else if (rentRadio.checked) {
+                        saleHidden.value = '0';
+                        rentHidden.value = '1';
+                    } else {
+                        saleHidden.value = '0';
+                        rentHidden.value = '0';
+                    }
+                }
+
+                // Add event listeners
+                saleRadio.addEventListener('change', updateHiddenInputs);
+                rentRadio.addEventListener('change', updateHiddenInputs);
+
+                // Initialize hidden inputs
+                updateHiddenInputs();
+            }
+        });
 
         // Close car edit modal when X is clicked
         if (closeCarEditBtn) {
