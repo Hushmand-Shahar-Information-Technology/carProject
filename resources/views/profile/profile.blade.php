@@ -1185,8 +1185,12 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_year">Year *</label>
-                                <input type="number" id="edit_year" name="year" class="form-control" min="1990"
-                                    max="{{ date('Y') }}" required>
+                                <select id="edit_year" name="year" class="form-control" required>
+                                    <option value="">Select Year</option>
+                                    @for ($year = date('Y'); $year >= 1995; $year--)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                    @endfor
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1195,13 +1199,56 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_make">Make *</label>
-                                <input type="text" id="edit_make" name="make" class="form-control" required>
+                                <select id="edit_make" name="make" class="form-control" required>
+                                    <option value="">Select Make</option>
+                                    <option value="toyota">Toyota</option>
+                                    <option value="bmw">BMW</option>
+                                    <option value="honda">Honda</option>
+                                    <option value="marcedes">Mercedes</option>
+                                    <option value="Hyundai">Hyundai</option>
+                                    <option value="Nissan">Nissan</option>
+                                    <option value="Kia">Kia</option>
+                                    <option value="ford">Ford</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_model">Model</label>
-                                <input type="text" id="edit_model" name="model" class="form-control">
+                                <select id="edit_model" name="model" class="form-control">
+                                    <option value="">Select Model</option>
+                                    <option value="Camry">Camry</option>
+                                    <option value="Corolla">Corolla</option>
+                                    <option value="Prius">Prius</option>
+                                    <option value="RAV4">RAV4</option>
+                                    <option value="Highlander">Highlander</option>
+                                    <option value="X3">X3</option>
+                                    <option value="X5">X5</option>
+                                    <option value="3 Series">3 Series</option>
+                                    <option value="5 Series">5 Series</option>
+                                    <option value="Civic">Civic</option>
+                                    <option value="Accord">Accord</option>
+                                    <option value="CR-V">CR-V</option>
+                                    <option value="Pilot">Pilot</option>
+                                    <option value="C-Class">C-Class</option>
+                                    <option value="E-Class">E-Class</option>
+                                    <option value="GLE">GLE</option>
+                                    <option value="Elantra">Elantra</option>
+                                    <option value="Sonata">Sonata</option>
+                                    <option value="Tucson">Tucson</option>
+                                    <option value="Santa Fe">Santa Fe</option>
+                                    <option value="Altima">Altima</option>
+                                    <option value="Sentra">Sentra</option>
+                                    <option value="Rogue">Rogue</option>
+                                    <option value="Murano">Murano</option>
+                                    <option value="Optima">Optima</option>
+                                    <option value="Sorento">Sorento</option>
+                                    <option value="Sportage">Sportage</option>
+                                    <option value="Focus">Focus</option>
+                                    <option value="Escape">Escape</option>
+                                    <option value="Explorer">Explorer</option>
+                                    <option value="F-150">F-150</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1210,14 +1257,32 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_car_color">Car Color *</label>
-                                <input type="text" id="edit_car_color" name="car_color" class="form-control"
-                                    required>
+                                <select id="edit_car_color" name="car_color" class="form-control" required>
+                                    <option value="">Select Color</option>
+                                    <option value="white">White</option>
+                                    <option value="black">Black</option>
+                                    <option value="silver">Silver</option>
+                                    <option value="red">Red</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="green">Green</option>
+                                    <option value="yellow">Yellow</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_body_type">Body Type</label>
-                                <input type="text" id="edit_body_type" name="body_type" class="form-control">
+                                <select id="edit_body_type" name="body_type" class="form-control">
+                                    <option value="">Select Body Type</option>
+                                    <option value="convertible">Convertible</option>
+                                    <option value="coupe">Coupe</option>
+                                    <option value="CUV">CUV</option>
+                                    <option value="micro">Micro</option>
+                                    <option value="supercar">Supercar</option>
+                                    <option value="sedan">Sedan</option>
+                                    <option value="pick-up">Pick-up</option>
+                                    <option value="minivan">Minivan</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1226,14 +1291,27 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_car_condition">Car Condition</label>
-                                <input type="text" id="edit_car_condition" name="car_condition" class="form-control">
+                                <select id="edit_car_condition" name="car_condition" class="form-control">
+                                    <option value="">Select Accident Condition</option>
+                                    <option value="تصادفی">Crashed</option>
+                                    <option value="سالم">UnDamaged</option>
+                                    <option value="تصادفی اما تعمیر شده">Repaired</option>
+                                </select>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_car_inside_color">Inside Color</label>
-                                <input type="text" id="edit_car_inside_color" name="car_inside_color"
-                                    class="form-control">
+                                <select id="edit_car_inside_color" name="car_inside_color" class="form-control">
+                                    <option value="">Select Interior Color</option>
+                                    <option value="black">Black</option>
+                                    <option value="gray">Gray</option>
+                                    <option value="beige">Beige</option>
+                                    <option value="brown">Brown</option>
+                                    <option value="white">White</option>
+                                    <option value="red">Red</option>
+                                    <option value="blue">Blue</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1270,10 +1348,8 @@
                                 <select id="edit_currency_type" name="currency_type" class="form-control">
                                     <option value="">Select Currency</option>
                                     <option value="USD">USD</option>
+                                    <option value="AFN">AFN</option>
                                     <option value="EUR">EUR</option>
-                                    <option value="GBP">GBP</option>
-                                    <option value="CAD">CAD</option>
-                                    <option value="AUD">AUD</option>
                                 </select>
                             </div>
                         </div>
@@ -1290,7 +1366,12 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_car_documents">Car Documents</label>
-                                <input type="text" id="edit_car_documents" name="car_documents" class="form-control">
+                                <select id="edit_car_documents" name="car_documents" class="form-control">
+                                    <option value="">Select Document Status</option>
+                                    <option value="complete">Complete</option>
+                                    <option value="incomplete">Incomplete</option>
+                                    <option value="pending">Pending</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -1884,6 +1965,7 @@
                 document.getElementById('edit_request_price_status').checked = carData
                     .request_price_status || false;
 
+
                 // Set form action URL
                 editCarForm.action = `/car/update/${carData.id}`;
 
@@ -1891,6 +1973,7 @@
                 carEditModal.style.display = 'block';
             });
         });
+
 
         // Close car edit modal when X is clicked
         if (closeCarEditBtn) {
