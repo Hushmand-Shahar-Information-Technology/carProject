@@ -1323,12 +1323,6 @@
                                 <input type="text" id="edit_vin_number" name="VIN_number" class="form-control">
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_location">Location</label>
-                                <input type="text" id="edit_location" name="location" class="form-control">
-                            </div>
-                        </div>
                     </div>
 
                     <div class="row">
@@ -1399,24 +1393,23 @@
                         <textarea id="edit_description" name="description" class="form-control" rows="3"></textarea>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input type="checkbox" id="edit_is_for_sale" name="is_for_sale"
-                                        class="form-check-input" value="1">
-                                    <label for="edit_is_for_sale" class="form-check-label">For Sale</label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <div class="form-check">
-                                    <input type="checkbox" id="edit_is_for_rent" name="is_for_rent"
-                                        class="form-check-input" value="1">
-                                    <label for="edit_is_for_rent" class="form-check-label">For Rent</label>
-                                </div>
-                            </div>
+                    <!-- Purpose Selection - Matching Registration Form -->
+                    <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 mb-6">
+                        <h3 class="text-lg font-semibold mb-4 text-blue-800">Select Car Purpose</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- For Sale -->
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" id="edit_is_for_sale" name="is_for_sale" value="1"
+                                    class="h-4 w-4">
+                                <span class="font-medium">For Sale</span>
+                            </label>
+
+                            <!-- For Rent -->
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" id="edit_is_for_rent" name="is_for_rent" value="1"
+                                    class="h-4 w-4">
+                                <span class="font-medium">For Rent</span>
+                            </label>
                         </div>
                     </div>
 
@@ -1917,19 +1910,25 @@
                 console.log('Car model:', carData.model);
                 console.log('Car color:', carData.car_color);
 
-                // Reset all select fields to default state first
-                const selectFields = [
-                    'edit_year', 'edit_make', 'edit_model', 'edit_car_color',
-                    'edit_body_type', 'edit_car_condition', 'edit_car_inside_color',
-                    'edit_transmission_type', 'edit_currency_type', 'edit_car_documents'
-                ];
+                // Function to add current value as first option if not exists
+                function addCurrentValueAsFirstOption(selectId, currentValue, displayText) {
+                    const select = document.getElementById(selectId);
+                    if (!select || !currentValue) return;
 
-                selectFields.forEach(fieldId => {
-                    const field = document.getElementById(fieldId);
-                    if (field) {
-                        field.selectedIndex = 0; // Reset to first option (usually "Select...")
+                    // Check if current value already exists in options
+                    const existingOption = Array.from(select.options).find(opt =>
+                        opt.value === currentValue || opt.text === currentValue
+                    );
+
+                    if (!existingOption) {
+                        // Add current value as first option
+                        const newOption = document.createElement('option');
+                        newOption.value = currentValue;
+                        newOption.text = displayText || currentValue;
+                        newOption.selected = true;
+                        select.insertBefore(newOption, select.firstChild);
                     }
-                });
+                }
 
                 // Populate form fields with car data
                 document.getElementById('edit_title').value = carData.title || '';
@@ -1996,6 +1995,23 @@
                     console.log(`Final ${fieldName} value:`, select.value);
                 }
 
+                // Add current values as first options and set them
+                addCurrentValueAsFirstOption('edit_year', carData.year, carData.year);
+                addCurrentValueAsFirstOption('edit_make', carData.make, carData.make);
+                addCurrentValueAsFirstOption('edit_model', carData.model, carData.model);
+                addCurrentValueAsFirstOption('edit_car_color', carData.car_color, carData.car_color);
+                addCurrentValueAsFirstOption('edit_body_type', carData.body_type, carData.body_type);
+                addCurrentValueAsFirstOption('edit_car_condition', carData.car_condition, carData
+                    .car_condition);
+                addCurrentValueAsFirstOption('edit_car_inside_color', carData.car_inside_color, carData
+                    .car_inside_color);
+                addCurrentValueAsFirstOption('edit_transmission_type', carData.transmission_type, carData
+                    .transmission_type);
+                addCurrentValueAsFirstOption('edit_currency_type', carData.currency_type, carData
+                    .currency_type);
+                addCurrentValueAsFirstOption('edit_car_documents', carData.car_documents, carData
+                    .car_documents);
+
                 // Set select values with proper handling
                 setSelectValue('edit_year', carData.year, 'year');
                 setSelectValue('edit_make', carData.make, 'make');
@@ -2010,7 +2026,6 @@
 
                 // Set text inputs
                 document.getElementById('edit_vin_number').value = carData.VIN_number || '';
-                document.getElementById('edit_location').value = carData.location || '';
                 document.getElementById('edit_regular_price').value = carData.regular_price || '';
 
                 document.getElementById('edit_rent_price_per_day').value = carData.rent_price_per_day || '';
