@@ -1393,15 +1393,6 @@
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="edit_request_price">Request Price</label>
-                                <input type="number" id="edit_request_price" name="request_price" class="form-control"
-                                    min="0" step="0.01">
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         <label for="edit_description">Description</label>
@@ -1924,25 +1915,74 @@
 
                 const carData = JSON.parse(this.getAttribute('data-car-data'));
 
+                // Debug: Log the car data to see what we're working with
+                console.log('Full car data:', carData);
+                console.log('Car make:', carData.make);
+                console.log('Car model:', carData.model);
+                console.log('Car color:', carData.car_color);
+
                 // Populate form fields with car data
                 document.getElementById('edit_title').value = carData.title || '';
-                document.getElementById('edit_year').value = carData.year || '';
-                document.getElementById('edit_make').value = carData.make || '';
-                document.getElementById('edit_model').value = carData.model || '';
-                document.getElementById('edit_car_color').value = carData.car_color || '';
-                document.getElementById('edit_body_type').value = carData.body_type || '';
-                document.getElementById('edit_car_condition').value = carData.car_condition || '';
-                document.getElementById('edit_car_inside_color').value = carData.car_inside_color || '';
+
+                // Function to set select value with fallback
+                function setSelectValue(selectId, value, fieldName) {
+                    const select = document.getElementById(selectId);
+                    if (!select || !value) return;
+
+                    console.log(`Setting ${fieldName} to:`, value);
+
+                    // First try exact value match
+                    select.value = value;
+
+                    // If that didn't work, try case-insensitive match
+                    if (select.value !== value) {
+                        const options = select.options;
+                        for (let i = 0; i < options.length; i++) {
+                            if (options[i].value.toLowerCase() === value.toLowerCase()) {
+                                select.value = options[i].value;
+                                console.log(`Found case-insensitive match for ${fieldName}:`, options[i]
+                                    .value);
+                                break;
+                            }
+                        }
+                    }
+
+                    // If still not found, try partial text match
+                    if (select.value !== value) {
+                        const options = select.options;
+                        for (let i = 0; i < options.length; i++) {
+                            if (options[i].text.toLowerCase().includes(value.toLowerCase()) ||
+                                value.toLowerCase().includes(options[i].text.toLowerCase())) {
+                                select.value = options[i].value;
+                                console.log(`Found partial match for ${fieldName}:`, options[i].value);
+                                break;
+                            }
+                        }
+                    }
+
+                    console.log(`Final ${fieldName} value:`, select.value);
+                }
+
+                // Set select values with proper handling
+                setSelectValue('edit_year', carData.year, 'year');
+                setSelectValue('edit_make', carData.make, 'make');
+                setSelectValue('edit_model', carData.model, 'model');
+                setSelectValue('edit_car_color', carData.car_color, 'car_color');
+                setSelectValue('edit_body_type', carData.body_type, 'body_type');
+                setSelectValue('edit_car_condition', carData.car_condition, 'car_condition');
+                setSelectValue('edit_car_inside_color', carData.car_inside_color, 'car_inside_color');
+                setSelectValue('edit_transmission_type', carData.transmission_type, 'transmission_type');
+                setSelectValue('edit_currency_type', carData.currency_type, 'currency_type');
+                setSelectValue('edit_car_documents', carData.car_documents, 'car_documents');
+
+                // Set text inputs
                 document.getElementById('edit_vin_number').value = carData.VIN_number || '';
                 document.getElementById('edit_location').value = carData.location || '';
-                document.getElementById('edit_transmission_type').value = carData.transmission_type || '';
-                document.getElementById('edit_currency_type').value = carData.currency_type || '';
                 document.getElementById('edit_regular_price').value = carData.regular_price || '';
-                document.getElementById('edit_car_documents').value = carData.car_documents || '';
+
                 document.getElementById('edit_rent_price_per_day').value = carData.rent_price_per_day || '';
                 document.getElementById('edit_rent_price_per_month').value = carData.rent_price_per_month ||
                     '';
-                document.getElementById('edit_request_price').value = carData.request_price || '';
                 document.getElementById('edit_description').value = carData.description || '';
 
                 // Set radio buttons for car purpose
