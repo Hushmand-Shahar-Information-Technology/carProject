@@ -1403,8 +1403,8 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-check">
-                                    <input type="radio" id="edit_is_for_sale" name="car_purpose"
-                                        class="form-check-input" value="sale">
+                                    <input type="checkbox" id="edit_is_for_sale" name="is_for_sale"
+                                        class="form-check-input" value="1">
                                     <label for="edit_is_for_sale" class="form-check-label">For Sale</label>
                                 </div>
                             </div>
@@ -1412,17 +1412,13 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-check">
-                                    <input type="radio" id="edit_is_for_rent" name="car_purpose"
-                                        class="form-check-input" value="rent">
+                                    <input type="checkbox" id="edit_is_for_rent" name="is_for_rent"
+                                        class="form-check-input" value="1">
                                     <label for="edit_is_for_rent" class="form-check-label">For Rent</label>
                                 </div>
                             </div>
                         </div>
                     </div>
-
-                    <!-- Hidden inputs to ensure backend receives correct boolean values -->
-                    <input type="hidden" id="edit_is_for_sale_hidden" name="is_for_sale" value="0">
-                    <input type="hidden" id="edit_is_for_rent_hidden" name="is_for_rent" value="0">
 
                     <div class="form-group">
                         <button type="submit" class="btn-save">Update Car</button>
@@ -1921,45 +1917,82 @@
                 console.log('Car model:', carData.model);
                 console.log('Car color:', carData.car_color);
 
+                // Reset all select fields to default state first
+                const selectFields = [
+                    'edit_year', 'edit_make', 'edit_model', 'edit_car_color',
+                    'edit_body_type', 'edit_car_condition', 'edit_car_inside_color',
+                    'edit_transmission_type', 'edit_currency_type', 'edit_car_documents'
+                ];
+
+                selectFields.forEach(fieldId => {
+                    const field = document.getElementById(fieldId);
+                    if (field) {
+                        field.selectedIndex = 0; // Reset to first option (usually "Select...")
+                    }
+                });
+
                 // Populate form fields with car data
                 document.getElementById('edit_title').value = carData.title || '';
 
-                // Function to set select value with fallback
+                // Function to set select value with comprehensive fallback
                 function setSelectValue(selectId, value, fieldName) {
                     const select = document.getElementById(selectId);
-                    if (!select || !value) return;
+                    if (!select || !value) {
+                        console.log(`No value provided for ${fieldName}`);
+                        return;
+                    }
 
-                    console.log(`Setting ${fieldName} to:`, value);
+                    console.log(`Setting ${fieldName} to:`, value, typeof value);
+
+                    // Convert value to string for comparison
+                    const stringValue = String(value).trim();
 
                     // First try exact value match
-                    select.value = value;
+                    select.value = stringValue;
+                    if (select.value === stringValue) {
+                        console.log(`Exact match found for ${fieldName}:`, stringValue);
+                        return;
+                    }
 
-                    // If that didn't work, try case-insensitive match
-                    if (select.value !== value) {
-                        const options = select.options;
-                        for (let i = 0; i < options.length; i++) {
-                            if (options[i].value.toLowerCase() === value.toLowerCase()) {
-                                select.value = options[i].value;
-                                console.log(`Found case-insensitive match for ${fieldName}:`, options[i]
-                                    .value);
-                                break;
-                            }
+                    // Try case-insensitive value match
+                    const options = select.options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].value.toLowerCase() === stringValue.toLowerCase()) {
+                            select.value = options[i].value;
+                            console.log(`Case-insensitive value match for ${fieldName}:`, options[i].value);
+                            return;
                         }
                     }
 
-                    // If still not found, try partial text match
-                    if (select.value !== value) {
-                        const options = select.options;
-                        for (let i = 0; i < options.length; i++) {
-                            if (options[i].text.toLowerCase().includes(value.toLowerCase()) ||
-                                value.toLowerCase().includes(options[i].text.toLowerCase())) {
-                                select.value = options[i].value;
-                                console.log(`Found partial match for ${fieldName}:`, options[i].value);
-                                break;
-                            }
+                    // Try case-insensitive text match
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text.toLowerCase() === stringValue.toLowerCase()) {
+                            select.value = options[i].value;
+                            console.log(`Case-insensitive text match for ${fieldName}:`, options[i].value);
+                            return;
                         }
                     }
 
+                    // Try partial text match
+                    for (let i = 0; i < options.length; i++) {
+                        const optionText = options[i].text.toLowerCase();
+                        const optionValue = options[i].value.toLowerCase();
+                        if (optionText.includes(stringValue.toLowerCase()) ||
+                            optionValue.includes(stringValue.toLowerCase()) ||
+                            stringValue.toLowerCase().includes(optionText) ||
+                            stringValue.toLowerCase().includes(optionValue)) {
+                            select.value = options[i].value;
+                            console.log(`Partial match for ${fieldName}:`, options[i].value);
+                            return;
+                        }
+                    }
+
+                    // If still no match, log all available options for debugging
+                    console.log(`No match found for ${fieldName}. Available options:`,
+                        Array.from(options).map(opt => ({
+                            value: opt.value,
+                            text: opt.text
+                        })));
                     console.log(`Final ${fieldName} value:`, select.value);
                 }
 
@@ -1985,19 +2018,9 @@
                     '';
                 document.getElementById('edit_description').value = carData.description || '';
 
-                // Set radio buttons for car purpose
-                if (carData.is_for_sale) {
-                    document.getElementById('edit_is_for_sale').checked = true;
-                    document.getElementById('edit_is_for_sale_hidden').value = '1';
-                    document.getElementById('edit_is_for_rent_hidden').value = '0';
-                } else if (carData.is_for_rent) {
-                    document.getElementById('edit_is_for_rent').checked = true;
-                    document.getElementById('edit_is_for_sale_hidden').value = '0';
-                    document.getElementById('edit_is_for_rent_hidden').value = '1';
-                } else {
-                    document.getElementById('edit_is_for_sale_hidden').value = '0';
-                    document.getElementById('edit_is_for_rent_hidden').value = '0';
-                }
+                // Set checkboxes for car purpose
+                document.getElementById('edit_is_for_sale').checked = carData.is_for_sale || false;
+                document.getElementById('edit_is_for_rent').checked = carData.is_for_rent || false;
 
 
                 // Set form action URL
@@ -2008,34 +2031,24 @@
             });
         });
 
-        // Handle radio button changes for car purpose
+        // Handle checkbox changes for car purpose (mutual exclusivity)
         document.addEventListener('DOMContentLoaded', function() {
-            const saleRadio = document.getElementById('edit_is_for_sale');
-            const rentRadio = document.getElementById('edit_is_for_rent');
-            const saleHidden = document.getElementById('edit_is_for_sale_hidden');
-            const rentHidden = document.getElementById('edit_is_for_rent_hidden');
+            const saleCheckbox = document.getElementById('edit_is_for_sale');
+            const rentCheckbox = document.getElementById('edit_is_for_rent');
 
-            if (saleRadio && rentRadio && saleHidden && rentHidden) {
-                // Function to update hidden inputs based on radio selection
-                function updateHiddenInputs() {
-                    if (saleRadio.checked) {
-                        saleHidden.value = '1';
-                        rentHidden.value = '0';
-                    } else if (rentRadio.checked) {
-                        saleHidden.value = '0';
-                        rentHidden.value = '1';
-                    } else {
-                        saleHidden.value = '0';
-                        rentHidden.value = '0';
+            if (saleCheckbox && rentCheckbox) {
+                // Add event listeners for mutual exclusivity
+                saleCheckbox.addEventListener('change', function() {
+                    if (this.checked && rentCheckbox.checked) {
+                        rentCheckbox.checked = false;
                     }
-                }
+                });
 
-                // Add event listeners
-                saleRadio.addEventListener('change', updateHiddenInputs);
-                rentRadio.addEventListener('change', updateHiddenInputs);
-
-                // Initialize hidden inputs
-                updateHiddenInputs();
+                rentCheckbox.addEventListener('change', function() {
+                    if (this.checked && saleCheckbox.checked) {
+                        saleCheckbox.checked = false;
+                    }
+                });
             }
         });
 
