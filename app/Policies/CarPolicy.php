@@ -39,6 +39,12 @@ class CarPolicy
      */
     public function update(User $user, Car $car): bool
     {
+        // Allow users to update their own cars
+        if ($car->user_id === $user->id) {
+            return true;
+        }
+
+        // Otherwise check for update_car permission
         return $user->can('update_car');
     }
 
