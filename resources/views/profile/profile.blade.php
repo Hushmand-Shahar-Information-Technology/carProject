@@ -891,9 +891,18 @@
                                             </li>
                                             <li><a href="{{ route('car.show', $car->id) }}"><i
                                                         class="fa fa-shopping-cart"></i></a></li>
+                                            @can('update', $car)
+                                                <li>
+                                                    <a href="#" class="edit-car-btn" data-car-id="{{ $car->id }}"
+                                                        data-car-data="{{ json_encode($car) }}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </li>
+                                            @endcan
                                             @can('delete', $car)
                                                 <li>
-                                                    <a href="#" class="delete-car-btn" data-car-id="{{ $car->id }}"
+                                                    <a href="#" class="delete-car-btn"
+                                                        data-car-id="{{ $car->id }}"
                                                         data-car-title="{{ $car->make }} {{ $car->model }}">
                                                         <i class="fa fa-trash"></i>
                                                     </a>
@@ -1153,6 +1162,218 @@
             </div>
         </div>
     </div>
+
+    <!-- Car Edit Modal -->
+    <div id="editCarModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close" id="closeCarEdit">&times;</span>
+            <div class="modal-header">
+                <h2>Edit Car</h2>
+            </div>
+            <div class="modal-body">
+                <form id="editCarForm" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_title">Title *</label>
+                                <input type="text" id="edit_title" name="title" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_year">Year *</label>
+                                <input type="number" id="edit_year" name="year" class="form-control" min="1990"
+                                    max="{{ date('Y') }}" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_make">Make *</label>
+                                <input type="text" id="edit_make" name="make" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_model">Model</label>
+                                <input type="text" id="edit_model" name="model" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_car_color">Car Color *</label>
+                                <input type="text" id="edit_car_color" name="car_color" class="form-control"
+                                    required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_body_type">Body Type</label>
+                                <input type="text" id="edit_body_type" name="body_type" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_car_condition">Car Condition</label>
+                                <input type="text" id="edit_car_condition" name="car_condition" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_car_inside_color">Inside Color</label>
+                                <input type="text" id="edit_car_inside_color" name="car_inside_color"
+                                    class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_vin_number">VIN Number</label>
+                                <input type="text" id="edit_vin_number" name="VIN_number" class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_location">Location</label>
+                                <input type="text" id="edit_location" name="location" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_transmission_type">Transmission Type</label>
+                                <select id="edit_transmission_type" name="transmission_type" class="form-control">
+                                    <option value="">Select Transmission</option>
+                                    <option value="manual">Manual</option>
+                                    <option value="automatic">Automatic</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_currency_type">Currency Type</label>
+                                <select id="edit_currency_type" name="currency_type" class="form-control">
+                                    <option value="">Select Currency</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="GBP">GBP</option>
+                                    <option value="CAD">CAD</option>
+                                    <option value="AUD">AUD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_regular_price">Regular Price</label>
+                                <input type="number" id="edit_regular_price" name="regular_price" class="form-control"
+                                    min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_car_documents">Car Documents</label>
+                                <input type="text" id="edit_car_documents" name="car_documents" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_rent_price_per_day">Rent Price Per Day</label>
+                                <input type="number" id="edit_rent_price_per_day" name="rent_price_per_day"
+                                    class="form-control" min="0" step="0.01">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_rent_price_per_month">Rent Price Per Month</label>
+                                <input type="number" id="edit_rent_price_per_month" name="rent_price_per_month"
+                                    class="form-control" min="0" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_request_price">Request Price</label>
+                                <input type="number" id="edit_request_price" name="request_price" class="form-control"
+                                    min="0" step="0.01">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="edit_description">Description</label>
+                        <textarea id="edit_description" name="description" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="edit_is_for_sale" name="is_for_sale"
+                                        class="form-check-input" value="1">
+                                    <label for="edit_is_for_sale" class="form-check-label">For Sale</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="edit_is_for_rent" name="is_for_rent"
+                                        class="form-check-input" value="1">
+                                    <label for="edit_is_for_rent" class="form-check-label">For Rent</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input type="checkbox" id="edit_is_promoted" name="is_promoted"
+                                        class="form-check-input" value="1">
+                                    <label for="edit_is_promoted" class="form-check-label">Promoted</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form-check">
+                            <input type="checkbox" id="edit_request_price_status" name="request_price_status"
+                                class="form-check-input" value="1">
+                            <label for="edit_request_price_status" class="form-check-label">Request Price Status</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn-save">Update Car</button>
+                        <button type="button" class="btn-cancel" id="cancelCarEdit">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1621,6 +1842,133 @@
             });
         });
 
+        // Car Edit Modal Functionality
+        const carEditModal = document.getElementById('editCarModal');
+        const closeCarEditBtn = document.getElementById('closeCarEdit');
+        const cancelCarEditBtn = document.getElementById('cancelCarEdit');
+        const editCarForm = document.getElementById('editCarForm');
+
+        // Open car edit modal when edit button is clicked
+        document.querySelectorAll('.edit-car-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const carData = JSON.parse(this.getAttribute('data-car-data'));
+
+                // Populate form fields with car data
+                document.getElementById('edit_title').value = carData.title || '';
+                document.getElementById('edit_year').value = carData.year || '';
+                document.getElementById('edit_make').value = carData.make || '';
+                document.getElementById('edit_model').value = carData.model || '';
+                document.getElementById('edit_car_color').value = carData.car_color || '';
+                document.getElementById('edit_body_type').value = carData.body_type || '';
+                document.getElementById('edit_car_condition').value = carData.car_condition || '';
+                document.getElementById('edit_car_inside_color').value = carData.car_inside_color || '';
+                document.getElementById('edit_vin_number').value = carData.VIN_number || '';
+                document.getElementById('edit_location').value = carData.location || '';
+                document.getElementById('edit_transmission_type').value = carData.transmission_type || '';
+                document.getElementById('edit_currency_type').value = carData.currency_type || '';
+                document.getElementById('edit_regular_price').value = carData.regular_price || '';
+                document.getElementById('edit_car_documents').value = carData.car_documents || '';
+                document.getElementById('edit_rent_price_per_day').value = carData.rent_price_per_day || '';
+                document.getElementById('edit_rent_price_per_month').value = carData.rent_price_per_month ||
+                    '';
+                document.getElementById('edit_request_price').value = carData.request_price || '';
+                document.getElementById('edit_description').value = carData.description || '';
+
+                // Set checkboxes
+                document.getElementById('edit_is_for_sale').checked = carData.is_for_sale || false;
+                document.getElementById('edit_is_for_rent').checked = carData.is_for_rent || false;
+                document.getElementById('edit_is_promoted').checked = carData.is_promoted || false;
+                document.getElementById('edit_request_price_status').checked = carData
+                    .request_price_status || false;
+
+                // Set form action URL
+                editCarForm.action = `/car/update/${carData.id}`;
+
+                // Show modal
+                carEditModal.style.display = 'block';
+            });
+        });
+
+        // Close car edit modal when X is clicked
+        if (closeCarEditBtn) {
+            closeCarEditBtn.addEventListener('click', function() {
+                carEditModal.style.display = 'none';
+            });
+        }
+
+        // Close car edit modal when cancel button is clicked
+        if (cancelCarEditBtn) {
+            cancelCarEditBtn.addEventListener('click', function() {
+                carEditModal.style.display = 'none';
+            });
+        }
+
+        // Close car edit modal when clicking outside of modal content
+        window.addEventListener('click', function(event) {
+            if (event.target === carEditModal) {
+                carEditModal.style.display = 'none';
+            }
+        });
+
+        // Handle car edit form submission
+        if (editCarForm) {
+            editCarForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Get form data
+                const formData = new FormData(editCarForm);
+
+                // Submit form via AJAX
+                fetch(editCarForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Close modal
+                            carEditModal.style.display = 'none';
+
+                            // Show success message
+                            Swal.fire({
+                                title: 'Success!',
+                                text: data.message || 'Car updated successfully!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                // Reload the page to reflect changes
+                                location.reload();
+                            });
+                        } else {
+                            // Show error message
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message || 'Failed to update car. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to update car. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+            });
+        }
+
         // Add delete functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Handle delete button clicks
@@ -1662,7 +2010,7 @@
                                         // If it's not JSON, it's probably an error page
                                         throw new Error(
                                             'Server returned an error page instead of JSON response'
-                                            );
+                                        );
                                     }
                                 })
                                 .then(data => {
@@ -1698,7 +2046,7 @@
                                                             .innerHTML.replace(
                                                                 `(${currentCount})`,
                                                                 `(${currentCount - 1})`
-                                                                );
+                                                            );
                                                     }
                                                 }
                                             }
