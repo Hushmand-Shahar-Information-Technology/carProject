@@ -748,6 +748,107 @@
                 text-align: center;
                 margin-bottom: 0;
             }
+
+            /* Newsletter Styles */
+            .newsletter-container {
+                padding: 20px 0;
+            }
+
+            .newsletter-card {
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                overflow: hidden;
+            }
+
+            .newsletter-header {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 30px;
+                text-align: center;
+            }
+
+            .newsletter-header h3 {
+                margin: 0 0 10px 0;
+                font-size: 24px;
+                font-weight: 600;
+            }
+
+            .newsletter-header p {
+                margin: 0;
+                opacity: 0.9;
+                font-size: 16px;
+            }
+
+            .newsletter-body {
+                padding: 30px;
+            }
+
+            .subscription-status {
+                display: flex;
+                align-items: center;
+                padding: 20px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+
+            .subscription-status.subscribed {
+                background-color: #d4edda;
+                border: 1px solid #c3e6cb;
+                color: #155724;
+            }
+
+            .subscription-status.not-subscribed {
+                background-color: #f8d7da;
+                border: 1px solid #f5c6cb;
+                color: #721c24;
+            }
+
+            .subscription-status i {
+                font-size: 24px;
+                margin-right: 15px;
+            }
+
+            .status-info h4 {
+                margin: 0 0 5px 0;
+                font-size: 18px;
+                font-weight: 600;
+            }
+
+            .status-info p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.8;
+            }
+
+            .newsletter-actions {
+                text-align: center;
+            }
+
+            .newsletter-actions .btn {
+                padding: 12px 30px;
+                font-size: 16px;
+                font-weight: 500;
+                border-radius: 6px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .newsletter-actions .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .newsletter-actions .btn-success {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .newsletter-actions .btn-danger {
+                background-color: #dc3545;
+                color: white;
+            }
         }
     </style>
 
@@ -868,6 +969,9 @@
                 <div class="modern-tab" data-tab="notifications">
                     Notifications <span class="notification-count-badge"
                         id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
+                </div>
+                <div class="modern-tab" data-tab="newsletter">
+                    Newsletter
                 </div>
             @endif
         </div>
@@ -1040,6 +1144,47 @@
                         <p>You don't have any offer notifications yet.</p>
                     </div>
                 @endif
+            </div>
+        </div>
+
+        <!-- Newsletter Tab Content -->
+        <div id="newsletter-tab" class="tab-content">
+            <div class="newsletter-container">
+                <div class="newsletter-card">
+                    <div class="newsletter-header">
+                        <h3><i class="fas fa-envelope"></i> Newsletter Subscription</h3>
+                        <p>Manage your newsletter subscription preferences</p>
+                    </div>
+                    <div class="newsletter-body">
+                        @if (auth()->user()->newsletter_subscribed)
+                            <div class="subscription-status subscribed">
+                                <i class="fas fa-check-circle"></i>
+                                <div class="status-info">
+                                    <h4>You are subscribed to our newsletter</h4>
+                                    <p>You will receive email notifications about new car posts and updates.</p>
+                                </div>
+                            </div>
+                            <div class="newsletter-actions">
+                                <button class="btn btn-danger" id="unsubscribe-btn">
+                                    <i class="fas fa-times"></i> Unsubscribe
+                                </button>
+                            </div>
+                        @else
+                            <div class="subscription-status not-subscribed">
+                                <i class="fas fa-times-circle"></i>
+                                <div class="status-info">
+                                    <h4>You are not subscribed to our newsletter</h4>
+                                    <p>Subscribe to receive email notifications about new car posts and updates.</p>
+                                </div>
+                            </div>
+                            <div class="newsletter-actions">
+                                <button class="btn btn-success" id="subscribe-btn">
+                                    <i class="fas fa-check"></i> Subscribe
+                                </button>
+                            </div>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2331,6 +2476,121 @@
                     });
                 });
             }, 500);
+        });
+
+        // Newsletter subscription/unsubscription functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle subscribe button
+            const subscribeBtn = document.getElementById('subscribe-btn');
+            if (subscribeBtn) {
+                subscribeBtn.addEventListener('click', function() {
+                    const email = '{{ auth()->user()->email }}';
+
+                    fetch('{{ route('email.store') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                email: email
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: data.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'An error occurred. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                });
+            }
+
+            // Handle unsubscribe button
+            const unsubscribeBtn = document.getElementById('unsubscribe-btn');
+            if (unsubscribeBtn) {
+                unsubscribeBtn.addEventListener('click', function() {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You will no longer receive newsletter emails about new car posts.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, unsubscribe',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const email = '{{ auth()->user()->email }}';
+
+                            fetch('{{ route('email.unsubscribe') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    },
+                                    body: JSON.stringify({
+                                        email: email
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Unsubscribed!',
+                                            text: data.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        }).then(() => {
+                                            location.reload();
+                                        });
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: data.message,
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'An error occurred. Please try again.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                });
+                        }
+                    });
+                });
+            }
         });
     </script> -->
 @endsection
