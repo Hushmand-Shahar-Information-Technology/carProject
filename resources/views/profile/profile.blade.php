@@ -112,6 +112,55 @@
             font-size: 12px;
         }
 
+        /* Car overlay banner styles */
+        .car-overlay-banner {
+            position: absolute;
+            top: 10px;
+            right: 0px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 4px;
+            padding: 5px;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            justify-content: center;
+            align-items: center;
+            width: fit-content;
+            height: fit-content;
+        }
+
+        .car-overlay-banner ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            gap: 5px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .car-overlay-banner li {
+            margin: 0;
+        }
+
+        .car-overlay-banner a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px;
+        }
+
+        .car-overlay-banner a:hover {
+            color: #ff6b6b;
+        }
+
+        .car-image:hover .car-overlay-banner {
+            opacity: 1;
+        }
+
         @media (max-width: 768px) {
             .profile-img {
                 width: 40%;
@@ -842,6 +891,23 @@
                                             </li>
                                             <li><a href="{{ route('car.show', $car->id) }}"><i
                                                         class="fa fa-shopping-cart"></i></a></li>
+                                            @can('update', $car)
+                                                <li>
+                                                    <a href="#" class="edit-car-btn" data-car-id="{{ $car->id }}"
+                                                        data-car-data="{{ json_encode($car) }}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('delete', $car)
+                                                <li>
+                                                    <a href="#" class="delete-car-btn"
+                                                        data-car-id="{{ $car->id }}"
+                                                        data-car-title="{{ $car->make }} {{ $car->model }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </li>
+                                            @endcan
                                         </ul>
                                     </div>
                                 </div>
@@ -1096,6 +1162,272 @@
             </div>
         </div>
     </div>
+
+    <!-- Car Edit Modal -->
+    <div id="editCarModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <span class="close" id="closeCarEdit">&times;</span>
+            <div class="modal-header">
+                <h2>Edit Car</h2>
+            </div>
+            <div class="modal-body">
+                <form id="editCarForm" method="POST">
+                    @csrf
+                    @method('PUT')
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_title">Title *</label>
+                                <input type="text" id="edit_title" name="title" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_year">Year *</label>
+                                <select id="edit_year" name="year" class="form-control" required>
+                                    <option value="">Select Year</option>
+                                    @for ($year = date('Y'); $year >= 1995; $year--)
+                                        <option value="{{ $year }}">{{ $year }}</option>
+                                    @endfor
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_make">Make *</label>
+                                <select id="edit_make" name="make" class="form-control" required>
+                                    <option value="">Select Make</option>
+                                    <option value="toyota">Toyota</option>
+                                    <option value="bmw">BMW</option>
+                                    <option value="honda">Honda</option>
+                                    <option value="marcedes">Mercedes</option>
+                                    <option value="Hyundai">Hyundai</option>
+                                    <option value="Nissan">Nissan</option>
+                                    <option value="Kia">Kia</option>
+                                    <option value="ford">Ford</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_model">Model</label>
+                                <select id="edit_model" name="model" class="form-control">
+                                    <option value="">Select Model</option>
+                                    <option value="Camry">Camry</option>
+                                    <option value="Corolla">Corolla</option>
+                                    <option value="Prius">Prius</option>
+                                    <option value="RAV4">RAV4</option>
+                                    <option value="Highlander">Highlander</option>
+                                    <option value="X3">X3</option>
+                                    <option value="X5">X5</option>
+                                    <option value="3 Series">3 Series</option>
+                                    <option value="5 Series">5 Series</option>
+                                    <option value="Civic">Civic</option>
+                                    <option value="Accord">Accord</option>
+                                    <option value="CR-V">CR-V</option>
+                                    <option value="Pilot">Pilot</option>
+                                    <option value="C-Class">C-Class</option>
+                                    <option value="E-Class">E-Class</option>
+                                    <option value="GLE">GLE</option>
+                                    <option value="Elantra">Elantra</option>
+                                    <option value="Sonata">Sonata</option>
+                                    <option value="Tucson">Tucson</option>
+                                    <option value="Santa Fe">Santa Fe</option>
+                                    <option value="Altima">Altima</option>
+                                    <option value="Sentra">Sentra</option>
+                                    <option value="Rogue">Rogue</option>
+                                    <option value="Murano">Murano</option>
+                                    <option value="Optima">Optima</option>
+                                    <option value="Sorento">Sorento</option>
+                                    <option value="Sportage">Sportage</option>
+                                    <option value="Focus">Focus</option>
+                                    <option value="Escape">Escape</option>
+                                    <option value="Explorer">Explorer</option>
+                                    <option value="F-150">F-150</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_car_color">Car Color *</label>
+                                <select id="edit_car_color" name="car_color" class="form-control" required>
+                                    <option value="">Select Color</option>
+                                    <option value="white">White</option>
+                                    <option value="black">Black</option>
+                                    <option value="silver">Silver</option>
+                                    <option value="red">Red</option>
+                                    <option value="blue">Blue</option>
+                                    <option value="green">Green</option>
+                                    <option value="yellow">Yellow</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_body_type">Body Type</label>
+                                <select id="edit_body_type" name="body_type" class="form-control">
+                                    <option value="">Select Body Type</option>
+                                    <option value="convertible">Convertible</option>
+                                    <option value="coupe">Coupe</option>
+                                    <option value="CUV">CUV</option>
+                                    <option value="micro">Micro</option>
+                                    <option value="supercar">Supercar</option>
+                                    <option value="sedan">Sedan</option>
+                                    <option value="pick-up">Pick-up</option>
+                                    <option value="minivan">Minivan</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_car_condition">Car Condition</label>
+                                <select id="edit_car_condition" name="car_condition" class="form-control">
+                                    <option value="">Select Accident Condition</option>
+                                    <option value="تصادفی">Crashed</option>
+                                    <option value="سالم">UnDamaged</option>
+                                    <option value="تصادفی اما تعمیر شده">Repaired</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_car_inside_color">Inside Color</label>
+                                <select id="edit_car_inside_color" name="car_inside_color" class="form-control">
+                                    <option value="">Select Interior Color</option>
+                                    <option value="black">Black</option>
+                                    <option value="gray">Gray</option>
+                                    <option value="beige">Beige</option>
+                                    <option value="brown">Brown</option>
+                                    <option value="white">White</option>
+                                    <option value="red">Red</option>
+                                    <option value="blue">Blue</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_vin_number">VIN Number</label>
+                                <input type="text" id="edit_vin_number" name="VIN_number" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_transmission_type">Transmission Type</label>
+                                <select id="edit_transmission_type" name="transmission_type" class="form-control">
+                                    <option value="">Select Transmission</option>
+                                    <option value="manual">Manual</option>
+                                    <option value="automatic">Automatic</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="edit_currency_type">Currency Type</label>
+                                <select id="edit_currency_type" name="currency_type" class="form-control">
+                                    <option value="">Select Currency</option>
+                                    <option value="USD">USD</option>
+                                    <option value="AFN">AFN</option>
+                                    <option value="EUR">EUR</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sale-related fields (show only when For Sale is checked) -->
+                    <div id="sale-fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_regular_price">Regular Price</label>
+                                    <input type="number" id="edit_regular_price" name="regular_price"
+                                        class="form-control" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_car_documents">Car Documents</label>
+                                    <select id="edit_car_documents" name="car_documents" class="form-control">
+                                        <option value="">Select Document Status</option>
+                                        <option value="complete">Complete</option>
+                                        <option value="incomplete">Incomplete</option>
+                                        <option value="pending">Pending</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rent-related fields (show only when For Rent is checked) -->
+                    <div id="rent-fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_rent_price_per_day">Rent Price Per Day</label>
+                                    <input type="number" id="edit_rent_price_per_day" name="rent_price_per_day"
+                                        class="form-control" min="0" step="0.01">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="edit_rent_price_per_month">Rent Price Per Month</label>
+                                    <input type="number" id="edit_rent_price_per_month" name="rent_price_per_month"
+                                        class="form-control" min="0" step="0.01">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="edit_description">Description</label>
+                        <textarea id="edit_description" name="description" class="form-control" rows="3"></textarea>
+                    </div>
+
+                    <!-- Purpose Selection - Matching Registration Form -->
+                    <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 mb-6">
+                        <h3 class="text-lg font-semibold mb-4 text-blue-800">Select Car Purpose</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <!-- For Sale -->
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" id="edit_is_for_sale" name="is_for_sale" value="1"
+                                    class="h-4 w-4">
+                                <span class="font-medium">For Sale</span>
+                            </label>
+
+                            <!-- For Rent -->
+                            <label class="inline-flex items-center gap-2">
+                                <input type="checkbox" id="edit_is_for_rent" name="is_for_rent" value="1"
+                                    class="h-4 w-4">
+                                <span class="font-medium">For Rent</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button type="submit" class="btn-save">Update Car</button>
+                        <button type="button" class="btn-cancel" id="cancelCarEdit">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -1561,6 +1893,409 @@
                     .catch(error => {
                         console.error('Error:', error);
                     });
+            });
+        });
+
+        // Car Edit Modal Functionality
+        const carEditModal = document.getElementById('editCarModal');
+        const closeCarEditBtn = document.getElementById('closeCarEdit');
+        const cancelCarEditBtn = document.getElementById('cancelCarEdit');
+        const editCarForm = document.getElementById('editCarForm');
+
+        // Open car edit modal when edit button is clicked
+        document.querySelectorAll('.edit-car-btn').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const carData = JSON.parse(this.getAttribute('data-car-data'));
+
+                // Debug: Log the car data to see what we're working with
+                console.log('Full car data:', carData);
+                console.log('Car make:', carData.make);
+                console.log('Car model:', carData.model);
+                console.log('Car color:', carData.car_color);
+
+                // Function to add current value as first option if not exists
+                function addCurrentValueAsFirstOption(selectId, currentValue, displayText) {
+                    const select = document.getElementById(selectId);
+                    if (!select || !currentValue) return;
+
+                    // Check if current value already exists in options
+                    const existingOption = Array.from(select.options).find(opt =>
+                        opt.value === currentValue || opt.text === currentValue
+                    );
+
+                    if (!existingOption) {
+                        // Add current value as first option
+                        const newOption = document.createElement('option');
+                        newOption.value = currentValue;
+                        newOption.text = displayText || currentValue;
+                        newOption.selected = true;
+                        select.insertBefore(newOption, select.firstChild);
+                    }
+                }
+
+                // Populate form fields with car data
+                document.getElementById('edit_title').value = carData.title || '';
+
+                // Function to set select value with comprehensive fallback
+                function setSelectValue(selectId, value, fieldName) {
+                    const select = document.getElementById(selectId);
+                    if (!select || !value) {
+                        console.log(`No value provided for ${fieldName}`);
+                        return;
+                    }
+
+                    console.log(`Setting ${fieldName} to:`, value, typeof value);
+
+                    // Convert value to string for comparison
+                    const stringValue = String(value).trim();
+
+                    // First try exact value match
+                    select.value = stringValue;
+                    if (select.value === stringValue) {
+                        console.log(`Exact match found for ${fieldName}:`, stringValue);
+                        return;
+                    }
+
+                    // Try case-insensitive value match
+                    const options = select.options;
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].value.toLowerCase() === stringValue.toLowerCase()) {
+                            select.value = options[i].value;
+                            console.log(`Case-insensitive value match for ${fieldName}:`, options[i].value);
+                            return;
+                        }
+                    }
+
+                    // Try case-insensitive text match
+                    for (let i = 0; i < options.length; i++) {
+                        if (options[i].text.toLowerCase() === stringValue.toLowerCase()) {
+                            select.value = options[i].value;
+                            console.log(`Case-insensitive text match for ${fieldName}:`, options[i].value);
+                            return;
+                        }
+                    }
+
+                    // Try partial text match
+                    for (let i = 0; i < options.length; i++) {
+                        const optionText = options[i].text.toLowerCase();
+                        const optionValue = options[i].value.toLowerCase();
+                        if (optionText.includes(stringValue.toLowerCase()) ||
+                            optionValue.includes(stringValue.toLowerCase()) ||
+                            stringValue.toLowerCase().includes(optionText) ||
+                            stringValue.toLowerCase().includes(optionValue)) {
+                            select.value = options[i].value;
+                            console.log(`Partial match for ${fieldName}:`, options[i].value);
+                            return;
+                        }
+                    }
+
+                    // If still no match, log all available options for debugging
+                    console.log(`No match found for ${fieldName}. Available options:`,
+                        Array.from(options).map(opt => ({
+                            value: opt.value,
+                            text: opt.text
+                        })));
+                    console.log(`Final ${fieldName} value:`, select.value);
+                }
+
+                // Add current values as first options and set them
+                addCurrentValueAsFirstOption('edit_year', carData.year, carData.year);
+                addCurrentValueAsFirstOption('edit_make', carData.make, carData.make);
+                addCurrentValueAsFirstOption('edit_model', carData.model, carData.model);
+                addCurrentValueAsFirstOption('edit_car_color', carData.car_color, carData.car_color);
+                addCurrentValueAsFirstOption('edit_body_type', carData.body_type, carData.body_type);
+                addCurrentValueAsFirstOption('edit_car_condition', carData.car_condition, carData
+                    .car_condition);
+                addCurrentValueAsFirstOption('edit_car_inside_color', carData.car_inside_color, carData
+                    .car_inside_color);
+                addCurrentValueAsFirstOption('edit_transmission_type', carData.transmission_type, carData
+                    .transmission_type);
+                addCurrentValueAsFirstOption('edit_currency_type', carData.currency_type, carData
+                    .currency_type);
+                addCurrentValueAsFirstOption('edit_car_documents', carData.car_documents, carData
+                    .car_documents);
+
+                // Set select values with proper handling
+                setSelectValue('edit_year', carData.year, 'year');
+                setSelectValue('edit_make', carData.make, 'make');
+                setSelectValue('edit_model', carData.model, 'model');
+                setSelectValue('edit_car_color', carData.car_color, 'car_color');
+                setSelectValue('edit_body_type', carData.body_type, 'body_type');
+                setSelectValue('edit_car_condition', carData.car_condition, 'car_condition');
+                setSelectValue('edit_car_inside_color', carData.car_inside_color, 'car_inside_color');
+                setSelectValue('edit_transmission_type', carData.transmission_type, 'transmission_type');
+                setSelectValue('edit_currency_type', carData.currency_type, 'currency_type');
+                setSelectValue('edit_car_documents', carData.car_documents, 'car_documents');
+
+                // Set text inputs
+                document.getElementById('edit_vin_number').value = carData.VIN_number || '';
+                document.getElementById('edit_regular_price').value = carData.regular_price || '';
+
+                document.getElementById('edit_rent_price_per_day').value = carData.rent_price_per_day || '';
+                document.getElementById('edit_rent_price_per_month').value = carData.rent_price_per_month ||
+                    '';
+                document.getElementById('edit_description').value = carData.description || '';
+
+                // Set checkboxes for car purpose
+                document.getElementById('edit_is_for_sale').checked = carData.is_for_sale || false;
+                document.getElementById('edit_is_for_rent').checked = carData.is_for_rent || false;
+
+                // Set initial field visibility based on car purpose
+                const saleFields = document.getElementById('sale-fields');
+                const rentFields = document.getElementById('rent-fields');
+
+                if (carData.is_for_sale) {
+                    if (saleFields) saleFields.style.display = 'block';
+                    if (rentFields) rentFields.style.display = 'none';
+                } else if (carData.is_for_rent) {
+                    if (rentFields) rentFields.style.display = 'block';
+                    if (saleFields) saleFields.style.display = 'none';
+                } else {
+                    if (saleFields) saleFields.style.display = 'none';
+                    if (rentFields) rentFields.style.display = 'none';
+                }
+
+
+                // Set form action URL
+                editCarForm.action = `/car/update/${carData.id}`;
+
+                // Show modal
+                carEditModal.style.display = 'block';
+            });
+        });
+
+        // Handle checkbox changes for car purpose (mutual exclusivity and field visibility)
+        document.addEventListener('DOMContentLoaded', function() {
+            const saleCheckbox = document.getElementById('edit_is_for_sale');
+            const rentCheckbox = document.getElementById('edit_is_for_rent');
+            const saleFields = document.getElementById('sale-fields');
+            const rentFields = document.getElementById('rent-fields');
+
+            if (saleCheckbox && rentCheckbox) {
+                // Function to toggle field visibility and clear fields
+                function toggleFields() {
+                    if (saleCheckbox.checked) {
+                        // Show sale fields, hide rent fields
+                        if (saleFields) saleFields.style.display = 'block';
+                        if (rentFields) rentFields.style.display = 'none';
+
+                        // Clear rent fields
+                        document.getElementById('edit_rent_price_per_day').value = '';
+                        document.getElementById('edit_rent_price_per_month').value = '';
+                    } else if (rentCheckbox.checked) {
+                        // Show rent fields, hide sale fields
+                        if (rentFields) rentFields.style.display = 'block';
+                        if (saleFields) saleFields.style.display = 'none';
+
+                        // Clear sale fields
+                        document.getElementById('edit_regular_price').value = '';
+                        document.getElementById('edit_car_documents').selectedIndex = 0;
+                    } else {
+                        // Hide both field groups
+                        if (saleFields) saleFields.style.display = 'none';
+                        if (rentFields) rentFields.style.display = 'none';
+                    }
+                }
+
+                // Add event listeners for mutual exclusivity and field visibility
+                saleCheckbox.addEventListener('change', function() {
+                    if (this.checked && rentCheckbox.checked) {
+                        rentCheckbox.checked = false;
+                    }
+                    toggleFields();
+                });
+
+                rentCheckbox.addEventListener('change', function() {
+                    if (this.checked && saleCheckbox.checked) {
+                        saleCheckbox.checked = false;
+                    }
+                    toggleFields();
+                });
+
+                // Initialize field visibility based on current state
+                toggleFields();
+            }
+        });
+
+        // Close car edit modal when X is clicked
+        if (closeCarEditBtn) {
+            closeCarEditBtn.addEventListener('click', function() {
+                carEditModal.style.display = 'none';
+            });
+        }
+
+        // Close car edit modal when cancel button is clicked
+        if (cancelCarEditBtn) {
+            cancelCarEditBtn.addEventListener('click', function() {
+                carEditModal.style.display = 'none';
+            });
+        }
+
+        // Close car edit modal when clicking outside of modal content
+        window.addEventListener('click', function(event) {
+            if (event.target === carEditModal) {
+                carEditModal.style.display = 'none';
+            }
+        });
+
+        // Handle car edit form submission
+        if (editCarForm) {
+            editCarForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Get form data
+                const formData = new FormData(editCarForm);
+
+                // Submit form via AJAX
+                fetch(editCarForm.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Close modal
+                            carEditModal.style.display = 'none';
+
+                            // Show success message
+                            Swal.fire({
+                                title: 'Success!',
+                                text: data.message || 'Car updated successfully!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                // Reload the page to reflect changes
+                                location.reload();
+                            });
+                        } else {
+                            // Show error message
+                            Swal.fire({
+                                title: 'Error!',
+                                text: data.message || 'Failed to update car. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to update car. Please try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    });
+            });
+        }
+
+        // Add delete functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle delete button clicks
+            document.querySelectorAll('.delete-car-btn').forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const carId = this.getAttribute('data-car-id');
+                    const carTitle = this.getAttribute('data-car-title');
+
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: `Do you really want to delete "${carTitle}"? This action cannot be undone.`,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, delete it!',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            // Submit delete request via AJAX
+                            fetch(`/car/delete/${carId}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    }
+                                })
+                                .then(response => {
+                                    // Check if the response is HTML (error page) or JSON
+                                    const contentType = response.headers.get(
+                                        'content-type');
+                                    if (contentType && contentType.indexOf(
+                                            'application/json') !== -1) {
+                                        return response.json();
+                                    } else {
+                                        // If it's not JSON, it's probably an error page
+                                        throw new Error(
+                                            'Server returned an error page instead of JSON response'
+                                        );
+                                    }
+                                })
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Deleted!',
+                                            text: 'The car has been deleted successfully.',
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        }).then(() => {
+                                            // Remove the car element from the DOM instead of reloading
+                                            const carElement = this.closest(
+                                                '.col-lg-4');
+                                            if (carElement) {
+                                                carElement.remove();
+                                            }
+                                            // Update car count
+                                            const carCountElement = document
+                                                .querySelector(
+                                                    '.modern-tab.active');
+                                            if (carCountElement) {
+                                                const countText =
+                                                    carCountElement.textContent;
+                                                const countMatch = countText
+                                                    .match(/\((\d+)\)/);
+                                                if (countMatch) {
+                                                    const currentCount =
+                                                        parseInt(countMatch[1]);
+                                                    if (currentCount > 0) {
+                                                        carCountElement
+                                                            .innerHTML =
+                                                            carCountElement
+                                                            .innerHTML.replace(
+                                                                `(${currentCount})`,
+                                                                `(${currentCount - 1})`
+                                                            );
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    } else {
+                                        throw new Error(data.message ||
+                                            'Failed to delete car');
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error!',
+                                        text: 'Failed to delete the car. Please try again. (Server Error)',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                });
+                        }
+                    });
+                });
             });
         });
     </script>
