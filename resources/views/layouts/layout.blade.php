@@ -760,10 +760,11 @@
                         <h6 class="text-white">subscribe Our Newsletter </h6>
                         <p>Keep up on our always evolving products features and technology. Enter your e-mail and
                             subscribe to our newsletter.</p>
-                        <form action="{{ route('email.store') }}" id="email_form" class="news-letter">
-                            <input type="email" id="email" placeholder="Enter your Email"
-                                style="background-color: aliceblue;" class="form-control placeholder">
-                            <button class="button red mt-2" type="butotn"
+                        <form id="email_form" class="news-letter">
+                            @csrf
+                            <input type="email" id="email" name="email" placeholder="Enter your Email"
+                                style="background-color: aliceblue;" class="form-control placeholder" required>
+                            <button class="button red mt-2" type="submit"
                                 id="make_an_email_submit">Subscribe</button>
                         </form>
                     </div>
@@ -1084,6 +1085,80 @@
         });
 
         // Initialize Fancybox for video playback
+
+        // Newsletter subscription handling
+        $(document).ready(function() {
+            $('#email_form').on('submit', function(e) {
+                e.preventDefault();
+
+                var email = $('#email').val();
+                var submitBtn = $('#make_an_email_submit');
+
+                // Basic email validation
+                if (!email || !isValidEmail(email)) {
+                    Swal.fire({
+                        title: 'Invalid Email',
+                        text: 'Please enter a valid email address.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                    return;
+                }
+
+                // Disable submit button and show loading
+                submitBtn.prop('disabled', true).text('Subscribing...');
+
+                // Send AJAX request
+                $.ajax({
+                    url: '{{ route('email.store') }}',
+                    method: 'POST',
+                    data: {
+                        email: email,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: 'Success!',
+                                text: response.message,
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                            $('#email').val(''); // Clear the form
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    },
+                    error: function(xhr) {
+                        var response = xhr.responseJSON;
+                        var message = response && response.message ? response.message :
+                            'An error occurred. Please try again.';
+
+                        Swal.fire({
+                            title: 'Error',
+                            text: message,
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    },
+                    complete: function() {
+                        // Re-enable submit button
+                        submitBtn.prop('disabled', false).text('Subscribe');
+                    }
+                });
+            });
+        });
+
+        // Email validation function
+        function isValidEmail(email) {
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
     </script>
 </body>
 
