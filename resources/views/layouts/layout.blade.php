@@ -763,7 +763,8 @@
                         <form id="email_form" class="news-letter">
                             @csrf
                             <input type="email" id="email" name="email" placeholder="Enter your Email"
-                                style="background-color: aliceblue;" class="form-control placeholder" required>
+                                style="background-color: aliceblue;" class="form-control placeholder" required
+                                value="{{ auth()->check() ? auth()->user()->email : '' }}">
                             <button class="button red mt-2" type="submit"
                                 id="make_an_email_submit">Subscribe</button>
                         </form>
