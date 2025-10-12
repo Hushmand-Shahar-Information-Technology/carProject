@@ -25,6 +25,7 @@ class User extends Authenticatable
         'password',
         'role', // Add role to fillable attributes
         'avatar', // Add avatar to fillable attributes
+        'newsletter_subscribed', // Add newsletter subscription to fillable attributes
     ];
 
     /**
