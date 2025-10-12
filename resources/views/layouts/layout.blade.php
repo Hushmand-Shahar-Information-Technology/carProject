@@ -764,7 +764,7 @@
                             @csrf
                             <input type="email" id="email" name="email" placeholder="Enter your Email"
                                 style="background-color: aliceblue;" class="form-control placeholder" required
-                                value="{{ auth()->check() ? auth()->user()->email : '' }}">
+                                value="{{ auth()->check() && !auth()->user()->newsletter_subscribed ? auth()->user()->email : '' }}">
                             <button class="button red mt-2" type="submit"
                                 id="make_an_email_submit">Subscribe</button>
                         </form>
