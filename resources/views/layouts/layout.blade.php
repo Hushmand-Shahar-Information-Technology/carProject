@@ -763,7 +763,7 @@
                         <form action="{{ route('email.store') }}" id="email_form" class="news-letter">
                             <input type="email" id="email" placeholder="Enter your Email"
                                 style="background-color: aliceblue;" class="form-control placeholder">
-                            <button class="button red mt-2" type="butotn"
+                            <button class="button red mt-2" type="button"
                                 id="make_an_email_submit">Subscribe</button>
                         </form>
                     </div>
@@ -960,7 +960,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '/email',
+                    url: $('#email_form').attr('action'),
                     data: formData,
                     dataType: 'json',
                     headers: {
@@ -999,6 +999,15 @@
                             });
                         }
                     },
+                    error: function(xhr, status, error) {
+                        console.log('AJAX Error:', xhr, status, error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: 'Something went wrong. Please try again.',
+                            heightAuto: false
+                        });
+                    }
                 });
             });
 
