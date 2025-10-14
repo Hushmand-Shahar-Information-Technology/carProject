@@ -748,6 +748,214 @@
                 text-align: center;
                 margin-bottom: 0;
             }
+
+            /* Bootstrap Newsletter Styles */
+            #newsletter-tab {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                min-height: 100vh;
+                padding: 2rem 0;
+            }
+
+            .newsletter-header-card {
+                border: none;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            }
+
+            .newsletter-header-card .card-body {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-radius: 0.375rem;
+            }
+
+            .newsletter-icon {
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .newsletter-form-card {
+                border: none;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                border-radius: 15px;
+                overflow: hidden;
+            }
+
+            .newsletter-form-card .card-header {
+                border-radius: 15px 15px 0 0;
+                background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+            }
+
+            .input-group-lg .form-control {
+                border-radius: 0 0.375rem 0.375rem 0;
+                border-left: none;
+            }
+
+            .input-group-lg .input-group-text {
+                border-radius: 0.375rem 0 0 0.375rem;
+                border-right: none;
+            }
+
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+
+            .status-card {
+                border: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                border-radius: 15px;
+            }
+
+            .benefits-card {
+                border: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                border-radius: 15px;
+            }
+
+            .benefits-card .card-header {
+                border-radius: 15px 15px 0 0;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .benefit-item {
+                padding: 1rem;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+            }
+
+            .benefit-item:hover {
+                background: rgba(0, 123, 255, 0.05);
+                transform: translateY(-5px);
+            }
+
+            .benefit-icon {
+                transition: all 0.3s ease;
+            }
+
+            .benefit-item:hover .benefit-icon {
+                transform: scale(1.1);
+            }
+
+            .btn-lg {
+                padding: 0.75rem 1.5rem;
+                font-size: 1.1rem;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+            }
+
+            .btn-lg:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            }
+
+            .card {
+                transition: all 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+            }
+
+            .btn-subscribe,
+            .btn-unsubscribe {
+                display: inline-flex;
+                align-items: center;
+                padding: 15px 35px;
+                font-size: 16px;
+                font-weight: 600;
+                border-radius: 50px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn-subscribe {
+                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                color: white;
+                box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+            }
+
+            .btn-unsubscribe {
+                background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+                color: white;
+                box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+            }
+
+            .btn-subscribe:hover,
+            .btn-unsubscribe:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn-subscribe:active,
+            .btn-unsubscribe:active {
+                transform: translateY(-1px);
+            }
+
+            .btn-subscribe i,
+            .btn-unsubscribe i {
+                margin-right: 10px;
+                font-size: 14px;
+            }
+
+            .newsletter-benefits {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                padding: 25px;
+                border-radius: 15px;
+                border: 1px solid #dee2e6;
+            }
+
+            .newsletter-benefits h5 {
+                margin: 0 0 20px 0;
+                font-size: 18px;
+                font-weight: 600;
+                color: #495057;
+            }
+
+            .newsletter-benefits ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .newsletter-benefits li {
+                display: flex;
+                align-items: center;
+                padding: 12px 0;
+                font-size: 15px;
+                color: #6c757d;
+                border-bottom: 1px solid rgba(222, 226, 230, 0.5);
+            }
+
+            .newsletter-benefits li:last-child {
+                border-bottom: none;
+            }
+
+            .newsletter-benefits li i {
+                margin-right: 15px;
+                font-size: 16px;
+                color: #667eea;
+                width: 20px;
+                text-align: center;
+            }
         }
     </style>
 
@@ -868,6 +1076,9 @@
                 <div class="modern-tab" data-tab="notifications">
                     Notifications <span class="notification-count-badge"
                         id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
+                </div>
+                <div class="modern-tab" data-tab="newsletter">
+                    Newsletter
                 </div>
             @endif
         </div>
@@ -1040,6 +1251,141 @@
                         <p>You don't have any offer notifications yet.</p>
                     </div>
                 @endif
+            </div>
+        </div>
+
+        <!-- Newsletter Tab Content -->
+        <div id="newsletter-tab" class="tab-content">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
+                        <!-- Newsletter Header Card -->
+                        <div class="card newsletter-header-card mb-4">
+                            <div class="card-body text-center py-5">
+                                <div class="newsletter-icon mb-3">
+                                    <i class="fas fa-envelope-open-text fa-3x text-primary"></i>
+                                </div>
+                                <h2 class="card-title mb-3">Newsletter Subscription</h2>
+                                <p class="card-text text-muted lead">Stay updated with the latest car listings and
+                                    exclusive offers</p>
+                            </div>
+                        </div>
+
+                        <!-- Subscription Form Card -->
+                        <div class="card newsletter-form-card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    Newsletter Subscription
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <p class="text-muted mb-4">Enter your email to subscribe or unsubscribe from our newsletter
+                                </p>
+
+                                <form id="profile-newsletter-form" class="subscription-form">
+                                    @csrf
+                                    <div class="mb-4">
+                                        <label for="profile-email" class="form-label fw-bold">Email Address</label>
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-envelope text-muted"></i>
+                                            </span>
+                                            <input type="email" id="profile-email" name="email"
+                                                class="form-control border-start-0" placeholder="Enter your email address"
+                                                value="{{ auth()->user()->email }}" required>
+                                        </div>
+                                        <div class="form-text">We'll use this email to send you newsletter updates</div>
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        @if (auth()->user()->newsletter_subscribed)
+                                            <button type="button" class="btn btn-danger btn-lg" id="unsubscribe-btn">
+                                                <i class="fas fa-times me-2"></i>
+                                                Unsubscribe from Newsletter
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-success btn-lg" id="subscribe-btn">
+                                                <i class="fas fa-check me-2"></i>
+                                                Subscribe to Newsletter
+                                            </button>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Current Status Card -->
+                        <div class="card status-card mb-4">
+                            <div class="card-body">
+                                @if (auth()->user()->newsletter_subscribed)
+                                    <div class="d-flex align-items-center">
+                                        <div class="status-icon me-3">
+                                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                                        </div>
+                                        <div class="status-content">
+                                            <h5 class="card-title text-success mb-1">Currently Subscribed</h5>
+                                            <p class="card-text text-muted mb-0">You're receiving newsletter notifications
+                                            </p>
+                                        </div>
+                                    </div>
+                                @else
+                                    <div class="d-flex align-items-center">
+                                        <div class="status-icon me-3">
+                                            <i class="fas fa-times-circle fa-2x text-danger"></i>
+                                        </div>
+                                        <div class="status-content">
+                                            <h5 class="card-title text-danger mb-1">Not Subscribed</h5>
+                                            <p class="card-text text-muted mb-0">Subscribe to receive newsletter
+                                                notifications</p>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <!-- Benefits Card -->
+                        <div class="card benefits-card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-gift me-2 text-primary"></i>
+                                    What you'll receive:
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="benefit-item text-center">
+                                            <div class="benefit-icon mb-2">
+                                                <i class="fas fa-car fa-2x text-primary"></i>
+                                            </div>
+                                            <h6 class="benefit-title">New Car Listings</h6>
+                                            <p class="benefit-desc text-muted small">Get notified about new car posts</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="benefit-item text-center">
+                                            <div class="benefit-icon mb-2">
+                                                <i class="fas fa-percentage fa-2x text-success"></i>
+                                            </div>
+                                            <h6 class="benefit-title">Exclusive Deals</h6>
+                                            <p class="benefit-desc text-muted small">Special promotions and offers</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="benefit-item text-center">
+                                            <div class="benefit-icon mb-2">
+                                                <i class="fas fa-info-circle fa-2x text-info"></i>
+                                            </div>
+                                            <h6 class="benefit-title">Updates</h6>
+                                            <p class="benefit-desc text-muted small">Important announcements</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -2332,5 +2678,144 @@
                 });
             }, 500);
         });
+
+        // Newsletter subscription/unsubscription functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle subscribe button
+            const subscribeBtn = document.getElementById('subscribe-btn');
+            if (subscribeBtn) {
+                subscribeBtn.addEventListener('click', function() {
+                    const emailInput = document.getElementById('profile-email');
+                    const email = emailInput.value;
+
+                    if (!email || !isValidEmail(email)) {
+                        Swal.fire({
+                            title: 'Invalid Email',
+                            text: 'Please enter a valid email address.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
+
+                    fetch('{{ route('email.store') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                email: email
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: data.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                });
+
+                                // Update the UI without reloading
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'An error occurred. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                });
+            }
+
+            // Handle unsubscribe button
+            const unsubscribeBtn = document.getElementById('unsubscribe-btn');
+            if (unsubscribeBtn) {
+                unsubscribeBtn.addEventListener('click', function() {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You will no longer receive newsletter emails about new car posts.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, unsubscribe',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const emailInput = document.getElementById('profile-email');
+                            const email = emailInput.value;
+
+                            fetch('{{ route('email.unsubscribe') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    },
+                                    body: JSON.stringify({
+                                        email: email
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Unsubscribed!',
+                                            text: data.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        });
+
+                                        // Update the UI without reloading
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1500);
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: data.message,
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'An error occurred. Please try again.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                });
+                        }
+                    });
+                });
+            }
+        });
+
+        // Email validation function
+        function isValidEmail(email) {
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
     </script> -->
 @endsection

@@ -200,3 +200,4 @@ Route::view('/contact-us', 'static.contact-us')->name('contact.us');
 
 // API route for car comparison
 Route::post('/email', [EmailController::class, 'store'])->name('email.store');
+Route::post('/email/unsubscribe', [EmailController::class, 'unsubscribe'])->name('email.unsubscribe');
