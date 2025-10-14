@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Models\Car;
+use App\Observers\CarObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +25,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        // Register model observers
+        Car::observe(CarObserver::class);
+
         // Ensure legacy morph types resolve correctly
         Relation::enforceMorphMap([
             'user' => \App\Models\User::class,

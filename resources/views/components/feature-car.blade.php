@@ -1,8 +1,9 @@
 <style>
     .container-width {
         width: 65% !important;
-        position: relative; /* or absolute/fixed/sticky */
-        z-index: 333333333 !important;
+        position: relative;
+        /* or absolute/fixed/sticky */
+        z-index: 333 !important;
     }
 
 
@@ -11,13 +12,13 @@
             width: 50% !important;
         }
     }
-    
+
     .car-image {
         position: relative;
         overflow: hidden;
         border-radius: 8px;
     }
-    
+
     .car-image .fixed-img {
         width: 100%;
         aspect-ratio: 16 / 9;
@@ -25,7 +26,7 @@
         border-radius: 8px;
         transition: transform 0.3s ease;
     }
-    
+
     .car-image:hover .fixed-img {
         transform: scale(1.05);
     }
@@ -44,20 +45,23 @@
 <div class="container container-width" style="width: 60%; transform: translate(10px, -80px);">
     <div class="row">
         <div class="col-md-12">
-            <div class="owl-carousel owl-theme" data-nav-arrow="true" data-items="4" data-md-items="4"
-                data-sm-items="2" data-xs-items="1" data-space="20">
-                
-                @if(count($carsToShow) > 0)
+            <div class="owl-carousel owl-theme" data-nav-arrow="true" data-items="4" data-md-items="4" data-sm-items="2"
+                data-xs-items="1" data-space="20">
+
+                @if (count($carsToShow) > 0)
                     {{-- Show promoted cars or latest cars --}}
-                    @foreach($carsToShow as $car)
+                    @foreach ($carsToShow as $car)
                         <div class="item">
                             <div class="car-item text-center">
                                 <div class="car-image">
-                                    <img class="img-fluid fixed-img" src="{{ asset($car->getFirstImageOrDefault()) }}" alt="{{ $car->title }}">
+                                    <img class="img-fluid fixed-img" src="{{ asset($car->getFirstImageOrDefault()) }}"
+                                        alt="{{ $car->title }}">
                                     <div class="car-overlay-banner">
                                         <ul>
-                                            <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a></li>
-                                            <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-dashboard"></i></a></li>
+                                            <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                        class="fa fa-link"></i></a></li>
+                                            <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                        class="fa fa-dashboard"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -76,11 +80,13 @@
                                         <i class="fa fa-star orange-color"></i>
                                         <i class="fa fa-star-o orange-color"></i>
                                     </div>
-                                    <a href="{{ route('car.show', $car->id) }}" style="font-size: 12px;">{{ $car->make }} {{ $car->model }}</a>
+                                    <a href="{{ route('car.show', $car->id) }}"
+                                        style="font-size: 12px;">{{ $car->make }} {{ $car->model }}</a>
                                     <div class="separator"></div>
                                     <div class="price">
-                                      
-                                        <span class="new-price" style="font-size: 10px;">${{ number_format($car->regular_price) }}</span>
+
+                                        <span class="new-price"
+                                            style="font-size: 10px;">${{ number_format($car->regular_price) }}</span>
                                     </div>
                                 </div>
                             </div>
