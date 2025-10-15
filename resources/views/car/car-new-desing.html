@@ -1,0 +1,432 @@
+<!-- hero section design -->
+
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Car Dealership</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1173d4",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            <main class="flex-1">
+                <div class="relative">
+                    <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-center justify-center p-4"
+                        data-alt="A sleek modern car driving on an open road"
+                        style='background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC6axOUEhDD1UQ_hNyo74-blep0Jygg3yfSZo9-X4OCawjY4eSxPeGJ5lMc9_MX_FxmmnOB4a22ZeWBJ9BM-BnBeLQcKoEvfADtNolyOLQ9ySzebWnS0VqdcIu9x5cFDqHwR4gVK08_KPMxwTJyvkaMqTprK-UMyzYsaljUUmyazIPiQTyS6-yhKsdZwoAtLQzgTkfbYVxNOGMhgjiypJYeClWF7ZV34hUKJk84AkehGly-QD4Saub1nR4lfIgNG4zaeKyyMt-VETc");'>
+                        <div class="flex flex-col gap-2 text-center text-white">
+                            <h1 class="text-4xl font-black leading-tight tracking-[-0.033em] md:text-5xl">Find Your
+                                Dream Car Today</h1>
+                            <h2 class="text-base font-normal leading-normal md:text-lg">Search by make, model, or
+                                keyword</h2>
+                        </div>
+                        <label class="flex flex-col min-w-40 h-14 w-full max-w-[480px] md:h-16">
+                            <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                                <div
+                                    class="text-[#617589] flex border border-[#dbe0e6] bg-white dark:bg-gray-800 dark:border-gray-600 items-center justify-center pl-[15px] rounded-l-lg border-r-0">
+                                    <span class="material-symbols-outlined">search</span>
+                                </div>
+                                <input
+                                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-[#dbe0e6] dark:focus:border-primary h-full placeholder:text-[#617589] dark:placeholder:text-gray-400 px-[15px] rounded-r-none border-r-0 pr-2 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal md:text-base"
+                                    placeholder="Search by make, model, or keyword" value="" />
+                                <div
+                                    class="flex items-center justify-center rounded-r-lg border-l-0 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 pr-[7px]">
+                                    <button
+                                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 md:h-12 md:px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] md:text-base">
+                                        <span class="truncate">Search</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+</body>
+
+</html>
+
+
+
+
+<!-- Car list page design  -->
+
+<!DOCTYPE html>
+<html class="light" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Car Dealer</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#1173d4",
+                        "secondary": "#FF6600",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+    </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark font-display text-gray-800 dark:text-gray-200">
+    <div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+        <div class="layout-container flex h-full grow flex-col">
+            <div class="flex flex-1">
+                <aside
+                    class="w-1/4 min-w-[280px] p-6 bg-white dark:bg-background-dark border-r border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-col gap-6">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Filter Your Search</h3>
+                        <div class="flex flex-col gap-4">
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200">Make</h4>
+                            <div class="flex flex-col gap-2">
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />Ford</label>
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />Honda</label>
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />Toyota</label>
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />BMW</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200">Price Range</h4>
+                            <input class="w-full" max="100000" min="10000" step="1000" type="range" />
+                            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                <span>$10,000</span>
+                                <span>$100,000</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200">Year</h4>
+                            <input class="w-full" max="2024" min="2010" step="1" type="range" />
+                            <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                                <span>2010</span>
+                                <span>2024</span>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-4">
+                            <h4 class="font-semibold text-gray-800 dark:text-gray-200">Body Type</h4>
+                            <div class="flex flex-col gap-2">
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />Sedan</label>
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />SUV</label>
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />Truck</label>
+                                <label class="flex items-center gap-2"><input
+                                        class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                        type="checkbox" />Coupe</label>
+                            </div>
+                        </div>
+                        <div class="flex flex-col gap-2 mt-4">
+                            <button
+                                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] w-full">
+                                <span class="truncate">Apply Filters</span>
+                            </button>
+                            <button
+                                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-[0.015em] w-full">
+                                <span class="truncate">Reset</span>
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+                <main class="flex-1 p-6">
+                    <div class="flex justify-between items-center mb-6">
+                        <p class="text-gray-600 dark:text-gray-400">Showing 1-12 of 124 results</p>
+                        <div class="flex items-center gap-4">
+                            <button
+                                class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
+                                <span class="material-symbols-outlined">compare_arrows</span>
+                                <span class="truncate">Compare (2)</span>
+                            </button>
+                            <label class="flex items-center gap-2">
+                                <span class="text-sm font-medium">Sort by:</span>
+                                <select
+                                    class="form-select flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-primary h-10 p-2 text-sm font-normal">
+                                    <option>Price: Low to High</option>
+                                    <option>Price: High to Low</option>
+                                    <option>Newest Listings</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div
+                            class="flex flex-col gap-3 pb-3 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative">
+                                <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                    data-alt="A white 2023 Ford Mustang GT parked in a showroom"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCx9_cA__pd7vNJq4Ey5T6k8NJNw5qD786ClIUmOjUT0i-4wI4zLCGabTTy98fXAY8-so5Uciep7JE0hpSiPBstYZ0gC9HlrabIyjwE269fin6SQ32env3iUeZuglMy860H1hU9X_4SreotY3t9dMNML3Z0ffzfaM2nEtXwjlvJEtGrEzbbY_ZXlXsqCwMhzi-v1fzfM8cc31Pcf7rsZh34ylgLw4FE-4S3gXm4QzfISPV3YKCpxsirtbWLnvQ5PwRR0hl4PvIxThU");'>
+                                </div>
+                                <button
+                                    class="absolute top-2 right-2 bg-white/70 dark:bg-gray-900/70 p-1.5 rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-500">
+                                    <span class="material-symbols-outlined">favorite_border</span>
+                                </button>
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow">
+                                <p class="text-lg font-bold text-gray-900 dark:text-white">2023 Ford Mustang GT</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Year: 2023, Mileage: 5,000,
+                                    Engine: 5.0L V8</p>
+                                <p class="text-xl font-bold text-primary mt-2">$45,000</p>
+                                <div class="mt-4 flex gap-2">
+                                    <button
+                                        class="flex-grow flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                        <span class="truncate">View Details</span>
+                                    </button>
+                                    <label
+                                        class="flex items-center gap-2 px-4 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+                                        <input class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                            type="checkbox" />
+                                        <span class="text-sm font-medium">Compare</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-3 pb-3 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative">
+                                <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                    data-alt="A blue 2022 Honda Civic parked outdoors"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD1vqoUm_jH1qmK-sZH-kck-o7q_SuUVr_94igB-eCxeSADdSq9g7UBloth0LGvKlo9UrxnhX9gkPzBPU75JIPFwaHzCDLSt12XFbxOG2VMuKl_KDogMgud4qP0e5eB4ReQk__QpRt4nGK0mC6RPuklM8jl8Tj0B2Cd-hibONGnvdt2mry1WxvYfD8obeRS05kchI4MlAwJUaSBXOOGW37gsEa2j_aozp3u-ROuBJICCZ9Pzc_THmEjoUNdl1lMvu_9pv3T4Vu6Syw");'>
+                                </div>
+                                <button
+                                    class="absolute top-2 right-2 bg-white/70 dark:bg-gray-900/70 p-1.5 rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-500">
+                                    <span class="material-symbols-outlined">favorite</span>
+                                </button>
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow">
+                                <p class="text-lg font-bold text-gray-900 dark:text-white">2022 Honda Civic</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Year: 2022, Mileage: 10,000,
+                                    Engine: 2.0L I4</p>
+                                <p class="text-xl font-bold text-primary mt-2">$25,000</p>
+                                <div class="mt-4 flex gap-2">
+                                    <button
+                                        class="flex-grow flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                        <span class="truncate">View Details</span>
+                                    </button>
+                                    <label
+                                        class="flex items-center gap-2 px-4 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+                                        <input checked=""
+                                            class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                            type="checkbox" />
+                                        <span class="text-sm font-medium">Compare</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-3 pb-3 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative">
+                                <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                    data-alt="A silver 2023 Toyota Camry on a city street"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD2eHA5U3-wVvoVyK_ViLQ-QuA5rcKBApLWIBrsB-GNYLpJXDzk00WjN1LNzGF9KQof58uK9loO9v9vvOpLL9BMENZoLERRHUE-SS6_YIWOzRCEIKR2KrjdL00pUxaBKlFxtT2PwdCFsdQaWBLR7c1OzuT4qm8MXvL_5zeKw2g5dVrc0S8dUH177DjJEYajOseT_GdzPm11tSQSqo5zSmT69IONgL3ScR0DrIP02YIemmBRaykN4gBnL60ZU3vR3pHDa9bideyO3_g");'>
+                                </div>
+                                <button
+                                    class="absolute top-2 right-2 bg-white/70 dark:bg-gray-900/70 p-1.5 rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-500">
+                                    <span class="material-symbols-outlined">favorite_border</span>
+                                </button>
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow">
+                                <p class="text-lg font-bold text-gray-900 dark:text-white">2023 Toyota Camry</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Year: 2023, Mileage: 2,000,
+                                    Engine: 2.5L I4</p>
+                                <p class="text-xl font-bold text-primary mt-2">$30,000</p>
+                                <div class="mt-4 flex gap-2">
+                                    <button
+                                        class="flex-grow flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                        <span class="truncate">View Details</span>
+                                    </button>
+                                    <label
+                                        class="flex items-center gap-2 px-4 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+                                        <input class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                            type="checkbox" />
+                                        <span class="text-sm font-medium">Compare</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-3 pb-3 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative">
+                                <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                    data-alt="A black 2022 BMW 3 Series"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBQZP-3VdwTesDSblafHjkKpB66eh_9fXsmofGdIVyJhlhG_REPSgBlPfVsvXwY72pM0LlmUMYAoI2KWsouVIOaZoxd-yUDYFWQGQuq_xuKsGb8ELAXUjWmtmO71-J5IHM7vMinkCxaxslEO6ssUUuZNU221UB8tIPLX6IKmyQcGBdsnxbquk772MOeb3hbzaK7kWZolQ_yoIinx94tlb5tPaDLdsY_Lj2wbuIjQL4pPsk53hbq5tvV16tVNFyAeMttrNivIOsFF9w");'>
+                                </div>
+                                <button
+                                    class="absolute top-2 right-2 bg-white/70 dark:bg-gray-900/70 p-1.5 rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-500">
+                                    <span class="material-symbols-outlined">favorite_border</span>
+                                </button>
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow">
+                                <p class="text-lg font-bold text-gray-900 dark:text-white">2022 BMW 3 Series</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Year: 2022, Mileage: 15,000,
+                                    Engine: 2.0L I4</p>
+                                <p class="text-xl font-bold text-primary mt-2">$40,000</p>
+                                <div class="mt-4 flex gap-2">
+                                    <button
+                                        class="flex-grow flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                        <span class="truncate">View Details</span>
+                                    </button>
+                                    <label
+                                        class="flex items-center gap-2 px-4 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+                                        <input checked=""
+                                            class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                            type="checkbox" />
+                                        <span class="text-sm font-medium">Compare</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-3 pb-3 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative">
+                                <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                    data-alt="A grey 2023 Audi Q5"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCSDH7ULmVVI8EzUJ8fMJT2uCSsN8Lixvd_3fZKhRgOOjTLlfNG0KZQgm-D6IFmLPXC8iOACS277rQEDO-8Jwm_fmBdtHs9J3SRajlBAdKh6X6cqwILuyVRFNZObAPnPLGMG3ugor6cb4EPSG8BlSwXK9DrJXiQ9qNO023FjPNVz-F4hI26bn54wWH0EgR6iyVzPVTvJlffxpN9SKzl2g7QxpZBVBsCmsUtU0T2x43ZIY2fUcTU4RYNHE7zKJdEMr8o7XUDm9K2yBw");'>
+                                </div>
+                                <button
+                                    class="absolute top-2 right-2 bg-white/70 dark:bg-gray-900/70 p-1.5 rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-500">
+                                    <span class="material-symbols-outlined">favorite_border</span>
+                                </button>
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow">
+                                <p class="text-lg font-bold text-gray-900 dark:text-white">2023 Audi Q5</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Year: 2023, Mileage: 8,000,
+                                    Engine: 2.0L I4</p>
+                                <p class="text-xl font-bold text-primary mt-2">$50,000</p>
+                                <div class="mt-4 flex gap-2">
+                                    <button
+                                        class="flex-grow flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                        <span class="truncate">View Details</span>
+                                    </button>
+                                    <label
+                                        class="flex items-center gap-2 px-4 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+                                        <input class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                            type="checkbox" />
+                                        <span class="text-sm font-medium">Compare</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="flex flex-col gap-3 pb-3 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <div class="relative">
+                                <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                    data-alt="A white 2022 Mercedes-Benz C-Class"
+                                    style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBvcBSKHWrKTEd7J-Sh9jhRyZwf0ZL_kgn-WBv9iVJtqM-FONQHWfso8Oyv6FXITM66P6muig3UBEcw8wOUwWVvkjCXtgjLP9EPifl4W0FxjopyNwGjy3szDVobSwQrh5mS-GbsLgTFmaoRwR9VgPPh1fLtO3k3nVPyVdOroiWiDx34wHyqawqldfJcbXStZPf0zdDQFeZGRaT9dFHYsC70ji-caAYupeEu6Xyc_2P4D-A1xtMDrrZtJv6wV3hgEoV-1LgpzigpIg4");'>
+                                </div>
+                                <button
+                                    class="absolute top-2 right-2 bg-white/70 dark:bg-gray-900/70 p-1.5 rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-500">
+                                    <span class="material-symbols-outlined">favorite_border</span>
+                                </button>
+                            </div>
+                            <div class="p-4 flex flex-col flex-grow">
+                                <p class="text-lg font-bold text-gray-900 dark:text-white">2022 Mercedes-Benz C-Class
+                                </p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Year: 2022, Mileage: 12,000,
+                                    Engine: 2.0L I4</p>
+                                <p class="text-xl font-bold text-primary mt-2">$48,000</p>
+                                <div class="mt-4 flex gap-2">
+                                    <button
+                                        class="flex-grow flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                        <span class="truncate">View Details</span>
+                                    </button>
+                                    <label
+                                        class="flex items-center gap-2 px-4 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+                                        <input class="form-checkbox rounded text-primary focus:ring-primary/50"
+                                            type="checkbox" />
+                                        <span class="text-sm font-medium">Compare</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center p-4 mt-8">
+                        <a class="flex size-10 items-center justify-center" href="#">
+                            <span class="material-symbols-outlined">chevron_left</span>
+                        </a>
+                        <a class="text-sm font-bold leading-normal tracking-[0.015em] flex size-10 items-center justify-center text-white dark:text-gray-900 rounded-full bg-primary"
+                            href="#">1</a>
+                        <a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-800 dark:text-gray-200 rounded-full"
+                            href="#">2</a>
+                        <a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-800 dark:text-gray-200 rounded-full"
+                            href="#">3</a>
+                        <span
+                            class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-800 dark:text-gray-200 rounded-full">...</span>
+                        <a class="text-sm font-normal leading-normal flex size-10 items-center justify-center text-gray-800 dark:text-gray-200 rounded-full"
+                            href="#">10</a>
+                        <a class="flex size-10 items-center justify-center" href="#">
+                            <span class="material-symbols-outlined">chevron_right</span>
+                        </a>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

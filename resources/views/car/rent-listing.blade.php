@@ -1,750 +1,921 @@
 @extends('layouts.layout')
+
 @section('title', 'Cars For Rent')
+
 @section('content')
-
-    <style>
-        .fixed-img {
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            object-fit: cover;
-        }
-
-        .view-toggle button.active {
-            background: #db2d2e;
-            color: #fff;
-            border-color: #db2d2e;
-        }
-
-        .red {
-            background: #db2d2e;
-            color: #fff;
-        }
-
-        /* Enhanced Price Styling - Different for Grid and List Views */
-        .price-container {
-            margin: 10px 0;
-        }
-
-        /* Grid View - Simple and Compact Design */
-        .grid-item .price-container {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            border-left: 3px solid #db2d2e;
-        }
-
-        .grid-item .price-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            padding: 4px 0;
-        }
-
-        .grid-item .price-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .grid-item .price-label {
-            font-size: 11px;
-            font-weight: 500;
-            color: #6c757d;
-            text-transform: uppercase;
-        }
-
-        .grid-item .price-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: #db2d2e;
-        }
-
-        .grid-item .price-currency {
-            font-size: 12px;
-            color: #495057;
-        }
-
-        .grid-item .price-badge {
-            background: #db2d2e;
-            color: white;
-            padding: 1px 6px;
-            border-radius: 8px;
-            font-size: 9px;
-            font-weight: 500;
-            margin-left: 5px;
-        }
-
-        /* List View - Beautiful and Detailed Design */
-        .car-grid .price-container {
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            border-left: 4px solid #db2d2e;
-        }
-
-        .car-grid .price-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            padding: 8px 12px;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .car-grid .price-item:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .car-grid .price-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .car-grid .price-label {
-            font-size: 12px;
-            font-weight: 600;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .car-grid .price-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: #db2d2e;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-        }
-
-        .car-grid .price-currency {
-            font-size: 14px;
-            color: #495057;
-        }
-
-        .car-grid .price-icon {
-            width: 16px;
-            height: 16px;
-            background: #db2d2e;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 10px;
-        }
-
-        .car-grid .price-badge {
-            background: linear-gradient(45deg, #db2d2e, #ff4757);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            margin-left: 8px;
-        }
-
-        /* Mobile responsive */
-        @media (max-width: 768px) {
-            .price-container {
-                padding: 12px;
-            }
-
-            .price-value {
-                font-size: 14px;
-            }
-
-            .price-label {
-                font-size: 11px;
-            }
-        }
-
-        /* Modern Slider Styles */
-        .filter-widget {
-            background: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            /* box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); */
-            margin-bottom: 20px;
-            /* border: 1px solid #eef0f3; */
-        }
-
-        .filter-widget h6 {
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 16px;
-            color: #333;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .filter-widget h6 button {
-            font-size: 12px;
-            padding: 4px 8px;
-        }
-
-        #year-range-slider,
-        #price-range-slider {
-            margin: 15px 0;
-            height: 6px;
-            border-radius: 3px;
-            background: #e9ecef;
-            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .noUi-connect {
-            background: linear-gradient(90deg, #db2d2e, #ff6b6b);
-            border-radius: 3px;
-        }
-
-        .noUi-handle {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            background: #fff;
-            border: 2px solid #db2d2e;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            cursor: grab;
-            transition: all 0.2s ease;
-            top: -6px;
-        }
-
-        .noUi-handle:hover {
-            transform: scale(1.1);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
-        }
-
-        .noUi-handle:before,
-        .noUi-handle:after {
-            display: none;
-        }
-
-        .year-values {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 10px;
-            color: #db2d2e;
-        }
-
-        .year-values span {
-            background: #f8f9fa;
-            padding: 4px 10px;
-            border-radius: 20px;
-            border: 1px solid #e9ecef;
-        }
-
-        /* Modern Filter Category Styles */
-        .filter-category {
-            border: none;
-            padding: 0;
-            margin-bottom: 10px;
-        }
-
-        /* .filter-header {
-                padding: 12px 15px;
-                background: #f8f9fa;
-                border-radius: 8px;
-                color: #333;
-                font-weight: 600;
-                text-decoration: none;
-                transition: all 0.3s ease;
-                border: 1px solid #eef0f3;
-            } */
-
-        /* .filter-header:hover {
-                background: #e9ecef;
-            } */
-
-        /* .filter-header.active {
-                background: #db2d2e;
-                color: #fff;
-                border-color: #db2d2e;
-            } */
-
-        .filter-arrow {
-            transition: transform 0.3s ease;
-        }
-
-        /*
-            .filter-header.active .filter-arrow {
-                transform: rotate(180deg);
-            } */
-
-        .filter-options {
-            padding: 15px 10px;
-            background: #fff;
-            border-radius: 0 0 8px 8px;
-            border: 1px solid #eef0f3;
-            border-top: none;
-        }
-
-        .filter-options li {
-            padding: 5px 10px;
-        }
-
-        .form-check-input:checked {
-            background-color: #db2d2e;
-            border-color: #db2d2e;
-        }
-
-        .form-check-label {
-            font-size: 14px;
-            color: #495057;
-        }
-    </style>
-
-    <section class="slider-parallax bg-overlay-black-50 bg-17">
-        <div class="slider-content-middle">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="slider-content text-center">
-                            <h2 class="text-white">Find Cars For Rent</h2>
-                            <strong class="text-white">White, Black and Red theme.</strong>
-                            <div class="row justify-content-center">
-                                <div class="col-lg-6 col-md-12">
-                                    <div class="search-page position-relative">
-                                        <input type="text" id="general-search" class="form-control"
-                                            placeholder="Search your desired car...">
-                                        <div id="search-results" class="search-results-container"></div>
-                                        <a href="#" class="search-icon">
-                                            <i class="fa fa-search"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!-- Hero section with search -->
+<div class="relative">
+    <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat items-center justify-center p-4"
+        style='background-image: linear-gradient(rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.6) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuC6axOUEhDD1UQ_hNyo74-blep0Jygg3yfSZo9-X4OCawjY4eSxPeGJ5lMc9_MX_FxmmnOB4a22ZeWBJ9BM-BnBeLQcKoEvfADtNolyOLQ9ySzebWnS0VqdcIu9x5cFDqHwR4gVK08_KPMxwTJyvkaMqTprK-UMyzYsaljUUmyazIPiQTyS6-yhKsdZwoAtLQzgTkfbYVxNOGMhgjiypJYeClWF7ZV34hUKJk84AkehGly-QD4Saub1nR4lfIgNG4zaeKyyMt-VETc");'>
+        <div class="flex flex-col gap-2 text-center text-white">
+            <h1 class="text-4xl font-black leading-tight tracking-[-0.033em] md:text-5xl">Find Cars For Rent</h1>
+            <h2 class="text-base font-normal leading-normal md:text-lg">White, Black and Red theme.</h2>
+        </div>
+        <label class="flex flex-col min-w-40 h-14 w-full max-w-[480px] md:h-16">
+            <div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+                <div
+                    class="text-[#617589] flex border border-[#dbe0e6] bg-white dark:bg-gray-800 dark:border-gray-600 items-center justify-center pl-[15px] rounded-l-lg border-r-0">
+                    <span class="material-symbols-outlined">search</span>
+                </div>
+                <input id="general-search"
+                    class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#111418] dark:text-white focus:outline-0 focus:ring-0 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-[#dbe0e6] dark:focus:border-primary h-full placeholder:text-[#617589] dark:placeholder:text-gray-400 px-[15px] rounded-r-none border-r-0 pr-2 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal md:text-base"
+                    placeholder="Search by make, model, or keyword" value="" />
+                <div
+                    class="flex items-center justify-center rounded-r-lg border-l-0 border border-[#dbe0e6] dark:border-gray-600 bg-white dark:bg-gray-800 pr-[7px]">
+                    <button id="search-button"
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 md:h-12 md:px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] md:text-base">
+                        <span class="truncate">Search</span>
+                    </button>
                 </div>
             </div>
-        </div>
-    </section>
+        </label>
+    </div>
+</div>
 
-    <section class="car-listing-sidebar product-listing" data-sticky_parent>
-        <div class="container-fluid p-0">
-            <div class="row g-0 p-2">
-                <div class="col-md-2 p-2">
-                    <div class="listing-sidebar scrollbar" data-sticky_column>
-                        <div class="widget">
-                            <div class="widget-search">
-                                <h5>Advanced Search</h5>
-                            </div>
-                            <div class="clearfix">
-                                <ul class="list-group">
-                                    @php $years = range(1990, now()->year); @endphp
-                                    <div class="filter-widget" style="padding: 10px;">
-                                        <div style="display: flex; align-items: center; justify-content: space-between;">
-                                            <h6>Year Range</h6>
-                                        </div>
-                                        <div id="year-range-slider"></div>
-                                        <div class="year-values">
-                                            <span id="year-min"></span>
-                                            <span id="year-max"></span>
-                                        </div>
-                                    </div>
+<!-- Main content with filters and car listings -->
+<div class="flex flex-1">
+    <!-- Filters sidebar -->
+    <aside class="w-1/4 min-w-[280px] p-6 bg-white dark:bg-background-dark border-r border-gray-200 dark:border-gray-700">
+        <div class="flex flex-col gap-6">
+            <h3 class="text-xl font-bold text-gray-900 dark:text-white">Filter Your Search</h3>
 
-                                    <x-car-filter name="Make" label="All Company" :options="$distinctValues['make']" />
-                                    <x-car-filter name="Transmission" label="All Transmission" :options="$distinctValues['transmissions']" />
-                                    <x-car-filter name="Body" label="All Body Styles" :options="$distinctValues['body_type']" />
-                                    <x-car-filter name="Model" label="All Models" :options="$distinctValues['models']" />
-                                    <x-car-filter name="Color" label="All Color" :options="$distinctValues['colors']" />
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-10 p-2 ">
-                    <div class="sorting-options-main">
-                        <div class="row justify-content-between">
-                            <div class="col-xl-3 col-md-12">
-                                <div class="price-slide filter-widget" style="padding: 10px;">
-                                    <label>Price Range</label>
-                                    <div id="price-range-slider"></div>
-                                    <div class="year-values">
-                                        <span id="price-min"></span>
-                                        <span id="price-max"></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-xxl-2 col-md-12 ms-auto">
-                                <div class="selected-box">
-                                    <div class="d-flex align-items-end gap-3">
-                                        <div class="view-toggle d-flex align-items-center gap-3 justify-content-center"
-                                            style="margin-bottom: 5px">
-                                            <button class="btn btn-sm active" id="grid-view"><i
-                                                    class="fa fa-th"></i></button>
-                                            <button class="btn btn-sm" id="list-view"><i class="fa fa-list"></i></button>
-                                        </div>
-                                        <div class="flex-grow-1">
-                                            <select class="form-control" id="sort-select" name="sort">
-                                                <option value="">Sort by Default</option>
-                                                <option value="name">Sort by Name</option>
-                                                <option value="price">Sort by Price</option>
-                                                <option value="date">Sort by Date</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xl-3 col-xxl-2 col-md-12">
-                                <div class="price-search">
-                                    <div class="search">
-                                        <i class="fa fa-search"></i>
-                                        <input type="search" id="car-search" class="form-control placeholder"
-                                            placeholder="Search Cars....">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div id="car-results" class="isotope column-5"></div>
-
-                    <div class="d-flex justify-content-center mt-3">
-                        <nav>
-                            <ul id="pagination" class="pagination"></ul>
-                        </nav>
-                    </div>
-                </div>
-                <div class="pagination-link" style="display: flex; justify-content: center; margin: 2rem 0 3rem 0;">
+            <!-- Year Range Filter -->
+            <div class="flex flex-col gap-4">
+                <h4 class="font-semibold text-gray-800 dark:text-gray-200">Year</h4>
+                <input id="year-slider" class="w-full" type="range" />
+                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                    <span id="year-min">1990</span>
+                    <span id="year-max">{{ now()->year }}</span>
                 </div>
             </div>
+
+            <!-- Price Range Filter -->
+            <div class="flex flex-col gap-4">
+                <h4 class="font-semibold text-gray-800 dark:text-gray-200">Price Range</h4>
+                <input id="price-slider" class="w-full" type="range" />
+                <div class="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                    <span id="price-min">$300</span>
+                    <span id="price-max">$50,000</span>
+                </div>
+            </div>
+
+            <!-- Other Filters -->
+            <x-car-filter name="Make" label="All Company" :options="$distinctValues['make']" />
+            <x-car-filter name="Transmission" label="All Transmission" :options="$distinctValues['transmissions']" />
+            <x-car-filter name="Body" label="All Body Styles" :options="$distinctValues['body_type']" />
+            <x-car-filter name="Model" label="All Models" :options="$distinctValues['models']" />
+            <x-car-filter name="Color" label="All Color" :options="$distinctValues['colors']" />
+
+            <div class="flex flex-col gap-2 mt-4">
+                <button id="apply-filters"
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] w-full">
+                    <span class="truncate">Apply Filters</span>
+                </button>
+                <button id="reset-filters"
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-[0.015em] w-full">
+                    <span class="truncate">Reset</span>
+                </button>
+            </div>
         </div>
-    </section>
+    </aside>
 
-    <script>
-        const API_URL = "{{ route('cars.filter-rent') }}";
-        const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
-        const bargain_show = "{{ route('bargains.show', ['id' => '__ID__']) }}";
-        const container = document.getElementById('car-results');
-        const paginationEl = document.getElementById('pagination');
-        let currentView = 'grid';
-        let currentPage = 1;
-        const perPage = 12;
+    <!-- Main content area -->
+    <main class="flex-1 p-6">
+        <!-- Top bar with results count and sorting options -->
+        <div class="flex justify-between items-center mb-6">
+            <p class="text-gray-600 dark:text-gray-400">Showing <span id="results-count">0</span> results</p>
+            <div class="flex items-center gap-4">
+                <button id="compare-button"
+                    class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2">
+                    <span class="material-symbols-outlined">compare_arrows</span>
+                    <span class="truncate">Compare (<span id="compare-count">0</span>)</span>
+                </button>
+                <label class="flex items-center gap-2">
+                    <span class="text-sm font-medium">Sort by:</span>
+                    <select id="sort-select"
+                        class="form-select flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-0 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:border-primary h-10 p-2 text-sm font-normal">
+                        <option value="">Sort by Default</option>
+                        <option value="name">Sort by Name</option>
+                        <option value="price">Sort by Price</option>
+                        <option value="date">Sort by Date</option>
+                    </select>
+                </label>
+            </div>
+        </div>
 
-        // Initialize sliders when DOM is loaded
-        document.addEventListener("DOMContentLoaded", function() {
-            // Price Range Slider
-            const priceSlider = document.getElementById('price-range-slider');
-            const priceMin = document.getElementById('price-min');
-            const priceMax = document.getElementById('price-max');
+        <!-- Search bar -->
+        <div class="mb-6">
+            <input type="search" id="car-search" class="form-control w-full p-2 border border-gray-300 rounded"
+                placeholder="Search Cars....">
+        </div>
 
-            noUiSlider.create(priceSlider, {
-                start: [300, 50000],
-                connect: true,
-                step: 1,
-                range: {
-                    'min': 300,
-                    'max': 50000
-                }
-            });
+        <!-- Car listings container -->
+        <div id="car-results" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Car items will be injected here by JS -->
+        </div>
 
-            priceSlider.noUiSlider.on('update', function(values) {
-                priceMin.innerHTML = Math.round(values[0]);
-                priceMax.innerHTML = Math.round(values[1]);
-            });
+        <!-- Pagination -->
+        <div class="flex items-center justify-center p-4 mt-8" id="pagination-container">
+            <!-- Pagination will be injected here by JS -->
+        </div>
+    </main>
+</div>
 
-            priceSlider.noUiSlider.on('change', function(values) {
-                applyFilters(1);
-            });
+<!-- Search results container -->
+<div id="search-results" class="search-results-container"></div>
 
-            // Year Range Slider
-            const yearSlider = document.getElementById('year-range-slider');
-            const yearMin = document.getElementById('year-min');
-            const yearMax = document.getElementById('year-max');
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 
-            noUiSlider.create(yearSlider, {
-                start: [1990, new Date().getFullYear()],
-                connect: true,
-                step: 1,
-                range: {
-                    'min': 1990,
-                    'max': new Date().getFullYear()
-                }
-            });
+<script>
+    // Tailwind config
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#1173d4",
+                    "secondary": "#FF6600",
+                    "background-light": "#f6f7f8",
+                    "background-dark": "#101922",
+                },
+                fontFamily: {
+                    "display": ["Inter", "sans-serif"]
+                },
+                borderRadius: {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+                },
+            },
+        },
+    }
+</script>
 
-            yearSlider.noUiSlider.on('update', function(values) {
-                yearMin.innerHTML = Math.round(values[0]);
-                yearMax.innerHTML = Math.round(values[1]);
-            });
+<style>
+    .material-symbols-outlined {
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+    }
 
-            yearSlider.noUiSlider.on('change', function(values) {
-                applyFilters(1);
-            });
+    .search-results-container {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        max-height: 300px;
+        overflow-y: auto;
+        display: none;
+    }
 
-            // Reset Year Button
-            document.getElementById('reset-year').addEventListener('click', () => {
-                yearSlider.noUiSlider.set([1990, new Date().getFullYear()]);
-                applyFilters(1);
-            });
+    .search-result-item {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+        transition: background-color 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .search-result-item:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .search-result-info {
+        flex-grow: 1;
+    }
+
+    .search-result-title {
+        font-weight: 500;
+        margin-bottom: 2px;
+    }
+
+    .search-result-price {
+        color: #db2d2e;
+        font-size: 0.9em;
+    }
+
+    .show-all-results {
+        padding: 10px;
+        text-align: center;
+        background: #f8f9fa;
+        font-weight: 500;
+    }
+
+    /* Slider styles with circular handles and end circles */
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: #e9ecef;
+        outline: none;
+        margin: 15px 0;
+        position: relative;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #1173d4;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        position: relative;
+        z-index: 2;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #fff;
+        border: 2px solid #1173d4;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        z-index: 2;
+    }
+
+    /* Add circles at both ends of the slider track */
+    input[type="range"]::before,
+    input[type="range"]::after {
+        content: "";
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #1173d4;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1;
+    }
+
+    input[type="range"]::before {
+        left: 0;
+    }
+
+    input[type="range"]::after {
+        right: 0;
+    }
+
+    /* Car item styles */
+    .fixed-img {
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        object-fit: cover;
+    }
+
+    .car-item {
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        background-color: #f9f9f9;
+        border-radius: 8px;
+    }
+
+    .car-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Rental badge */
+    .rental-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: linear-gradient(45deg, #4CAF50, #2E7D32);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: bold;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        z-index: 10;
+    }
+
+    /* Compare button */
+    .add-to-compare {
+        cursor: pointer !important;
+        z-index: 10;
+        position: relative;
+    }
+
+    .add-to-compare:hover {
+        transform: scale(1.1);
+        transition: transform 0.2s ease;
+    }
+</style>
+
+<script>
+    const API_URL = "{{ route('cars.filter-rent') }}"; // Laravel route for rental cars
+    const car_show = "{{ route('car.show', ['id' => '__ID__']) }}";
+    let container = null;
+    let lastQuery = '';
+    let currentPage = 1;
+    const perPage = 12;
+
+    // Initialize container after DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+        container = document.getElementById('car-results');
+        if (!container) {
+            console.error('Car results container not found');
+            return;
+        }
+
+        // Initialize sliders
+        initSliders();
+
+        // Initialize event listeners
+        initEventListeners();
+
+        // Initial load
+        fetchFilteredCars();
+    });
+
+    function initSliders() {
+        // Price Range Slider
+        const priceSlider = document.getElementById('price-slider');
+        const priceMin = document.getElementById('price-min');
+        const priceMax = document.getElementById('price-max');
+
+        priceSlider.min = 300;
+        priceSlider.max = 50000;
+        if (!priceSlider.value) priceSlider.value = 25000; // Default middle value
+
+        priceSlider.addEventListener('input', function() {
+            const value = parseInt(this.value);
+            priceMin.textContent = '$' + value.toLocaleString();
         });
 
-        function renderPagination(meta) {
-            paginationEl.innerHTML = '';
-            const {
-                current_page,
-                last_page
-            } = meta;
-            if (last_page <= 1) return;
+        // Year Range Slider
+        const yearSlider = document.getElementById('year-slider');
+        const yearMin = document.getElementById('year-min');
+        const yearMax = document.getElementById('year-max');
 
-            const createItem = (label, page, disabled = false, active = false) => {
-                const li = document.createElement('li');
-                li.className = 'page-item ' + (disabled ? 'disabled' : '') + ' ' + (active ? 'active' : '');
-                const a = document.createElement('a');
-                a.className = 'page-link';
-                a.href = '#';
-                a.textContent = label;
-                a.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (!disabled) {
-                        applyFilters(page);
+        yearSlider.min = 1990;
+        yearSlider.max = new Date().getFullYear();
+        if (!yearSlider.value) yearSlider.value = Math.floor((1990 + new Date().getFullYear()) / 2); // Default middle value
+
+        yearSlider.addEventListener('input', function() {
+            yearMin.textContent = this.value;
+        });
+
+        // Set initial value displays
+        priceMin.textContent = '$' + parseInt(priceSlider.value).toLocaleString();
+        yearMin.textContent = yearSlider.value;
+    }
+
+    function initEventListeners() {
+        // Filter handlers
+        document.querySelectorAll('.filter-option').forEach(input => {
+            input.addEventListener('change', function() {
+                const name = this.name.replace('[]', '');
+                const group = document.querySelectorAll(`input[name="${name}[]"]`);
+                const allCheckbox = document.getElementById(`all-${name.toLowerCase()}`);
+
+                if (this.value === '*') {
+                    if (this.checked) {
+                        group.forEach(el => {
+                            if (el !== this) el.checked = false;
+                        });
                     }
-                });
-                li.appendChild(a);
-                return li;
-            };
-
-            paginationEl.appendChild(createItem('«', current_page - 1, current_page === 1));
-            for (let i = 1; i <= last_page; i++) {
-                paginationEl.appendChild(createItem(i, i, false, i === current_page));
-            }
-            paginationEl.appendChild(createItem('»', current_page + 1, current_page === last_page));
-        }
-
-        function setView(view) {
-            currentView = view;
-            document.getElementById('grid-view').classList.toggle('active', view === 'grid');
-            document.getElementById('list-view').classList.toggle('active', view === 'list');
-            applyFilters(1);
-        }
-
-        function buildQuery(page = 1) {
-            const formData = new FormData();
-
-            // Add checkbox filters
-            document.querySelectorAll('.filter-option:checked').forEach(input => {
-                if (input.value !== '*') {
-                    const name = input.name.replace('[]', '');
-                    formData.append(name + '[]', input.value);
-                }
-            });
-
-            // Add search keyword
-            const keyword = document.getElementById('car-search').value.trim();
-            if (keyword) formData.append('keyword', keyword);
-
-            // Add sort option
-            const sortValue = document.getElementById('sort-select').value;
-            if (sortValue) formData.append('sort', sortValue);
-
-            // Add price range
-            const priceSlider = document.getElementById('price-range-slider');
-            if (priceSlider && priceSlider.noUiSlider) {
-                const priceValues = priceSlider.noUiSlider.get();
-                const minPrice = Math.round(priceValues[0]);
-                const maxPrice = Math.round(priceValues[1]);
-                formData.append('price_min', minPrice);
-                formData.append('price_max', maxPrice);
-            }
-
-            // Add year range
-            const yearSlider = document.getElementById('year-range-slider');
-            if (yearSlider && yearSlider.noUiSlider) {
-                const yearValues = yearSlider.noUiSlider.get();
-                const minYear = Math.round(yearValues[0]);
-                const maxYear = Math.round(yearValues[1]);
-
-                // Push all years in range to 'Year[]'
-                const years = [];
-                for (let y = minYear; y <= maxYear; y++) {
-                    years.push(y);
-                }
-                years.forEach(y => formData.append('Year[]', y));
-            }
-
-            formData.append('page', page);
-            formData.append('per_page', perPage);
-            return new URLSearchParams(formData).toString();
-        }
-
-        function fetchFilteredCars(query) {
-            // Ensure container is available
-            if (!container) {
-                container = document.getElementById('car-results');
-                if (!container) {
-                    console.error('Car results container not found');
+                    applyFilters();
                     return;
                 }
-            }
-
-            // Show loading indicator
-            container.innerHTML =
-                '<div class="text-center py-5"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading rental cars...</p></div>';
-
-            axios.get(API_URL + '?' + query)
-                .then(response => {
-                    const res = response.data;
-                    const cars = res.data || [];
-                    currentPage = res.current_page || 1;
-                    container.innerHTML = '';
-                    const error_img = `/images/car/23.png`;
-
-                    if (!cars.length) {
-                        container.innerHTML = `
-                            <section class="error-page page-section-ptb">
-                                <div class="container"><div class="row"><div class="col-md-12">
-                                    <div class="error-content text-center">
-                                        <img class="img-fluid center-block" style="width: 70%;" src="${error_img}" alt="">
-                                        <h3 class="text-red">Ooopps:( </h3>
-                                        <strong class="text-black">No cars found for rent</strong>
-                                    </div>
-                                </div></div></div>
-                            </section>`;
-                        renderPagination({
-                            current_page: 1,
-                            last_page: 1
-                        });
-                        return;
-                    }
-
-                    cars.forEach(car => {
-                        let images = Array.isArray(car.images) ? car.images : (car.images ? [car.images] : []);
-                        const imageSrc = images.length ?
-                            "{{ asset('storage') }}/" + images[0] :
-                            '/images/demo.jpg';
-                        const url = car_show.replace('__ID__', car.id);
-                        const bargain_url = car.bargain ?
-                            bargain_show.replace('__ID__', car.bargain.id) :
-                            null;
-                        const carDiv = document.createElement('div');
-                        carDiv.className = currentView === 'list' ? 'car-grid mb-3' : 'grid-item py-2 gap-1';
-                        let html = `
-                            ${currentView === 'list' ? '<div class="row p-2">' : ''}
-                                <div class="${currentView === 'list' ? 'col-lg-4 col-md-12' : ''}">
-                                    <div class="car-item gray-bg text-center">
-                                        <div class="car-image">
-                                            <img class="img-fluid fixed-img" src="${imageSrc}" alt="${car.title}">
-                                            <div class="car-overlay-banner">
-                                                <ul>
-                                                    <li><a href="${url}"><i class="fa fa-link"></i></a></li>
-                                                    <li><a href="${url}"><i class="fa fa-shopping-cart"></i></a></li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="${currentView === 'list' ? 'col-lg-8 col-md-12' : ''}">
-                                    <div class="${currentView === 'list' ? 'car-details' : 'car-content'}">
-                                        ${currentView === 'list' ? `<h4>${car.title ?? ''}</h4>` : ''}
-                                        <div class="price-container">
-                                            <div class="price-item">
-                                                <div class="price-label">
-                                                    ${currentView === 'list' ? '<span class="price-icon">📅</span>' : ''}
-                                                    Daily
-                                                </div>
-                                                <div class="price-value">
-                                                    <span class="price-currency">$</span>${car.rent_price_per_day ?? ''}
-                                                    <span class="price-badge">${currentView === 'list' ? 'Per Day' : '/day'}</span>
-                                                </div>
-                                            </div>
-                                            <div class="price-item">
-                                                <div class="price-label">
-                                                    ${currentView === 'list' ? '<span class="price-icon">📆</span>' : ''}
-                                                    Monthly
-                                                </div>
-                                                <div class="price-value">
-                                                    <span class="price-currency">$</span>${car.rent_price_per_month ?? ''}
-                                                    <span class="price-badge">${currentView === 'list' ? '30 Days' : '/month'}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="car-list">
-                                            <ul class="list-inline" style="font-size: 12px;">
-                                                <li><i class="fa fa-registered"></i> ${car.year}</li>
-                                                ${currentView == 'list' ? "<li><i class=\"fa fa-cog\"></i> " + (car.transmission_type ?? '') + "</li>" : ''}
-                                                <li><i class="fa fa-car"></i> ${car.make ?? ''} ${car.model ?? ''}</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            ${currentView === 'list' ? '</div>' : ''}
-                        `;
-                        carDiv.innerHTML = html;
-                        carDiv.addEventListener('click', function(e) {
-                            if (e.target.closest('.add-to-compare')) return;
-                            window.location.href = url;
-                        });
-                        container.appendChild(carDiv);
-                    });
-
-                    renderPagination(res);
-                })
-                .catch(error => {
-                    console.error('Error fetching cars:', error);
-                    // Ensure container is available
-                    if (!container) {
-                        container = document.getElementById('car-results');
-                    }
-                    if (container) {
-                        container.innerHTML = `
-                            <div class="alert alert-danger text-center">
-                                <h4>Error Loading Rental Cars</h4>
-                                <p>Failed to load rental cars. Please try again later.</p>
-                                <button class="btn btn-danger" onclick="applyFilters(1)">Retry</button>
-                            </div>`;
-                    }
-                    renderPagination({
-                        current_page: 1,
-                        last_page: 1
-                    });
-                });
-        }
-
-        function applyFilters(page = 1) {
-            const query = buildQuery(page);
-            fetchFilteredCars(query);
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize view toggle buttons
-            document.getElementById('grid-view').addEventListener('click', () => setView('grid'));
-            document.getElementById('list-view').addEventListener('click', () => setView('list'));
-
-            // Initialize filter event listeners
-            document.querySelectorAll('.filter-option').forEach(el => el.addEventListener('change', () =>
-                applyFilters(1)));
-            document.getElementById('car-search').addEventListener('input', () => applyFilters(1));
-            document.getElementById('sort-select').addEventListener('change', () => applyFilters(1));
-
-            // Collapsible filters
-            document.querySelectorAll('.filter-header').forEach(header => {
-                header.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const submenu = this.nextElementSibling;
-                    this.classList.toggle('active');
-
-                    // Simple toggle without animation
-                    if (submenu.style.display === 'block') {
-                        submenu.style.display = 'none';
-                    } else {
-                        submenu.style.display = 'block';
-                    }
-                });
+                if (this.checked && allCheckbox) {
+                    allCheckbox.checked = false;
+                }
+                applyFilters();
             });
-
-            // Initial load
-            applyFilters(1);
         });
-    </script>
+
+        // Search handlers
+        document.getElementById('car-search').addEventListener('input', applyFilters);
+        document.getElementById('general-search').addEventListener('input', handleGeneralSearch);
+        document.getElementById('search-button').addEventListener('click', function(e) {
+            e.preventDefault();
+            const keyword = document.getElementById('general-search').value.trim();
+            if (keyword) {
+                document.getElementById('car-search').value = keyword;
+                applyFilters();
+            }
+        });
+
+        // Sort handler
+        document.getElementById('sort-select').addEventListener('change', applyFilters);
+
+        // Compare button
+        document.getElementById('compare-button').addEventListener('click', function() {
+            window.location.href = "{{ route('car.compare') }}";
+        });
+
+        // Apply and reset filter buttons
+        document.getElementById('apply-filters').addEventListener('click', applyFilters);
+        document.getElementById('reset-filters').addEventListener('click', resetFilters);
+
+        // Slider change handlers for real-time filtering
+        if (document.getElementById('price-slider')) {
+            document.getElementById('price-slider').addEventListener('change', applyFilters);
+        }
+        if (document.getElementById('year-slider')) {
+            document.getElementById('year-slider').addEventListener('change', applyFilters);
+        }
+
+        // Collapsible filters
+        document.querySelectorAll('.list-group-item > a').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const submenu = this.nextElementSibling;
+                submenu.style.display = submenu.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+
+        // Hide search results when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.search-page')) {
+                document.getElementById('search-results').style.display = 'none';
+            }
+        });
+
+        // Hide search results when pressing ESC
+        document.addEventListener('keyup', function(e) {
+            if (e.key === "Escape") {
+                document.getElementById('search-results').style.display = 'none';
+            }
+        });
+    }
+
+    function handleGeneralSearch() {
+        const keyword = this.value.trim();
+        const resultsContainer = document.getElementById('search-results');
+
+        if (keyword.length < 2) {
+            resultsContainer.style.display = 'none';
+            resultsContainer.innerHTML = '';
+            return;
+        }
+
+        axios.get(`/car/search?keyword=${keyword}&limit=4`)
+            .then(response => {
+                const results = response.data.slice(0, 4); // Get first 4 results
+                resultsContainer.innerHTML = '';
+
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = '<div class="search-result-item">No results found</div>';
+                    resultsContainer.style.display = 'block';
+                    return;
+                }
+
+                results.forEach(car => {
+                    const carDiv = document.createElement('div');
+                    carDiv.className = 'search-result-item';
+
+                    // Handle images
+                    let images = Array.isArray(car.images) ? car.images : (car.images ? [car.images] : []);
+                    const imageSrc = images.length ?
+                        (images[0].startsWith('http') ? images[0] : `/storage/${images[0]}`) :
+                        '/images/demo.jpg';
+
+                    carDiv.innerHTML = `
+                        <img src="${imageSrc}" style="object-fit: cover;width: 80px;height: 80px;" alt="${car.title}">
+                        <div class="search-result-info">
+                            <div class="search-result-title">${car.year} ${car.make} ${car.model}</div>
+                            <div class="search-result-vin">VIN: ${car.VIN_number}</div>
+                            <div class="search-result-price">$${car.regular_price}</div>
+                        </div>
+                    `;
+
+                    carDiv.addEventListener('click', () => {
+                        window.location.href = `/car/show/${car.id}`;
+                    });
+
+                    resultsContainer.appendChild(carDiv);
+                });
+
+                // Add "Show all" link if there are more results
+                if (response.data.length > 4) {
+                    const showAll = document.createElement('div');
+                    showAll.className = 'show-all-results';
+                    showAll.innerHTML = `<a href="/cars/search?q=${keyword}">Show all ${response.data.length} results</a>`;
+                    resultsContainer.appendChild(showAll);
+                }
+
+                resultsContainer.style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Error fetching cars:', error);
+                resultsContainer.innerHTML = '<div class="search-result-item">Error loading results</div>';
+                resultsContainer.style.display = 'block';
+            });
+    }
+
+    function setQueryParam(query, key, value) {
+        const params = new URLSearchParams(query || '');
+        params.set(key, value);
+        return params.toString();
+    }
+
+    function renderPagination(meta) {
+        const pagContainer = document.getElementById('pagination-container');
+        if (!pagContainer) return;
+
+        if (!meta) {
+            pagContainer.innerHTML = '';
+            return;
+        }
+
+        const current = meta.current_page || 1;
+        const last = meta.last_page || 1;
+        const total = meta.total || 0;
+
+        // Update results count
+        document.getElementById('results-count').textContent = `${(current - 1) * perPage + 1}-${Math.min(current * perPage, total)} of ${total}`;
+
+        const parts = [];
+
+        // Prev button
+        if (current > 1) {
+            parts.push(`<a href="#" class="pagination-link" data-page="${current - 1}">Prev</a>`);
+        }
+
+        // Page numbers
+        for (let i = 1; i <= last; i++) {
+            if (i === current) {
+                parts.push(`<a href="#" class="pagination-link active" data-page="${i}">${i}</a>`);
+            } else if (i <= 3 || i >= last - 2 || (i >= current - 1 && i <= current + 1)) {
+                parts.push(`<a href="#" class="pagination-link" data-page="${i}">${i}</a>`);
+            } else if (i === 4 || i === last - 3) {
+                parts.push(`<span>...</span>`);
+            }
+        }
+
+        // Next button
+        if (current < last) {
+            parts.push(`<a href="#" class="pagination-link" data-page="${current + 1}">Next</a>`);
+        }
+
+        pagContainer.innerHTML = parts.join('');
+
+        // Attach events
+        pagContainer.querySelectorAll('.pagination-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = parseInt(this.getAttribute('data-page'));
+                if (!isNaN(page)) {
+                    applyFilters(page);
+                    pagContainer.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    }
+
+    function buildQuery(page = 1) {
+        const formData = new FormData();
+
+        // Add checkbox filters
+        document.querySelectorAll('.filter-option:checked').forEach(input => {
+            if (input.value !== '*') {
+                const name = input.name.replace('[]', '');
+                formData.append(name + '[]', input.value);
+            }
+        });
+
+        // Add search keyword
+        const keyword = document.getElementById('car-search').value.trim();
+        if (keyword) formData.append('keyword', keyword);
+
+        // Add sort option
+        const sortValue = document.getElementById('sort-select').value;
+        if (sortValue) formData.append('sort', sortValue);
+
+        // Add price range
+        const priceSlider = document.getElementById('price-slider');
+        if (priceSlider) {
+            const priceValue = parseInt(priceSlider.value);
+            formData.append('price_min', priceSlider.min);
+            formData.append('price_max', priceValue);
+        }
+
+        // Add year range
+        const yearSlider = document.getElementById('year-slider');
+        if (yearSlider) {
+            const yearValue = parseInt(yearSlider.value);
+            formData.append('year_min', yearSlider.min);
+            formData.append('year_max', yearValue);
+        }
+
+        formData.append('page', page);
+        formData.append('per_page', perPage);
+        return new URLSearchParams(formData).toString();
+    }
+
+    function fetchFilteredCars(query = '') {
+        // Ensure container is available
+        if (!container) {
+            container = document.getElementById('car-results');
+            if (!container) {
+                console.error('Car results container not found');
+                return;
+            }
+        }
+
+        lastQuery = query || '';
+        const url = query ? (API_URL + '?' + query) : API_URL;
+
+        // Show loading indicator
+        container.innerHTML =
+            '<div class="text-center py-5"><div class="spinner-border text-danger" role="status"><span class="visually-hidden">Loading...</span></div><p class="mt-2">Loading rental cars...</p></div>';
+
+        axios.get(url)
+            .then(response => {
+                const res = response.data;
+                const cars = res.data || [];
+                let meta = null;
+                if (res.meta && res.meta.current_page) {
+                    meta = res.meta;
+                } else if (typeof res.current_page !== 'undefined') {
+                    meta = {
+                        current_page: res.current_page,
+                        last_page: res.last_page,
+                        per_page: res.per_page,
+                        total: res.total
+                    };
+                }
+                container.innerHTML = '';
+                const error_img = `/images/car/23.png`;
+
+                if (!cars.length) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <img class="mx-auto w-64 h-64 object-contain" src="${error_img}" alt="No rental cars found">
+                            <h3 class="text-2xl font-bold text-gray-800 mt-4">No Rental Cars Found</h3>
+                            <p class="text-gray-600 mt-2">Try adjusting your filters or search terms</p>
+                            <button class="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" onclick="resetFilters()">Reset Filters</button>
+                        </div>`;
+                    renderPagination(meta);
+                    return;
+                }
+
+                cars.forEach(car => {
+                    // Handle images
+                    let images = Array.isArray(car.images) ? car.images : (car.images ? [car.images] : []);
+                    const imageSrc = images.length ?
+                        (images[0].startsWith('http') ? images[0] : "{{ asset('storage') }}/" + images[0]) :
+                        '/images/demo.jpg';
+
+                    const url = car_show.replace('__ID__', car.id);
+
+                    // Create car element
+                    const carElement = document.createElement('div');
+                    carElement.className = 'flex flex-col gap-3 pb-3 rounded-lg overflow-hidden bg-white dark:bg-gray-800 shadow-md hover:shadow-xl transition-shadow duration-300';
+
+                    // Build HTML dynamically
+                    let html = `
+                        <div class="relative">
+                            <div class="w-full bg-center bg-no-repeat aspect-video bg-cover"
+                                style='background-image: url("${imageSrc}");'>
+                            </div>
+                            <div class="rental-badge">RENTAL</div>
+                            <div class="absolute top-2 right-2 flex gap-2">
+                                <button class="bg-white/70 dark:bg-gray-900/70 p-1.5 rounded-full text-gray-700 dark:text-gray-300 hover:text-red-500 dark:hover:text-red-500 add-to-compare" data-car-id="${car.id}">
+                                    <span class="material-symbols-outlined">favorite_border</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="p-4 flex flex-col flex-grow">
+                            <p class="text-lg font-bold text-gray-900 dark:text-white">${car.make} ${car.model}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Year: ${car.year || 'N/A'}, Transmission: ${car.transmission_type || 'N/A'}</p>
+                            <div class="mt-3">
+                                <div class="flex justify-between items-center mb-2">
+                                    <span class="text-sm font-medium text-gray-700">Daily Rate</span>
+                                    <span class="text-lg font-bold text-primary">$${car.rent_price_per_day || '0'}/day</span>
+                                </div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm font-medium text-gray-700">Monthly Rate</span>
+                                    <span class="text-lg font-bold text-primary">$${car.rent_price_per_month || '0'}/month</span>
+                                </div>
+                            </div>
+                            <div class="mt-4 flex gap-2">
+                                <a href="${url}" class="flex-grow flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-secondary text-white text-sm font-bold leading-normal tracking-[0.015em]">
+                                    <span class="truncate">View Details</span>
+                                </a>
+                                <label class="flex items-center gap-2 px-4 rounded-lg bg-gray-100 dark:bg-gray-700 cursor-pointer">
+                                    <input class="form-checkbox rounded text-primary focus:ring-primary/50 compare-checkbox" type="checkbox" data-car-id="${car.id}" />
+                                    <span class="text-sm font-medium">Compare</span>
+                                </label>
+                            </div>
+                        </div>
+                    `;
+
+                    carElement.innerHTML = html;
+                    container.appendChild(carElement);
+                });
+
+                renderPagination(res);
+
+                // Initialize compare functionality
+                initCompareFunctionality();
+            })
+            .catch(error => {
+                console.error('Error fetching cars:', error);
+                // Ensure container is available
+                if (!container) {
+                    container = document.getElementById('car-results');
+                }
+                if (container) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-12">
+                            <div class="text-red-500 text-5xl mb-4">⚠️</div>
+                            <h3 class="text-2xl font-bold text-gray-800">Error Loading Rental Cars</h3>
+                            <p class="text-gray-600 mt-2">Failed to load rental cars. Please try again later.</p>
+                            <button class="mt-4 bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition" onclick="fetchFilteredCars()">Retry</button>
+                        </div>`;
+                }
+                renderPagination(null);
+            });
+    }
+
+    function initCompareFunctionality() {
+        // Add to compare buttons
+        document.querySelectorAll('.add-to-compare').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const carId = this.dataset.carId;
+                addToCompare(carId);
+            });
+        });
+
+        // Compare checkboxes
+        document.querySelectorAll('.compare-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const carId = this.dataset.carId;
+                if (this.checked) {
+                    addToCompare(carId);
+                } else {
+                    removeFromCompare(carId);
+                }
+            });
+        });
+
+        // Update compare count
+        updateCompareIcon();
+    }
+
+    function applyFilters(page = 1) {
+        const query = buildQuery(page);
+        fetchFilteredCars(query);
+    }
+
+    function resetFilters() {
+        // Reset all filters
+        document.querySelectorAll('.filter-option').forEach(input => {
+            input.checked = input.value === '*';
+        });
+
+        // Reset search
+        document.getElementById('car-search').value = '';
+        document.getElementById('general-search').value = '';
+
+        // Reset sort
+        document.getElementById('sort-select').value = '';
+
+        // Reset sliders
+        const yearSlider = document.getElementById('year-slider');
+        if (yearSlider) {
+            yearSlider.value = Math.floor((1990 + new Date().getFullYear()) / 2);
+            document.getElementById('year-min').textContent = yearSlider.value;
+        }
+
+        const priceSlider = document.getElementById('price-slider');
+        if (priceSlider) {
+            priceSlider.value = 25000;
+            document.getElementById('price-min').textContent = '$' + parseInt(priceSlider.value).toLocaleString();
+        }
+
+        // Apply filters
+        applyFilters();
+    }
+
+    // storing the count value in local storage
+    function getCompareCars() {
+        const stored = localStorage.getItem('compareCars');
+        if (!stored) return [];
+
+        try {
+            const data = JSON.parse(stored);
+            // Check if data has expired (5 minutes)
+            if (data.timestamp && (Date.now() - data.timestamp) > 5 * 60 * 1000) {
+                localStorage.removeItem('compareCars');
+                return [];
+            }
+            return data.cars || [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function setCompareCars(cars) {
+        const data = {
+            cars: cars,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('compareCars', JSON.stringify(data));
+    }
+
+    function addToCompare(carId) {
+        let compareCars = getCompareCars();
+
+        if (compareCars.includes(carId)) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Already Added',
+                    text: 'This car is already in the compare list.',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                alert('This car is already in the compare list.');
+            }
+            return;
+        }
+
+        if (compareCars.length >= 3) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Limit Reached',
+                    text: 'Maximum 3 cars allowed to compare.',
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+            } else {
+                alert('Maximum 3 cars allowed to compare.');
+            }
+            return;
+        }
+
+        compareCars.push(carId);
+        setCompareCars(compareCars);
+
+        updateCompareIcon();
+
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'success',
+                title: 'Added!',
+                text: 'Car added to compare list.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } else {
+            alert('Car added to compare list!');
+        }
+    }
+
+    function removeFromCompare(carId) {
+        let compareCars = getCompareCars();
+        const index = compareCars.indexOf(carId);
+        if (index > -1) {
+            compareCars.splice(index, 1);
+            setCompareCars(compareCars);
+            updateCompareIcon();
+        }
+    }
+
+    // Update compare icon count in navbar
+    function updateCompareIcon() {
+        const count = getCompareCars().length;
+        const icon = document.querySelector('#compare-count');
+        if (icon) {
+            icon.textContent = count;
+        }
+
+        // Update checkboxes
+        const compareCars = getCompareCars();
+        document.querySelectorAll('.compare-checkbox').forEach(checkbox => {
+            const carId = checkbox.dataset.carId;
+            checkbox.checked = compareCars.includes(carId);
+        });
+    }
+
+    // Initialize count on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCompareIcon();
+    });
+</script>
 @endsection
