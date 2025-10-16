@@ -390,7 +390,7 @@
                     <div class="topbar-left text-lg-start text-center">
                         <ul class="list-inline mb-0" style="display: flex; align-items: center;">
                             <li class="list-inline-item">
-                                <i class="fa-solid fa-envelope"></i> topmotor@gmail.com
+                                <i class="fa-solid fa-envelope"></i> info@topmotar.com
                             </li>
                             <li class="list-inline-item">
                                 <i class="fa fa-phone"></i>0 780 480 980 / 072 806 3532
@@ -498,9 +498,6 @@
                                     </li>
                                     <li class="{{ request()->routeIs('car.auction') ? 'active' : '' }} mx-2">
                                         <a href="{{ route('car.auction') }}" class="nav-link">Car Auction</a>
-                                    </li>
-                                    <li class="{{ request()->routeIs('promotions.index') ? 'active' : '' }} mx-2">
-                                        <a href="{{ route('promotions.index') }}" class="nav-link">Promoted</a>
                                     </li>
                                     <li class="{{ request()->routeIs('user.profile') ? 'active' : '' }} mx-2">
                                         <a href="{{ route('user.profile') }}" class="nav-link">Profile</a>
@@ -703,7 +700,7 @@
                             <li> <i class="fa fa-map-marker"></i><span>Kart-e-Mamorin, Khushal khan Mena, Kabul,
                                     Afghanistan</span> </li>
                             <li> <i class="fa fa-phone"></i><span>0 780 480 980 / 072 806 3532 </span> </li>
-                            <li> <i class="fa-solid fa-envelope"></i><span>topmotor@gmail.com</span> </li>
+                            <li> <i class="fa-solid fa-envelope"></i><span>info@topmotar.com</span> </li>
                         </ul>
                     </div>
                 </div>

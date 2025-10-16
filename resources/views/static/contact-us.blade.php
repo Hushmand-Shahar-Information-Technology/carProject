@@ -69,7 +69,7 @@
                                         </div>
                                         <div class="flex-grow-1">
                                             <h6 class="mb-1">Email Address</h6>
-                                            <p class="mb-0">topmotor@gmail.com</p>
+                                            <p class="mb-0">info@topmotar.com</p>
                                         </div>
                                     </div>
                                 </li>
