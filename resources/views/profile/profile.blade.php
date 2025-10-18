@@ -415,9 +415,14 @@
                     </div>
                 </div>
                 @if (auth()->check() && $user->id === auth()->id())
-                    <button type="button" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-6 rounded-lg transition-colors w-full sm:w-auto" id="edit-profile-btn">
-                        <i class="fas fa-edit mr-2"></i> Edit Profile
-                    </button>
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <button type="button" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-4 rounded-lg transition-colors flex-1" id="share-profile-btn">
+                            <i class="fas fa-share-alt mr-2"></i> Share
+                        </button>
+                        <button type="button" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-4 rounded-lg transition-colors flex-1" id="edit-profile-btn">
+                            <i class="fas fa-edit mr-2"></i> Edit
+                        </button>
+                    </div>
                 @endif
             </div>
         </div>
@@ -1278,6 +1283,15 @@
             const profileShareBtn = document.querySelector('.fa-share');
             if (profileShareBtn) {
                 profileShareBtn.closest('button').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    shareModal.style.display = 'block';
+                });
+            }
+
+            // NEW: Open share modal when the share profile button is clicked
+            const shareProfileBtn = document.getElementById('share-profile-btn');
+            if (shareProfileBtn) {
+                shareProfileBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     shareModal.style.display = 'block';
                 });
