@@ -7,7 +7,7 @@
             document.addEventListener('DOMContentLoaded', function() {
                 Swal.fire({
                     title: 'Action Not Allowed',
-                    text: "{{ session('swal_error') }}",
+                    text: "<?php echo e(session('swal_error')); ?>",
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -15,43 +15,104 @@
         </script>
     @endif
 
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com" rel="preconnect" />
-    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#dc2626",
-                        "background-light": "#f5f6f8",
-                        "background-dark": "#0f1623",
-                    },
-                    fontFamily: {
-                        display: ["Inter"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.5rem",
-                        lg: "1rem",
-                        xl: "1.5rem",
-                        full: "9999px",
-                    },
-                },
-            },
-        };
-    </script>
     <style>
-        .material-symbols-outlined {
-            font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+        /* Your existing CSS styles remain exactly the same */
+        .new-post {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
         }
 
-        /* Preserve existing functionality styles */
         .new-post-circle {
+            width: 60px;
+            height: 50px;
+            border: 2px dashed #363636;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
             cursor: pointer;
         }
 
+        .new-post-circle:hover {
+            border-color: #555;
+        }
+
+        .new-post-circle i {
+            font-size: 24px;
+            color: #a8a8a8;
+        }
+
+        .new-post-label {
+            font-size: 12px;
+            color: #a8a8a8;
+            font-weight: 600;
+        }
+
+        .nav-tabs {
+            border-bottom: 1px solid #867272;
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs .nav-link {
+            color: #a8a8a8;
+            border: none;
+            padding: 15px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            background-color: #f8f9fa;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: #fff;
+            background-color: #363636;
+            border-bottom: 1px solid #fff;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: #fff;
+            border: none;
+            background-color: #555;
+        }
+
+        .posts-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+        }
+
+        .post-item {
+            aspect-ratio: 1;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .post-item img {
+            width: 70%;
+            height: 70%;
+            object-fit: cover;
+        }
+
+        .post-overlay {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 4px;
+            padding: 4px;
+        }
+
+        .post-overlay i {
+            color: #fff;
+            font-size: 12px;
+        }
+
+        /* Car overlay banner styles */
         .car-overlay-banner {
             position: absolute;
             top: 10px;
@@ -100,6 +161,29 @@
             opacity: 1;
         }
 
+        @media (max-width: 768px) {
+            .profile-img {
+                width: 40%;
+            }
+
+            .stats {
+                justify-content: center;
+            }
+        }
+
+        .hover-state:hover {
+            color: blue;
+            text-decoration: underline;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .promotion-card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -114,6 +198,130 @@
             top: 10px;
             right: 10px;
             z-index: 10;
+        }
+
+        #bargains-tab {
+            color: #212529;
+        }
+
+        .car-content a {
+            color: #212529;
+        }
+
+        .car-content a:hover {
+            color: #000;
+        }
+
+        .car-content {
+            color: #212529;
+        }
+
+        .car-item {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .dropdown-btn {
+            background-color: #363636;
+            color: white;
+            padding: 10px 15px;
+            font-size: 14px;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+            min-width: 160px;
+            text-align: left;
+            width: 100%;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 100%;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+            border-radius: 4px;
+            left: 0;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .profile-dropdown:hover .dropdown-content,
+        .profile-dropdown:focus-within .dropdown-content {
+            display: block;
+        }
+
+        .profile-dropdown:hover .dropdown-btn {
+            background-color: #555;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .status-approved {
+            background-color: #28a745;
+        }
+
+        .status-pending {
+            background-color: #ffc107;
+        }
+
+        .status-blocked {
+            background-color: #dc3545;
+        }
+
+        .status-restricted {
+            background-color: #fd7e14;
+        }
+
+        .bargain-profile-view {
+            display: none;
+        }
+
+        .user-profile-view {
+            display: block;
+        }
+
+        .notifications-container {
+            max-width: 100%;
         }
 
         .notification-card {
@@ -134,6 +342,124 @@
         .notification-card.unread {
             border-left: 4px solid #007bff;
             background-color: #f8f9ff;
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .notification-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-right: 15px;
+            background-color: #f1f3f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-size: 20px;
+        }
+
+        .notification-info {
+            flex: 1;
+        }
+
+        .notification-sender {
+            font-weight: 600;
+            color: #212529;
+            margin-bottom: 3px;
+        }
+
+        .notification-car-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+
+        .notification-body {
+            padding: 15px;
+        }
+
+        .notification-details {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .detail-item {
+            flex: 1 1 50%;
+            min-width: 200px;
+            margin-bottom: 10px;
+        }
+
+        .detail-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-weight: 500;
+            color: #212529;
+        }
+
+        .notification-actions {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .mark-as-read-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .mark-as-read-btn:hover {
+            background-color: #0056b3;
+            transform: translateY(-1px);
+        }
+
+        .read-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #28a745;
+            margin-left: 10px;
+        }
+
+        .unread-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #007bff;
+            margin-left: 10px;
+        }
+
+        .no-notifications {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+
+        .no-notifications i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #ced4da;
         }
 
         .fixed-img {
@@ -183,6 +509,50 @@
 
         .car-content .price {
             margin-top: auto;
+        }
+
+        .modern-tabs {
+            display: flex;
+            border-bottom: 2px solid #e2e8f0;
+            margin-bottom: 30px;
+            padding: 0;
+        }
+
+        .modern-tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #718096;
+            transition: all 0.3s ease;
+            position: relative;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: -2px;
+        }
+
+        .modern-tab:hover {
+            color: #4a5568;
+            background-color: #f7fafc;
+        }
+
+        .modern-tab.active {
+            color: #2d3748;
+            background-color: #ffffff;
+            border-bottom: 2px solid #3182ce;
+        }
+
+        .notification-count-badge {
+            background-color: #e53e3e;
+            color: white;
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .car-type-badge {
+            margin-right: 5px;
+            font-size: 0.75rem;
         }
 
         /* Profile Edit Modal Styles */
@@ -352,6 +722,11 @@
                 justify-content: center;
                 margin-top: 10px;
             }
+
+            .modern-tab {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
         }
 
         @media (max-width: 576px) {
@@ -362,6 +737,224 @@
             .notification-header,
             .notification-body {
                 padding: 12px;
+            }
+
+            .modern-tabs {
+                flex-wrap: wrap;
+            }
+
+            .modern-tab {
+                flex: 1 0 auto;
+                text-align: center;
+                margin-bottom: 0;
+            }
+
+            /* Bootstrap Newsletter Styles */
+            #newsletter-tab {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                min-height: 100vh;
+                padding: 2rem 0;
+            }
+
+            .newsletter-header-card {
+                border: none;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            }
+
+            .newsletter-header-card .card-body {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-radius: 0.375rem;
+            }
+
+            .newsletter-icon {
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.05);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
+            }
+
+            .newsletter-form-card {
+                border: none;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                border-radius: 15px;
+                overflow: hidden;
+            }
+
+            .newsletter-form-card .card-header {
+                border-radius: 15px 15px 0 0;
+                background: linear-gradient(135deg, #007bff 0%, #0056b3 100%) !important;
+            }
+
+            .input-group-lg .form-control {
+                border-radius: 0 0.375rem 0.375rem 0;
+                border-left: none;
+            }
+
+            .input-group-lg .input-group-text {
+                border-radius: 0.375rem 0 0 0.375rem;
+                border-right: none;
+            }
+
+            .form-control:focus {
+                border-color: #007bff;
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+            }
+
+            .status-card {
+                border: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                border-radius: 15px;
+            }
+
+            .benefits-card {
+                border: none;
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+                border-radius: 15px;
+            }
+
+            .benefits-card .card-header {
+                border-radius: 15px 15px 0 0;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+                border-bottom: 1px solid #dee2e6;
+            }
+
+            .benefit-item {
+                padding: 1rem;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+            }
+
+            .benefit-item:hover {
+                background: rgba(0, 123, 255, 0.05);
+                transform: translateY(-5px);
+            }
+
+            .benefit-icon {
+                transition: all 0.3s ease;
+            }
+
+            .benefit-item:hover .benefit-icon {
+                transform: scale(1.1);
+            }
+
+            .btn-lg {
+                padding: 0.75rem 1.5rem;
+                font-size: 1.1rem;
+                border-radius: 10px;
+                transition: all 0.3s ease;
+            }
+
+            .btn-lg:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            }
+
+            .card {
+                transition: all 0.3s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+            }
+
+            .btn-subscribe,
+            .btn-unsubscribe {
+                display: inline-flex;
+                align-items: center;
+                padding: 15px 35px;
+                font-size: 16px;
+                font-weight: 600;
+                border-radius: 50px;
+                border: none;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .btn-subscribe {
+                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                color: white;
+                box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+            }
+
+            .btn-unsubscribe {
+                background: linear-gradient(135deg, #dc3545 0%, #e74c3c 100%);
+                color: white;
+                box-shadow: 0 8px 20px rgba(220, 53, 69, 0.3);
+            }
+
+            .btn-subscribe:hover,
+            .btn-unsubscribe:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn-subscribe:active,
+            .btn-unsubscribe:active {
+                transform: translateY(-1px);
+            }
+
+            .btn-subscribe i,
+            .btn-unsubscribe i {
+                margin-right: 10px;
+                font-size: 14px;
+            }
+
+            .newsletter-benefits {
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+                padding: 25px;
+                border-radius: 15px;
+                border: 1px solid #dee2e6;
+            }
+
+            .newsletter-benefits h5 {
+                margin: 0 0 20px 0;
+                font-size: 18px;
+                font-weight: 600;
+                color: #495057;
+            }
+
+            .newsletter-benefits ul {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .newsletter-benefits li {
+                display: flex;
+                align-items: center;
+                padding: 12px 0;
+                font-size: 15px;
+                color: #6c757d;
+                border-bottom: 1px solid rgba(222, 226, 230, 0.5);
+            }
+
+            .newsletter-benefits li:last-child {
+                border-bottom: none;
+            }
+
+            .newsletter-benefits li i {
+                margin-right: 15px;
+                font-size: 16px;
+                color: #667eea;
+                width: 20px;
+                text-align: center;
             }
         }
     </style>
@@ -387,262 +980,194 @@
         </div>
     </section>
 
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Profile Header with Gradient Background -->
-        <div class="bg-gradient-to-r from-red-600 to-red-800 rounded-xl p-6 mb-8 shadow-lg text-white">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="relative inline-block">
-                        <img src="{{ $user->avatar && $user->avatar !== 'avatar.png' ? asset('storage/' . $user->avatar) : asset('images/demo.jpg') }}"
-                            class="rounded-full w-24 h-24 border-4 border-white/50 object-cover" alt="Profile Picture" id="profile-image">
-                        @if (auth()->check() && $user->id === auth()->id())
-                            <div class="absolute bottom-0 right-0">
-                                <button type="button" class="bg-white/20 hover:bg-white/30 text-white rounded-full p-2 shadow"
-                                    id="edit-profile-image-btn">
-                                    <i class="fas fa-camera"></i>
-                                </button>
-                                <!-- Hidden file input for direct upload -->
-                                <input type="file" id="avatar-input" name="avatar" accept="image/*"
-                                    style="display: none;">
-                            </div>
-                        @endif
-                    </div>
-                    <div>
-                        <h1 class="text-3xl font-bold" id="profile-name">
-                            {{ $activeBargain ? $activeBargain->username : $user->name }}
-                        </h1>
-                        <p class="text-white/80 text-lg">User</p>
-                    </div>
-                </div>
-                @if (auth()->check() && $user->id === auth()->id())
-                    <button type="button" class="bg-white/10 hover:bg-white/20 text-white font-bold py-2 px-6 rounded-lg transition-colors w-full sm:w-auto" id="edit-profile-btn">
-                        <i class="fas fa-edit mr-2"></i> Edit Profile
-                    </button>
-                @endif
-            </div>
-        </div>
-
-        <!-- Profile Information Card -->
-        {{-- <div class="bg-background-light dark:bg-gray-800/20 rounded-xl p-4 mb-6 shadow-sm">
-            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Profile Information
-            </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-gray-700 dark:text-gray-300">
-                <div class="flex justify-between py-2">
-                    <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Name:</span>
-                    <span id="profile-display-name" class="font-medium">{{ $activeBargain ? $activeBargain->username : $user->name }}</span>
-                </div>
-                <div class="flex justify-between py-2">
-                    <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Email:</span>
-                    <span id="profile-email" class="font-medium">{{ $user->email }}</span>
-                </div>
-                <div class="flex justify-between py-2">
-                    <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Phone:</span>
-                    <span id="profile-phone" class="font-medium">{{ $user->phone ?? 'N/A' }}</span>
-                </div>
-                <div class="flex justify-between py-2">
-                    <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Location:</span>
-                    <span id="profile-location" class="font-medium">{{ $activeBargain ? $activeBargain->address ?? 'N/A' : 'Location not set' }}</span>
-                </div>
-                <div class="flex justify-between py-2 sm:col-span-2">
-                    <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Posts:</span>
-                    <span id="post-count" class="font-medium">{{ $user->cars->count() }}</span>
-                </div>
-            </div>
-        </div> --}}
-        <div class="bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-            <!-- Enhanced Profile Card -->
-                <div class="profile-card rounded-2xl p-6 mb-6 shadow-lg border border-gray-100 dark:border-gray-700 backdrop-blur-sm">
-                    <div class="flex items-center mb-6">
-                        <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4 shadow-md">
-                            <i class="fas fa-user text-white"></i>
+    <div class="container">
+        <div class="my-5">
+            <div class="card shadow-sm" style="margin: 0 auto;">
+                <div class="row g-0">
+                    <div class="col-md-4 p-3 text-center">
+                        <div class="position-relative d-inline-block">
+                            <img src="{{ $user->avatar && $user->avatar !== 'avatar.png' ? asset('storage/' . $user->avatar) : asset('images/demo.jpg') }}"
+                                class="rounded-circle img-thumbnail profile-img" alt="Profile Picture" id="profile-image"
+                                style="width: 150px; height: 150px; object-fit: cover;">
+                            @if (auth()->check() && $user->id === auth()->id())
+                                <div class="position-absolute bottom-0 end-0">
+                                    <button type="button" class="btn btn-primary rounded-circle p-2 shadow"
+                                        id="edit-profile-image-btn" style="width: 40px; height: 40px;">
+                                        <i class="fas fa-camera"></i>
+                                    </button>
+                                    <!-- Hidden file input for direct upload -->
+                                    <input type="file" id="avatar-input" name="avatar" accept="image/*"
+                                        style="display: none;">
+                                </div>
+                            @endif
                         </div>
-                        <div>
-                            <h2 class="text-xl font-bold text-gray-900 dark:text-white">
-                                Profile Information
-                            </h2>
+                        <div class="mt-2">
+                            <!-- <span class="badge bg-success">Online</span> -->
                         </div>
                     </div>
-
-                    <div class="space-y-1">
-                        <div class="info-item flex justify-between py-3 px-4 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mr-3">
-                                    <i class="fas fa-user-tag text-blue-600 dark:text-blue-400 text-sm"></i>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title d-flex justify-content-between align-items-center">
+                                <span id="profile-name">{{ $activeBargain ? $activeBargain->username : $user->name }}</span>
+                                @if (auth()->check() && $user->id === auth()->id())
+                                    <div>
+                                        <button type="button" class="btn btn-sm btn-outline-primary" id="edit-profile-btn">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                    </div>
+                                @endif
+                            </h5>
+                            <p class="card-text text-muted">
+                                <i class="fas fa-briefcase"></i> <span id="profile-email">{{ $user->email }}</span>
+                            </p>
+                            @if ($user->phone)
+                                <p class="card-text text-muted">
+                                    <i class="fas fa-phone"></i> <span id="profile-phone">{{ $user->phone }}</span>
+                                </p>
+                            @endif
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <i class="fas fa-map-marker-alt"></i> <span
+                                        id="profile-location">{{ $activeBargain ? $activeBargain->address ?? 'N/A' : 'Location not set' }}</span>
+                                </small>
+                            </p>
+                            <div class="border-top pt-2">
+                                <div class="row text-center">
+                                    <div class="col">
+                                        <h6>Post</h6>
+                                        <strong id="post-count">{{ $user->cars->count() }}</strong>
+                                    </div>
                                 </div>
-                                <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Name:</span>
                             </div>
-                            <span id="profile-display-name" class="font-medium text-gray-900 dark:text-white">{{ $activeBargain ? $activeBargain->username : $user->name }}</span>
                         </div>
-
-                        <div class="info-item flex justify-between py-3 px-4 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center mr-3">
-                                    <i class="fas fa-envelope text-green-600 dark:text-green-400 text-sm"></i>
-                                </div>
-                                <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Email:</span>
-                            </div>
-                            <span id="profile-email" class="font-medium text-gray-900 dark:text-white">{{ $user->email }}</span>
-                        </div>
-
-                        <div class="info-item flex justify-between py-3 px-4 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mr-3">
-                                    <i class="fas fa-phone text-purple-600 dark:text-purple-400 text-sm"></i>
-                                </div>
-                                <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Phone:</span>
-                            </div>
-                            <span id="profile-phone" class="font-medium text-gray-900 dark:text-white">{{ $user->phone ?? 'N/A' }}</span>
-                        </div>
-
-                        <div class="info-item flex justify-between py-3 px-4 rounded-lg">
-                            <div class="flex items-center">
-                                <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mr-3">
-                                    <i class="fas fa-map-marker-alt text-amber-600 dark:text-amber-400 text-sm"></i>
-                                </div>
-                                <span class="font-medium text-gray-500 dark:text-gray-400 text-sm">Location:</span>
-                            </div>
-                            <span id="profile-location" class="font-medium text-gray-900 dark:text-white">{{ $activeBargain ? $activeBargain->address ?? 'N/A' : 'Location not set' }}</span>
-                        </div>
-
                     </div>
                 </div>
-        </div>
-
-        <!-- Statistics Section -->
-        <div class="mb-6">
-            <h2 class="text-xl font-bold mb-4 text-gray-900 dark:text-white">
-                Statistics
-            </h2>
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <div class="bg-background-light dark:bg-gray-800/20 rounded-lg p-4 shadow-sm flex flex-col items-center text-center">
-                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                        Total Cars
-                    </p>
-                    <p class="text-2xl font-bold text-primary mt-1" id="total-cars-count">
-                        {{ $user->cars->count() }}
-                    </p>
-                </div>
-                <div class="bg-background-light dark:bg-gray-800/20 rounded-lg p-4 shadow-sm flex flex-col items-center text-center">
-                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                        For Sale
-                    </p>
-                    <p class="text-2xl font-bold text-primary mt-1" id="for-sale-count">
-                        {{ $user->cars->where('is_for_sale', true)->count() }}
-                    </p>
-                </div>
-                <div class="bg-background-light dark:bg-gray-800/20 rounded-lg p-4 shadow-sm flex flex-col items-center text-center">
-                    <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                        For Rent
-                    </p>
-                    <p class="text-2xl font-bold text-primary mt-1" id="for-rent-count">
-                        {{ $user->cars->where('is_for_rent', true)->count() }}
-                    </p>
+                <div class="card-footer bg-white">
+                    <div class="d-flex justify-content-around">
+                        <button class="btn btn-link text-decoration-none">
+                            <i class="fas fa-envelope"></i> Message
+                        </button>
+                        <button class="btn btn-link text-decoration-none">
+                            <i class="fas fa-share"></i> Share
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- New Post Section -->
         @if (auth()->check() && $user->id === auth()->id())
-            <a href="{{ route('car.create') }}" id="new-car-link" class="block mb-6">
-                <div class="new-post flex flex-col items-center">
-                    <div class="new-post-circle w-12 h-12 border-2 border-dashed border-gray-400 rounded-full flex items-center justify-center hover:border-gray-600">
-                        <i class="fas fa-plus text-lg text-gray-500"></i>
+            <a href="{{ route('car.create') }}" id="new-car-link">
+                <div class="new-post">
+                    <div class="new-post-circle">
+                        <i class="fas fa-plus"></i>
                     </div>
-                    <div class="new-post-label text-xs text-gray-500 font-medium mt-1">New Car</div>
+                    <div class="new-post-label">New Car</div>
                 </div>
             </a>
         @endif
 
         <!-- Modern Tab Navigation -->
-        <div class="border-b border-gray-200 dark:border-gray-700 mb-4">
-            <nav class="flex space-x-6">
-                <button class="modern-tab py-3 px-1 border-b-2 font-medium text-sm active border-primary text-primary" data-tab="cars">
-                    Cars ({{ $user->cars->count() }})
-                </button>
-                @if (auth()->check() && $user->id === auth()->id())
-                    <button class="modern-tab py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="notifications">
-                        Notifications <span class="notification-count-badge bg-red-500 text-white rounded-full px-2 py-1 text-xs ml-2" id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
-                    </button>
-                    <button class="modern-tab py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" data-tab="newsletter">
-                        Newsletter
-                    </button>
-                @endif
-            </nav>
+        <div class="modern-tabs">
+            <div class="modern-tab active" data-tab="cars">
+                Cars ({{ $user->cars->count() }})
+            </div>
+            @if (auth()->check() && $user->id === auth()->id())
+                <div class="modern-tab" data-tab="notifications">
+                    Notifications <span class="notification-count-badge"
+                        id="notification-count">{{ auth()->user()->unreadNotifications->count() }}</span>
+                </div>
+                <div class="modern-tab" data-tab="newsletter">
+                    Newsletter
+                </div>
+            @endif
         </div>
 
-        <!-- Cars Tab Content -->
+        <!-- Cars Tab Content - Only show user cars -->
         <div id="cars-tab" class="tab-content active">
             <div class="sorting-options-main">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4" id="user-cars-container">
+                <div class="row" id="user-cars-container">
                     @forelse ($user->cars as $car)
-                        <div class="car-item bg-background-light dark:bg-gray-800/20 rounded-xl shadow-md overflow-hidden group promotion-card">
-                            @if ($car->is_promoted)
-                                <span class="badge bg-success badge-promotion bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">Promoted</span>
-                            @endif
-                            <div class="car-image relative">
-                                <img class="fixed-img w-full object-cover transition-transform duration-300 group-hover:scale-105" src="{{ asset($car->getFirstImageOrDefault()) }}" alt="{{ $car->title }}">
-                                <div class="car-overlay-banner">
-                                    <ul>
-                                        <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a></li>
-                                        <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-shopping-cart"></i></a></li>
-                                        @can('update', $car)
-                                            <li>
-                                                <a href="#" class="edit-car-btn" data-car-id="{{ $car->id }}" data-car-data="{{ json_encode($car) }}">
-                                                    <i class="fa fa-edit"></i>
-                                                </a>
+                        <div class="col-lg-4 col-md-6 mb-4">
+                            <div class="car-item gray-bg text-center promotion-card">
+                                @if ($car->is_promoted)
+                                    <span class="badge bg-success badge-promotion">Promoted</span>
+                                @endif
+                                <div class="car-image">
+                                    <img class="fixed-img" src="{{ asset($car->getFirstImageOrDefault()) }}"
+                                        alt="{{ $car->title }}">
+                                    <div class="car-overlay-banner">
+                                        <ul>
+                                            <li><a href="{{ route('car.show', $car->id) }}"><i class="fa fa-link"></i></a>
                                             </li>
-                                        @endcan
-                                        @can('delete', $car)
-                                            <li>
-                                                <a href="#" class="delete-car-btn" data-car-id="{{ $car->id }}" data-car-title="{{ $car->make }} {{ $car->model }}">
-                                                    <i class="fa fa-trash"></i>
-                                                </a>
-                                            </li>
-                                        @endcan
+                                            <li><a href="{{ route('car.show', $car->id) }}"><i
+                                                        class="fa fa-shopping-cart"></i></a></li>
+                                            @can('update', $car)
+                                                <li>
+                                                    <a href="#" class="edit-car-btn" data-car-id="{{ $car->id }}"
+                                                        data-car-data="{{ json_encode($car) }}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                            @can('delete', $car)
+                                                <li>
+                                                    <a href="#" class="delete-car-btn"
+                                                        data-car-id="{{ $car->id }}"
+                                                        data-car-title="{{ $car->make }} {{ $car->model }}">
+                                                        <i class="fa fa-trash"></i>
+                                                    </a>
+                                                </li>
+                                            @endcan
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div class="car-list">
+                                    <ul class="list-inline">
+                                        <li><i class="fa fa-registered"></i> {{ $car->year }}</li>
+                                        <li><i class="fa fa-cog"></i> {{ $car->transmission_type }} </li>
+                                        <li><i class="fa fa-shopping-cart"></i> {{ $car->currency_type }}
+                                            {{ number_format($car->regular_price) }}
+                                        </li>
                                     </ul>
                                 </div>
-                            </div>
-                            <div class="car-list p-2">
-                                <ul class="flex justify-between text-xs text-gray-600 dark:text-gray-400">
-                                    <li><i class="fa fa-registered"></i> {{ $car->year }}</li>
-                                    <li><i class="fa fa-cog"></i> {{ $car->transmission_type }} </li>
-                                    <li><i class="fa fa-shopping-cart"></i> {{ $car->currency_type }} {{ number_format($car->regular_price) }}</li>
-                                </ul>
-                            </div>
-                            <div class="car-content p-4">
-                                <div class="star mb-2">
-                                    <i class="fa fa-star text-yellow-400"></i>
-                                    <i class="fa fa-star text-yellow-400"></i>
-                                    <i class="fa fa-star text-yellow-400"></i>
-                                    <i class="fa fa-star text-yellow-400"></i>
-                                    <i class="fa fa-star-o text-yellow-400"></i>
-                                </div>
-                                <a href="{{ route('car.show', $car->id) }}" class="text-lg font-bold text-gray-900 dark:text-white">{{ $car->make }} {{ $car->model }}</a>
-                                <div class="separator my-2 border-t border-gray-200 dark:border-gray-700"></div>
-                                <div class="price">
-                                    <span class="new-price text-primary font-semibold">{{ $car->currency_type }} {{ number_format($car->regular_price) }}</span>
-                                </div>
-                                <div class="mt-2 flex flex-wrap gap-1">
-                                    @if ($car->is_for_sale)
-                                        <span class="badge bg-success bg-green-500 text-white text-xs px-2 py-1 rounded">For Sale</span>
-                                    @endif
-                                    @if ($car->is_for_rent)
-                                        <span class="badge bg-info bg-red-500 text-white text-xs px-2 py-1 rounded">For Rent</span>
-                                    @endif
-                                    @if ($car->auctions && $car->auctions->count() > 0)
-                                        <span class="badge bg-warning bg-yellow-500 text-white text-xs px-2 py-1 rounded">Auction</span>
-                                    @endif
-                                    @if ($car->request_price_status)
-                                        <span class="badge bg-primary text-white text-xs px-2 py-1 rounded">Request Price: {{ $car->currency_type }} {{ number_format($car->request_price) }}</span>
-                                    @endif
+                                <div class="car-content">
+                                    <div class="star">
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star orange-color"></i>
+                                        <i class="fa fa-star-o orange-color"></i>
+                                    </div>
+                                    <a href="{{ route('car.show', $car->id) }}">{{ $car->make }}
+                                        {{ $car->model }}</a>
+                                    <div class="separator"></div>
+                                    <div class="price">
+                                        <span class="new-price">{{ $car->currency_type }}
+                                            {{ number_format($car->regular_price) }}</span>
+                                    </div>
+                                    <div class="mt-2">
+                                        @if ($car->is_for_sale)
+                                            <span class="badge bg-success">For Sale</span>
+                                        @endif
+                                        @if ($car->is_for_rent)
+                                            <span class="badge bg-info">For Rent</span>
+                                        @endif
+                                        @if ($car->auctions && $car->auctions->count() > 0)
+                                            <span class="badge bg-warning">Auction</span>
+                                        @endif
+                                        @if ($car->request_price_status)
+                                            <span class="badge bg-primary">Request Price: {{ $car->currency_type }}
+                                                {{ number_format($car->request_price) }}</span>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     @empty
-                        <div class="col-span-full">
-                            <div class="alert alert-info text-center bg-red-100 text-red-800 p-6 rounded-lg">
-                                <i class="fas fa-car mr-2"></i> No cars posted yet.
+                        <div class="col-12">
+                            <div class="alert alert-info text-center">
+                                <i class="fas fa-car me-2"></i> No cars posted yet.
                             </div>
                         </div>
                     @endforelse
@@ -651,69 +1176,67 @@
         </div>
 
         <!-- Notifications Tab Content -->
-        <div id="notifications-tab" class="tab-content hidden">
+        <div id="notifications-tab" class="tab-content">
             <div class="notifications-container">
                 @if (auth()->user()->notifications->count() > 0)
                     @foreach (auth()->user()->notifications as $notification)
-                        <div class="notification-card {{ $notification->read_at ? '' : 'unread' }} bg-white dark:bg-gray-800"
+                        <div class="notification-card {{ $notification->read_at ? '' : 'unread' }}"
                             data-notification-id="{{ $notification->id }}"
                             data-car-url="{{ route('car.show', $notification->data['car_id']) }}">
-                            <div class="notification-header p-4 border-b border-gray-200 dark:border-gray-700">
-                                <div class="flex items-center">
-                                    <div class="notification-image w-12 h-12 rounded-lg bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500">
-                                        <i class="fas fa-car"></i>
-                                    </div>
-                                    <div class="notification-info ml-4 flex-1">
-                                        <div class="flex justify-between">
-                                            <div>
-                                                <div class="notification-sender font-bold text-gray-900 dark:text-white">
-                                                    {{ $notification->data['sender_name'] }}
-                                                </div>
-                                                <div class="notification-car-title text-sm text-gray-600 dark:text-gray-400">
-                                                    <a href="{{ route('car.show', $notification->data['car_id']) }}"
-                                                        class="text-decoration-none hover:underline">
-                                                        {{ $notification->data['car_title'] }}
-                                                    </a>
-                                                </div>
+                            <div class="notification-header">
+                                <div class="notification-image">
+                                    <i class="fas fa-car"></i>
+                                </div>
+                                <div class="notification-info">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <div class="notification-sender">{{ $notification->data['sender_name'] }}
                                             </div>
-                                            <div class="flex items-center">
-                                                <div class="notification-time text-xs text-gray-500 dark:text-gray-400">
-                                                    {{ $notification->created_at->diffForHumans() }}
-                                                </div>
-                                                @if (!$notification->read_at)
-                                                    <div class="unread-indicator w-2 h-2 rounded-full bg-red-500 ml-2" title="Unread"></div>
-                                                @else
-                                                    <div class="read-indicator w-2 h-2 rounded-full bg-green-500 ml-2" title="Read"></div>
-                                                @endif
+                                            <div class="notification-car-title">
+                                                <a href="{{ route('car.show', $notification->data['car_id']) }}"
+                                                    class="text-decoration-none">
+                                                    {{ $notification->data['car_title'] }}
+                                                </a>
                                             </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <div class="notification-time">
+                                                {{ $notification->created_at->diffForHumans() }}
+                                            </div>
+                                            @if (!$notification->read_at)
+                                                <div class="unread-indicator" title="Unread"></div>
+                                            @else
+                                                <div class="read-indicator" title="Read"></div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="notification-body p-4">
-                                <div class="notification-details grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div class="notification-body">
+                                <div class="notification-details">
                                     <div class="detail-item">
-                                        <div class="detail-label text-xs text-gray-500 dark:text-gray-400">Offer Price</div>
-                                        <div class="detail-value font-medium text-gray-900 dark:text-white">${{ number_format($notification->data['offer_price']) }}</div>
+                                        <div class="detail-label">Offer Price</div>
+                                        <div class="detail-value">${{ number_format($notification->data['offer_price']) }}
+                                        </div>
                                     </div>
                                     <div class="detail-item">
-                                        <div class="detail-label text-xs text-gray-500 dark:text-gray-400">Contact</div>
-                                        <div class="detail-value font-medium text-gray-900 dark:text-white">{{ $notification->data['sender_email'] }}</div>
+                                        <div class="detail-label">Contact</div>
+                                        <div class="detail-value">{{ $notification->data['sender_email'] }}</div>
                                     </div>
                                     <div class="detail-item">
-                                        <div class="detail-label text-xs text-gray-500 dark:text-gray-400">Phone</div>
-                                        <div class="detail-value font-medium text-gray-900 dark:text-white">{{ $notification->data['sender_phone'] ?? 'N/A' }}</div>
+                                        <div class="detail-label">Phone</div>
+                                        <div class="detail-value">{{ $notification->data['sender_phone'] ?? 'N/A' }}</div>
                                     </div>
                                     @if ($notification->data['remark'])
                                         <div class="detail-item">
-                                            <div class="detail-label text-xs text-gray-500 dark:text-gray-400">Message</div>
-                                            <div class="detail-value font-medium text-gray-900 dark:text-white">{{ $notification->data['remark'] }}</div>
+                                            <div class="detail-label">Message</div>
+                                            <div class="detail-value">{{ $notification->data['remark'] }}</div>
                                         </div>
                                     @endif
                                 </div>
                                 @if (!$notification->read_at)
-                                    <div class="notification-actions flex justify-end">
-                                        <button class="mark-as-read-btn bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-full text-sm transition-colors" data-notification-id="{{ $notification->id }}">
+                                    <div class="notification-actions">
+                                        <button class="mark-as-read-btn" data-notification-id="{{ $notification->id }}">
                                             Mark as Read
                                         </button>
                                     </div>
@@ -722,125 +1245,143 @@
                         </div>
                     @endforeach
                 @else
-                    <div class="no-notifications text-center py-12">
-                        <i class="fas fa-bell-slash text-5xl text-gray-300 mb-4"></i>
-                        <h4 class="text-xl font-bold text-gray-900 dark:text-white mb-2">No Notifications</h4>
-                        <p class="text-gray-600 dark:text-gray-400">You don't have any offer notifications yet.</p>
+                    <div class="no-notifications">
+                        <i class="fas fa-bell-slash"></i>
+                        <h4>No Notifications</h4>
+                        <p>You don't have any offer notifications yet.</p>
                     </div>
                 @endif
             </div>
         </div>
 
         <!-- Newsletter Tab Content -->
-        <div id="newsletter-tab" class="tab-content hidden">
-            <div class="max-w-4xl mx-auto">
-                <!-- Newsletter Header Card -->
-                <div class="bg-gradient-to-r from-red-500 to-red-700 rounded-xl p-8 mb-6 text-white text-center shadow-lg">
-                    <div class="mb-4">
-                        <i class="fas fa-envelope-open-text text-4xl"></i>
-                    </div>
-                    <h2 class="text-2xl font-bold mb-2">Newsletter Subscription</h2>
-                    <p class="text-red-100">Stay updated with the latest car listings and exclusive offers</p>
-                </div>
-
-                <!-- Subscription Form Card -->
-                <div class="bg-background-light dark:bg-gray-800/20 rounded-xl shadow-md mb-6">
-                    <div class="bg-primary text-white p-4 rounded-t-xl">
-                        <h5 class="text-lg font-bold mb-0">
-                            <i class="fas fa-envelope mr-2"></i>
-                            Newsletter Subscription
-                        </h5>
-                    </div>
-                    <div class="p-6">
-                        <p class="text-gray-600 dark:text-gray-400 mb-6">Enter your email to subscribe or unsubscribe from our newsletter</p>
-
-                        <form id="profile-newsletter-form" class="mb-6">
-                            @csrf
-                            <div class="mb-6">
-                                <label for="profile-email" class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-2">Email Address</label>
-                                <div class="flex">
-                                    <span class="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
-                                        <i class="fas fa-envelope"></i>
-                                    </span>
-                                    <input type="email" id="profile-email-input" name="email"
-                                        class="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-gray-300 focus:ring-red-500 focus:border-red-500"
-                                        value="{{ auth()->user()->email }}" required>
+        <div id="newsletter-tab" class="tab-content">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-lg-8 col-md-10">
+                        <!-- Newsletter Header Card -->
+                        <div class="card newsletter-header-card mb-4">
+                            <div class="card-body text-center py-5">
+                                <div class="newsletter-icon mb-3">
+                                    <i class="fas fa-envelope-open-text fa-3x text-primary"></i>
                                 </div>
-                                <p class="mt-2 text-sm text-gray-500">We'll use this email to send you newsletter updates</p>
+                                <h2 class="card-title mb-3">Newsletter Subscription</h2>
+                                <p class="card-text text-muted lead">Stay updated with the latest car listings and
+                                    exclusive offers</p>
                             </div>
+                        </div>
 
-                            <div class="grid grid-cols-1 gap-4">
+                        <!-- Subscription Form Card -->
+                        <div class="card newsletter-form-card mb-4">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-envelope me-2"></i>
+                                    Newsletter Subscription
+                                </h5>
+                            </div>
+                            <div class="card-body p-4">
+                                <p class="text-muted mb-4">Enter your email to subscribe or unsubscribe from our newsletter
+                                </p>
+
+                                <form id="profile-newsletter-form" class="subscription-form">
+                                    @csrf
+                                    <div class="mb-4">
+                                        <label for="profile-email" class="form-label fw-bold">Email Address</label>
+                                        <div class="input-group input-group-lg">
+                                            <span class="input-group-text bg-light border-end-0">
+                                                <i class="fas fa-envelope text-muted"></i>
+                                            </span>
+                                            <input type="email" id="profile-email" name="email"
+                                                class="form-control border-start-0" placeholder="Enter your email address"
+                                                value="{{ auth()->user()->email }}" required>
+                                        </div>
+                                        <div class="form-text">We'll use this email to send you newsletter updates</div>
+                                    </div>
+
+                                    <div class="d-grid gap-2">
+                                        @if (auth()->user()->newsletter_subscribed)
+                                            <button type="button" class="btn btn-danger btn-lg" id="unsubscribe-btn">
+                                                <i class="fas fa-times me-2"></i>
+                                                Unsubscribe from Newsletter
+                                            </button>
+                                        @else
+                                            <button type="button" class="btn btn-success btn-lg" id="subscribe-btn">
+                                                <i class="fas fa-check me-2"></i>
+                                                Subscribe to Newsletter
+                                            </button>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Current Status Card -->
+                        <div class="card status-card mb-4">
+                            <div class="card-body">
                                 @if (auth()->user()->newsletter_subscribed)
-                                    <button type="button" class="btn btn-danger bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-lg transition-colors" id="unsubscribe-btn">
-                                        <i class="fas fa-times mr-2"></i>
-                                        Unsubscribe from Newsletter
-                                    </button>
+                                    <div class="d-flex align-items-center">
+                                        <div class="status-icon me-3">
+                                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                                        </div>
+                                        <div class="status-content">
+                                            <h5 class="card-title text-success mb-1">Currently Subscribed</h5>
+                                            <p class="card-text text-muted mb-0">You're receiving newsletter notifications
+                                            </p>
+                                        </div>
+                                    </div>
                                 @else
-                                    <button type="button" class="btn btn-success bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition-colors" id="subscribe-btn">
-                                        <i class="fas fa-check mr-2"></i>
-                                        Subscribe to Newsletter
-                                    </button>
+                                    <div class="d-flex align-items-center">
+                                        <div class="status-icon me-3">
+                                            <i class="fas fa-times-circle fa-2x text-danger"></i>
+                                        </div>
+                                        <div class="status-content">
+                                            <h5 class="card-title text-danger mb-1">Not Subscribed</h5>
+                                            <p class="card-text text-muted mb-0">Subscribe to receive newsletter
+                                                notifications</p>
+                                        </div>
+                                    </div>
                                 @endif
                             </div>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Current Status Card -->
-                <div class="bg-background-light dark:bg-gray-800/20 rounded-xl shadow-md p-6 mb-6">
-                    @if (auth()->user()->newsletter_subscribed)
-                        <div class="flex items-center">
-                            <div class="mr-4">
-                                <i class="fas fa-check-circle text-3xl text-green-500"></i>
-                            </div>
-                            <div>
-                                <h5 class="text-lg font-bold text-green-600 mb-1">Currently Subscribed</h5>
-                                <p class="text-gray-600 dark:text-gray-400 mb-0">You're receiving newsletter notifications</p>
-                            </div>
                         </div>
-                    @else
-                        <div class="flex items-center">
-                            <div class="mr-4">
-                                <i class="fas fa-times-circle text-3xl text-red-500"></i>
-                            </div>
-                            <div>
-                                <h5 class="text-lg font-bold text-red-600 mb-1">Not Subscribed</h5>
-                                <p class="text-gray-600 dark:text-gray-400 mb-0">Subscribe to receive newsletter notifications</p>
-                            </div>
-                        </div>
-                    @endif
-                </div>
 
-                <!-- Benefits Card -->
-                <div class="bg-background-light dark:bg-gray-800/20 rounded-xl shadow-md">
-                    <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-t-xl">
-                        <h5 class="text-lg font-bold mb-0 text-gray-900 dark:text-white">
-                            <i class="fas fa-gift mr-2 text-primary"></i>
-                            What you'll receive:
-                        </h5>
-                    </div>
-                    <div class="p-6">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="text-center p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                <div class="mb-3">
-                                    <i class="fas fa-car text-2xl text-primary"></i>
-                                </div>
-                                <h6 class="font-bold text-gray-900 dark:text-white mb-2">New Car Listings</h6>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Get notified about new car posts</p>
+                        <!-- Benefits Card -->
+                        <div class="card benefits-card">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-gift me-2 text-primary"></i>
+                                    What you'll receive:
+                                </h5>
                             </div>
-                            <div class="text-center p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                <div class="mb-3">
-                                    <i class="fas fa-percentage text-2xl text-green-500"></i>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="benefit-item text-center">
+                                            <div class="benefit-icon mb-2">
+                                                <i class="fas fa-car fa-2x text-primary"></i>
+                                            </div>
+                                            <h6 class="benefit-title">New Car Listings</h6>
+                                            <p class="benefit-desc text-muted small">Get notified about new car posts</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="benefit-item text-center">
+                                            <div class="benefit-icon mb-2">
+                                                <i class="fas fa-percentage fa-2x text-success"></i>
+                                            </div>
+                                            <h6 class="benefit-title">Exclusive Deals</h6>
+                                            <p class="benefit-desc text-muted small">Special promotions and offers</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="benefit-item text-center">
+                                            <div class="benefit-icon mb-2">
+                                                <i class="fas fa-info-circle fa-2x text-info"></i>
+                                            </div>
+                                            <h6 class="benefit-title">Updates</h6>
+                                            <p class="benefit-desc text-muted small">Important announcements</p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <h6 class="font-bold text-gray-900 dark:text-white mb-2">Exclusive Deals</h6>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Special promotions and offers</p>
-                            </div>
-                            <div class="text-center p-4 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                                <div class="mb-3">
-                                    <i class="fas fa-info-circle text-2xl text-red-500"></i>
-                                </div>
-                                <h6 class="font-bold text-gray-900 dark:text-white mb-2">Updates</h6>
-                                <p class="text-sm text-gray-600 dark:text-gray-400">Important announcements</p>
                             </div>
                         </div>
                     </div>
@@ -904,63 +1445,64 @@
             <div class="modal-body">
                 <p>Share {{ $user->name }}'s profile on:</p>
                 <div class="share-buttons">
-                    <div class="grid grid-cols-4 gap-4">
-                        <div class="text-center mb-3">
+                    <div class="row">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="facebook">
-                                <i class="fab fa-facebook-f text-2xl" style="color: #363636;"></i>
-                                <div class="text-xs mt-1">Facebook</div>
+                                <i class="fab fa-facebook-f fa-2x" style="color: #363636;"></i>
+                                <div>Facebook</div>
                             </a>
                         </div>
-                        <div class="text-center mb-3">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="twitter">
-                                <i class="fab fa-twitter text-2xl" style="color: #363636;"></i>
-                                <div class="text-xs mt-1">Twitter</div>
+                                <i class="fab fa-twitter fa-2x" style="color: #363636;"></i>
+                                <div>Twitter</div>
                             </a>
                         </div>
-                        <div class="text-center mb-3">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="linkedin">
-                                <i class="fab fa-linkedin-in text-2xl" style="color: #363636;"></i>
-                                <div class="text-xs mt-1">LinkedIn</div>
+                                <i class="fab fa-linkedin-in fa-2x" style="color: #363636;"></i>
+                                <div>LinkedIn</div>
                             </a>
                         </div>
-                        <div class="text-center mb-3">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="whatsapp">
-                                <i class="fab fa-whatsapp text-2xl" style="color: #28a745;"></i>
-                                <div class="text-xs mt-1">WhatsApp</div>
+                                <i class="fab fa-whatsapp fa-2x" style="color: #28a745;"></i>
+                                <div>WhatsApp</div>
                             </a>
                         </div>
-                        <div class="text-center mb-3">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="telegram">
-                                <i class="fab fa-telegram-plane text-2xl" style="color: #007bff;"></i>
-                                <div class="text-xs mt-1">Telegram</div>
+                                <i class="fab fa-telegram-plane fa-2x" style="color: #007bff;"></i>
+                                <div>Telegram</div>
                             </a>
                         </div>
-                        <div class="text-center mb-3">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="email">
-                                <i class="fas fa-envelope text-2xl" style="color: #dc3545;"></i>
-                                <div class="text-xs mt-1">Email</div>
+                                <i class="fas fa-envelope fa-2x" style="color: #dc3545;"></i>
+                                <div>Email</div>
                             </a>
                         </div>
-                        <div class="text-center mb-3">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="copy">
-                                <i class="fas fa-copy text-2xl" style="color: #363636;"></i>
-                                <div class="text-xs mt-1">Copy Link</div>
+                                <i class="fas fa-copy fa-2x" style="color: #363636;"></i>
+                                <div>Copy Link</div>
                             </a>
                         </div>
-                        <div class="text-center mb-3">
+                        <div class="col-3 text-center mb-3">
                             <a href="#" class="share-btn" data-platform="sms">
-                                <i class="fas fa-sms text-2xl" style="color: #ffc107;"></i>
-                                <div class="text-xs mt-1">SMS</div>
+                                <i class="fas fa-sms fa-2x" style="color: #ffc107;"></i>
+                                <div>SMS</div>
                             </a>
                         </div>
                     </div>
                 </div>
-                <div class="mt-6">
-                    <label for="share-link" class="block text-sm font-medium text-gray-700 mb-2">Or copy the link:</label>
-                    <div class="flex">
-                        <input type="text" id="share-link" class="flex-1 min-w-0 block w-full px-3 py-2 rounded-l-lg border border-gray-300"
+                <div class="mt-3">
+                    <label for="share-link">Or copy the link:</label>
+                    <div class="input-group">
+                        <input type="text" id="share-link" class="form-control"
                             value="{{ route('profile.showUser', $user->id) }}" readonly>
-                        <button class="btn btn-outline-secondary bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-r-lg" type="button" id="copy-link-btn">Copy</button>
+                        <button class="btn btn-outline-secondary" type="button" id="copy-link-btn"
+                            style="background-color: #363636; color: white; border-color: #363636;">Copy</button>
                     </div>
                 </div>
             </div>
@@ -979,14 +1521,14 @@
                     @csrf
                     @method('PUT')
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_title">Title *</label>
                                 <input type="text" id="edit_title" name="title" class="form-control" required>
                             </div>
                         </div>
-                        <div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_year">Year *</label>
                                 <select id="edit_year" name="year" class="form-control" required>
@@ -999,8 +1541,8 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_make">Make *</label>
                                 <select id="edit_make" name="make" class="form-control" required>
@@ -1016,7 +1558,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_model">Model</label>
                                 <select id="edit_model" name="model" class="form-control">
@@ -1057,8 +1599,8 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_car_color">Car Color *</label>
                                 <select id="edit_car_color" name="car_color" class="form-control" required>
@@ -1073,7 +1615,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_body_type">Body Type</label>
                                 <select id="edit_body_type" name="body_type" class="form-control">
@@ -1091,8 +1633,8 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_car_condition">Car Condition</label>
                                 <select id="edit_car_condition" name="car_condition" class="form-control">
@@ -1103,7 +1645,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_car_inside_color">Inside Color</label>
                                 <select id="edit_car_inside_color" name="car_inside_color" class="form-control">
@@ -1120,14 +1662,17 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_vin_number">VIN Number</label>
                                 <input type="text" id="edit_vin_number" name="VIN_number" class="form-control">
                             </div>
                         </div>
-                        <div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_transmission_type">Transmission Type</label>
                                 <select id="edit_transmission_type" name="transmission_type" class="form-control">
@@ -1137,10 +1682,7 @@
                                 </select>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <label for="edit_currency_type">Currency Type</label>
                                 <select id="edit_currency_type" name="currency_type" class="form-control">
@@ -1154,16 +1696,16 @@
                     </div>
 
                     <!-- Sale-related fields (show only when For Sale is checked) -->
-                    <div id="sale-fields" class="hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
+                    <div id="sale-fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="edit_regular_price">Regular Price</label>
                                     <input type="number" id="edit_regular_price" name="regular_price"
                                         class="form-control" min="0" step="0.01">
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="edit_car_documents">Car Documents</label>
                                     <select id="edit_car_documents" name="car_documents" class="form-control">
@@ -1178,16 +1720,16 @@
                     </div>
 
                     <!-- Rent-related fields (show only when For Rent is checked) -->
-                    <div id="rent-fields" class="hidden">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
+                    <div id="rent-fields" style="display: none;">
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="edit_rent_price_per_day">Rent Price Per Day</label>
                                     <input type="number" id="edit_rent_price_per_day" name="rent_price_per_day"
                                         class="form-control" min="0" step="0.01">
                                 </div>
                             </div>
-                            <div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="edit_rent_price_per_month">Rent Price Per Month</label>
                                     <input type="number" id="edit_rent_price_per_month" name="rent_price_per_month"
@@ -1197,14 +1739,15 @@
                         </div>
                     </div>
 
+
                     <div class="form-group">
                         <label for="edit_description">Description</label>
                         <textarea id="edit_description" name="description" class="form-control" rows="3"></textarea>
                     </div>
 
                     <!-- Purpose Selection - Matching Registration Form -->
-                    <div class="border-2 border-red-200 rounded-lg p-4 bg-red-50 mb-6">
-                        <h3 class="text-lg font-semibold mb-4 text-red-800">Select Car Purpose</h3>
+                    <div class="border-2 border-blue-200 rounded-lg p-4 bg-blue-50 mb-6">
+                        <h3 class="text-lg font-semibold mb-4 text-blue-800">Select Car Purpose</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <!-- For Sale -->
                             <label class="inline-flex items-center gap-2">
@@ -1266,7 +1809,8 @@
             const profileImage = document.getElementById('profile-image');
 
             // Share Profile Functionality
-            const shareBtn = document.querySelector('#shareProfileModal').previousElementSibling;
+            const shareBtn = document.querySelector('.btn-link.text-decoration-none .fa-share').closest(
+                '.btn-link');
             const shareModal = document.getElementById('shareProfileModal');
             const closeShareBtn = document.querySelector('.close-share');
             const cancelShareBtn = document.getElementById('cancelShare');
@@ -1274,10 +1818,9 @@
             const copyLinkBtn = document.getElementById('copy-link-btn');
             const shareLinkInput = document.getElementById('share-link');
 
-            // Open share modal when edit button is clicked (assuming there's a share button)
-            const profileShareBtn = document.querySelector('.fa-share');
-            if (profileShareBtn) {
-                profileShareBtn.closest('button').addEventListener('click', function(e) {
+            // Open share modal when share button is clicked
+            if (shareBtn) {
+                shareBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     shareModal.style.display = 'block';
                 });
@@ -1286,6 +1829,13 @@
             // Close share modal when X is clicked
             if (closeShareBtn) {
                 closeShareBtn.addEventListener('click', function() {
+                    shareModal.style.display = 'none';
+                });
+            }
+
+            // Close share modal when cancel button is clicked
+            if (cancelShareBtn) {
+                cancelShareBtn.addEventListener('click', function() {
                     shareModal.style.display = 'none';
                 });
             }
@@ -1507,7 +2057,6 @@
                                 // Update profile information on page
                                 const newName = document.getElementById('name').value;
                                 document.getElementById('profile-name').textContent = newName;
-                                document.getElementById('profile-display-name').textContent = newName;
                                 document.getElementById('profile-email').textContent = document
                                     .getElementById('email').value;
 
@@ -1516,7 +2065,17 @@
                                 if (phoneInput) {
                                     const phoneElement = document.getElementById('profile-phone');
                                     if (phoneElement) {
-                                        phoneElement.textContent = phoneInput.value || 'N/A';
+                                        phoneElement.textContent = phoneInput.value;
+                                    } else if (phoneInput.value) {
+                                        // Create phone element if it doesn't exist but has a value
+                                        const phoneContainer = document.createElement('p');
+                                        phoneContainer.className = 'card-text text-muted';
+                                        phoneContainer.innerHTML =
+                                            '<i class="fas fa-phone"></i> <span id="profile-phone">' +
+                                            phoneInput.value + '</span>';
+                                        document.querySelector('.card-body').insertBefore(
+                                            phoneContainer, document.querySelector('.card-text')
+                                            .nextSibling);
                                     }
                                 }
 
@@ -1613,18 +2172,15 @@
                 e.preventDefault();
 
                 // Remove active class from all tabs
-                document.querySelectorAll('.modern-tab').forEach(t => t.classList.remove('active', 'border-primary', 'text-primary'));
-                document.querySelectorAll('.modern-tab').forEach(t => t.classList.add('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300'));
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.querySelectorAll('.modern-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove(
+                    'active'));
 
                 // Add active class to clicked tab
-                this.classList.remove('border-transparent', 'text-gray-500', 'hover:text-gray-700', 'hover:border-gray-300');
-                this.classList.add('active', 'border-primary', 'text-primary');
+                this.classList.add('active');
 
                 // Show corresponding content
                 const tabId = this.getAttribute('data-tab');
-                document.getElementById(tabId + '-tab').classList.remove('hidden');
                 document.getElementById(tabId + '-tab').classList.add('active');
             });
         });
@@ -1838,14 +2394,14 @@
                 const rentFields = document.getElementById('rent-fields');
 
                 if (carData.is_for_sale) {
-                    if (saleFields) saleFields.classList.remove('hidden');
-                    if (rentFields) rentFields.classList.add('hidden');
+                    if (saleFields) saleFields.style.display = 'block';
+                    if (rentFields) rentFields.style.display = 'none';
                 } else if (carData.is_for_rent) {
-                    if (rentFields) rentFields.classList.remove('hidden');
-                    if (saleFields) saleFields.classList.add('hidden');
+                    if (rentFields) rentFields.style.display = 'block';
+                    if (saleFields) saleFields.style.display = 'none';
                 } else {
-                    if (saleFields) saleFields.classList.add('hidden');
-                    if (rentFields) rentFields.classList.add('hidden');
+                    if (saleFields) saleFields.style.display = 'none';
+                    if (rentFields) rentFields.style.display = 'none';
                 }
 
 
@@ -1869,24 +2425,24 @@
                 function toggleFields() {
                     if (saleCheckbox.checked) {
                         // Show sale fields, hide rent fields
-                        if (saleFields) saleFields.classList.remove('hidden');
-                        if (rentFields) rentFields.classList.add('hidden');
+                        if (saleFields) saleFields.style.display = 'block';
+                        if (rentFields) rentFields.style.display = 'none';
 
                         // Clear rent fields
                         document.getElementById('edit_rent_price_per_day').value = '';
                         document.getElementById('edit_rent_price_per_month').value = '';
                     } else if (rentCheckbox.checked) {
                         // Show rent fields, hide sale fields
-                        if (rentFields) rentFields.classList.remove('hidden');
-                        if (saleFields) saleFields.classList.add('hidden');
+                        if (rentFields) rentFields.style.display = 'block';
+                        if (saleFields) saleFields.style.display = 'none';
 
                         // Clear sale fields
                         document.getElementById('edit_regular_price').value = '';
                         document.getElementById('edit_car_documents').selectedIndex = 0;
                     } else {
                         // Hide both field groups
-                        if (saleFields) saleFields.classList.add('hidden');
-                        if (rentFields) rentFields.classList.add('hidden');
+                        if (saleFields) saleFields.style.display = 'none';
+                        if (rentFields) rentFields.style.display = 'none';
                     }
                 }
 
@@ -2041,7 +2597,7 @@
                                         }).then(() => {
                                             // Remove the car element from the DOM instead of reloading
                                             const carElement = this.closest(
-                                                '.car-item');
+                                                '.col-lg-4');
                                             if (carElement) {
                                                 carElement.remove();
                                             }
@@ -2089,4 +2645,177 @@
             });
         });
     </script>
+    <!-- <script>
+        // Emergency dropdown fix for profile page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force initialize all Bootstrap dropdowns
+            setTimeout(function() {
+                var dropdowns = document.querySelectorAll('.dropdown-toggle');
+                dropdowns.forEach(function(dropdown) {
+                    dropdown.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        var menu = this.nextElementSibling;
+                        if (menu && menu.classList.contains('dropdown-menu')) {
+                            var isVisible = menu.style.display === 'block';
+                            // Hide all other dropdowns
+                            document.querySelectorAll('.dropdown-menu').forEach(function(
+                                m) {
+                                m.style.display = 'none';
+                            });
+                            // Toggle current dropdown
+                            menu.style.display = isVisible ? 'none' : 'block';
+                        }
+                    });
+                });
+
+                // Close dropdowns when clicking outside
+                document.addEventListener('click', function() {
+                    document.querySelectorAll('.dropdown-menu').forEach(function(menu) {
+                        menu.style.display = 'none';
+                    });
+                });
+            }, 500);
+        });
+
+        // Newsletter subscription/unsubscription functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Handle subscribe button
+            const subscribeBtn = document.getElementById('subscribe-btn');
+            if (subscribeBtn) {
+                subscribeBtn.addEventListener('click', function() {
+                    const emailInput = document.getElementById('profile-email');
+                    const email = emailInput.value;
+
+                    if (!email || !isValidEmail(email)) {
+                        Swal.fire({
+                            title: 'Invalid Email',
+                            text: 'Please enter a valid email address.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                        return;
+                    }
+
+                    fetch('{{ route('email.store') }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            },
+                            body: JSON.stringify({
+                                email: email
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                Swal.fire({
+                                    title: 'Success!',
+                                    text: data.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                });
+
+                                // Update the UI without reloading
+                                setTimeout(() => {
+                                    location.reload();
+                                }, 1500);
+                            } else {
+                                Swal.fire({
+                                    title: 'Error',
+                                    text: data.message,
+                                    icon: 'error',
+                                    confirmButtonText: 'OK'
+                                });
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire({
+                                title: 'Error',
+                                text: 'An error occurred. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        });
+                });
+            }
+
+            // Handle unsubscribe button
+            const unsubscribeBtn = document.getElementById('unsubscribe-btn');
+            if (unsubscribeBtn) {
+                unsubscribeBtn.addEventListener('click', function() {
+                    Swal.fire({
+                        title: 'Are you sure?',
+                        text: 'You will no longer receive newsletter emails about new car posts.',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#3085d6',
+                        confirmButtonText: 'Yes, unsubscribe',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            const emailInput = document.getElementById('profile-email');
+                            const email = emailInput.value;
+
+                            fetch('{{ route('email.unsubscribe') }}', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                        'X-CSRF-TOKEN': document.querySelector(
+                                            'meta[name="csrf-token"]').getAttribute(
+                                            'content')
+                                    },
+                                    body: JSON.stringify({
+                                        email: email
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.success) {
+                                        Swal.fire({
+                                            title: 'Unsubscribed!',
+                                            text: data.message,
+                                            icon: 'success',
+                                            confirmButtonText: 'OK'
+                                        });
+
+                                        // Update the UI without reloading
+                                        setTimeout(() => {
+                                            location.reload();
+                                        }, 1500);
+                                    } else {
+                                        Swal.fire({
+                                            title: 'Error',
+                                            text: data.message,
+                                            icon: 'error',
+                                            confirmButtonText: 'OK'
+                                        });
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                    Swal.fire({
+                                        title: 'Error',
+                                        text: 'An error occurred. Please try again.',
+                                        icon: 'error',
+                                        confirmButtonText: 'OK'
+                                    });
+                                });
+                        }
+                    });
+                });
+            }
+        });
+
+        // Email validation function
+        function isValidEmail(email) {
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+    </script> -->
 @endsection
